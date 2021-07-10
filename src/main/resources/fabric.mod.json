@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "tropicraft",
+  "version": "${version}",
+
+  "name": "Tropicraft Fabric Port",
+  "description": "A port of the forge version of Tropic Craft(Not Official).",
+  "authors": [
+    "DragonSeeker"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "mpl-2.0",
+  "icon": "assets/tropicraft/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.dragonseeker.tropicfabricport.Tropicfabricport"
+    ],
+    "client": [
+      "com.dragonseeker.tropicfabricport.TropicFabricPortClient"
+    ]
+  },
+  "mixins": [
+    "tropicraft.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
