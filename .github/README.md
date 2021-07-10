@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/Dragon-Seeker/Tropicraft-Fabric-Port/blob/main/.github/logo.png">
+  <img src="https://github.com/Dragon-Seeker/fabric-Tropicraft-First-Release/blob/main/.github/logo.png">
 </p>  
 
 # A UNOFFICIAL FABRIC VERSION OF TROPICRAFT
