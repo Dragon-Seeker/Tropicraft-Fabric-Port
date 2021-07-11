@@ -4,13 +4,13 @@
   "version": "${version}",
 
   "name": "Tropicraft Fabric Port",
-  "description": "A port of the forge version of Tropic Craft(Not Official).",
+  "description": "A fabric port of the popular tropical mod: Tropicraft. (Unoffical)",
   "authors": [
     "DragonSeeker"
   ],
   "contact": {
     "homepage": "",
-    "sources": ""
+    "sources": "https://github.com/Dragon-Seeker/Tropicraft-Fabric-Port"
   },
 
   "license": "mpl-2.0",
