@@ -24,7 +24,7 @@ public class TropicFabricPortClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         TropicBlocks.initClient();
-
+        //Test comment
         //new TropicBambooChestBlockEntity(getBlockEntityType(), new Identifier(Tropicfabricport.MOD_ID, "bamboo_chest")); //((TropicBambooChestBlock) bamboochest.getBlock()).blockId()
         //TropicBambooChestBlockEntity renderEntity = new ChestBlockEntity(ChestCommon.getBlockEntityType(), ((ChestBlock) item.getBlock()).blockId());
 
