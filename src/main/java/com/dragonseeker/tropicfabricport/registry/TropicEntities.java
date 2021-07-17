@@ -1,28 +1,20 @@
 package com.dragonseeker.tropicfabricport.registry;
 
 import com.dragonseeker.tropicfabricport.Tropicfabricport;
-import com.dragonseeker.tropicfabricport.entity.BambooItemFrameEntity;
-import com.dragonseeker.tropicfabricport.entity.ExplodingCoconutEntity;
-import com.dragonseeker.tropicfabricport.entity.IEntityType;
+import com.dragonseeker.tropicfabricport.entity.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-public class TropicEntities<T extends Entity> implements IEntityType {
+public class TropicEntities<T extends Entity> {
 
     public static EntityType<BambooItemFrameEntity> BAMBOO_ITEM_FRAME;
     public static EntityType<ExplodingCoconutEntity> EXPLODING_COCONUT;
+    public static EntityType<AshenMaskEntity> ASHEN_MASK;
+    public static EntityType<AshenEntity> ASHEN;
 
-    @Override
-    public boolean alwaysUpdateVelocity() {
-        if(this.equals(BAMBOO_ITEM_FRAME)) {
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
+    public static EntityType<WallItemEntity> WALL_ITEM;
 
     static {
         //BAMBOO_ITEM_FRAME = registerEntityType("bamboo_item_frame", SpawnGroup.MISC, 0.5F, 0.5F, 8, 3, false, BambooItemFrameEntity::new);
@@ -33,9 +25,15 @@ public class TropicEntities<T extends Entity> implements IEntityType {
 
                  */
 
+        ASHEN_MASK = registerEntity("ashen_mask", ashenMask());
+
+        ASHEN = registerEntity("ashen", ashen());
+
         EXPLODING_COCONUT = registerEntity("exploding_coconut", explodingCoconut());
 
         BAMBOO_ITEM_FRAME = registerEntity("bamboo_item_frame", bambooItemFrame());
+
+        WALL_ITEM = registerEntity("wall_item", wallItem());
 
         //BAMBOO_ITEM_FRAME = registerEntityType("bamboo_item_frame", SpawnGroup.MISC, 0.5F, 0.5F, 8, 3, false, BambooItemFrameEntity::new);
 
@@ -115,7 +113,37 @@ public class TropicEntities<T extends Entity> implements IEntityType {
                         .fixed(0.5F, 0.5F))
                 .trackRangeBlocks(8)
                 .trackedUpdateRate(3)
+                .forceTrackedVelocityUpdates(false);
+    }
+
+    private static FabricEntityTypeBuilder<AshenMaskEntity> ashenMask() {
+        return FabricEntityTypeBuilder
+                .create(SpawnGroup.MISC, (EntityType.EntityFactory<AshenMaskEntity>) AshenMaskEntity::new)
+                .dimensions(EntityDimensions
+                        .fixed(0.8F, 0.2F))
+                .trackRangeBlocks(6)
+                .trackedUpdateRate(100)
                 .forceTrackedVelocityUpdates(true);
+    }
+
+    private static FabricEntityTypeBuilder<AshenEntity> ashen() {
+        return FabricEntityTypeBuilder
+                .create(SpawnGroup.MONSTER, (EntityType.EntityFactory<AshenEntity>) AshenEntity::new)
+                .dimensions(EntityDimensions
+                        .fixed(0.5F, 1.3F))
+                .trackRangeBlocks(8)
+                .trackedUpdateRate(3)
+                .forceTrackedVelocityUpdates(true);
+    }
+
+    private static FabricEntityTypeBuilder<WallItemEntity> wallItem() {
+        return FabricEntityTypeBuilder
+                .create(SpawnGroup.MISC, (EntityType.EntityFactory<WallItemEntity>) WallItemEntity::new)
+                .dimensions(EntityDimensions
+                        .fixed(0.5F, 0.5F))
+                .trackRangeBlocks(8)
+                .trackedUpdateRate(Integer.MAX_VALUE)
+                .forceTrackedVelocityUpdates(false);
     }
 
 }

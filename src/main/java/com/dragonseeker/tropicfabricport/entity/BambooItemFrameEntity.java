@@ -1,5 +1,6 @@
 package com.dragonseeker.tropicfabricport.entity;
 
+import com.dragonseeker.tropicfabricport.mixins.ItemFrameEntityInvoker;
 import com.dragonseeker.tropicfabricport.registry.TropicEntities;
 import com.dragonseeker.tropicfabricport.registry.TropicItems;
 import net.minecraft.entity.Entity;
@@ -10,14 +11,13 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BambooItemFrameEntity extends ItemFrameEntity  {
+public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameEntityInvoker {
 
 	public BambooItemFrameEntity(World worldIn, BlockPos pos, Direction direction) {
 		this(TropicEntities.BAMBOO_ITEM_FRAME, worldIn, pos, direction);
@@ -34,17 +34,27 @@ public class BambooItemFrameEntity extends ItemFrameEntity  {
 		super(bambooItemFrameEntityEntityType, world);
 	}
 
-
 	/*
-	private void dropHeldStack(Entity entityIn, boolean alwaysDrop) {
+	@Override
+	public void dropHeldStack(Entity entityIn, boolean alwaysDrop) {
 		alwaysDrop = false;
 		if (alwaysDrop) {
 			this.dropItem(TropicItems.BAMBOO_ITEM_FRAME);
 		} else {
-			//BambooItemFrameAccessor.dropHeldStackInvoker(entityIn, false);//dropItemOrSelf
+			BambooItemFrameAccessor.dropHeldStackInvoker(entityIn, false);//dropItemOrSelf
 		}
 	}
+
 	 */
+
+	@Override
+	public void invokedropHeldStack(Entity entityIn, boolean dropSelf) {
+		((ItemFrameEntityInvoker) this).invokedropHeldStack(entityIn, false); //??? TODO: Check if this is working
+		if (dropSelf) {
+			this.dropItem(TropicItems.BAMBOO_ITEM_FRAME);
+		}
+	}
+
 
 	@Override
 	@Nullable
@@ -57,13 +67,10 @@ public class BambooItemFrameEntity extends ItemFrameEntity  {
 		}
 	}
 
-
-	/*
 	@Override
 	public Packet<?> createSpawnPacket() {
 		return new EntitySpawnS2CPacket(this, this.getType(), this.facing.getId(), this.getDecorationBlockPos());
     }
-	 */
 
 	/*
     @Override
@@ -77,8 +84,8 @@ public class BambooItemFrameEntity extends ItemFrameEntity  {
         this.attachmentPos = additionalData.readBlockPos();
         updateFacingWithBoundingBox(Direction.byIndex(additionalData.readByte()));
     }
-	 */
 
+	 */
 
 	@Override
 	public ItemStack getHeldItemStack() {

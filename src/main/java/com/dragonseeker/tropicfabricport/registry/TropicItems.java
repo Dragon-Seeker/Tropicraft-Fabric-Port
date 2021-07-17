@@ -182,6 +182,10 @@ public class TropicItems {
 
     public static final Item EXPLODING_COCONUT = registerItem("exploding_coconut", new ExplodingCoconutItem(getDefaultProperties()));
 
+    public static final ImmutableMap<AshenMasks, Item> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
+            .collect(Maps.<AshenMasks, AshenMasks, Item>toImmutableEnumMap(Function.identity(), type -> registerItem("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
+
+
 
     //-----------------------ITEMS TO PORT STILL-----------------------
 

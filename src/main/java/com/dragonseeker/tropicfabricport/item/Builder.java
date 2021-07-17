@@ -84,11 +84,12 @@ public class Builder {
         return ret;
 
     }
-    /*
-    public static Supplier<AshenMaskItem> mask(final AshenMasks mask) {
-        return item(p -> new AshenMaskItem(ArmorMaterials.ASHEN_MASK, mask, p));
+
+    public static AshenMaskItem mask(final AshenMasks mask) {
+        //return item(p -> new AshenMaskItem(ArmorMaterials.ASHEN_MASK, mask, p));
+        return new AshenMaskItem(ArmorMaterials.ASHEN_MASK, mask, getDefaultProperties());
     }
-    */
+
 
     public static TropicalMusicDiscItem musicDisc(RecordMusic type) {
         TropicalMusicDiscItem musicDisc = new TropicalMusicDiscItem(type, getDefaultProperties().rarity(Rarity.RARE).maxCount(1));

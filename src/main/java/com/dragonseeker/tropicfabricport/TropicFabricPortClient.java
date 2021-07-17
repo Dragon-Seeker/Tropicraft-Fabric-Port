@@ -1,9 +1,8 @@
 package com.dragonseeker.tropicfabricport;
 
 import com.dragonseeker.tropicfabricport.block.blockentity.TropicBambooChestBlockEntity;
-import com.dragonseeker.tropicfabricport.block.render.BambooChestBlockEntityRenderer;
+import com.dragonseeker.tropicfabricport.client.renderers.*;
 import com.dragonseeker.tropicfabricport.block.testContainer.BoxChestScreen;
-import com.dragonseeker.tropicfabricport.client.entity.BambooItemFrameEntityRenderer;
 import com.dragonseeker.tropicfabricport.item.IColoredItem;
 import com.dragonseeker.tropicfabricport.registry.*;
 import net.fabricmc.api.ClientModInitializer;
@@ -52,6 +51,13 @@ public class TropicFabricPortClient implements ClientModInitializer {
 
 
         EntityRendererRegistry.INSTANCE.register(TropicEntities.EXPLODING_COCONUT, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));//manager -> new SpriteRenderer<>(manager, event.getMinecraftSupplier().get().getItemRenderer())
+
+        EntityRendererRegistry.INSTANCE.register(TropicEntities.ASHEN_MASK, (dispatcher, context) -> new AshenMaskRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicEntities.ASHEN, (dispatcher, context) -> new AshenRenderer(dispatcher));
+
+        EntityRendererRegistry.INSTANCE.register(TropicEntities.WALL_ITEM, (dispatcher, context) -> new WallItemRenderer(dispatcher));
+        //RenderingRegistry.registerEntityRenderingHandler(TropicraftEntities.WALL_ITEM.get(), WallItemRenderer::new);
+
 
         /*
         EntityRendererRegistry.INSTANCE.register(TropicEntities.BAMBOO_ITEM_FRAME, (dispatcher, context) -> {

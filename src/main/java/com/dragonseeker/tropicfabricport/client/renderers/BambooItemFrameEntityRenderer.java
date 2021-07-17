@@ -1,4 +1,4 @@
-package com.dragonseeker.tropicfabricport.client.entity;
+package com.dragonseeker.tropicfabricport.client.renderers;
 
 import com.dragonseeker.tropicfabricport.entity.BambooItemFrameEntity;
 import com.dragonseeker.tropicfabricport.registry.TropicItems;

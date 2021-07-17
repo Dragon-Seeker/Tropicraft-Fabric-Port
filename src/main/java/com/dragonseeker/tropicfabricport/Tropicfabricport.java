@@ -32,10 +32,13 @@ public class Tropicfabricport implements ModInitializer {
     @Override
     public void onInitialize() {
         Sounds.init();
+
         TropicItems.init();
         TropicBlocks.init();
 
         TropicEntities.init();
+        TropicEntityAttributes.init();
+
         TropicBlockEntities.init();
         TropicScreenHandler.init();
     }

@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -84,10 +85,7 @@ public class BlowGunItem extends RangedWeaponItem {
             look3f.rotate(quaternion);
             //look3f.transform(quaternion);
 
-            arrowEntity.setDamage(dmg);
-            arrowEntity.setVelocity(look3f.getX(), look3f.getY(), look3f.getZ());
-            arrowEntity.pitch = pitch;
-            //arrowEntity.shoot(look3f.getX(), look3f.getY(), look3f.getZ(), dmg, pitch); //shoot();
+            arrowEntity.setVelocity((double)look3f.getX(), (double)look3f.getY(), (double)look3f.getZ(), dmg, pitch); //shoot();
 
             heldItem.damage(1, shooter, (i) -> i.sendToolBreakStatus(hand));
 
