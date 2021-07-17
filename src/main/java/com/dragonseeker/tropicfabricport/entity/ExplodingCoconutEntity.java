@@ -4,6 +4,8 @@ import com.dragonseeker.tropicfabricport.Tropicfabricport;
 import com.dragonseeker.tropicfabricport.registry.TropicEntities;
 import com.dragonseeker.tropicfabricport.registry.TropicItems;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -17,7 +19,11 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
+import java.util.UUID;
+
 public class ExplodingCoconutEntity extends ThrownItemEntity {
+
+    public static Identifier SPAWN_PACKET = new Identifier(Tropicfabricport.MOD_ID, "exploding_coconut");
     
     public ExplodingCoconutEntity(EntityType<? extends ExplodingCoconutEntity> type, World world) {
         super(type, world);
@@ -27,11 +33,18 @@ public class ExplodingCoconutEntity extends ThrownItemEntity {
         super(TropicEntities.EXPLODING_COCONUT, thrower, world);
     }
 
+    @Environment(EnvType.CLIENT)
+    public ExplodingCoconutEntity(World world, double x, double y, double z, int id, UUID uuid) {
+        super(TropicEntities.EXPLODING_COCONUT, world);
+        updatePosition(x, y, z);
+        updateTrackedPosition(x, y, z);
+        setEntityId(id);
+        setUuid(uuid);
+    }
+
     @Override
     public Packet<?> createSpawnPacket() {
         //return new EntitySpawnS2CPacket(this);
-
-        Identifier SPAWN_PACKET = new Identifier(Tropicfabricport.MOD_ID, "exploding_coconut");
 
         //NetworkHooks.getEntitySpawningPacket(this);
 

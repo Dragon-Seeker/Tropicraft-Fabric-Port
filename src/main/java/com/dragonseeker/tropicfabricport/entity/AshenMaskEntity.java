@@ -2,8 +2,11 @@ package com.dragonseeker.tropicfabricport.entity;
 
 import com.dragonseeker.tropicfabricport.Tropicfabricport;
 import com.dragonseeker.tropicfabricport.item.AshenMasks;
+import com.dragonseeker.tropicfabricport.registry.TropicEntities;
 import com.dragonseeker.tropicfabricport.registry.TropicItems;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -20,13 +23,26 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 public class AshenMaskEntity extends Entity {
+
+    public static Identifier SPAWN_PACKET = new Identifier(Tropicfabricport.MOD_ID, "ashen_mask");
 
     private static final TrackedData<Byte> MASK_TYPE = DataTracker.registerData(AshenEntity.class, TrackedDataHandlerRegistry.BYTE);
     public static final int MAX_TICKS_ALIVE = 24000;
 
     public AshenMaskEntity(EntityType<?> type, World world) {
         super(type, world);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public AshenMaskEntity(World world, double x, double y, double z, int id, UUID uuid) {
+        super(TropicEntities.ASHEN_MASK, world);
+        updatePosition(x, y, z);
+        updateTrackedPosition(x, y, z);
+        setEntityId(id);
+        setUuid(uuid);
     }
 
     public void dropItemStack() {
@@ -60,8 +76,6 @@ public class AshenMaskEntity extends Entity {
 
     @Override
     public Packet<?> createSpawnPacket() {
-
-        Identifier SPAWN_PACKET = new Identifier(Tropicfabricport.MOD_ID, "ashen_mask");
 
         //return NetworkHooks.getEntitySpawningPacket(this);
         PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
