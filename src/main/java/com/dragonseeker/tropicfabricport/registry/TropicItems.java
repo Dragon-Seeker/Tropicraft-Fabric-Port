@@ -34,15 +34,6 @@ public class TropicItems {
     public static final Item MANGANESE = registerItem("manganese_ingot", new TropicItem());
     public static final Item ZIRCONIUM = registerItem("zirconium_gem", new TropicItem());
 
-    /*
-    public static final Map<DyeColor, RegistryObject<FurnitureItem<UmbrellaEntity>>> UMBRELLAS = Arrays.stream(DyeColor.values())
-            .collect(Maps.toImmutableEnumMap(Function.identity(), c -> register(c.getString() + "_umbrella", Builder.umbrella(c))));
-    public static final Map<DyeColor, RegistryObject<FurnitureItem<ChairEntity>>> CHAIRS = Arrays.stream(DyeColor.values())
-            .collect(Maps.toImmutableEnumMap(Function.identity(), c -> register(c.getString() + "_chair", Builder.chair(c))));
-    public static final Map<DyeColor, RegistryObject<FurnitureItem<BeachFloatEntity>>> BEACH_FLOATS = Arrays.stream(DyeColor.values())
-            .collect(Maps.toImmutableEnumMap(Function.identity(), c -> register(c.getString() + "_beach_float", Builder.beachFloat(c))));
-     */
-
     public static final Item BAMBOO_STICK = registerItem("bamboo_stick", new TropicItem());
 
 
@@ -82,11 +73,7 @@ public class TropicItems {
             "love_tropics_shell", () -> new LoveTropicsShellItem(new Item.Properties()));
 
     public static final RegistryObject<BlockNamedItem> RAW_COFFEE_BEAN = register("raw_coffee_bean", Builder.blockNamedItem(TropicraftBlocks.COFFEE_BUSH));
-    public static final RegistryObject<Item> ROASTED_COFFEE_BEAN = register("roasted_coffee_bean", Builder.item());
-    public static final RegistryObject<Item> COFFEE_BERRY = register("coffee_berry", Builder.item());
-    public static final RegistryObject<Item> BAMBOO_MUG = register("bamboo_mug", Builder.item());
-*/
-    // Cocktails
+    */
 
     public static final ImmutableMap<Drink, Item> COCKTAILS = ImmutableMap.copyOf(
             Drink.DRINKS.values().stream()
@@ -102,7 +89,6 @@ public class TropicItems {
     /*
     public static final RegistryObject<Item> NIGEL_STACHE = register(
             "nigel_stache", () -> new NigelStacheItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP)));
-
      */
 
     public static final Item POISON_FROG_SKIN = registerItem("poison_frog_skin", new TropicItem());
@@ -149,8 +135,6 @@ public class TropicItems {
     public static final Item DAGGER = registerItem("dagger", new DaggerItem(TropicTiers.ZIRCON, getDefaultProperties().maxCount(1)));
     public static final Item BAMBOO_SPEAR = registerItem("bamboo_spear", new SpearItem(TropicTiers.BAMBOO, 3, -2.4F, getDefaultProperties().maxCount(1)));
 
-
-
     public static final Item FIRE_BOOTS = registerItem("fire_boots", new FireArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1).maxDamage(300)));
     public static final Item FIRE_LEGGINGS = registerItem("fire_leggings", new FireArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1).maxDamage(300)));
     public static final Item FIRE_CHESTPLATE = registerItem("fire_chestplate", new FireArmorItem(EquipmentSlot.CHEST, getDefaultProperties().maxCount(1).maxDamage(300)));
@@ -176,31 +160,28 @@ public class TropicItems {
             .stream(RecordMusic.values())
             .collect(Maps.<RecordMusic, RecordMusic, Item>toImmutableEnumMap(Function.identity(), (type) -> registerItem("music_disc_" + type.name().toLowerCase(Locale.ROOT), Builder.musicDisc(type))));
 
-
-
     public static final Item BLOW_GUN = registerItem("blow_gun", new BlowGunItem(getDefaultProperties().maxCount(1)));
-
     public static final Item EXPLODING_COCONUT = registerItem("exploding_coconut", new ExplodingCoconutItem(getDefaultProperties()));
 
     public static final ImmutableMap<AshenMasks, Item> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
             .collect(Maps.<AshenMasks, AshenMasks, Item>toImmutableEnumMap(Function.identity(), type -> registerItem("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
 
-
-
-    //-----------------------ITEMS TO PORT STILL-----------------------
-
     /*
-    public static final RegistryObject<PonyBottleItem> YELLOW_PONY_BOTTLE = register("yellow_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
-    public static final RegistryObject<PonyBottleItem> PINK_PONY_BOTTLE = register("pink_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
-
+    public static final ImmutableMap<AshenMasks, RegistryObject<AshenMaskItem>> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
+            .collect(Maps.toImmutableEnumMap(Function.identity(), type -> register("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
     */
 
 
     //--------------------ITEMS HARDER TO PORT STILL--------------------
 
     /*
-    public static final ImmutableMap<RecordMusic, RegistryObject<TropicalMusicDiscItem>> MUSIC_DISCS = Arrays.stream(RecordMusic.values())
-            .collect(Maps.toImmutableEnumMap(Function.identity(), type -> register("music_disc_" + type.name().toLowerCase(Locale.ROOT), Builder.musicDisc(type))));
+
+    public static final Map<DyeColor, RegistryObject<FurnitureItem<UmbrellaEntity>>> UMBRELLAS = Arrays.stream(DyeColor.values())
+            .collect(Maps.toImmutableEnumMap(Function.identity(), c -> register(c.getString() + "_umbrella", Builder.umbrella(c))));
+    public static final Map<DyeColor, RegistryObject<FurnitureItem<ChairEntity>>> CHAIRS = Arrays.stream(DyeColor.values())
+            .collect(Maps.toImmutableEnumMap(Function.identity(), c -> register(c.getString() + "_chair", Builder.chair(c))));
+    public static final Map<DyeColor, RegistryObject<FurnitureItem<BeachFloatEntity>>> BEACH_FLOATS = Arrays.stream(DyeColor.values())
+            .collect(Maps.toImmutableEnumMap(Function.identity(), c -> register(c.getString() + "_beach_float", Builder.beachFloat(c))));
 
     public static final RegistryObject<Item> TROPICAL_FISH_BUCKET = register("tropical_fish_bucket", Builder.fishBucket(TropicraftEntities.TROPICAL_FISH));
     public static final RegistryObject<Item> SARDINE_BUCKET = register("sardine_bucket", Builder.fishBucket(TropicraftEntities.RIVER_SARDINE));
@@ -230,8 +211,8 @@ public class TropicItems {
     public static final RegistryObject<Item> MAN_O_WAR_SPAWN_EGG = register("man_o_war_spawn_egg", Builder.spawnEgg(TropicraftEntities.MAN_O_WAR));
     public static final RegistryObject<Item> TROPIBEE_SPAWN_EGG = register("tropibee_spawn_egg", Builder.spawnEgg(TropicraftEntities.TROPI_BEE));
 
-    public static final ImmutableMap<AshenMasks, RegistryObject<AshenMaskItem>> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
-            .collect(Maps.toImmutableEnumMap(Function.identity(), type -> register("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
+    public static final RegistryObject<PonyBottleItem> YELLOW_PONY_BOTTLE = register("yellow_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
+    public static final RegistryObject<PonyBottleItem> PINK_PONY_BOTTLE = register("pink_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
 
     public static final RegistryObject<ScubaGogglesItem> YELLOW_SCUBA_GOGGLES = register("yellow_scuba_goggles", Builder.scubaGoggles(ScubaType.YELLOW));
     public static final RegistryObject<ScubaHarnessItem> YELLOW_SCUBA_HARNESS = register("yellow_scuba_harness", Builder.scubaHarness(ScubaType.YELLOW));
@@ -242,9 +223,6 @@ public class TropicItems {
 
     public static final RegistryObject<Item> WATER_WAND = register(
             "water_wand", () -> new WaterWandItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP).maxStackSize(1).maxDamage(2000)));
-
-    public static final RegistryObject<Item> EXPLODING_COCONUT = register(
-            "exploding_coconut", () -> new ExplodingCoconutItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP)));
 
     public static final RegistryObject<Item> FISHING_NET = register("fishing_net", () -> new Item(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP).maxStackSize(1)));
      */
