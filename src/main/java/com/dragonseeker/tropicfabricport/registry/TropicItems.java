@@ -171,11 +171,18 @@ public class TropicItems {
             .collect(Maps.toImmutableEnumMap(Function.identity(), type -> register("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
     */
 
+    /*
+    public static final RegistryObject<Item> WATER_WAND = register(
+            "water_wand", () -> new WaterWandItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP).maxStackSize(1).maxDamage(2000)));
+     */
+
+    public static final Item WATER_WAND = registerItem("water_wand", new WaterWandItem(getDefaultProperties().maxCount(1).maxDamage(2000)));
+
+    public static final Item FISHING_NET = registerItem("fishing_net", new Item(getDefaultProperties().maxCount(1)));
 
     //--------------------ITEMS HARDER TO PORT STILL--------------------
 
     /*
-
     public static final Map<DyeColor, RegistryObject<FurnitureItem<UmbrellaEntity>>> UMBRELLAS = Arrays.stream(DyeColor.values())
             .collect(Maps.toImmutableEnumMap(Function.identity(), c -> register(c.getString() + "_umbrella", Builder.umbrella(c))));
     public static final Map<DyeColor, RegistryObject<FurnitureItem<ChairEntity>>> CHAIRS = Arrays.stream(DyeColor.values())
@@ -212,19 +219,16 @@ public class TropicItems {
     public static final RegistryObject<Item> TROPIBEE_SPAWN_EGG = register("tropibee_spawn_egg", Builder.spawnEgg(TropicraftEntities.TROPI_BEE));
 
     public static final RegistryObject<PonyBottleItem> YELLOW_PONY_BOTTLE = register("yellow_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
-    public static final RegistryObject<PonyBottleItem> PINK_PONY_BOTTLE = register("pink_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
-
     public static final RegistryObject<ScubaGogglesItem> YELLOW_SCUBA_GOGGLES = register("yellow_scuba_goggles", Builder.scubaGoggles(ScubaType.YELLOW));
     public static final RegistryObject<ScubaHarnessItem> YELLOW_SCUBA_HARNESS = register("yellow_scuba_harness", Builder.scubaHarness(ScubaType.YELLOW));
     public static final RegistryObject<ScubaFlippersItem> YELLOW_SCUBA_FLIPPERS = register("yellow_scuba_flippers", Builder.scubaFlippers(ScubaType.YELLOW));
+
+     public static final RegistryObject<PonyBottleItem> PINK_PONY_BOTTLE = register("pink_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
     public static final RegistryObject<ScubaGogglesItem> PINK_SCUBA_GOGGLES = register("pink_scuba_goggles", Builder.scubaGoggles(ScubaType.PINK));
     public static final RegistryObject<ScubaHarnessItem> PINK_SCUBA_HARNESS = register("pink_scuba_harness", Builder.scubaHarness(ScubaType.PINK));
     public static final RegistryObject<ScubaFlippersItem> PINK_SCUBA_FLIPPERS = register("pink_scuba_flippers", Builder.scubaFlippers(ScubaType.PINK));
 
-    public static final RegistryObject<Item> WATER_WAND = register(
-            "water_wand", () -> new WaterWandItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP).maxStackSize(1).maxDamage(2000)));
 
-    public static final RegistryObject<Item> FISHING_NET = register("fishing_net", () -> new Item(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP).maxStackSize(1)));
      */
 
 

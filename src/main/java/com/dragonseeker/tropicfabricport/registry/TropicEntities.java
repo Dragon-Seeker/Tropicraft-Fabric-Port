@@ -13,7 +13,6 @@ public class TropicEntities<T extends Entity> {
     public static EntityType<ExplodingCoconutEntity> EXPLODING_COCONUT;
     public static EntityType<AshenMaskEntity> ASHEN_MASK;
     public static EntityType<AshenEntity> ASHEN;
-
     public static EntityType<WallItemEntity> WALL_ITEM;
 
     static {
@@ -26,13 +25,9 @@ public class TropicEntities<T extends Entity> {
                  */
 
         ASHEN_MASK = registerEntity("ashen_mask", ashenMask());
-
         ASHEN = registerEntity("ashen", ashen());
-
         EXPLODING_COCONUT = registerEntity("exploding_coconut", explodingCoconut());
-
         BAMBOO_ITEM_FRAME = registerEntity("bamboo_item_frame", bambooItemFrame());
-
         WALL_ITEM = registerEntity("wall_item", wallItem());
 
         //BAMBOO_ITEM_FRAME = registerEntityType("bamboo_item_frame", SpawnGroup.MISC, 0.5F, 0.5F, 8, 3, false, BambooItemFrameEntity::new);

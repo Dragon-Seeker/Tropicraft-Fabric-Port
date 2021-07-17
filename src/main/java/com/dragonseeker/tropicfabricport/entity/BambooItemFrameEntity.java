@@ -10,19 +10,14 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -55,8 +50,6 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 		setFacing(facing);
 	}
 
-
-
 	/*
 	@Override
 	public void dropHeldStack(Entity entityIn, boolean alwaysDrop) {
@@ -78,7 +71,7 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 		}
 	}
 
-
+	/*
 	@Override
 	@Nullable
 	public ItemEntity dropItem(ItemConvertible item) {
@@ -89,6 +82,7 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 			return this.dropItem(item, 0);
 		}
 	}
+	 */
 
 	@Override
 	public Packet<?> createSpawnPacket() {
@@ -105,26 +99,12 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 		packet.writeInt(getEntityId());
 		packet.writeUuid(getUuid());
 
+		//Entity Facing direction
 		packet.writeInt(getHorizontalFacing().getId());
 
 		return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
 
     }
-
-	/*
-    @Override
-    public void writeSpawnData(PacketByteBuf buffer) {
-        buffer.writeBlockPos(this.attachmentPos);
-        buffer.writeByte(facingDirection.getIndex());
-    }
-
-    @Override
-    public void readSpawnData(PacketByteBuf additionalData) {
-        this.attachmentPos = additionalData.readBlockPos();
-        updateFacingWithBoundingBox(Direction.byIndex(additionalData.readByte()));
-    }
-
-	 */
 
 	@Override
 	public ItemStack getHeldItemStack() {

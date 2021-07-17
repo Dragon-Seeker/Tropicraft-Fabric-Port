@@ -12,7 +12,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
 
-
 public class WallItemRenderer extends EntityRenderer<WallItemEntity> {
 
     public WallItemRenderer(final EntityRenderDispatcher entityRendererManager) {
