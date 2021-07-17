@@ -85,7 +85,13 @@ public class BlowGunItem extends RangedWeaponItem {
             look3f.rotate(quaternion);
             //look3f.transform(quaternion);
 
-            arrowEntity.setVelocity((double)look3f.getX(), (double)look3f.getY(), (double)look3f.getZ(), dmg, pitch); //shoot();
+            //TODO: Implement a breath in counter that determines either the speed and/or the damage
+            float blowCount = 1.0F;
+
+            arrowEntity.setDamage(dmg);
+            arrowEntity.setVelocity(look3f.getX(), look3f.getY(), look3f.getZ());
+            arrowEntity.pitch = pitch;
+            //arrowEntity.setVelocity((double)look3f.getX(), (double)look3f.getY(), (double)look3f.getZ(), dmg, pitch); //shoot();
 
             heldItem.damage(1, shooter, (i) -> i.sendToolBreakStatus(hand));
 
