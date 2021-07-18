@@ -4,8 +4,10 @@ import com.dragonseeker.tropicfabricport.block.blockentity.TropicBambooChestBloc
 import com.dragonseeker.tropicfabricport.client.models.MaskArmorProvider;
 import com.dragonseeker.tropicfabricport.client.renderers.*;
 import com.dragonseeker.tropicfabricport.block.testContainer.BoxChestScreen;
+import com.dragonseeker.tropicfabricport.item.AshenMaskItem;
 import com.dragonseeker.tropicfabricport.item.IColoredItem;
 import com.dragonseeker.tropicfabricport.registry.*;
+import com.google.common.collect.ImmutableCollection;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,6 +22,7 @@ import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.item.Item;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Environment(EnvType.CLIENT)
@@ -78,18 +81,19 @@ public class TropicFabricPortClient implements ClientModInitializer {
         ArmorRenderingRegistryImpl.registerModel();
          */
 
-        ArrayList<MaskArmorProvider> MASK_PROVIDER = new ArrayList<MaskArmorProvider>();
 
-        AtomicInteger i = new AtomicInteger();
-        i.set(0);
 
-        TropicItems.ASHEN_MASKS.values().forEach((maskItem) -> {
+
+        ArrayList<MaskArmorProvider> MASK_PROVIDER = new ArrayList<>();
+        final List<AshenMaskItem> values = TropicItems.ASHEN_MASKS.values().asList();
+        final int size = values.size();
+
+        for (int i = 0; i < size; i++) {
+            AshenMaskItem maskItem = values.get(i);
             MASK_PROVIDER.add(new MaskArmorProvider(maskItem.getMaskType()));
-            int currentIndex = i.getAndIncrement();
-            ArmorRenderingRegistry.registerModel(MASK_PROVIDER.get(currentIndex), maskItem);
-            ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(currentIndex), maskItem);
-        });
-
+            ArmorRenderingRegistry.registerModel(MASK_PROVIDER.get(i), maskItem);
+            ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
+        }
 
         /*
 	    @OnlyIn(Dist.CLIENT)
