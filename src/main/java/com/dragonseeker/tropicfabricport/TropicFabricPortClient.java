@@ -95,22 +95,6 @@ public class TropicFabricPortClient implements ClientModInitializer {
             ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
         }
 
-        /*
-	    @OnlyIn(Dist.CLIENT)
-	    @Nullable
-	    @Override
-	    public BipedEntityModel getArmorModel(final LivingEntity entityLiving, final ItemStack itemStack, final EquipmentSlot armorSlot, final BipedEntityModel model) {
-		    return armorSlot == EquipmentSlot.HEAD ? new PlayerHeadpieceRenderer(maskType.ordinal(), maskType.getXOffset(), maskType.getYOffset()) : null;
-	    }
-
-	    @Override
-        public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-            return TropicraftRenderUtils.getTextureEntity("ashen/mask").toString();
-        }
-	    */
-
-
-
         //RenderingRegistry.registerEntityRenderingHandler(TropicraftEntities.WALL_ITEM.get(), WallItemRenderer::new);
 
 
