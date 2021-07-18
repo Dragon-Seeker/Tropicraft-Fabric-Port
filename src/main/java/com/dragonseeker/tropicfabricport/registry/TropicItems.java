@@ -163,8 +163,8 @@ public class TropicItems {
     public static final Item BLOW_GUN = registerItem("blow_gun", new BlowGunItem(getDefaultProperties().maxCount(1)));
     public static final Item EXPLODING_COCONUT = registerItem("exploding_coconut", new ExplodingCoconutItem(getDefaultProperties()));
 
-    public static final ImmutableMap<AshenMasks, Item> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
-            .collect(Maps.<AshenMasks, AshenMasks, Item>toImmutableEnumMap(Function.identity(), type -> registerItem("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
+    public static final ImmutableMap<AshenMasks, AshenMaskItem> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
+            .collect(Maps.<AshenMasks, AshenMasks, AshenMaskItem>toImmutableEnumMap(Function.identity(), type -> registerItemMask("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
 
     /*
     public static final ImmutableMap<AshenMasks, RegistryObject<AshenMaskItem>> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
@@ -235,6 +235,12 @@ public class TropicItems {
     public static void init() {}
 
     public static Item registerItem(String id, Item item) {
+        Registry.register(Registry.ITEM, new Identifier(Tropicfabricport.MOD_ID, id), item);
+
+        return item;
+    }
+
+    public static AshenMaskItem registerItemMask(String id, AshenMaskItem item) {
         Registry.register(Registry.ITEM, new Identifier(Tropicfabricport.MOD_ID, id), item);
 
         return item;

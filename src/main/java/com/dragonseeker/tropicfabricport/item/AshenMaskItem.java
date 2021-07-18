@@ -1,20 +1,28 @@
 package com.dragonseeker.tropicfabricport.item;
 
+import com.dragonseeker.tropicfabricport.client.TropicraftRenderUtils;
+import com.dragonseeker.tropicfabricport.client.models.PlayerHeadpieceRenderer;
 import com.dragonseeker.tropicfabricport.entity.WallItemEntity;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class AshenMaskItem extends ArmorItem {
-    private final AshenMasks maskType;
+    public final AshenMasks maskType;
 
     public AshenMaskItem(ArmorMaterial armorMaterial, AshenMasks maskType, FabricItemSettings settings) {
         super(armorMaterial, EquipmentSlot.HEAD, settings);
@@ -58,6 +66,7 @@ public class AshenMaskItem extends ArmorItem {
     private boolean canPlace(PlayerEntity player, Direction direction, ItemStack heldStack, BlockPos pos) {
         return player.canPlaceOn(pos, direction, heldStack); //canPlayerEdit()
 	}
+
 
 
 	/*
