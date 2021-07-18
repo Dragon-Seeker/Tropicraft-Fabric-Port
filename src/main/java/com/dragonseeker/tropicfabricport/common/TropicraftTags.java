@@ -3,7 +3,9 @@ package com.dragonseeker.tropicfabricport.common;
 import com.dragonseeker.tropicfabricport.Tropicfabricport;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.data.server.BlockTagsProvider;
 import net.minecraft.item.Item;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 
@@ -47,6 +49,8 @@ public class TropicraftTags {
         }
 
          */
+
+
         static Tag.Identified<Block> modTag(String name) {
             return (Tag.Identified<Block>) TagRegistry.block(new Identifier(Tropicfabricport.MOD_ID, name));
         }

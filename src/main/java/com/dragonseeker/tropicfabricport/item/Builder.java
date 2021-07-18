@@ -33,5 +33,5 @@ public class Builder {
         TropicalMusicDiscItem musicDisc = new TropicalMusicDiscItem(type, getDefaultProperties().rarity(Rarity.RARE).maxCount(1));
         return musicDisc;
     }
-    
+
 }

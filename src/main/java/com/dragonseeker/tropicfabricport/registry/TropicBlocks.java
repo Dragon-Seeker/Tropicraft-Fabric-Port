@@ -8,7 +8,8 @@ import com.dragonseeker.tropicfabricport.block.plants.TropicTallPlant;
 import com.dragonseeker.tropicfabricport.block.Builder;
 import com.dragonseeker.tropicfabricport.item.TropicBlockItem;
 import com.dragonseeker.tropicfabricport.world.feature.tree.tropicBasicSaplingGenerator;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -21,8 +22,10 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.function.Function;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.dragonseeker.tropicfabricport.registry.TropicItems.registerBlockItem;
 
@@ -115,29 +118,29 @@ public class TropicBlocks {
 
     public static FabricBlockSettings FlowerPot = FabricBlockSettings.copyOf(BAMBOO_BUNDLE).breakInstantly().nonOpaque();
 
-    //public static final Block BAMBOO_FLOWER_POT = registerBlock("bamboo_flower_pot", Builder.BambooPot(Blocks.AIR));
+    public static final Block BAMBOO_FLOWER_POT = registerBlock("bamboo_flower_pot", Builder.BambooPot(Blocks.AIR));
 
     private static FabricBlockSettings FLOWERS_SETTINGS = FabricBlockSettings.of(Material.PLANT).sounds(BlockSoundGroup.GRASS).breakInstantly().noCollision();
 
-    public static final Block ACAI_VINE = registerBlock("acai_vine", new TropicFlower(StatusEffects.REGENERATION, 0, 7, 16, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block ANEMONE = registerBlock("anemone", new TropicFlower(StatusEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block BROMELIAD = registerBlock("bromeliad", new TropicFlower(StatusEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ACAI_VINE = registerBlock("acai_vine", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 7, 16, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ANEMONE = registerBlock("anemone", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block BROMELIAD = registerBlock("bromeliad", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block CANNA = registerBlock("canna", new TropicFlower(StatusEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block COMMELINA_DIFFUSA = registerBlock("commelina_diffusa", new TropicFlower(StatusEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block CROCOSMIA = registerBlock("crocosmia", new TropicFlower(StatusEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block CANNA = registerBlock("canna", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block COMMELINA_DIFFUSA = registerBlock("commelina_diffusa", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block CROCOSMIA = registerBlock("crocosmia", new TropicFlowerBlock(StatusEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block CROTON = registerBlock("croton", new TropicFlower(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block DRACAENA = registerBlock("dracaena", new TropicFlower(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block TROPICAL_FERN = registerBlock("tropical_fern", new TropicFlower(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block FOLIAGE = registerBlock("foliage", new TropicFlower(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block CROTON = registerBlock("croton", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block DRACAENA = registerBlock("dracaena", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block TROPICAL_FERN = registerBlock("tropical_fern", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block FOLIAGE = registerBlock("foliage", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block MAGIC_MUSHROOM = registerBlock("magic_mushroom", new TropicFlower(StatusEffects.REGENERATION, 0, 11, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block ORANGE_ANTHURIUM = registerBlock("orange_anthurium", new TropicFlower(StatusEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block MAGIC_MUSHROOM = registerBlock("magic_mushroom", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 11, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ORANGE_ANTHURIUM = registerBlock("orange_anthurium", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block ORCHID = registerBlock("orchid", new TropicFlower(StatusEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block PATHOS = registerBlock("pathos", new TropicFlower(StatusEffects.REGENERATION, 0, 15, 12, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block RED_ANTHURIUM = registerBlock("red_anthurium", new TropicFlower(StatusEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ORCHID = registerBlock("orchid", new TropicFlowerBlock(StatusEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block PATHOS = registerBlock("pathos", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 15, 12, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block RED_ANTHURIUM = registerBlock("red_anthurium", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
     /*
     public static final ImmutableMap<Flower, Block> FLOWERS = ImmutableMap.copyOf(
@@ -225,6 +228,60 @@ public class TropicBlocks {
 
     */
 
+    /*
+    public static final Map<TropicFlowerTest, TropicFlower> FLOWERS =
+            Arrays
+                    .<TropicFlowerTest>stream(TropicFlowerTest.values())
+                    .collect(Collectors.<TropicFlowerTest, TropicFlowerTest, TropicFlower, TropicFlower>toMap(Function.identity(),
+                            type -> registerBlock(type.getId(), Builder.flower(type)),
+                            (f1, f2) -> { throw new IllegalStateException(); },
+                            new EnumMap<>(TropicFlowerTest.class)));
+     */
+
+    /*
+    public static final ImmutableMap<TropicFlowerTest, Block> FLOWERS =
+            Arrays
+                    .stream(TropicFlowerTest.values())
+                    .collect(Maps.<TropicFlowerTest, TropicFlowerTest, Block>toImmutableEnumMap(Function.identity(), (type) -> registerBlock(type.getId(), Builder.flower(type))));
+
+
+     */
+
+    private static final Set<Block> POTTABLE_PLANTS = ImmutableSet.<Block>builder()
+            .add(PALM_SAPLING, MAHOGANY_SAPLING, GRAPEFRUIT_SAPLING, LEMON_SAPLING, LIME_SAPLING, ORANGE_SAPLING)
+            .add(IRIS)
+            .add(ACAI_VINE, ANEMONE, BROMELIAD, CANNA, COMMELINA_DIFFUSA, CROCOSMIA, CROTON, DRACAENA, TROPICAL_FERN, FOLIAGE, MAGIC_MUSHROOM, ORANGE_ANTHURIUM, ORCHID, PATHOS, RED_ANTHURIUM)
+            .build();
+
+    public static final List<Block> BAMBOO_POTTED_TROPICS_PLANTS = ImmutableList.copyOf(POTTABLE_PLANTS.stream()
+            .map(b -> registerNoItem("bamboo_potted_" + Registry.BLOCK.getId(b).getPath(), Builder.tropicraftPot(b)))
+            .collect(Collectors.toList()));
+
+    public static final List<Block> VANILLA_POTTED_TROPICS_PLANTS = ImmutableList.copyOf(POTTABLE_PLANTS.stream()
+            .map(b -> registerNoItem("potted_" + Registry.BLOCK.getId(b).getPath(), Builder.vanillaPot(b)))
+            .collect(Collectors.toList()));
+
+    public static final List<Block> BAMBOO_POTTED_VANILLA_PLANTS = ImmutableList.copyOf(
+            Stream.of(Blocks.OAK_SAPLING, Blocks.SPRUCE_SAPLING, Blocks.BIRCH_SAPLING, Blocks.JUNGLE_SAPLING,
+                    Blocks.ACACIA_SAPLING, Blocks.DARK_OAK_SAPLING, Blocks.FERN, Blocks.DANDELION, Blocks.POPPY,
+                    Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP,
+                    Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY, Blocks.CORNFLOWER, Blocks.LILY_OF_THE_VALLEY,
+                    Blocks.WITHER_ROSE, Blocks.RED_MUSHROOM, Blocks.BROWN_MUSHROOM, Blocks.DEAD_BUSH, Blocks.CACTUS)
+                    .map(b -> registerNoItem("bamboo_potted_" + Registry.BLOCK.getId(b).getPath(), Builder.tropicraftPot(b)))
+                    .collect(Collectors.toList()));
+
+    public static final List<Block> ALL_POTTED_PLANTS = ImmutableList.<Block>builder()
+            .addAll(BAMBOO_POTTED_TROPICS_PLANTS)
+            .addAll(VANILLA_POTTED_TROPICS_PLANTS)
+            .addAll(BAMBOO_POTTED_VANILLA_PLANTS)
+            .build();
+
+    private static Block registerNoItem(String id, Block block) {
+        Registry.register(Registry.BLOCK, new Identifier(Tropicfabricport.MOD_ID, id), block);
+        return block;
+    }
+
+
     public static Block registerBlock(String id, Block block) {
         if(block == BAMBOO_CHEST || block == COCONUT){
             Registry.register(Registry.BLOCK, new Identifier(Tropicfabricport.MOD_ID, id), block);
@@ -291,6 +348,8 @@ public class TropicBlocks {
 
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.IRIS, RenderLayer.getCutout());
 
+
+
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ACAI_VINE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ANEMONE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BROMELIAD, RenderLayer.getCutout());
@@ -306,6 +365,16 @@ public class TropicBlocks {
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ORCHID, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.PATHOS, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.RED_ANTHURIUM, RenderLayer.getCutout());
+
+
+        //ALL_POTTED_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BAMBOO_FLOWER_POT, RenderLayer.getCutout());
+
+        BAMBOO_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+        BAMBOO_POTTED_VANILLA_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+        VANILLA_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+
 
 
         //BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BAMBOO_CHEST, RenderLayer.get);

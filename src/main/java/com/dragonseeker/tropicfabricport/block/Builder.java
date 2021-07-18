@@ -1,8 +1,5 @@
 package com.dragonseeker.tropicfabricport.block;
 
-import com.dragonseeker.tropicfabricport.block.TropicSand;
-import com.dragonseeker.tropicfabricport.block.TropicStairsBlock;
-import com.dragonseeker.tropicfabricport.item.CocktailItem;
 import com.dragonseeker.tropicfabricport.registry.TropicBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
@@ -118,12 +115,22 @@ public class Builder {
     }
 
     //TropicBambooPot(Blocks.AIR, );
-    public static Block BambooPot(Block content) {
-        return new FlowerPotBlock(content, FabricBlockSettings.copyOf(TropicBlocks.FlowerPot).nonOpaque());
+    public static TropicBambooPot BambooPot(Block content) {
+        return new TropicBambooPot(content, FabricBlockSettings.copyOf(TropicBlocks.FlowerPot).nonOpaque());
     }
 
-    public static Block Flower(Flower flower, FabricBlockSettings settings) {
-        return new TropicFlower(flower, FabricBlockSettings.copyOf(settings));
+
+    public static TropicFlowerBlock flower(TropicFlowers type) {
+        return new TropicFlowerBlock(type.getEffect(), type.getEffectDuration(), type.getShape(), FabricBlockSettings.copyOf(Blocks.POPPY));
+    }
+
+
+    public static TropicBambooPot tropicraftPot(final Block block) {
+        return new TropicBambooPot(block, FabricBlockSettings.of(Material.DECORATION).strength(0.2F, 5.0F).sounds(BlockSoundGroup.BAMBOO));
+    }
+
+    public static FlowerPotBlock vanillaPot(final Block block) {
+        return new FlowerPotBlock(block, FabricBlockSettings.copyOf(Blocks.FLOWER_POT));
     }
 
 
