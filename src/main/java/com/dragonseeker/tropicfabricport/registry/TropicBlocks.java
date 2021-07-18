@@ -78,7 +78,7 @@ public class TropicBlocks {
     public static final Block CHUNK_STAIRS = registerBlock("chunk_stairs", Builder.Stairs(CHUNK));
 
     public static final Block COCONUT = registerBlock("coconut", new TropicraftCoconutBlock());
-    public static final Block COFFEE_BUSH = registerBlock("coffee_bush", new CoffeeBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).strength(0.15f).sounds(BlockSoundGroup.GRASS).noCollision()));//Was MaterialColor.GRASS
+    public static final Block COFFEE_BUSH = registerNoItem("coffee_bush", new CoffeeBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).strength(0.15f).sounds(BlockSoundGroup.GRASS).noCollision()));//Was MaterialColor.GRASS
 
 
     public static final Block BAMBOO_SLAB = registerBlock("bamboo_slab", Builder.Slab(BAMBOO_BUNDLE));
@@ -228,24 +228,7 @@ public class TropicBlocks {
 
     */
 
-    /*
-    public static final Map<TropicFlowerTest, TropicFlower> FLOWERS =
-            Arrays
-                    .<TropicFlowerTest>stream(TropicFlowerTest.values())
-                    .collect(Collectors.<TropicFlowerTest, TropicFlowerTest, TropicFlower, TropicFlower>toMap(Function.identity(),
-                            type -> registerBlock(type.getId(), Builder.flower(type)),
-                            (f1, f2) -> { throw new IllegalStateException(); },
-                            new EnumMap<>(TropicFlowerTest.class)));
-     */
 
-    /*
-    public static final ImmutableMap<TropicFlowerTest, Block> FLOWERS =
-            Arrays
-                    .stream(TropicFlowerTest.values())
-                    .collect(Maps.<TropicFlowerTest, TropicFlowerTest, Block>toImmutableEnumMap(Function.identity(), (type) -> registerBlock(type.getId(), Builder.flower(type))));
-
-
-     */
 
     private static final Set<Block> POTTABLE_PLANTS = ImmutableSet.<Block>builder()
             .add(PALM_SAPLING, MAHOGANY_SAPLING, GRAPEFRUIT_SAPLING, LEMON_SAPLING, LIME_SAPLING, ORANGE_SAPLING)
@@ -365,6 +348,8 @@ public class TropicBlocks {
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ORCHID, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.PATHOS, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.RED_ANTHURIUM, RenderLayer.getCutout());
+
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.COFFEE_BUSH, RenderLayer.getCutout());
 
 
         //ALL_POTTED_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));

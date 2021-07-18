@@ -13,17 +13,6 @@ public class TropicFlowerBlock extends FlowerBlock {
     public static StatusEffect baseEffect;
     public int effectDuration;
 
-    //private static AbstractBlock.Settings FLOWERS = FabricBlockSettings.of(Material.PLANT).sounds(BlockSoundGroup.GRASS).breakInstantly().noCollision();
-    //FabricBlockSettings.copyOf(FLOWERS)
-
-    public TropicFlowerBlock(Flower flower, FabricBlockSettings Settings) {
-        super(flower.getEffect(), flower.getEffectDuration(), Settings);
-        //this.baseEffect = baseEffect;
-        //this.effectDuration = effectDuration;
-        this.SHAPE = flower.getShape();
-        this.flower = flower;
-    }
-
     public TropicFlowerBlock(StatusEffect baseEffect, int effectDuration, FabricBlockSettings Settings) {
         //super(suspiciousStewEffect, effectDuration, settings);
         this(baseEffect, effectDuration, 7, Settings);
@@ -32,7 +21,6 @@ public class TropicFlowerBlock extends FlowerBlock {
     public TropicFlowerBlock(StatusEffect baseEffect, int effectDuration, int width, FabricBlockSettings Settings) {
         this(baseEffect, effectDuration, width, 15, Settings);
     }
-
 
     public TropicFlowerBlock(StatusEffect baseEffect, int effectDuration, int width, int height, FabricBlockSettings Settings) {
         super(baseEffect, effectDuration, Settings);
@@ -48,7 +36,6 @@ public class TropicFlowerBlock extends FlowerBlock {
         this.effectDuration = effectDuration;
         this.SHAPE = shape;
     }
-
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {

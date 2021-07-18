@@ -63,7 +63,7 @@ public class TropicItems {
     public static final Item RAW_FISH = registerItem("raw_fish", new Item(getDefaultProperties().food(TropicFood.RAW_FISH)));
     public static final Item COOKED_FISH = registerItem("cooked_fish", new Item(getDefaultProperties().food(TropicFood.COOKED_FISH)));
 
-    public static final Item RAW_COFFEE_BEAN = registerItem("raw_coffee_bean", new BlockItem(TropicBlocks.COFFEE_BUSH, getDefaultProperties()));
+    public static final Item RAW_COFFEE_BEAN = registerItem("raw_coffee_bean", new CoffeeBeanItem(TropicBlocks.COFFEE_BUSH, getDefaultProperties()));
     public static final Item ROASTED_COFFEE_BEAN = registerItem("roasted_coffee_bean", new Item(getDefaultProperties()));
     public static final Item COFFEE_BERRY = registerItem("coffee_berry", new Item(getDefaultProperties()));
     public static final Item BAMBOO_MUG = registerItem("bamboo_mug", new Item(getDefaultProperties()));

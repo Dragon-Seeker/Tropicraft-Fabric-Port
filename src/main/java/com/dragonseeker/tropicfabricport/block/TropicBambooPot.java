@@ -48,17 +48,22 @@ public class TropicBambooPot extends Block {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack possibleFloralItem = player.getStackInHand(hand);
         Item item = possibleFloralItem.getItem();
-        Block block = item instanceof BlockItem ? FLOWER_TO_POTTED.getOrDefault(((BlockItem)item).getBlock(), Blocks.AIR) : Blocks.AIR;
+
+        Block block;
+        if(item instanceof BlockItem){
+            block = FLOWER_TO_POTTED.getOrDefault(((BlockItem)item).getBlock(), Blocks.AIR);
+        }
+        else {
+            block = Blocks.AIR;
+        }
 
         boolean isAirBlock = block == Blocks.AIR;
         boolean isFlowerBlockAir = this.flora == Blocks.AIR;
-        System.out.println("Flower Block Being set!");
         if (isAirBlock != isFlowerBlockAir) {
             if (isFlowerBlockAir) {
                 world.setBlockState(pos, block.getDefaultState(), 3);
-
-                System.out.println("Flower Block has been set! I think");
                 player.incrementStat(Stats.POT_FLOWER);
+
                 if (!player.abilities.creativeMode) {
                     possibleFloralItem.decrement(1);
                 }
@@ -67,7 +72,9 @@ public class TropicBambooPot extends Block {
                 ItemStack currentFloraInPot = new ItemStack(this.flora);
                 if (possibleFloralItem.isEmpty()) {
                     player.setStackInHand(hand, currentFloraInPot);
-                } else if (!player.giveItemStack(currentFloraInPot)) {
+                }
+
+                else if (!player.giveItemStack(currentFloraInPot)) {
                     player.dropItem(currentFloraInPot, false);
                 }
 
@@ -75,7 +82,10 @@ public class TropicBambooPot extends Block {
             }
 
             return ActionResult.success(world.isClient);
-        } else {
+
+        }
+        else {
+
             return ActionResult.CONSUME;
         }
     }
@@ -83,12 +93,20 @@ public class TropicBambooPot extends Block {
     @Override
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return this.flora == Blocks.AIR ? super.getPickStack(world, pos, state) : new ItemStack(this.flora);
+        if(this.flora == Blocks.AIR ){
+            return super.getPickStack(world, pos, state);
+        }
+
+        return new ItemStack(this.flora);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction == Direction.DOWN && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        if(direction == Direction.DOWN && !state.canPlaceAt(world, pos)){
+            return Blocks.AIR.getDefaultState();
+        }
+
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
