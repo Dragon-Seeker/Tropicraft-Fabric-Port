@@ -1,6 +1,6 @@
 package com.dragonseeker.tropicfabricport.mixins;
 
-import com.dragonseeker.tropicfabricport.registry.TropicBlocks;
+import com.dragonseeker.tropicfabricport.common.registry.TropicBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PlantBlock;
 import net.minecraft.util.math.BlockPos;

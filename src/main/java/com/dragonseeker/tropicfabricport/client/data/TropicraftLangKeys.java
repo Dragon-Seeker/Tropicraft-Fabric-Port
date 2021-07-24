@@ -1,7 +1,7 @@
 package com.dragonseeker.tropicfabricport.client.data;
 
 import com.dragonseeker.tropicfabricport.Tropicfabricport;
-import com.dragonseeker.tropicfabricport.Util;
+import com.dragonseeker.tropicfabricport.common.Util;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 

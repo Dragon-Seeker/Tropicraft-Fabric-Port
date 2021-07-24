@@ -1,0 +1,82 @@
+package com.dragonseeker.tropicfabricport.common.drinks;
+
+import com.dragonseeker.tropicfabricport.common.registry.TropicItems;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
+import net.minecraft.util.Formatting;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Drink {
+	public static final Int2ObjectMap<Drink> DRINKS = new Int2ObjectOpenHashMap<>();
+	public static final Drink LEMONADE = new Drink(1, 0xfadb41, "lemonade", Formatting.YELLOW).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 1));
+	public static final Drink LIMEADE = new Drink(2, 0x84e88a, "limeade", Formatting.GREEN).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 1));
+	public static final Drink ORANGEADE = new Drink(3, 0xf3be36, "orangeade", Formatting.GOLD).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 1));
+	public static final Drink CAIPIRINHA = new Drink(4, 0x94ff36, "caipirinha", Formatting.GREEN).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 1)).setHasUmbrella(true);
+	public static final Drink BLACK_COFFEE = new Drink(5, 0x68442c, "black_coffee", Formatting.WHITE).addAction(new DrinkActionPotion(StatusEffects.REGENERATION, 5, 1)).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 2));
+	public static final Drink PINA_COLADA = new Drink(6, 0xefefef, "pina_colada", Formatting.GOLD).addAction(new DrinkActionPotion(StatusEffects.NAUSEA, 10, 0)).addAction(new DrinkAction() {
+        
+        @Override
+        public void onDrink(PlayerEntity player) {
+            if (!player.world.isClient() && isSunset(player.world)){//&& player.getRidingEntity() instanceof ChairEntity) {
+                //TropicraftWorldUtils.teleportPlayer((ServerPlayerEntity) player, TropicraftWorldUtils.TROPICS_DIMENSION);
+            }
+        }
+
+        private boolean isSunset(World world) {
+            long timeDay = world.getTimeOfDay();
+            return timeDay > 12200 && timeDay < 14000;
+        }
+    }).setAlwaysEdible(true);
+	public static final Drink COCONUT_WATER = new Drink(7, 0xdfdfdf, "coconut_water", Formatting.WHITE).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 1));
+	public static final Drink MAI_TAI = new Drink(8, 0xff772e, "mai_tai", Formatting.GOLD).addAction(new DrinkActionPotion(StatusEffects.NAUSEA, 5, 0));
+	public static final Drink COCKTAIL = new Drink(9, 0, "cocktail", Formatting.WHITE);
+
+	public int drinkId;
+	public int color;
+	public String name;
+	public boolean alwaysEdible;
+	public boolean hasUmbrella;
+	public Formatting textFormatting;
+	public List<DrinkAction> actions = new ArrayList<>();
+
+	public Drink(int id, int color, String name, Formatting textFormatting) {
+		DRINKS.put(id, this);
+		this.drinkId = id;
+		this.color = color;
+		this.name = name;
+		this.textFormatting = textFormatting;
+		this.alwaysEdible = true; // Set all of them always edible for now
+	}
+
+	public Drink setHasUmbrella(boolean has) {
+		this.hasUmbrella = has;
+		return this;
+	}
+
+	public Drink setAlwaysEdible(boolean edible) {
+		this.alwaysEdible = edible;
+		return this;
+	}
+
+	public Drink addAction(DrinkAction action) {
+		this.actions.add(action);
+		return this;
+	}
+
+	public void onDrink(PlayerEntity player) {
+		for (DrinkAction action: actions) {
+			action.onDrink(player);
+		}
+	}
+
+	public static boolean isDrink(final Item item) {
+        return TropicItems.COCKTAILS.values().stream().anyMatch(ri -> ri == item);
+    }
+}

@@ -1,9 +1,8 @@
 package com.dragonseeker.tropicfabricport;
 
-import com.dragonseeker.tropicfabricport.block.TropicFlowers;
-import com.dragonseeker.tropicfabricport.common.TropicraftTags;
-import com.dragonseeker.tropicfabricport.registry.*;
-import com.dragonseeker.tropicfabricport.sound.Sounds;
+import com.dragonseeker.tropicfabricport.client.data.TropicraftTags;
+import com.dragonseeker.tropicfabricport.common.registry.*;
+import com.dragonseeker.tropicfabricport.common.sound.Sounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
