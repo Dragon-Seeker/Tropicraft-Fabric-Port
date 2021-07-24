@@ -160,6 +160,10 @@ public class TropicTikiTorch extends Block {
                 world.setBlockState(pos2, world.getFluidState(pos2).getBlockState(), world.isClient ? 11 : 3);
             }
         }
+        if(section == TorchSection.UPPER){
+            super.afterBreak(world, player, pos, state, blockEntity, stack);
+            world.setBlockState(pos, world.getFluidState(pos).getBlockState(), world.isClient ? 11 : 3);
+        }
     }
 
     /*
