@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class TropicTikiTorch extends Block {
@@ -35,13 +37,6 @@ public class TropicTikiTorch extends Block {
             this.height = height;
         }
 
-        /*
-        @Override
-        public String getName() {
-            return this.name().toLowerCase();
-        }
-         */
-
         @Override
         public String toString() {
             return this.asString();
@@ -49,33 +44,19 @@ public class TropicTikiTorch extends Block {
 
         @Override
         public String asString() {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
-    };
+    }
 
     public static final EnumProperty<TorchSection> SECTION = EnumProperty.of("section", TorchSection.class);
-
-    /*
-    protected static final VoxelShape BASE_SHAPE = VoxelShapes.create(new AxisAlignedBB(0.4000000059604645D, 0.0D, 0.4000000059604645D, 0.6000000238418579D, 0.999999D, 0.6000000238418579D));
-    protected static final VoxelShape TOP_SHAPE = VoxelShapes.create(new AxisAlignedBB(0.4000000059604645D, 0.0D, 0.4000000059604645D, 0.6000000238418579D, 0.6000000238418579D, 0.6000000238418579D));
-     */
 
     protected static final VoxelShape BASE_SHAPE = VoxelShapes.cuboid(0.4000000059604645D, 0.0D, 0.4000000059604645D, 0.6000000238418579D, 0.999999D, 0.6000000238418579D);
     protected static final VoxelShape TOP_SHAPE = VoxelShapes.cuboid(0.4000000059604645D, 0.0D, 0.4000000059604645D, 0.6000000238418579D, 0.6000000238418579D, 0.6000000238418579D);
 
-
-
     public TropicTikiTorch() {
         super(FabricBlockSettings.copyOf(Blocks.TORCH));
         this.setDefaultState(getDefaultState().with(SECTION, TorchSection.UPPER));
-        StateManager.Builder<Block, BlockState> builder = new StateManager.Builder(this);
-        builder.add(SECTION);
-        //StateManager.Builder<Block, BlockState> builder = new StateManager.Builder(this);
-        //this.appendProperties(builder);
-        //this.stateManager = builder.build(Block::getDefaultState, BlockState::new);
-        //this.setDefaultState((BlockState)this.stateManager.getDefaultState());
     }
-
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -95,11 +76,11 @@ public class TropicTikiTorch extends Block {
     }
 
     @Override
-    @Deprecated
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) { //canPlaceAt
         if (sideCoversSmallSquare(world, pos.down(), Direction.UP)) { // can block underneath support torch
             return true;
-        } else { // if not, is the block underneath a lower 2/3 tiki torch segment?
+        }
+        else { // if not, is the block underneath a lower 2/3 tiki torch segment?
             BlockState blockstate = world.getBlockState(pos.down());
             return (blockstate.getBlock() == this && blockstate.get(SECTION) != TorchSection.UPPER) && super.canPlaceAt(state, world, pos); //canPlaceAt
         }
@@ -118,13 +99,37 @@ public class TropicTikiTorch extends Block {
     }
 
     @Override
-    @Deprecated
-    public BlockState getStateForNeighborUpdate(BlockState stateIn, Direction facing, BlockState facingState, WorldAccess world, BlockPos currentPos, BlockPos facingPos) {
-        if(facing.getAxis() == Direction.Axis.Y && !this.canPlaceAt(stateIn, world, currentPos)){
-            return Blocks.AIR.getDefaultState();
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos currentPos, BlockPos facingPos) {
+        if(facing.getAxis() == Direction.Axis.Y){
+            if(state.get(SECTION) == TorchSection.UPPER){
+                return !state.canPlaceAt(world, currentPos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, facing, neighborState, world, currentPos, facingPos);
+            }
+
+            else{
+                return !state.canPlaceAt(world, currentPos) || (neighborState == Blocks.AIR.getDefaultState()) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, facing, neighborState, world, currentPos, facingPos);
+            }
         }
-        else
-            return super.getStateForNeighborUpdate(stateIn, facing, facingState, world, currentPos, facingPos);
+
+        else{
+            return super.getStateForNeighborUpdate(state, facing, neighborState, world, currentPos, facingPos);
+        }
+
+
+        /*
+        if(facing.getAxis() == Direction.Axis.Y){
+            if(state.get(SECTION) == TorchSection.UPPER){
+                return !state.canPlaceAt(world, currentPos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, facing, neighborState, world, currentPos, facingPos);
+            }
+
+            else{
+                return !state.canPlaceAt(world, currentPos) || (neighborState == Blocks.AIR.getDefaultState()) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, facing, neighborState, world, currentPos, facingPos);
+            }
+        }
+
+        else{
+            return super.getStateForNeighborUpdate(state, facing, neighborState, world, currentPos, facingPos);
+        }
+         */
     }
 
     @Override
@@ -142,7 +147,6 @@ public class TropicTikiTorch extends Block {
         return state.getBlock().isIn(BlockTags.FENCES) || state.getBlock().isIn(BlockTags.WALLS);
     }
 
-
     @Override
     public void afterBreak(World world, PlayerEntity player, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack stack) {
         TorchSection section = state.get(SECTION);
@@ -152,6 +156,7 @@ public class TropicTikiTorch extends Block {
             BlockState state2 = world.getBlockState(pos2);
             if (state2.getBlock() == this && state2.get(SECTION) == otherSection) {
                 super.afterBreak(world, player, pos2, state2, blockEntity, stack);
+                //world.setBlockState(pos2, Blocks.AIR.getDefaultState(), 35);
                 world.setBlockState(pos2, world.getFluidState(pos2).getBlockState(), world.isClient ? 11 : 3);
             }
         }
@@ -178,34 +183,6 @@ public class TropicTikiTorch extends Block {
         return ret;
     }
      */
-
-
-    //FIXME: Most definitely not working as this is just setting the sections to air is my guess but the block is destroyed
-    @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient) {
-            if (player.isCreative()) {
-                TorchSection section = state.get(SECTION);
-                BlockPos base = pos.down(section.height);
-                for (TorchSection otherSection : TorchSection.values()) {
-                    BlockPos pos2 = base.up(otherSection.height);
-                    BlockState state2 = world.getBlockState(pos2);
-                    if (state2.getBlock() == this && state2.get(SECTION) == otherSection) {
-                        if (player.isCreative()) {
-                            //world.setBlockState(pos2, Blocks.AIR.getDefaultState(), 35);
-                            world.syncWorldEvent(player, 2001, pos2, Block.getRawIdFromState(state2));
-                        } else {
-                            this.dropStacks(state2, world, pos2, (BlockEntity) null, player, player.getMainHandStack());
-
-                        }
-                    }
-                }
-            }
-
-            super.onBreak(world, pos, state, player);
-        }
-    }
-
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random rand) { //randomTick or scheduledTick
