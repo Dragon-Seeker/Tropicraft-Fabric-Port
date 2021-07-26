@@ -1,11 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.dragonseeker.tropicfabricport.mixins",
+  "package": "net.tropicraftFabric.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "TropicraftPlantableMixins",
-    "ItemFrameEntityInvoker"
+    "ItemFrameEntityInvoker",
+    "SeaTurtleInvoker",
+    "SeaTurtleAccessor"
   ],
   "client": [
   ],

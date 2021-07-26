@@ -22,10 +22,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.dragonseeker.tropicfabricport.Tropicfabricport"
+      "net.tropicraftFabric.Tropicraft"
     ],
     "client": [
-      "com.dragonseeker.tropicfabricport.client.TropicFabricPortClient"
+      "net.tropicraftFabric.client.TropicraftClient"
     ]
   },
   "mixins": [
