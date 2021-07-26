@@ -2,6 +2,7 @@ package net.tropicraftFabric.common.item;
 
 import net.tropicraftFabric.Tropicraft;
 import net.tropicraftFabric.common.drinks.Drink;
+import net.tropicraftFabric.common.drinks.MixerRecipes;
 import net.tropicraftFabric.common.entity.placeable.BeachFloatEntity;
 import net.tropicraftFabric.common.entity.placeable.ChairEntity;
 import net.tropicraftFabric.common.entity.placeable.FurnitureEntity;
@@ -25,7 +26,7 @@ public class Builder {
 
     public static CocktailItem cocktail(final Drink drink) {
         CocktailItem ret = new CocktailItem(drink, getDefaultProperties().maxDamage(0).maxCount(1));
-        //MixerRecipes.setDrinkItem(drink, ret);
+        MixerRecipes.setDrinkItem(drink, ret);
         return ret;
 
     }

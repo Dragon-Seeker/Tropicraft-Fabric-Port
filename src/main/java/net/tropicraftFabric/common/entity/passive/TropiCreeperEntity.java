@@ -225,7 +225,7 @@ public class TropiCreeperEntity extends PathAwareEntity {
                                                         TropicBlocks.PATHOS,
                                                         TropicBlocks.RED_ANTHURIUM);
 
-                    BlockState state = SMALL_FLOWERS.get(random.nextInt(SMALL_FLOWERS.size()) - 1).getDefaultState(); //.Blocks.SMALL_FLOWERS.getRandom(random).getDefaultState();
+                    BlockState state = SMALL_FLOWERS.get(random.nextInt(SMALL_FLOWERS.size())).getDefaultState(); //.Blocks.SMALL_FLOWERS.getRandom(random).getDefaultState();
                     if (state.canPlaceAt(world, attempt)) {
                         world.setBlockState(attempt, state);
                     }
