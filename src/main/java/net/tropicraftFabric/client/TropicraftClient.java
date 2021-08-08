@@ -11,14 +11,19 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.SkyProperties;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.dimension.DimensionType;
 import net.tropicraftFabric.client.blockEntity.BambooChestBlockEntityRenderer;
 import net.tropicraftFabric.client.entity.models.MaskArmorProvider;
 import net.tropicraftFabric.client.entity.renderers.*;
 import net.tropicraftFabric.common.block.blockentity.TropicBambooChestBlockEntity;
 import net.tropicraftFabric.common.block.testContainer.BoxChestScreen;
+import net.tropicraftFabric.common.dimension.TropicraftDimension;
 import net.tropicraftFabric.common.item.AshenMaskItem;
 import net.tropicraftFabric.common.item.IColoredItem;
 import net.tropicraftFabric.common.registry.*;
@@ -55,6 +60,20 @@ public class TropicraftClient implements ClientModInitializer {
             ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
         }
 
+
+
+        SkyProperties.BY_IDENTIFIER.put(TropicraftDimension.WORLD.getValue(), new SkyProperties(192.0F, true, SkyProperties.SkyType.NORMAL, false, false) {
+            @Override
+            public Vec3d adjustFogColor(Vec3d color, float brightness) {
+                return color.multiply(brightness * 0.94F + 0.06F, brightness * 0.94F + 0.06F, brightness * 0.91F + 0.09F);
+            }
+
+            @Override
+            public boolean useThickFog(int x, int z) {
+                return false;
+            }
+        });
+
     }
 
     public static void itemColorinit(){
@@ -75,53 +94,53 @@ public class TropicraftClient implements ClientModInitializer {
 
     public static void setupBlockRenderLayers() {
 
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.THATCH_STAIRS_FUZZY, RenderLayer.getCutoutMipped());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.THATCH_STAIRS_FUZZY, RenderLayer.getCutoutMipped());
 
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BAMBOO_DOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.PALM_DOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.MAHOGANY_DOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.THATCH_DOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.BAMBOO_DOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.PALM_DOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.MAHOGANY_DOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.THATCH_DOOR, RenderLayer.getCutout());
 
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BAMBOO_TRAPDOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.PALM_TRAPDOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.MAHOGANY_TRAPDOOR, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.THATCH_TRAPDOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.BAMBOO_TRAPDOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.PALM_TRAPDOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.MAHOGANY_TRAPDOOR, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.THATCH_TRAPDOOR, RenderLayer.getCutout());
 
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BAMBOO_FLOWER_POT, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BAMBOO_LADDER, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.TIKI_TORCH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.BAMBOO_FLOWER_POT, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.BAMBOO_LADDER, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.TIKI_TORCH, RenderLayer.getCutout());
 
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.PINEAPPLE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.COCONUT, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.IRIS, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.COFFEE_BUSH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.PINEAPPLE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.COCONUT, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.IRIS, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.COFFEE_BUSH, RenderLayer.getCutout());
 
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ACAI_VINE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ANEMONE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.BROMELIAD, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.CANNA, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.COMMELINA_DIFFUSA, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.CROCOSMIA, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.CROTON, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.DRACAENA, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.TROPICAL_FERN, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.FOLIAGE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.MAGIC_MUSHROOM, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ORANGE_ANTHURIUM, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ORCHID, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.PATHOS, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.RED_ANTHURIUM, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.ACAI_VINE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.ANEMONE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.BROMELIAD, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.CANNA, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.COMMELINA_DIFFUSA, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.CROCOSMIA, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.CROTON, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.DRACAENA, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.TROPICAL_FERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.FOLIAGE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.MAGIC_MUSHROOM, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.ORANGE_ANTHURIUM, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.ORCHID, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.PATHOS, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.RED_ANTHURIUM, RenderLayer.getCutout());
 
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.GRAPEFRUIT_SAPLING, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.LEMON_SAPLING, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.LIME_SAPLING, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.ORANGE_SAPLING, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.MAHOGANY_SAPLING, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(TropicBlocks.PALM_SAPLING, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.GRAPEFRUIT_SAPLING, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.LEMON_SAPLING, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.LIME_SAPLING, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.ORANGE_SAPLING, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.MAHOGANY_SAPLING, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.PALM_SAPLING, RenderLayer.getCutout());
 
-        TropicBlocks.BAMBOO_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
-        TropicBlocks.BAMBOO_POTTED_VANILLA_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
-        TropicBlocks.VANILLA_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+        TropicraftBlocks.BAMBOO_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+        TropicraftBlocks.BAMBOO_POTTED_VANILLA_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+        TropicraftBlocks.VANILLA_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
     }
 
 
@@ -170,7 +189,7 @@ public class TropicraftClient implements ClientModInitializer {
 
     public static void setupBlockEntityRenderers() {
         BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
-        BuiltinItemRendererRegistry.INSTANCE.register(TropicBlocks.BAMBOO_CHEST, (itemStack, transform, stack, source, light, overlay) ->
+        BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST, (itemStack, transform, stack, source, light, overlay) ->
                 BlockEntityRenderDispatcher.INSTANCE.renderEntity(new TropicBambooChestBlockEntity(), stack, source, light, overlay));
 
         /*

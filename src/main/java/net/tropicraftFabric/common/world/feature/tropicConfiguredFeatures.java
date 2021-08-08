@@ -1,7 +1,7 @@
 package net.tropicraftFabric.common.world.feature;
 
 import net.tropicraftFabric.Constants;
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -29,8 +29,8 @@ public class tropicConfiguredFeatures {
         public static final TreeFeatureConfig BASIC_TEST_TREE_CONFIG = (
                 new TreeFeatureConfig.Builder(
                         new SimpleBlockStateProvider(
-                                TropicBlocks.MAHOGANY_LOG.getDefaultState()),
-                        new SimpleBlockStateProvider(TropicBlocks.MAHOGANY_LEAVES.getDefaultState()),
+                                TropicraftBlocks.MAHOGANY_LOG.getDefaultState()),
+                        new SimpleBlockStateProvider(TropicraftBlocks.MAHOGANY_LEAVES.getDefaultState()),
                             new BlobFoliagePlacer(UniformIntDistribution.of(2),
                                         UniformIntDistribution.of(0), 3),
                             new StraightTrunkPlacer(4, 2, 0),

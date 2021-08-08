@@ -1,6 +1,6 @@
 package net.tropicraftFabric.common.block;
 
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
@@ -116,7 +116,7 @@ public class Builder {
 
     //TropicBambooPot(Blocks.AIR, );
     public static TropicBambooPot BambooPot(Block content) {
-        return new TropicBambooPot(content, FabricBlockSettings.copyOf(TropicBlocks.FlowerPot).nonOpaque());
+        return new TropicBambooPot(content, FabricBlockSettings.copyOf(TropicraftBlocks.FlowerPot).nonOpaque());
     }
 
 

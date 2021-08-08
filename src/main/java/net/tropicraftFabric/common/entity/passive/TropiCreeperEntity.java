@@ -28,7 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.tropicraftFabric.common.entity.ai.TropiCreeperSwellGoal;
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 
 import java.util.Collection;
 import java.util.List;
@@ -209,21 +209,21 @@ public class TropiCreeperEntity extends PathAwareEntity {
                     }
                     attempt = attempt.up();
 
-                    List<Block> SMALL_FLOWERS = List.of(TropicBlocks.ACAI_VINE,
-                                                        TropicBlocks.ANEMONE,
-                                                        TropicBlocks.BROMELIAD,
-                                                        TropicBlocks.CANNA,
-                                                        TropicBlocks.COMMELINA_DIFFUSA,
-                                                        TropicBlocks.CROCOSMIA,
-                                                        TropicBlocks.CROTON,
-                                                        TropicBlocks.DRACAENA,
-                                                        TropicBlocks.TROPICAL_FERN,
-                                                        TropicBlocks.FOLIAGE,
-                                                        TropicBlocks.MAGIC_MUSHROOM,
-                                                        TropicBlocks.ORANGE_ANTHURIUM,
-                                                        TropicBlocks.ORCHID,
-                                                        TropicBlocks.PATHOS,
-                                                        TropicBlocks.RED_ANTHURIUM);
+                    List<Block> SMALL_FLOWERS = List.of(TropicraftBlocks.ACAI_VINE,
+                                                        TropicraftBlocks.ANEMONE,
+                                                        TropicraftBlocks.BROMELIAD,
+                                                        TropicraftBlocks.CANNA,
+                                                        TropicraftBlocks.COMMELINA_DIFFUSA,
+                                                        TropicraftBlocks.CROCOSMIA,
+                                                        TropicraftBlocks.CROTON,
+                                                        TropicraftBlocks.DRACAENA,
+                                                        TropicraftBlocks.TROPICAL_FERN,
+                                                        TropicraftBlocks.FOLIAGE,
+                                                        TropicraftBlocks.MAGIC_MUSHROOM,
+                                                        TropicraftBlocks.ORANGE_ANTHURIUM,
+                                                        TropicraftBlocks.ORCHID,
+                                                        TropicraftBlocks.PATHOS,
+                                                        TropicraftBlocks.RED_ANTHURIUM);
 
                     BlockState state = SMALL_FLOWERS.get(random.nextInt(SMALL_FLOWERS.size())).getDefaultState(); //.Blocks.SMALL_FLOWERS.getRandom(random).getDefaultState();
                     if (state.canPlaceAt(world, attempt)) {

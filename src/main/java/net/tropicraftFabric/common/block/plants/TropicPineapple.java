@@ -1,6 +1,6 @@
 package net.tropicraftFabric.common.block.plants;
 
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.*;
@@ -48,7 +48,7 @@ public class TropicPineapple extends TallFlowerBlock {
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return state.getBlock() == TropicBlocks.PINEAPPLE &&
+        return state.getBlock() == TropicraftBlocks.PINEAPPLE &&
                state.get(TropicPineapple.HALF) == DoubleBlockHalf.LOWER &&
                world.getBlockState(pos.up()).isAir();
     }
@@ -134,7 +134,7 @@ public class TropicPineapple extends TallFlowerBlock {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView worldIn, BlockPos pos) {
         if (state.get(HALF) == DoubleBlockHalf.UPPER) {
-            return worldIn.getBlockState(pos.down()).getBlock() == TropicBlocks.PINEAPPLE;
+            return worldIn.getBlockState(pos.down()).getBlock() == TropicraftBlocks.PINEAPPLE;
         } else {
             return canPlantOnTop(state, worldIn, pos);
         }

@@ -2,7 +2,7 @@ package net.tropicraftFabric.common.entity.passive;
 
 import net.tropicraftFabric.common.drinks.Drink;
 import net.tropicraftFabric.common.item.CocktailItem;
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.tropicraftFabric.common.registry.TropicraftEntities;
 import net.tropicraftFabric.common.registry.TropicraftItems;
 import net.fabricmc.api.EnvType;
@@ -173,8 +173,8 @@ public class CowktailEntity extends CowEntity implements Shearable {
 	 */
 
 	public enum Type {
-		IRIS("iris", TropicBlocks.IRIS.getDefaultState().with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER)),
-		ANEMONE("anemone", TropicBlocks.ANEMONE.getDefaultState());
+		IRIS("iris", TropicraftBlocks.IRIS.getDefaultState().with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER)),
+		ANEMONE("anemone", TropicraftBlocks.ANEMONE.getDefaultState());
 
 		private final String name;
 		private final BlockState renderState;

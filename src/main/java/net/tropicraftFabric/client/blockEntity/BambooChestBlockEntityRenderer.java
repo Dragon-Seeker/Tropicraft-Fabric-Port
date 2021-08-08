@@ -2,7 +2,7 @@ package net.tropicraftFabric.client.blockEntity;
 
 import net.tropicraftFabric.Constants;
 import net.tropicraftFabric.common.block.blockentity.TropicBambooChestBlockEntity;
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.tropicraftFabric.common.registry.TropicraftItems;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
@@ -182,9 +182,9 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
         };
 
         bambooChestLayer = new RenderLayer[] {
-                RenderLayer.getEntityCutout(new Identifier(Constants.MODID, "textures/entity/chest/" + Registry.BLOCK.getId(TropicBlocks.BAMBOO_CHEST).getPath() + "_normal.png")),
-                RenderLayer.getEntityCutout(new Identifier(Constants.MODID, "textures/entity/chest/" + Registry.BLOCK.getId(TropicBlocks.BAMBOO_CHEST).getPath() + "_left.png")),
-                RenderLayer.getEntityCutout(new Identifier(Constants.MODID, "textures/entity/chest/" + Registry.BLOCK.getId(TropicBlocks.BAMBOO_CHEST).getPath() + "_right.png"))
+                RenderLayer.getEntityCutout(new Identifier(Constants.MODID, "textures/entity/chest/" + Registry.BLOCK.getId(TropicraftBlocks.BAMBOO_CHEST).getPath() + "_normal.png")),
+                RenderLayer.getEntityCutout(new Identifier(Constants.MODID, "textures/entity/chest/" + Registry.BLOCK.getId(TropicraftBlocks.BAMBOO_CHEST).getPath() + "_left.png")),
+                RenderLayer.getEntityCutout(new Identifier(Constants.MODID, "textures/entity/chest/" + Registry.BLOCK.getId(TropicraftBlocks.BAMBOO_CHEST).getPath() + "_right.png"))
         };
     }
 

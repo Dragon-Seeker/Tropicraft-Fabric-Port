@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import static net.tropicraftFabric.common.registry.TropicraftItems.registerBlockItem;
 
-public class TropicBlocks {
+public class TropicraftBlocks {
     /*
     public static final RegistryObject<PortalWaterBlock> PORTAL_WATER = registerNoItem(
             "portal_water", () -> new PortalWaterBlock(Block.Properties.create(Material.WATER).noDrops()));
@@ -31,6 +31,7 @@ public class TropicBlocks {
 
     public static final Block CHUNK = registerBlock("chunk", Builder.tropicBlock(Material.STONE, MapColor.BLACK,6.0F,30F));
     public static final Block CHUNK_WALL = registerBlock("chunk_wall", Builder.Wall(CHUNK));
+    public static final VolcanoBlock VOLCANO = registerNoItem("volcano", new VolcanoBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).dropsNothing()));
 
     public static final Block AZURITE_ORE = registerBlock("azurite_ore", new TropicOreBlock(MapColor.GRAY));
     public static final Block EUDIALYTE_ORE = registerBlock("eudialyte_ore", new TropicOreBlock(MapColor.GRAY));
@@ -72,7 +73,7 @@ public class TropicBlocks {
     public static final Block CHUNK_STAIRS = registerBlock("chunk_stairs", Builder.Stairs(CHUNK));
 
     public static final Block COCONUT = registerBlock("coconut", new TropicraftCoconutBlock());
-    public static final Block COFFEE_BUSH = registerNoItem("coffee_bush", new CoffeeBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).strength(0.15f).sounds(BlockSoundGroup.GRASS).noCollision()));//Was MaterialColor.GRASS
+    public static final CoffeeBushBlock COFFEE_BUSH = registerNoItem("coffee_bush", new CoffeeBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).strength(0.15f).sounds(BlockSoundGroup.GRASS).noCollision()));//Was MaterialColor.GRASS
 
 
     public static final Block BAMBOO_SLAB = registerBlock("bamboo_slab", Builder.Slab(BAMBOO_BUNDLE));
@@ -160,12 +161,12 @@ public class TropicBlocks {
 
     private static AbstractBlock.Settings SAPLINGS = FabricBlockSettings.of(Material.PLANT).sounds(BlockSoundGroup.GRASS).breakInstantly().ticksRandomly().noCollision().nonOpaque();
 
-    public final static Block GRAPEFRUIT_SAPLING = registerBlock("grapefruit_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static Block LEMON_SAPLING = registerBlock("lemon_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static Block LIME_SAPLING = registerBlock("lime_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static Block ORANGE_SAPLING = registerBlock("orange_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static Block MAHOGANY_SAPLING = registerBlock("mahogany_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static Block PALM_SAPLING = registerBlock("palm_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock GRAPEFRUIT_SAPLING = registerBlock("grapefruit_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock LEMON_SAPLING = registerBlock("lemon_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock LIME_SAPLING = registerBlock("lime_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock ORANGE_SAPLING = registerBlock("orange_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock MAHOGANY_SAPLING = registerBlock("mahogany_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock PALM_SAPLING = registerBlock("palm_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
 
     /*
     public static final RegistryObject<SaplingBlock> GRAPEFRUIT_SAPLING = register("grapefruit_sapling", Builder.sapling(TropicraftTrees.GRAPEFRUIT));
@@ -252,13 +253,33 @@ public class TropicBlocks {
             .addAll(BAMBOO_POTTED_VANILLA_PLANTS)
             .build();
 
-    private static Block registerNoItem(String id, Block block) {
+
+    private static <T extends Block> T registerNoItem(String id, T block) {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
         return block;
     }
 
+    private static CoffeeBushBlock registerNoItemCoffee(String id, CoffeeBushBlock block) {
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
+        return block;
+    }
 
+    /*
     public static Block registerBlock(String id, Block block) {
+        if(block == BAMBOO_CHEST || block == COCONUT){
+            Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
+        }
+
+        else {
+            Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
+            registerBlockItem(id, new TropicBlockItem(block));
+        }
+
+        return block;
+    }
+     */
+
+    public static <T extends Block> T registerBlock(String id, T block) {
         if(block == BAMBOO_CHEST || block == COCONUT){
             Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
         }

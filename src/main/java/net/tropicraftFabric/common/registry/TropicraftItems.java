@@ -28,7 +28,7 @@ import static net.tropicraftFabric.common.item.Builder.getDefaultProperties;
 public class TropicraftItems {
     //public static BlockItem COCONUT = new TropicBlockItem(TropicBlocks.COCONUT);
 
-    public static BlockItem BAMBOO_CHEST = new TropicBlockItem(TropicBlocks.BAMBOO_CHEST);
+    public static BlockItem BAMBOO_CHEST = new TropicBlockItem(TropicraftBlocks.BAMBOO_CHEST);
 
     public static final Item AZURITE = registerItem("azurite_gem", new TropicItem());
     public static final Item EUDIALYTE = registerItem("eudialyte_gem", new TropicItem());
@@ -66,7 +66,7 @@ public class TropicraftItems {
     public static final Item RAW_FISH = registerItem("raw_fish", new Item(getDefaultProperties().food(TropicFood.RAW_FISH)));
     public static final Item COOKED_FISH = registerItem("cooked_fish", new Item(getDefaultProperties().food(TropicFood.COOKED_FISH)));
 
-    public static final Item RAW_COFFEE_BEAN = registerItem("raw_coffee_bean", new CoffeeBeanItem(TropicBlocks.COFFEE_BUSH, getDefaultProperties()));
+    public static final Item RAW_COFFEE_BEAN = registerItem("raw_coffee_bean", new CoffeeBeanItem(TropicraftBlocks.COFFEE_BUSH, getDefaultProperties()));
     public static final Item ROASTED_COFFEE_BEAN = registerItem("roasted_coffee_bean", new Item(getDefaultProperties()));
     public static final Item COFFEE_BERRY = registerItem("coffee_berry", new Item(getDefaultProperties()));
     public static final Item BAMBOO_MUG = registerItem("bamboo_mug", new Item(getDefaultProperties()));
