@@ -21,6 +21,8 @@ import net.tropicraftFabric.common.dimension.chunk.TropicraftChunkGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
 import java.util.function.Supplier;
 
@@ -72,7 +74,28 @@ public class TropicraftDimension {
     @SuppressWarnings("unchecked")
     public static void addDefaultDimensionKey() {
         //Field dimensionKeysField = ObfuscationReflectionHelper.findField(DimensionOptions.class, "field_236056_e_");
-        DimensionOptions.BASE_DIMENSIONS.add(DIMENSION);
+
+        Field dimensionKeysField = null;
+
+        try{
+            dimensionKeysField = DimensionOptions.class.getField("BASE_DIMENSIONS");
+
+        } catch(NoSuchFieldException e){
+           LOGGER.error("Failed to find Dimension Options to add tropics", e);
+        }
+
+        try{
+            LinkedHashSet<RegistryKey<DimensionOptions>> keys = (LinkedHashSet<RegistryKey<DimensionOptions>>) dimensionKeysField.get(null);
+            keys.add(DIMENSION);
+
+        } catch(IllegalAccessException e){
+            LOGGER.error("Failed to add tropics as a default dimension key", e);
+        }
+
+
+
+
+        //DimensionOptions.BASE_DIMENSIONS.add(DIMENSION);
 
     }
 

@@ -29,9 +29,10 @@ public class WorldSettingsImportMixin {
     /**
      * Add the tropicraft dimension to both new worlds and existing worlds when they get loaded.
      */
-    @Inject(method = "loadToRegistry(Lnet/minecraft/util/registry/SimpleRegistry;Lnet/minecraft/util/RegistryKey;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/DataResult;", at = @At("HEAD"))
+    //@Inject(method = "loadToRegistry(Lnet/minecraft/util/registry/SimpleRegistry;Lnet/minecraft/util/RegistryKey;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/DataResult;", at = @At("HEAD"))
+    @Inject(at = @At("HEAD"), method = "loadToRegistry")
     @SuppressWarnings("unchecked")
-    protected void loadToRegistry(SimpleRegistry<?> registry, RegistryKey<?> registryKey, Codec<?> codec, CallbackInfoReturnable<DataResult<SimpleRegistry<?>>> ci) {
+    protected <E> void loadToRegistry(SimpleRegistry<E> registry, RegistryKey<E> registryKey, Codec<E> codec, CallbackInfoReturnable<DataResult<SimpleRegistry<E>>> ci) {
         if (registryKey == Registry.DIMENSION_KEY && registry.get(TropicraftDimension.ID) == null) {
             this.addDimensions((SimpleRegistry<DimensionOptions>) registry);
         }

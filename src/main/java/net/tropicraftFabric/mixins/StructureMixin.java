@@ -38,8 +38,9 @@ public abstract class StructureMixin implements StructureExtensions {
         cir.setReturnValue(true);
     }
 
+    //TODO: Issue
     @Redirect(method = "place(Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/structure/StructurePlacementData;Ljava/util/Random;I)Z",
-    at = @At(value = "INVOKE",target = "Lnet/minecraft/structure/Structure;process(Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/structure/StructurePlacementData;Ljava/util/List;)Ljava/util/List"))
+    at = @At(value = "INVOKE", target = "Lnet/minecraft/structure/Structure;process(Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/structure/StructurePlacementData;Ljava/util/List;)Ljava/util/List"))
     public List<Structure.StructureBlockInfo> tropic$proceesCall(WorldAccess world, BlockPos blockPos, BlockPos blockPos2, StructurePlacementData placementSettings, List<Structure.StructureBlockInfo> list, @Nullable Structure structure, CallbackInfoReturnable<Boolean> cir) {
         return tropic$process(world, blockPos, blockPos2, placementSettings, list);//, structure);
         //cir.setReturnValue(true);
