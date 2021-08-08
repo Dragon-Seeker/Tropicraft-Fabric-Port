@@ -84,7 +84,7 @@ public interface StructureExtensions {
     }
 
 
-    default List<Structure.StructureBlockInfo> tropic$process(WorldAccess world, BlockPos pos, BlockPos blockPos, StructurePlacementData placementData, List<Structure.StructureBlockInfo> list){ //, @Nullable Structure structure) {
+    default List<Structure.StructureBlockInfo> tropic$process(WorldAccess world, BlockPos pos, BlockPos blockPos, StructurePlacementData placementData, List<Structure.StructureBlockInfo> list){//, @Nullable Structure structure) {
         List<Structure.StructureBlockInfo> list2 = Lists.newArrayList();
         Iterator var6 = list.iterator();
 
@@ -104,7 +104,7 @@ public interface StructureExtensions {
                 }
 
                 else if(processor instanceof SteepPathProcessor) {
-                    structureBlockInfo2 = ((SteepPathProcessor)processor).process(world, pos, blockPos, structureBlockInfo, structureBlockInfo2, placementData, (Structure) this);
+                    structureBlockInfo2 = ((SteepPathProcessor)processor).process(world, pos, blockPos, structureBlockInfo, structureBlockInfo2, placementData, (Structure)this );
                 }
 
                 else {

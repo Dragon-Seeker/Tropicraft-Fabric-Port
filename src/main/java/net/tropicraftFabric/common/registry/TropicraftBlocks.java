@@ -24,10 +24,10 @@ import java.util.stream.Stream;
 import static net.tropicraftFabric.common.registry.TropicraftItems.registerBlockItem;
 
 public class TropicraftBlocks {
-    /*
-    public static final RegistryObject<PortalWaterBlock> PORTAL_WATER = registerNoItem(
-            "portal_water", () -> new PortalWaterBlock(Block.Properties.create(Material.WATER).noDrops()));
-     */
+
+
+    public static final PortalWaterBlock PORTAL_WATER = registerNoItem(
+            "portal_water", new PortalWaterBlock(FabricBlockSettings.of(Material.WATER).dropsNothing()));
 
     public static final Block CHUNK = registerBlock("chunk", Builder.tropicBlock(Material.STONE, MapColor.BLACK,6.0F,30F));
     public static final Block CHUNK_WALL = registerBlock("chunk_wall", Builder.Wall(CHUNK));

@@ -14,9 +14,15 @@ import net.minecraft.world.World;
 import net.tropicraftFabric.client.data.TropicraftTags;
 import net.tropicraftFabric.common.dimension.TropicraftDimension;
 import net.tropicraftFabric.common.dimension.biome.TropicraftBiomeProvider;
+import net.tropicraftFabric.common.dimension.biome.TropicraftBiomes;
 import net.tropicraftFabric.common.dimension.carver.TropicraftCarvers;
+import net.tropicraftFabric.common.dimension.carver.TropicraftConfiguredCarvers;
 import net.tropicraftFabric.common.dimension.chunk.TropicraftChunkGenerator;
+import net.tropicraftFabric.common.dimension.feature.TropicraftConfiguredFeatures;
 import net.tropicraftFabric.common.dimension.feature.TropicraftFeatures;
+import net.tropicraftFabric.common.dimension.feature.jigsaw.TropicraftProcessorLists;
+import net.tropicraftFabric.common.dimension.feature.pools.TropicraftTemplatePools;
+import net.tropicraftFabric.common.dimension.surfacebuilders.TropicraftConfiguredSurfaceBuilders;
 import net.tropicraftFabric.common.dimension.surfacebuilders.TropicraftSurfaceBuilders;
 import net.tropicraftFabric.common.registry.*;
 import net.tropicraftFabric.common.sound.Sounds;
@@ -60,16 +66,30 @@ public class Tropicraft implements ModInitializer {
         TropicBlockEntities.init();
         TropicScreenHandler.init();
 
-
         TropicraftDimension.addDefaultDimensionKey();
 
+        TropicraftProcessorLists.processorListsRegister();
+
+        TropicraftFeatures.init();
+        TropicraftConfiguredFeatures.configuredFeatureInit();
+
+        TropicraftTemplatePools.structurePoolRegistery();
+
         TropicraftChunkGenerator.register();
-        TropicraftBiomeProvider.register();
+
 
         TropicraftCarvers.init();
-        TropicraftFeatures.init();
+        TropicraftConfiguredCarvers.configuredCarversRegister();
 
         TropicraftSurfaceBuilders.init();
+        TropicraftConfiguredSurfaceBuilders.ConfiguredSurfaceBuildersRegister();
+
+        TropicraftBiomes.regisisterBiomes();
+        TropicraftBiomes.vanillaBiomoeModificationInit();
+
+        TropicraftBiomeProvider.register();
+
+
 
         /*
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
