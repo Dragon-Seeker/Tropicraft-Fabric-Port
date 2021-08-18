@@ -209,7 +209,7 @@ public class TropiCreeperEntity extends PathAwareEntity {
                     }
                     attempt = attempt.up();
 
-                    List<Block> SMALL_FLOWERS = List.of(TropicraftBlocks.ACAI_VINE,
+                    Block[] SMALL_FLOWERS = new Block[]{TropicraftBlocks.ACAI_VINE,
                                                         TropicraftBlocks.ANEMONE,
                                                         TropicraftBlocks.BROMELIAD,
                                                         TropicraftBlocks.CANNA,
@@ -223,9 +223,26 @@ public class TropiCreeperEntity extends PathAwareEntity {
                                                         TropicraftBlocks.ORANGE_ANTHURIUM,
                                                         TropicraftBlocks.ORCHID,
                                                         TropicraftBlocks.PATHOS,
-                                                        TropicraftBlocks.RED_ANTHURIUM);
-
-                    BlockState state = SMALL_FLOWERS.get(random.nextInt(SMALL_FLOWERS.size())).getDefaultState(); //.Blocks.SMALL_FLOWERS.getRandom(random).getDefaultState();
+                                                        TropicraftBlocks.RED_ANTHURIUM};
+                    /*
+                    List<Block> SMALL_FLOWERS = List.of(TropicraftBlocks.ACAI_VINE,
+                            TropicraftBlocks.ANEMONE,
+                            TropicraftBlocks.BROMELIAD,
+                            TropicraftBlocks.CANNA,
+                            TropicraftBlocks.COMMELINA_DIFFUSA,
+                            TropicraftBlocks.CROCOSMIA,
+                            TropicraftBlocks.CROTON,
+                            TropicraftBlocks.DRACAENA,
+                            TropicraftBlocks.TROPICAL_FERN,
+                            TropicraftBlocks.FOLIAGE,
+                            TropicraftBlocks.MAGIC_MUSHROOM,
+                            TropicraftBlocks.ORANGE_ANTHURIUM,
+                            TropicraftBlocks.ORCHID,
+                            TropicraftBlocks.PATHOS,
+                            TropicraftBlocks.RED_ANTHURIUM);
+                     */
+                    
+                    BlockState state = SMALL_FLOWERS[random.nextInt(SMALL_FLOWERS.length)].getDefaultState(); //.Blocks.SMALL_FLOWERS.getRandom(random).getDefaultState();
                     if (state.canPlaceAt(world, attempt)) {
                         world.setBlockState(attempt, state);
                     }
