@@ -1,12 +1,5 @@
 package net.tropicraftFabric.common.registry;
 
-import net.tropicraftFabric.Constants;
-import net.tropicraftFabric.common.block.*;
-import net.tropicraftFabric.common.block.plants.TropicPineapple;
-import net.tropicraftFabric.common.block.plants.TropicTallPlant;
-import net.tropicraftFabric.common.dimension.feature.TropicraftFeatures;
-import net.tropicraftFabric.common.item.TropicBlockItem;
-import net.tropicraftFabric.common.world.feature.tree.tropicBasicSaplingGenerator;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -16,6 +9,11 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.tropicraftFabric.Constants;
+import net.tropicraftFabric.common.block.*;
+import net.tropicraftFabric.common.block.plants.TropicPineapple;
+import net.tropicraftFabric.common.block.plants.TropicTallPlant;
+import net.tropicraftFabric.common.item.TropicBlockItem;
 
 import java.util.List;
 import java.util.Set;

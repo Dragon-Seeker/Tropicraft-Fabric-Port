@@ -4,3 +4,4 @@ extendable class net/minecraft/world/gen/chunk/NoiseChunkGenerator
 accessible field net/minecraft/world/dimension/DimensionOptions BASE_DIMENSIONS Ljava/util/LinkedHashSet;
 accessible field net/minecraft/client/render/SkyProperties BY_IDENTIFIER Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;
 accessible method net/minecraft/world/gen/stateprovider/BlockStateProviderType <init> (Lcom/mojang/serialization/Codec;)V
+accessible field net/minecraft/structure/pool/StructurePool$Projection PROJECTIONS_BY_ID Ljava/util/Map;

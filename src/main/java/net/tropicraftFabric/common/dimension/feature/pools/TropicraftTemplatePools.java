@@ -210,6 +210,7 @@ public final class TropicraftTemplatePools {
                 noAirSingle("koa_village/huts/trade_hut_01", TropicraftProcessorLists.koaBuildings, 2)
         );
 
+        //TODO: Fix Koa Path no existing or something
         koaStreets = register(
                 "koa_village/streets",
                 new Identifier(Constants.MODID, "koa_village/terminators"),
@@ -235,6 +236,7 @@ public final class TropicraftTemplatePools {
                 TropicraftFeatures.KOA_PATH,
                 noAirSingle("koa_village/terminators/terminator_01", 1)
         );
+
 
         koaVillagers = register(
                 "koa_village/villagers",

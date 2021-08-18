@@ -2,6 +2,7 @@ package net.tropicraftFabric.common.dimension.feature;
 
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
+import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePool.Projection;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
@@ -92,6 +93,12 @@ public class TropicraftFeatures {
                              new SteepPathProcessor(),
                              new StructureSupportsProcessor(false, ImmutableList.of(new Identifier("bamboo_fence")))));
 
+    public static void setStructurePoolsProjectionMap(){
+        Projection.PROJECTIONS_BY_ID.put(KOA_PATH.getId(), KOA_PATH);
+    }
+
+
+
     /*
     private static <T extends Feature<?>> T register(final String name, final Supplier<T> sup) {
         return FEATURES.register(name, sup);
@@ -147,6 +154,6 @@ public class TropicraftFeatures {
     }
 
     public static void init(){
-
+        setStructurePoolsProjectionMap();
     }
 }
