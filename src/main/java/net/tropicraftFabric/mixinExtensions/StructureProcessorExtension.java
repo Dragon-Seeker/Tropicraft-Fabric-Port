@@ -1,12 +1,9 @@
 package net.tropicraftFabric.mixinExtensions;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.Nullable;
 
 public interface StructureProcessorExtension {
 
