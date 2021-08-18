@@ -1,6 +1,6 @@
 package net.tropicraftFabric.common.block;
 
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import com.google.common.collect.Maps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -78,7 +78,7 @@ public class TropicBambooPot extends Block {
                     player.dropItem(currentFloraInPot, false);
                 }
 
-                world.setBlockState(pos, TropicBlocks.BAMBOO_FLOWER_POT.getDefaultState(), 3);
+                world.setBlockState(pos, TropicraftBlocks.BAMBOO_FLOWER_POT.getDefaultState(), 3);
             }
 
             return ActionResult.success(world.isClient);

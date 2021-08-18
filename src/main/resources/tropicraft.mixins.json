@@ -7,7 +7,18 @@
     "TropicraftPlantableMixins",
     "ItemFrameEntityInvoker",
     "SeaTurtleInvoker",
-    "SeaTurtleAccessor"
+    "SeaTurtleAccessor",
+    "BlockStateProviderTypeInvoker",
+    "NoiseChuckGeneratorAccessor",
+    "ProjectionFactory",
+    "SeedAccessor",
+    "StructureFeatureInvoker",
+    "StructureProcessorMixin",
+    "WorldSettingsImportMixin",
+    "StructureMixin",
+    "StructureProcessorMixin",
+    "ModelLoaderSTATICDEFINITIONS",
+    "StructureAccessor"
   ],
   "client": [
   ],

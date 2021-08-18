@@ -1,8 +1,7 @@
 package net.tropicraftFabric.common.entity.neutral;
 
 import net.tropicraftFabric.common.entity.hostile.TropicraftCreatureEntity;
-import net.tropicraftFabric.common.registry.TropicBlocks;
-import net.tropicraftFabric.common.registry.TropicraftItems;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.tropicraftFabric.common.sound.Sounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
@@ -149,7 +147,7 @@ public class EIHEntity extends TropicraftCreatureEntity {
                             final ItemStack itemstack = player.inventory.getMainHandStack();
 
                             if (!itemstack.isEmpty()) {
-                                if (isAware() && itemstack.getItem() == TropicBlocks.CHUNK.asItem()) {
+                                if (isAware() && itemstack.getItem() == TropicraftBlocks.CHUNK.asItem()) {
                                     setAngry(true);
                                     setImmobile(false);
                                 }

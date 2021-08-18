@@ -32,6 +32,8 @@
     "tropicraft.mixins.json"
   ],
 
+  "accessWidener" : "tropicraftFabric.accesswidener",
+
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",

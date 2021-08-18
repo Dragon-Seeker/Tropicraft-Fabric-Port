@@ -1,7 +1,7 @@
 package net.tropicraftFabric.common.drinks;
 
 import net.tropicraftFabric.common.item.CocktailItem;
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.tropicraftFabric.common.registry.TropicraftItems;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,9 +28,9 @@ public class Ingredient implements Comparable<Ingredient> {
 	public static final Ingredient lime = new Ingredient(6, TropicraftItems.LIME, true, 0x7fff00).addAction(new DrinkActionFood(2, 0.2f));
 	public static final Ingredient orange = new Ingredient(7, TropicraftItems.ORANGE, true, 0xffa500).addAction(new DrinkActionFood(3, 0.2f));
 	public static final Ingredient grapefruit = new Ingredient(8, TropicraftItems.GRAPEFRUIT, true, 0xff6347).addAction(new DrinkActionFood(4, 0.2f));
-	public static final Ingredient pineapple = new Ingredient(9, TropicBlocks.PINEAPPLE.asItem(), false, 0xeeff00).addAction(new DrinkActionFood(1, 0.1f));
+	public static final Ingredient pineapple = new Ingredient(9, TropicraftBlocks.PINEAPPLE.asItem(), false, 0xeeff00).addAction(new DrinkActionFood(1, 0.1f));
 	public static final Ingredient pineappleCubes = new Ingredient(10, TropicraftItems.PINEAPPLE_CUBES, false, 0xeeff00, 0.1f).addAction(new DrinkActionFood(1, 0.1f));
-	public static final Ingredient coconut = new Ingredient(11, TropicBlocks.COCONUT.asItem(), false, 0xefefef).addAction(new DrinkActionFood(1, 0.1f));
+	public static final Ingredient coconut = new Ingredient(11, TropicraftBlocks.COCONUT.asItem(), false, 0xefefef).addAction(new DrinkActionFood(1, 0.1f));
 	public static final Ingredient coconutChunk = new Ingredient(12, TropicraftItems.COCONUT_CHUNK, false, 0xefefef/*, 0.1f*/).addAction(new DrinkActionFood(1, 0.1f));
 	public static final Ingredient sugarcane = new Ingredient(13, Items.SUGAR_CANE, false, 0xb1ff6b, 0.1f);
 	public static final Ingredient roastedCoffeeBean = new Ingredient(14, TropicraftItems.ROASTED_COFFEE_BEAN, false, 0x68442c, 0.95f).addAction(new DrinkActionFood(4, 0.2f)).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 1));

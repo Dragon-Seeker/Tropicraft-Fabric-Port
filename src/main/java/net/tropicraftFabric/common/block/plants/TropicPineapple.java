@@ -1,6 +1,6 @@
 package net.tropicraftFabric.common.block.plants;
 
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.*;
@@ -35,20 +35,55 @@ public class TropicPineapple extends TallFlowerBlock {
         //this.setDefaultState(super.getDefaultState().with(HALF, DoubleBlockHalf.LOWER));
     }
 
-
     @Override
-    protected void appendProperties(final StateManager.Builder<Block, BlockState> builder) {
-        builder.add(HALF, STAGE);
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if(canPlaceAt(state, world, pos)){
+            return state;
+        }
+        return Blocks.AIR.getDefaultState();
     }
 
+    @Override
+    public void onPlaced(World p_180633_1_, BlockPos p_180633_2_, BlockState p_180633_3_, LivingEntity p_180633_4_, ItemStack p_180633_5_) {
+        // override super behavior of placing top half of double flower by default
+    }
+
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        if (state.get(HALF) == DoubleBlockHalf.UPPER) {
+            return world.getBlockState(pos.down()).getBlock() == TropicraftBlocks.PINEAPPLE;
+        } else {
+            BlockPos blockPos = pos.down();
+            return canPlantOnTop(world.getBlockState(blockPos), world, pos);
+        }
+    }
+
+    /*
     public void placeAt(WorldAccess world, BlockPos pos, int flags) {
         world.setBlockState(pos, this.getDefaultState().with(HALF, DoubleBlockHalf.LOWER), flags);
         world.setBlockState(pos.up(), this.getDefaultState().with(HALF, DoubleBlockHalf.UPPER), flags);
     }
+     */
+
+    @Override
+    protected boolean canPlantOnTop(BlockState state, BlockView worldIn, BlockPos pos) {
+        //worldIn.getBlockState(pos.down());
+        return state.isOf(Blocks.GRASS_BLOCK) || state.getBlock().isIn(TagRegistry.block(new Identifier("c", "dirt"))) || state.isOf(Blocks.FARMLAND) || state.isOf(Blocks.DIRT) || state.isOf(Blocks.COARSE_DIRT) || state.isOf(Blocks.PODZOL) || state.isOf(TropicraftBlocks.MINERAL_SAND);
+    }
+
+    @Override
+    public void onBreak(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
+            super.onBreak(worldIn, pos, state, player);
+        } else {
+            worldIn.syncWorldEvent(player, 2001, pos, getRawIdFromState(state)); //worldIn.playEvent(player, 2001, pos, getStateId(state));
+            dropStacks(state, worldIn, pos, null, player, player.getMainHandStack());
+        }
+    }
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return state.getBlock() == TropicBlocks.PINEAPPLE &&
+        return state.getBlock() == TropicraftBlocks.PINEAPPLE &&
                state.get(TropicPineapple.HALF) == DoubleBlockHalf.LOWER &&
                world.getBlockState(pos.up()).isAir();
     }
@@ -103,48 +138,6 @@ public class TropicPineapple extends TallFlowerBlock {
         }
     }
 
-    @Override
-    public void onBreak(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
-            super.onBreak(worldIn, pos, state, player);
-        } else {
-            worldIn.syncWorldEvent(player, 2001, pos, getRawIdFromState(state)); //worldIn.playEvent(player, 2001, pos, getStateId(state));
-            dropStacks(state, worldIn, pos, null, player, player.getMainHandStack());
-        }
-    }
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if(canPlaceAt(state, world, pos)){
-            return state;
-        }
-        return Blocks.AIR.getDefaultState();
-    }
-
-    /*
-    @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, World worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (canPlaceAt(stateIn, worldIn, currentPos)) {
-            return stateIn;
-        }
-        return Blocks.AIR.getDefaultState();
-    }
-     */
-
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView worldIn, BlockPos pos) {
-        if (state.get(HALF) == DoubleBlockHalf.UPPER) {
-            return worldIn.getBlockState(pos.down()).getBlock() == TropicBlocks.PINEAPPLE;
-        } else {
-            return canPlantOnTop(state, worldIn, pos);
-        }
-    }
-
-    @Override
-    public void onPlaced(World p_180633_1_, BlockPos p_180633_2_, BlockState p_180633_3_, LivingEntity p_180633_4_, ItemStack p_180633_5_) {
-        // override super behavior of placing top half of double flower by default
-    }
-
     /*
     private boolean canPlaceBlockAt(WorldView worldIn, BlockPos pos) {
         final BlockState belowState = worldIn.getBlockState(pos.down());
@@ -153,8 +146,8 @@ public class TropicPineapple extends TallFlowerBlock {
      */
 
     @Override
-    protected boolean canPlantOnTop(BlockState state, BlockView worldIn, BlockPos pos) {
-        return state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock().isIn(TagRegistry.block(new Identifier("c", "dirt")))  || state.getBlock() == Blocks.FARMLAND || state.getBlock() == this;
+    protected void appendProperties(final StateManager.Builder<Block, BlockState> builder) {
+        builder.add(HALF, STAGE);
     }
 
 }

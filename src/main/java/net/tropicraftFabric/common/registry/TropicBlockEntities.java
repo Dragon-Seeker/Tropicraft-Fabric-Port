@@ -1,8 +1,10 @@
 package net.tropicraftFabric.common.registry;
 
+import com.google.common.collect.Sets;
 import net.tropicraftFabric.Constants;
 //import com.dragonseeker.tropicfabricport.common.block.entity.CoconutBlockEntity;
 import net.tropicraftFabric.common.block.blockentity.TropicBambooChestBlockEntity;
+import net.tropicraftFabric.common.block.blockentity.VolcanoBlockEntity;
 import net.tropicraftFabric.common.block.testContainer.BoxBlockEntity;
 import net.tropicraftFabric.common.block.testContainer.BoxChestBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -18,9 +20,12 @@ public class TropicBlockEntities<T extends BlockEntity>{
     public static BlockEntityType<TropicBambooChestBlockEntity> BAMBOO_CHEST;
     //public static BlockEntityType<CoconutBlockEntity> COCONUT;
 
+    public static final BlockEntityType<VolcanoBlockEntity> VOLCANO;
+
     static {
         //BOX_BLOCK_ENTITY = registerBlockEntityType("box_block", BlockEntityType.Builder.create(BoxBlockEntity::new, TropicBlocks.BOX_BLOCK));
-        BAMBOO_CHEST = registerBlockEntityType("bamboo_chest", BlockEntityType.Builder.create(TropicBambooChestBlockEntity::new, TropicBlocks.BAMBOO_CHEST));
+        BAMBOO_CHEST = registerBlockEntityType("bamboo_chest", BlockEntityType.Builder.create(TropicBambooChestBlockEntity::new, TropicraftBlocks.BAMBOO_CHEST));
+        VOLCANO = registerBlockEntityType("tile_entity_volcano", BlockEntityType.Builder.create(VolcanoBlockEntity::new, TropicraftBlocks.VOLCANO));
         //BOX_BLOCK_CHEST_ENTITY = registerBlockEntityType("box_chest_block", BlockEntityType.Builder.create(BoxChestBlockEntity::new, TropicBlocks.BOX_BLOCK_CHEST));
     }
 

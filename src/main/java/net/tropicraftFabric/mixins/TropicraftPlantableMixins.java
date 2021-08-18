@@ -1,6 +1,6 @@
 package net.tropicraftFabric.mixins;
 
-import net.tropicraftFabric.common.registry.TropicBlocks;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PlantBlock;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TropicraftPlantableMixins {
     @Inject(at = @At("RETURN"), method = "canPlantOnTop", cancellable = true)
     void tc_canPlantOnTop(BlockState floor, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (floor.isOf(TropicBlocks.PURIFIED_SAND)) {
+        if (floor.isOf(TropicraftBlocks.PURIFIED_SAND)) {
             cir.setReturnValue(true);
         }
     }
