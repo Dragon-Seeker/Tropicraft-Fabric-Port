@@ -4,6 +4,7 @@ import net.tropicraftFabric.Constants;
 import net.tropicraftFabric.common.block.*;
 import net.tropicraftFabric.common.block.plants.TropicPineapple;
 import net.tropicraftFabric.common.block.plants.TropicTallPlant;
+import net.tropicraftFabric.common.dimension.feature.TropicraftFeatures;
 import net.tropicraftFabric.common.item.TropicBlockItem;
 import net.tropicraftFabric.common.world.feature.tree.tropicBasicSaplingGenerator;
 import com.google.common.collect.ImmutableList;
@@ -161,12 +162,12 @@ public class TropicraftBlocks {
 
     private static AbstractBlock.Settings SAPLINGS = FabricBlockSettings.of(Material.PLANT).sounds(BlockSoundGroup.GRASS).breakInstantly().ticksRandomly().noCollision().nonOpaque();
 
-    public final static SaplingBlock GRAPEFRUIT_SAPLING = registerBlock("grapefruit_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static SaplingBlock LEMON_SAPLING = registerBlock("lemon_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static SaplingBlock LIME_SAPLING = registerBlock("lime_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static SaplingBlock ORANGE_SAPLING = registerBlock("orange_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static SaplingBlock MAHOGANY_SAPLING = registerBlock("mahogany_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
-    public final static SaplingBlock PALM_SAPLING = registerBlock("palm_sapling", new TropicSaplings(new tropicBasicSaplingGenerator(), FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock GRAPEFRUIT_SAPLING = registerBlock("grapefruit_sapling", Builder.sapling(TropicraftTrees.GRAPEFRUIT, FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock LEMON_SAPLING = registerBlock("lemon_sapling", Builder.sapling(TropicraftTrees.LEMON, FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock LIME_SAPLING = registerBlock("lime_sapling", Builder.sapling(TropicraftTrees.LIME, FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock ORANGE_SAPLING = registerBlock("orange_sapling", Builder.sapling(TropicraftTrees.ORANGE, FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock MAHOGANY_SAPLING = registerBlock("mahogany_sapling", Builder.sapling(TropicraftTrees.RAINFOREST, FabricBlockSettings.copyOf(SAPLINGS)));
+    public final static SaplingBlock PALM_SAPLING = registerBlock("palm_sapling", Builder.sapling(TropicraftTrees.PALM, FabricBlockSettings.copyOf(SAPLINGS), Blocks.SAND, CORAL_SAND, FOAMY_SAND, VOLCANIC_SAND, PURIFIED_SAND, MINERAL_SAND));
 
     /*
     public static final RegistryObject<SaplingBlock> GRAPEFRUIT_SAPLING = register("grapefruit_sapling", Builder.sapling(TropicraftTrees.GRAPEFRUIT));

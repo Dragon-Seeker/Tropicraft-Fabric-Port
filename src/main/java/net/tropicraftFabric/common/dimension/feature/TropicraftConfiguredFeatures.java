@@ -20,7 +20,9 @@ import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 import net.tropicraftFabric.Constants;
 import net.tropicraftFabric.client.data.TropicraftTags;
 import net.tropicraftFabric.client.data.WorldgenDataConsumer;
-import net.tropicraftFabric.common.dimension.feature.block_state_provider.NoiseFromTagBlockStateProvider;
+//import net.tropicraftFabric.common.dimension.feature.block_state_provider.NoiseFromTagBlockStateProvider;
+import net.tropicraftFabric.common.dimension.feature.block_state_provider.NoiseFromTagRainForestFlowerBlockStateProvider;
+import net.tropicraftFabric.common.dimension.feature.block_state_provider.NoiseFromTagTropicFlowerBlockStateProvider;
 import net.tropicraftFabric.common.dimension.feature.config.FruitTreeConfig;
 import net.tropicraftFabric.common.dimension.feature.config.HomeTreeBranchConfig;
 import net.tropicraftFabric.common.dimension.feature.config.RainforestVinesConfig;
@@ -240,12 +242,14 @@ public final class TropicraftConfiguredFeatures {
             ).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP);
         });
         tropicsFlowers = register("tropics_flowers", Feature.FLOWER, feature -> {
-            BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.TROPICS_FLOWERS);
+            //BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.TROPICS_FLOWERS);
+            BlockStateProvider stateProvider = new NoiseFromTagTropicFlowerBlockStateProvider();
             RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, SimpleBlockPlacer.INSTANCE).tries(64).build();
             return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(12));
         });
         rainforestFlowers = register("rainforest_flowers", Feature.FLOWER, feature -> {
-            BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.RAINFOREST_FLOWERS);
+            //BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.RAINFOREST_FLOWERS);
+            BlockStateProvider stateProvider = new NoiseFromTagRainForestFlowerBlockStateProvider();
             RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, SimpleBlockPlacer.INSTANCE).tries(64).cannotProject().build();
             return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(4));
         });

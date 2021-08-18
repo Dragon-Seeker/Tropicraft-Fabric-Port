@@ -1,11 +1,17 @@
 package net.tropicraftFabric.common.block;
 
+import net.minecraft.block.sapling.SaplingGenerator;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.tropicraftFabric.common.registry.TropicraftBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.math.Direction;
+
+import java.util.Arrays;
+import java.util.function.Supplier;
 
 public class Builder {
 
@@ -132,6 +138,21 @@ public class Builder {
     public static FlowerPotBlock vanillaPot(final Block block) {
         return new FlowerPotBlock(block, FabricBlockSettings.copyOf(Blocks.FLOWER_POT));
     }
+
+    @SafeVarargs
+    public static SaplingBlock sapling(final SaplingGenerator tree, FabricBlockSettings settings, final Block... validPlantBlocks) {
+        return new SaplingBlock(tree, settings) {
+            protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
+                final Block block = floor.getBlock();
+                if (validPlantBlocks == null || validPlantBlocks.length == 0) {
+                    return block == Blocks.GRASS_BLOCK || block == Blocks.DIRT || block == Blocks.COARSE_DIRT || block == Blocks.PODZOL || block == Blocks.FARMLAND;
+                } else {
+                    return Arrays.stream(validPlantBlocks).anyMatch(b -> b == block);
+                }
+            }
+        };
+    }
+
 
 
 }

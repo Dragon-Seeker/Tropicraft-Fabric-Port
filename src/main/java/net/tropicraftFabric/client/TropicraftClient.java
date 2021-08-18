@@ -1,5 +1,6 @@
 package net.tropicraftFabric.client;
 
+import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,13 +11,21 @@ import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.SkyProperties;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.item.Item;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.dimension.DimensionType;
 import net.tropicraftFabric.client.blockEntity.BambooChestBlockEntityRenderer;
 import net.tropicraftFabric.client.entity.models.MaskArmorProvider;
@@ -27,9 +36,11 @@ import net.tropicraftFabric.common.dimension.TropicraftDimension;
 import net.tropicraftFabric.common.item.AshenMaskItem;
 import net.tropicraftFabric.common.item.IColoredItem;
 import net.tropicraftFabric.common.registry.*;
+import net.tropicraftFabric.mixins.ModelLoaderSTATICDEFINITIONS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class TropicraftClient implements ClientModInitializer {
@@ -59,6 +70,17 @@ public class TropicraftClient implements ClientModInitializer {
             ArmorRenderingRegistry.registerModel(MASK_PROVIDER.get(i), maskItem);
             ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
         }
+
+
+        //TODO:Check if item frames are now working
+        StateManager<Block, BlockState> frameState = new StateManager.Builder<Block, BlockState>(Blocks.AIR).add(BooleanProperty.of("map")).build(Block::getDefaultState, BlockState::new);
+
+        final Map<Identifier, StateManager<Block, BlockState>> TEMP_STATIC_DEFINITIONS = ModelLoaderSTATICDEFINITIONS.getStaticDimensions();
+
+        ModelLoaderSTATICDEFINITIONS.setStaticDimensions(ImmutableMap.<Identifier, StateManager<Block, BlockState>>builder()
+                .putAll(TEMP_STATIC_DEFINITIONS)
+                .put(Registry.ITEM.getId(TropicraftItems.BAMBOO_ITEM_FRAME), frameState)
+                .build());
 
 
 

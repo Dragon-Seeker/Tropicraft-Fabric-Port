@@ -1,41 +1,41 @@
 package net.tropicraftFabric.common.dimension.feature.block_state_provider;
-/*
+
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.tag.ServerTagManagerHolder;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
-import net.minecraft.world.gen.stateprovider.PlainsFlowerBlockStateProvider;
 import net.tropicraftFabric.client.data.TropicraftTags;
 
 import java.util.List;
 import java.util.Random;
 
-public final class NoiseFromTagBlockStateProvider extends BlockStateProvider {
+public final class NoiseFromTagRainForestFlowerBlockStateProvider extends BlockStateProvider {
+    public static Tag<Block> tag = TropicraftTags.Blocks.RAINFOREST_FLOWERS;
 
-    public Tag<Block> tag = TropicraftTags.Blocks.TROPICS_FLOWERS;
-
-    public static final Codec<NoiseFromTagBlockStateProvider> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    /*
+    public static final Codec<NoiseFromTagTropicFlowerBlockStateProvider> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Tag.codec(() -> ServerTagManagerHolder.getTagManager().getBlocks()).fieldOf("tag").forGetter(c -> c.tag)
-    ).apply(instance, NoiseFromTagBlockStateProvider::new));
+    ).apply(instance, NoiseFromTagTropicFlowerBlockStateProvider::new));
+
+     */
 
 
+    public static final NoiseFromTagRainForestFlowerBlockStateProvider INSTANCE = new NoiseFromTagRainForestFlowerBlockStateProvider();
+    public static final Codec<NoiseFromTagRainForestFlowerBlockStateProvider> CODEC = Codec.unit(() -> INSTANCE);
 
 
-    public NoiseFromTagBlockStateProvider(Tag<Block> tag) {
-        this.tag = tag;
+    public NoiseFromTagRainForestFlowerBlockStateProvider() {
     }
 
     @Override
     protected BlockStateProviderType<?> getType() {
-        return TropicraftBlockStateProviders.NOISE_FROM_TAG;
+        return TropicraftBlockStateProviders.NOISE_FROM_TAG_RAINFOREST_FLOWER;
     }
 
     @Override
@@ -52,5 +52,3 @@ public final class NoiseFromTagBlockStateProvider extends BlockStateProvider {
         return block.getDefaultState();
     }
 }
-
- */

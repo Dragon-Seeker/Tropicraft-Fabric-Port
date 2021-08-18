@@ -1,6 +1,7 @@
 package net.tropicraftFabric.common.dimension.feature;
 
 import com.google.common.collect.ImmutableList;
+import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.structure.pool.StructurePool.Projection;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
@@ -55,7 +56,7 @@ public class TropicraftFeatures {
 
     public static final StructureFeature<StructurePoolFeatureConfig> KOA_VILLAGE = registerFeatureStructure("koa_village", new KoaVillageStructure(StructurePoolFeatureConfig.CODEC), GenerationStep.Feature.SURFACE_STRUCTURES);
     public static final StructureFeature<StructurePoolFeatureConfig> HOME_TREE = registerFeatureStructure("home_tree", new HomeTreeStructure(StructurePoolFeatureConfig.CODEC), GenerationStep.Feature.SURFACE_STRUCTURES);
-    public static final HomeTreeBranchFeature<HomeTreeBranchConfig> HOME_TREE_BRANCH = registerFeature("home_tree_branch", new HomeTreeBranchFeature<>(HomeTreeBranchConfig.CODEC));
+    public static final HomeTreeBranchFeature<HomeTreeBranchConfig> HOME_TREE_BRANCH = registerFeature("home_tree_branch", new HomeTreeBranchFeature(HomeTreeBranchConfig.CODEC));
     public static final CoffeePlantFeature COFFEE_BUSH = registerFeature("coffee_bush", new CoffeePlantFeature(DefaultFeatureConfig.CODEC));
 
     public static final ConfiguredFeature<?, ?> NORMAL_PALM_TREE_CONFIGURED = TropicraftConfiguredFeatures.register("normal_palm_tree_configured", TropicraftFeatures.NORMAL_PALM_TREE, f -> f.configure(DefaultFeatureConfig.INSTANCE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).decorate(Decorator.COUNT_EXTRA.configure(new CountExtraDecoratorConfig(0, 0.08F, 1))));
@@ -113,13 +114,21 @@ public class TropicraftFeatures {
         return feature;
     }
 
-    private static <F extends StructureFeature<?>> F registerFeatureStructure(String id, F structureFeature, GenerationStep.Feature step) {
+    private static <FC extends FeatureConfig, S extends StructureFeature<FC>> S registerFeatureStructure(String id, S structureFeature, GenerationStep.Feature step) {
         Identifier tropicID = new Identifier(Constants.MODID, id);
         if (Registry.STRUCTURE_FEATURE.getIds().contains(tropicID))
             throw new IllegalStateException("Structure Feature ID: \"" + tropicID.toString() + "\" already exists in the Structure Features registry!");
 
-        TropicraftFeatures.structureFeatures.add(structureFeature);
-        return StructureFeatureInvoker.invokeRegister(id, structureFeature, step);
+        //Registry.register(Registry.STRUCTURE_PIECE, tropicID, step);
+        return FabricStructureBuilder.create(tropicID, structureFeature)
+                .step(step)
+                .defaultConfig(32, 8, 12345)
+                .adjustsSurface()
+                .register();
+
+
+        //TropicraftFeatures.structureFeatures.add(structureFeature);
+        //return StructureFeatureInvoker.invokeRegister(id, structureFeature, step);
     }
 
 

@@ -392,7 +392,8 @@ public final class TropicraftTemplatePools {
 
     public static StructurePool register(StructurePool templatePool) {
         //return this.worldgen.register(templatePool.getId(), templatePool);
-        return Registry.register(BuiltinRegistries.STRUCTURE_POOL, templatePool.getId(), templatePool);
+        return (StructurePool)BuiltinRegistries.add(BuiltinRegistries.STRUCTURE_POOL, templatePool.getId(), templatePool);
+        //return Registry.register(BuiltinRegistries.STRUCTURE_POOL, templatePool.getId(), templatePool);
     }
 
 }

@@ -16,7 +16,9 @@
     "StructureProcessorMixin",
     "WorldSettingsImportMixin",
     "StructureMixin",
-    "StructureProcessorMixin"
+    "StructureProcessorMixin",
+    "ModelLoaderSTATICDEFINITIONS",
+    "StructureAccessor"
   ],
   "client": [
   ],

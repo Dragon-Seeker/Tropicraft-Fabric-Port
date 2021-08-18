@@ -1,0 +1,12 @@
+{
+  "type": "tropicraft:tropics",
+  "generator": {
+    "type": "minecraft:noise",
+    "seed": -229147274,
+    "settings": "minecraft:overworld",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "minecraft:plains"
+    }
+  }
+}

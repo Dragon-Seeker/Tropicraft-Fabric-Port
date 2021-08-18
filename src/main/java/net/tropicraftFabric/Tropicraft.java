@@ -19,7 +19,9 @@ import net.tropicraftFabric.common.dimension.carver.TropicraftCarvers;
 import net.tropicraftFabric.common.dimension.carver.TropicraftConfiguredCarvers;
 import net.tropicraftFabric.common.dimension.chunk.TropicraftChunkGenerator;
 import net.tropicraftFabric.common.dimension.feature.TropicraftConfiguredFeatures;
+import net.tropicraftFabric.common.dimension.feature.TropicraftConfiguredStructures;
 import net.tropicraftFabric.common.dimension.feature.TropicraftFeatures;
+import net.tropicraftFabric.common.dimension.feature.block_state_provider.TropicraftBlockStateProviders;
 import net.tropicraftFabric.common.dimension.feature.jigsaw.TropicraftProcessorLists;
 import net.tropicraftFabric.common.dimension.feature.pools.TropicraftTemplatePools;
 import net.tropicraftFabric.common.dimension.surfacebuilders.TropicraftConfiguredSurfaceBuilders;
@@ -68,12 +70,20 @@ public class Tropicraft implements ModInitializer {
 
         TropicraftDimension.addDefaultDimensionKey();
 
+        TropicraftBlockStateProviders.init();
+
         TropicraftProcessorLists.processorListsRegister();
 
         TropicraftFeatures.init();
+
         TropicraftConfiguredFeatures.configuredFeatureInit();
 
         TropicraftTemplatePools.structurePoolRegistery();
+
+
+
+
+        TropicraftConfiguredStructures.registerConfiguredStructures();
 
         TropicraftChunkGenerator.register();
 

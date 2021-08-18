@@ -12,7 +12,7 @@ import java.util.Optional;
 @Mixin(Structure.class)
 public interface StructureAccessor {
     @Invoker("getEntity")
-    static Optional<Entity> getEntity(ServerWorldAccess iServerWorld, NbtCompound compoundNBT) {
+    static Optional<Entity> getEntity(ServerWorldAccess world, NbtCompound nbt) {
         throw new AssertionError();
     }
 }
