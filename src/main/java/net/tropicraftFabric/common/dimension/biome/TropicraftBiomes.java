@@ -131,7 +131,7 @@ public final class TropicraftBiomes {
 
         BiomeModifications.addFeature(biomeSelectorJungle,
                 GenerationStep.Feature.VEGETAL_DECORATION,
-                TropicraftFeatures.PINEAPPLE_PATCH_KEY);
+                TropicraftFeatures.PINEAPPLE_PATCH_OVERWORLD_KEY);
     }
 
 

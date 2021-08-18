@@ -62,12 +62,17 @@ public class TropicraftFeatures {
     public static final ConfiguredFeature<?, ?> NORMAL_PALM_TREE_CONFIGURED = TropicraftConfiguredFeatures.register("normal_palm_tree_configured", TropicraftFeatures.NORMAL_PALM_TREE, f -> f.configure(DefaultFeatureConfig.INSTANCE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).decorate(Decorator.COUNT_EXTRA.configure(new CountExtraDecoratorConfig(0, 0.08F, 1))));
     public static final ConfiguredFeature<?, ?> CURVED_PALM_TREE_CONFIGURED = TropicraftConfiguredFeatures.register("curved_palm_tree_configured", TropicraftFeatures.CURVED_PALM_TREE, f -> f.configure(DefaultFeatureConfig.INSTANCE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).decorate(Decorator.COUNT_EXTRA.configure(new CountExtraDecoratorConfig(0, 0.08F, 1))));
     public static final ConfiguredFeature<?, ?> LARGE_PALM_TREE_CONFIGURED = TropicraftConfiguredFeatures.register("large_palm_tree_configured", TropicraftFeatures.LARGE_PALM_TREE, f -> f.configure(DefaultFeatureConfig.INSTANCE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).decorate(Decorator.COUNT_EXTRA.configure(new CountExtraDecoratorConfig(0, 0.08F, 1))));
-    //public static final ConfiguredFeature<?, ?> PINEAPPLE_PATCH = registerConfiguredFeature("pineapple_patch", Feature.RANDOM_PATCH.configure(new RandomPatchFeatureConfig.Builder(new SimpleBlockStateProvider(TropicraftBlocks.PINEAPPLE.getDefaultState()), new DoublePlantPlacer()).tries(6).canReplace().build()).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP_SPREAD_DOUBLE));
+    public static final ConfiguredFeature<?, ?> PINEAPPLE_PATCH_OVERWORLD = registerConfiguredFeature("pineapple_patch_overworld",
+            Feature.RANDOM_PATCH.configure(
+                    new RandomPatchFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(
+                            TropicraftBlocks.PINEAPPLE.getDefaultState()),
+                    new DoublePlantPlacer()).tries(6).canReplace().build()).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP_SPREAD_DOUBLE));
 
     public static final RegistryKey<ConfiguredFeature<?, ?>> NORMAL_PALM_TREE_CONFIGURED_KEY = registerConfiguredFeatureKey("normal_palm_tree_configured");
     public static final RegistryKey<ConfiguredFeature<?, ?>> CURVED_PALM_TREE_CONFIGURED_KEY = registerConfiguredFeatureKey("curved_palm_tree_configured");
     public static final RegistryKey<ConfiguredFeature<?, ?>> LARGE_PALM_TREE_CONFIGURED_KEY = registerConfiguredFeatureKey("large_palm_tree_configured");
-    public static final RegistryKey<ConfiguredFeature<?, ?>> PINEAPPLE_PATCH_KEY = registerConfiguredFeatureKey("pineapple_patch");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> PINEAPPLE_PATCH_OVERWORLD_KEY = registerConfiguredFeatureKey("pineapple_patch_overworld");
 
 
 

@@ -234,12 +234,9 @@ public final class TropicraftConfiguredFeatures {
         );
 
         pineapplePatch = register("pineapple_patch", Feature.RANDOM_PATCH, feature -> {
-            SimpleBlockStateProvider state = new SimpleBlockStateProvider(TropicraftBlocks.PINEAPPLE.getDefaultState());
-            return feature.configure(new RandomPatchFeatureConfig.Builder(state, new DoublePlantPlacer())
-                    .tries(64)
-                    .cannotProject()
-                    .build()
-            ).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP);
+            SimpleBlockStateProvider stateProvider = new SimpleBlockStateProvider(TropicraftBlocks.PINEAPPLE.getDefaultState());
+            RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, DoublePlantPlacer.INSTANCE).tries(64).cannotProject().build();
+            return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP);
         });
         tropicsFlowers = register("tropics_flowers", Feature.FLOWER, feature -> {
             //BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.TROPICS_FLOWERS);
@@ -255,7 +252,7 @@ public final class TropicraftConfiguredFeatures {
         });
         irisFlowers = register("iris_flowers", Feature.RANDOM_PATCH, feature -> {
             BlockStateProvider stateProvider = new SimpleBlockStateProvider(TropicraftBlocks.IRIS.getDefaultState());
-            RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, new DoublePlantPlacer()).tries(64).cannotProject().build();
+            RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, DoublePlantPlacer.INSTANCE).tries(64).cannotProject().build();
             return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(10));
         });
 
