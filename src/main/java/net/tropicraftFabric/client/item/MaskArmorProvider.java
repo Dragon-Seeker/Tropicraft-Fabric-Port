@@ -1,5 +1,6 @@
-package net.tropicraftFabric.client.entity.models;
+package net.tropicraftFabric.client.item;
 
+import net.tropicraftFabric.client.entity.models.PlayerHeadpieceRenderer;
 import net.tropicraftFabric.client.util.TropicraftRenderUtils;
 import net.tropicraftFabric.common.item.AshenMasks;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;

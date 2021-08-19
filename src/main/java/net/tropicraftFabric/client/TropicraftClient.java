@@ -18,18 +18,16 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.SkyProperties;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.item.Item;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.dimension.DimensionType;
 import net.tropicraftFabric.client.blockEntity.BambooChestBlockEntityRenderer;
-import net.tropicraftFabric.client.entity.models.MaskArmorProvider;
+import net.tropicraftFabric.client.item.MaskArmorProvider;
 import net.tropicraftFabric.client.entity.renderers.*;
+import net.tropicraftFabric.client.item.StacheArmorProvider;
 import net.tropicraftFabric.common.block.blockentity.TropicBambooChestBlockEntity;
 import net.tropicraftFabric.common.block.testContainer.BoxChestScreen;
 import net.tropicraftFabric.common.dimension.TropicraftDimension;
@@ -70,6 +68,11 @@ public class TropicraftClient implements ClientModInitializer {
             ArmorRenderingRegistry.registerModel(MASK_PROVIDER.get(i), maskItem);
             ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
         }
+
+        final StacheArmorProvider STACHPROVIDER = new StacheArmorProvider();
+
+        ArmorRenderingRegistry.registerModel(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
+        ArmorRenderingRegistry.registerTexture(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
 
 
         //TODO:Check if item frames are now working

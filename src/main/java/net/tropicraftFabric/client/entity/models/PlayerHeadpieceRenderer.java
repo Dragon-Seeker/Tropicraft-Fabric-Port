@@ -12,6 +12,10 @@ public class PlayerHeadpieceRenderer extends BipedEntityModel<LivingEntity> {
 	private final double xOffset, yOffset;
 	protected TropicraftSpecialRenderHelper renderer;
 
+	public PlayerHeadpieceRenderer(final int textureIndex) {
+		this(textureIndex, 0, 0);
+	}
+
 	public PlayerHeadpieceRenderer(final int textureIndex, final double xOffset, final double yOffset) {
 		super(0);
 		this.textureIndex = textureIndex;
