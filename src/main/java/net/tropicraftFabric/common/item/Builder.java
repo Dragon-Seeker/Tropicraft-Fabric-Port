@@ -17,6 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Rarity;
 
+import java.util.function.Supplier;
+
 
 public class Builder {
 
@@ -65,5 +67,11 @@ public class Builder {
     public static <T extends FishEntity> Item fishBucket(final EntityType<T> type) {
         return new TropicraftFishBucketItem(type, Fluids.WATER, getDefaultProperties().maxCount(1));
     }
+
+    public static ShellItem shell() {
+        return new ShellItem(getDefaultProperties());
+    }
+
+
 
 }

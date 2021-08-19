@@ -39,12 +39,14 @@ public class TropicraftItems {
 
     public static final Item BAMBOO_STICK = registerItem("bamboo_stick", new TropicItem());
 
-    public static final Item SOLONOX_SHELL = registerItem("solonox_shell", new TropicItem());
-    public static final Item FROX_CONCH = registerItem("frox_conch", new TropicItem());
-    public static final Item RUBE_NAUTILUS = registerItem("rube_nautilus", new TropicItem());
-    public static final Item PAB_SHELL = registerItem("pab_shell", new TropicItem());
-    public static final Item STARFISH = registerItem("starfish", new TropicItem());
-    public static final Item TURTLE_SHELL = registerItem("turtle_shell", new TropicItem());
+    public static final Item SOLONOX_SHELL = registerItem("solonox_shell", Builder.shell());
+    public static final Item FROX_CONCH = registerItem("frox_conch", Builder.shell());
+    public static final Item RUBE_NAUTILUS = registerItem("rube_nautilus", Builder.shell());
+    public static final Item PAB_SHELL = registerItem("pab_shell", Builder.shell());
+    public static final Item STARFISH = registerItem("starfish", Builder.shell());
+    public static final Item TURTLE_SHELL = registerItem("turtle_shell", Builder.shell());
+
+    public static final Item LOVE_TROPICS_SHELL = registerItem("love_tropics_shell", new LoveTropicsShellItem(getDefaultProperties()));
 
     public static final Item LEMON = registerItem("lemon", new Item(getDefaultProperties().food(TropicFood.LEMON)));
     public static final Item LIME = registerItem("lime", new Item(getDefaultProperties().food(TropicFood.LIME)));
@@ -64,17 +66,13 @@ public class TropicraftItems {
     public static final Item RAW_FISH = registerItem("raw_fish", new Item(getDefaultProperties().food(TropicFood.RAW_FISH)));
     public static final Item COOKED_FISH = registerItem("cooked_fish", new Item(getDefaultProperties().food(TropicFood.COOKED_FISH)));
 
+    //public static final RegistryObject<BlockNamedItem> RAW_COFFEE_BEAN = register("raw_coffee_bean", Builder.blockNamedItem(TropicraftBlocks.COFFEE_BUSH));
     public static final Item RAW_COFFEE_BEAN = registerItem("raw_coffee_bean", new CoffeeBeanItem(TropicraftBlocks.COFFEE_BUSH, getDefaultProperties()));
     public static final Item ROASTED_COFFEE_BEAN = registerItem("roasted_coffee_bean", new Item(getDefaultProperties()));
     public static final Item COFFEE_BERRY = registerItem("coffee_berry", new Item(getDefaultProperties()));
     public static final Item BAMBOO_MUG = registerItem("bamboo_mug", new Item(getDefaultProperties()));
 
-    /*
-    public static final RegistryObject<LoveTropicsShellItem> LOVE_TROPICS_SHELL = register(
-            "love_tropics_shell", () -> new LoveTropicsShellItem(new Item.Properties()));
 
-    public static final RegistryObject<BlockNamedItem> RAW_COFFEE_BEAN = register("raw_coffee_bean", Builder.blockNamedItem(TropicraftBlocks.COFFEE_BUSH));
-    */
 
     public static final ImmutableMap<Drink, Item> COCKTAILS = ImmutableMap.copyOf(
             Drink.DRINKS.values().stream()
@@ -83,13 +81,6 @@ public class TropicraftItems {
     public static final Item WHITE_PEARL = registerItem("white_pearl", new TropicItem());
     public static final Item BLACK_PEARL = registerItem("black_pearl", new TropicItem());
     public static final Item SCALE = registerItem("scale", new TropicItem());
-
-    //TODO: Not done with this item as it isn't correct
-    public static final Item NIGEL_STACHE = registerItem("nigel_stache", new NigelStacheItem(getDefaultProperties().maxCount(1)));
-    /*
-    public static final RegistryObject<Item> NIGEL_STACHE = register(
-            "nigel_stache", () -> new NigelStacheItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP)));
-     */
 
     public static final Item POISON_FROG_SKIN = registerItem("poison_frog_skin", new TropicItem());
     public static final Item IGUANA_LEATHER = registerItem("iguana_leather", new TropicItem());
@@ -134,15 +125,8 @@ public class TropicraftItems {
     public static final Item DAGGER = registerItem("dagger", new DaggerItem(TropicTiers.ZIRCON, getDefaultProperties().maxCount(1)));
     public static final Item BAMBOO_SPEAR = registerItem("bamboo_spear", new SpearItem(TropicTiers.BAMBOO, 3, -2.4F, getDefaultProperties().maxCount(1)));
 
-    public static final Item FIRE_BOOTS = registerItem("fire_boots", new FireArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1).maxDamage(300)));
-    public static final Item FIRE_LEGGINGS = registerItem("fire_leggings", new FireArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1).maxDamage(300)));
-    public static final Item FIRE_CHESTPLATE = registerItem("fire_chestplate", new FireArmorItem(EquipmentSlot.CHEST, getDefaultProperties().maxCount(1).maxDamage(300)));
-    public static final Item FIRE_HELMET = registerItem("fire_helmet", new FireArmorItem(EquipmentSlot.HEAD, getDefaultProperties().maxCount(1).maxDamage(300)));
-
-    public static final Item SCALE_BOOTS = registerItem("scale_boots", new ScaleArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1)));
-    public static final Item SCALE_LEGGINGS = registerItem("scale_leggings", new ScaleArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1)));
-    public static final Item SCALE_CHESTPLATE = registerItem("scale_chestplate", new ScaleArmorItem(EquipmentSlot.CHEST, getDefaultProperties().maxCount(1)));
-    public static final Item SCALE_HELMET = registerItem("scale_helmet", new ScaleArmorItem(EquipmentSlot.HEAD, getDefaultProperties().maxCount(1)));
+    public static final Item BLOW_GUN = registerItem("blow_gun", new BlowGunItem(getDefaultProperties().maxCount(1)));
+    public static final Item EXPLODING_COCONUT = registerItem("exploding_coconut", new ExplodingCoconutItem(getDefaultProperties()));
 
     //FIXME: Super Borked as it is invisible and directional placement seems to also be borked
     public static final Item BAMBOO_ITEM_FRAME = registerItem("bamboo_item_frame", new BambooItemFrameItem(getDefaultProperties()));
@@ -153,32 +137,27 @@ public class TropicraftItems {
 
     public static final Item TROPICAL_FERTILIZER = registerItem("tropical_fertilizer", new TropicalFertilizerItem(getDefaultProperties()));
 
-
-    public static final ImmutableMap<RecordMusic, Item> MUSIC_DISCS =
-            Arrays
-            .stream(RecordMusic.values())
+    public static final ImmutableMap<RecordMusic, Item> MUSIC_DISCS = Arrays.stream(RecordMusic.values())
             .collect(Maps.<RecordMusic, RecordMusic, Item>toImmutableEnumMap(Function.identity(), (type) -> registerItem("music_disc_" + type.name().toLowerCase(Locale.ROOT), Builder.musicDisc(type))));
 
-    public static final Item BLOW_GUN = registerItem("blow_gun", new BlowGunItem(getDefaultProperties().maxCount(1)));
-    public static final Item EXPLODING_COCONUT = registerItem("exploding_coconut", new ExplodingCoconutItem(getDefaultProperties()));
+    public static final Item FIRE_BOOTS = registerItem("fire_boots", new FireArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1).maxDamage(300)));
+    public static final Item FIRE_LEGGINGS = registerItem("fire_leggings", new FireArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1).maxDamage(300)));
+    public static final Item FIRE_CHESTPLATE = registerItem("fire_chestplate", new FireArmorItem(EquipmentSlot.CHEST, getDefaultProperties().maxCount(1).maxDamage(300)));
+    public static final Item FIRE_HELMET = registerItem("fire_helmet", new FireArmorItem(EquipmentSlot.HEAD, getDefaultProperties().maxCount(1).maxDamage(300)));
+
+    public static final Item SCALE_BOOTS = registerItem("scale_boots", new ScaleArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1)));
+    public static final Item SCALE_LEGGINGS = registerItem("scale_leggings", new ScaleArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1)));
+    public static final Item SCALE_CHESTPLATE = registerItem("scale_chestplate", new ScaleArmorItem(EquipmentSlot.CHEST, getDefaultProperties().maxCount(1)));
+    public static final Item SCALE_HELMET = registerItem("scale_helmet", new ScaleArmorItem(EquipmentSlot.HEAD, getDefaultProperties().maxCount(1)));
+
+    public static final Item NIGEL_STACHE = registerItem("nigel_stache", new NigelStacheItem(getDefaultProperties().maxCount(1)));
 
     public static final ImmutableMap<AshenMasks, AshenMaskItem> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
-            .collect(Maps.<AshenMasks, AshenMasks, AshenMaskItem>toImmutableEnumMap(Function.identity(), type -> registerItemMask("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
-
-    /*
-    public static final ImmutableMap<AshenMasks, RegistryObject<AshenMaskItem>> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
-            .collect(Maps.toImmutableEnumMap(Function.identity(), type -> register("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
-    */
-
-    /*
-    public static final RegistryObject<Item> WATER_WAND = register(
-            "water_wand", () -> new WaterWandItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP).maxStackSize(1).maxDamage(2000)));
-     */
+            .collect(Maps.<AshenMasks, AshenMasks, AshenMaskItem>toImmutableEnumMap(Function.identity(), type -> registerItem("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
 
     public static final Item WATER_WAND = registerItem("water_wand", new WaterWandItem(getDefaultProperties().maxCount(1).maxDamage(2000)));
 
     public static final Item FISHING_NET = registerItem("fishing_net", new Item(getDefaultProperties().maxCount(1)));
-
 
     public static final Item KOA_SPAWN_EGG = registerItem("koa_spawn_egg", Builder.spawnEgg(TropicraftEntities.KOA_HUNTER));
     public static final Item TROPICREEPER_SPAWN_EGG = registerItem("tropicreeper_spawn_egg", Builder.spawnEgg(TropicraftEntities.TROPI_CREEPER));
@@ -213,13 +192,9 @@ public class TropicraftItems {
     public static final ImmutableMap<DyeColor, FurnitureItem<BeachFloatEntity>> BEACH_FLOATS = Arrays.stream(DyeColor.values())
             .collect(Maps.<DyeColor, DyeColor, FurnitureItem<BeachFloatEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<BeachFloatEntity>) registerItem(c.asString() + "_beach_float", Builder.beachFloat(c))));
 
-
-
     public static final Item TROPICAL_FISH_BUCKET = registerItem("tropical_fish_bucket", Builder.fishBucket(TropicraftEntities.TROPICAL_FISH));
     public static final Item SARDINE_BUCKET = registerItem("sardine_bucket", Builder.fishBucket(TropicraftEntities.RIVER_SARDINE));
     public static final Item PIRANHA_BUCKET = registerItem("piranha_bucket", Builder.fishBucket(TropicraftEntities.PIRANHA));
-
-
 
     //--------------------ITEMS HARDER TO PORT STILL--------------------
 
@@ -229,35 +204,19 @@ public class TropicraftItems {
     public static final RegistryObject<ScubaHarnessItem> YELLOW_SCUBA_HARNESS = register("yellow_scuba_harness", Builder.scubaHarness(ScubaType.YELLOW));
     public static final RegistryObject<ScubaFlippersItem> YELLOW_SCUBA_FLIPPERS = register("yellow_scuba_flippers", Builder.scubaFlippers(ScubaType.YELLOW));
 
-     public static final RegistryObject<PonyBottleItem> PINK_PONY_BOTTLE = register("pink_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
+    public static final RegistryObject<PonyBottleItem> PINK_PONY_BOTTLE = register("pink_pony_bottle", Builder.item(PonyBottleItem::new, Builder.getDefaultProperties().maxStackSize(1).maxDamage(32)));
     public static final RegistryObject<ScubaGogglesItem> PINK_SCUBA_GOGGLES = register("pink_scuba_goggles", Builder.scubaGoggles(ScubaType.PINK));
     public static final RegistryObject<ScubaHarnessItem> PINK_SCUBA_HARNESS = register("pink_scuba_harness", Builder.scubaHarness(ScubaType.PINK));
     public static final RegistryObject<ScubaFlippersItem> PINK_SCUBA_FLIPPERS = register("pink_scuba_flippers", Builder.scubaFlippers(ScubaType.PINK));
 
-
      */
-
 
     public static void init() {}
 
-    public static Item registerItem(String id, Item item) {
+    public static <T extends Item> T registerItem(String id, T item) {
         Registry.register(Registry.ITEM, new Identifier(Constants.MODID, id), item);
 
         return item;
     }
-
-    public static AshenMaskItem registerItemMask(String id, AshenMaskItem item) {
-        Registry.register(Registry.ITEM, new Identifier(Constants.MODID, id), item);
-
-        return item;
-    }
-
-    public static BlockItem registerBlockItem(String id, BlockItem blockItem) {
-        Registry.register(Registry.ITEM, new Identifier(Constants.MODID, id), blockItem);
-
-        return blockItem;
-    }
-
-
 
 }

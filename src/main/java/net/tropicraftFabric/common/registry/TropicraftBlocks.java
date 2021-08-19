@@ -20,8 +20,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.tropicraftFabric.common.registry.TropicraftItems.registerBlockItem;
-
 public class TropicraftBlocks {
 
 
@@ -283,7 +281,7 @@ public class TropicraftBlocks {
 
         else {
             Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
-            registerBlockItem(id, new TropicBlockItem(block));
+            TropicraftItems.registerItem(id, new TropicBlockItem(block));
         }
 
         return block;
