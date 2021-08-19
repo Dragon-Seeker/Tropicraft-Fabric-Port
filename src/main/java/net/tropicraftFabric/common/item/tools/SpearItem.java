@@ -15,13 +15,13 @@ import net.minecraft.world.World;
 
 public class SpearItem extends TridentItem {
 
-    private final TropicraftItems.TropicTiers tier;
+    private final TropicTiers tier;
     private final int attackDamage;
     private final float attackSpeed;
 
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
-    public SpearItem(TropicraftItems.TropicTiers tier, int attackDamage, float attackSpeed, FabricItemSettings properties) {
+    public SpearItem(TropicTiers tier, int attackDamage, float attackSpeed, FabricItemSettings properties) {
         super(properties.maxDamage(tier.getDefaultTier().getDurability()));
 
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();

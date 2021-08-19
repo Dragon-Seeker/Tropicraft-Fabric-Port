@@ -21,9 +21,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class DaggerItem extends Item {
-    private final TropicraftItems.TropicTiers tier;
+    private final TropicTiers tier;
 
-    public DaggerItem(TropicraftItems.TropicTiers tier, FabricItemSettings properties) {
+    public DaggerItem(TropicTiers tier, FabricItemSettings properties) {
         super(properties.maxDamage(tier.getDefaultTier().getDurability()));
 
         this.tier = tier;
