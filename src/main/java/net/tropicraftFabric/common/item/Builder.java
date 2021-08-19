@@ -1,5 +1,6 @@
 package net.tropicraftFabric.common.item;
 
+import net.minecraft.item.FoodComponent;
 import net.tropicraftFabric.Tropicraft;
 import net.tropicraftFabric.common.drinks.Drink;
 import net.tropicraftFabric.common.drinks.MixerRecipes;
@@ -30,11 +31,13 @@ public class Builder {
         CocktailItem ret = new CocktailItem(drink, getDefaultProperties().maxDamage(0).maxCount(1));
         MixerRecipes.setDrinkItem(drink, ret);
         return ret;
+    }
 
+    public static Item foodItem(final FoodComponent food) {
+        return new Item(getDefaultProperties().food(food));
     }
 
     public static AshenMaskItem mask(final AshenMasks mask) {
-        //return item(p -> new AshenMaskItem(ArmorMaterials.ASHEN_MASK, mask, p));
         return new AshenMaskItem(ArmorMaterials.ASHEN_MASK, mask, getDefaultProperties());
     }
 

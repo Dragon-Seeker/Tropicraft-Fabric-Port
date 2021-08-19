@@ -17,6 +17,7 @@ import net.tropicraftFabric.common.item.*;
 import net.tropicraftFabric.common.item.armor.FireArmorItem;
 import net.tropicraftFabric.common.item.armor.ScaleArmorItem;
 import net.tropicraftFabric.common.item.tools.*;
+import net.tropicraftFabric.common.item.tools.TropicTiers;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -48,31 +49,29 @@ public class TropicraftItems {
 
     public static final Item LOVE_TROPICS_SHELL = registerItem("love_tropics_shell", new LoveTropicsShellItem(getDefaultProperties()));
 
-    public static final Item LEMON = registerItem("lemon", new Item(getDefaultProperties().food(TropicFood.LEMON)));
-    public static final Item LIME = registerItem("lime", new Item(getDefaultProperties().food(TropicFood.LIME)));
-    public static final Item GRAPEFRUIT = registerItem("grapefruit", new Item(getDefaultProperties().food(TropicFood.GRAPEFRUIT)));
-    public static final Item ORANGE = registerItem("orange", new Item(getDefaultProperties().food(TropicFood.ORANGE)));
-    public static final Item PINEAPPLE_CUBES = registerItem("pineapple_cubes", new Item(getDefaultProperties().food(TropicFood.PINEAPPLE_CUBES)));
-    public static final Item COCONUT_CHUNK = registerItem("coconut_chunk", new Item(getDefaultProperties().food(TropicFood.COCONUT_CHUNK)));
+    public static final Item LEMON = registerItem("lemon", Builder.foodItem(TropicFood.LEMON));
+    public static final Item LIME = registerItem("lime", Builder.foodItem(TropicFood.LIME));
+    public static final Item GRAPEFRUIT = registerItem("grapefruit", Builder.foodItem(TropicFood.GRAPEFRUIT));
+    public static final Item ORANGE = registerItem("orange", Builder.foodItem(TropicFood.ORANGE));
+    public static final Item PINEAPPLE_CUBES = registerItem("pineapple_cubes", Builder.foodItem(TropicFood.PINEAPPLE_CUBES));
+    public static final Item COCONUT_CHUNK = registerItem("coconut_chunk", Builder.foodItem(TropicFood.COCONUT_CHUNK));
 
-    public static final Item FRESH_MARLIN = registerItem("fresh_marlin", new Item(getDefaultProperties().food(TropicFood.FRESH_MARLIN)));
-    public static final Item SEARED_MARLIN = registerItem("seared_marlin", new Item(getDefaultProperties().food(TropicFood.SEARED_MARLIN)));
-    public static final Item RAW_RAY = registerItem("raw_ray", new Item(getDefaultProperties().food(TropicFood.RAW_RAY)));
-    public static final Item COOKED_RAY = registerItem("cooked_ray", new Item(getDefaultProperties().food(TropicFood.COOKED_RAY)));
-    public static final Item FROG_LEG = registerItem("frog_leg", new Item(getDefaultProperties().food(TropicFood.RAW_FROG_LEG)));
-    public static final Item COOKED_FROG_LEG = registerItem("cooked_frog_leg", new Item(getDefaultProperties().food(TropicFood.COOKED_FROG_LEG)));
-    public static final Item SEA_URCHIN_ROE = registerItem("sea_urchin_roe", new Item(getDefaultProperties().food(TropicFood.SEA_URCHIN_ROE)));
-    public static final Item TOASTED_NORI = registerItem("toasted_nori", new Item(getDefaultProperties().food(TropicFood.TOASTED_NORI)));
-    public static final Item RAW_FISH = registerItem("raw_fish", new Item(getDefaultProperties().food(TropicFood.RAW_FISH)));
-    public static final Item COOKED_FISH = registerItem("cooked_fish", new Item(getDefaultProperties().food(TropicFood.COOKED_FISH)));
+    public static final Item FRESH_MARLIN = registerItem("fresh_marlin", Builder.foodItem(TropicFood.FRESH_MARLIN));
+    public static final Item SEARED_MARLIN = registerItem("seared_marlin", Builder.foodItem(TropicFood.SEARED_MARLIN));
+    public static final Item RAW_RAY = registerItem("raw_ray", Builder.foodItem(TropicFood.RAW_RAY));
+    public static final Item COOKED_RAY = registerItem("cooked_ray", Builder.foodItem(TropicFood.COOKED_RAY));
+    public static final Item FROG_LEG = registerItem("frog_leg", Builder.foodItem(TropicFood.RAW_FROG_LEG));
+    public static final Item COOKED_FROG_LEG = registerItem("cooked_frog_leg", Builder.foodItem(TropicFood.COOKED_FROG_LEG));
+    public static final Item SEA_URCHIN_ROE = registerItem("sea_urchin_roe", Builder.foodItem(TropicFood.SEA_URCHIN_ROE));
+    public static final Item TOASTED_NORI = registerItem("toasted_nori", Builder.foodItem(TropicFood.TOASTED_NORI));
+    public static final Item RAW_FISH = registerItem("raw_fish", Builder.foodItem(TropicFood.RAW_FISH));
+    public static final Item COOKED_FISH = registerItem("cooked_fish", Builder.foodItem(TropicFood.COOKED_FISH));
 
     //public static final RegistryObject<BlockNamedItem> RAW_COFFEE_BEAN = register("raw_coffee_bean", Builder.blockNamedItem(TropicraftBlocks.COFFEE_BUSH));
     public static final Item RAW_COFFEE_BEAN = registerItem("raw_coffee_bean", new CoffeeBeanItem(TropicraftBlocks.COFFEE_BUSH, getDefaultProperties()));
     public static final Item ROASTED_COFFEE_BEAN = registerItem("roasted_coffee_bean", new Item(getDefaultProperties()));
     public static final Item COFFEE_BERRY = registerItem("coffee_berry", new Item(getDefaultProperties()));
     public static final Item BAMBOO_MUG = registerItem("bamboo_mug", new Item(getDefaultProperties()));
-
-
 
     public static final ImmutableMap<Drink, Item> COCKTAILS = ImmutableMap.copyOf(
             Drink.DRINKS.values().stream()
@@ -85,6 +84,7 @@ public class TropicraftItems {
     public static final Item POISON_FROG_SKIN = registerItem("poison_frog_skin", new TropicItem());
     public static final Item IGUANA_LEATHER = registerItem("iguana_leather", new TropicItem());
 
+    /*
     public enum TropicTiers{
         BAMBOO(new TropicItemTier(0,110, 1F, 6, 1.2F, TropicraftItems.BAMBOO_STICK)),
         ZIRCON(new TropicItemTier(1,200, 1F, 14, 4.5F, TropicraftItems.ZIRCON)),
@@ -102,24 +102,24 @@ public class TropicraftItems {
         }
     }
 
+     */
+
     public static final Item ZIRCON_HOE = registerItem("zircon_hoe", new TropicHoe(TropicTiers.ZIRCON, 0, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCONIUM_HOE = registerItem("zirconium_hoe", new TropicHoe(TropicTiers.EUDIALYTE, 0, -2.0f, getDefaultProperties()));
-    public static final Item EUDIALYTE_HOE = registerItem("eudialyte_hoe", new TropicHoe(TropicTiers.ZIRCONIUM, 0, -2.0f, getDefaultProperties()));
-
     public static final Item ZIRCON_AXE = registerItem("zircon_axe", new TropicAxe(TropicTiers.ZIRCON, 5.0F, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCONIUM_AXE = registerItem("zirconium_axe", new TropicAxe(TropicTiers.EUDIALYTE, 5.0F, -2.0f, getDefaultProperties()));
-    public static final Item EUDIALYTE_AXE = registerItem("eudialyte_axe", new TropicAxe(TropicTiers.ZIRCONIUM, 5.0F, -2.0f, getDefaultProperties()));
-
     public static final Item ZIRCON_PICKAXE = registerItem("zircon_pickaxe", new TropicPickaxe(TropicTiers.ZIRCON, 2, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCONIUM_PICKAXE = registerItem("zirconium_pickaxe", new TropicPickaxe(TropicTiers.EUDIALYTE, 2, -2.0f, getDefaultProperties()));
-    public static final Item EUDIALYTE_PICKAXE = registerItem("eudialyte_pickaxe", new TropicPickaxe(TropicTiers.ZIRCONIUM, 2, -2.0f, getDefaultProperties()));
-
     public static final Item ZIRCON_SHOVEL = registerItem("zircon_shovel", new TropicShovel(TropicTiers.ZIRCON, 2.0F, -3.0f, getDefaultProperties()));
-    public static final Item ZIRCONIUM_SHOVEL = registerItem("zirconium_shovel", new TropicShovel(TropicTiers.EUDIALYTE, 2.0F, -3.0f, getDefaultProperties()));
-    public static final Item EUDIALYTE_SHOVEL = registerItem("eudialyte_shovel", new TropicShovel(TropicTiers.ZIRCONIUM, 2.0F, -3.0f, getDefaultProperties()));
-
     public static final Item ZIRCON_SWORD = registerItem("zircon_sword", new TropicSword(TropicTiers.ZIRCON, 3, -3.0f, getDefaultProperties()));
+
+    public static final Item ZIRCONIUM_HOE = registerItem("zirconium_hoe", new TropicHoe(TropicTiers.EUDIALYTE, 0, -2.0f, getDefaultProperties()));
+    public static final Item ZIRCONIUM_AXE = registerItem("zirconium_axe", new TropicAxe(TropicTiers.EUDIALYTE, 5.0F, -2.0f, getDefaultProperties()));
+    public static final Item ZIRCONIUM_PICKAXE = registerItem("zirconium_pickaxe", new TropicPickaxe(TropicTiers.EUDIALYTE, 2, -2.0f, getDefaultProperties()));
+    public static final Item ZIRCONIUM_SHOVEL = registerItem("zirconium_shovel", new TropicShovel(TropicTiers.EUDIALYTE, 2.0F, -3.0f, getDefaultProperties()));
     public static final Item ZIRCONIUM_SWORD = registerItem("zirconium_sword", new TropicSword(TropicTiers.EUDIALYTE, 3, -3.0f, getDefaultProperties()));
+
+    public static final Item EUDIALYTE_HOE = registerItem("eudialyte_hoe", new TropicHoe(TropicTiers.ZIRCONIUM, 0, -2.0f, getDefaultProperties()));
+    public static final Item EUDIALYTE_AXE = registerItem("eudialyte_axe", new TropicAxe(TropicTiers.ZIRCONIUM, 5.0F, -2.0f, getDefaultProperties()));
+    public static final Item EUDIALYTE_PICKAXE = registerItem("eudialyte_pickaxe", new TropicPickaxe(TropicTiers.ZIRCONIUM, 2, -2.0f, getDefaultProperties()));
+    public static final Item EUDIALYTE_SHOVEL = registerItem("eudialyte_shovel", new TropicShovel(TropicTiers.ZIRCONIUM, 2.0F, -3.0f, getDefaultProperties()));
     public static final Item EUDIALYTE_SWORD = registerItem("eudialyte_sword", new TropicSword(TropicTiers.ZIRCONIUM, 3, -3.0f, getDefaultProperties()));
 
     public static final Item DAGGER = registerItem("dagger", new DaggerItem(TropicTiers.ZIRCON, getDefaultProperties().maxCount(1)));
@@ -135,10 +135,10 @@ public class TropicraftItems {
             "bamboo_item_frame", () -> new BambooItemFrameItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP)));
      */
 
-    public static final Item TROPICAL_FERTILIZER = registerItem("tropical_fertilizer", new TropicalFertilizerItem(getDefaultProperties()));
-
     public static final ImmutableMap<RecordMusic, Item> MUSIC_DISCS = Arrays.stream(RecordMusic.values())
             .collect(Maps.<RecordMusic, RecordMusic, Item>toImmutableEnumMap(Function.identity(), (type) -> registerItem("music_disc_" + type.name().toLowerCase(Locale.ROOT), Builder.musicDisc(type))));
+
+    //Armor - Masks - Stache
 
     public static final Item FIRE_BOOTS = registerItem("fire_boots", new FireArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1).maxDamage(300)));
     public static final Item FIRE_LEGGINGS = registerItem("fire_leggings", new FireArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1).maxDamage(300)));
@@ -156,8 +156,10 @@ public class TropicraftItems {
             .collect(Maps.<AshenMasks, AshenMasks, AshenMaskItem>toImmutableEnumMap(Function.identity(), type -> registerItem("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
 
     public static final Item WATER_WAND = registerItem("water_wand", new WaterWandItem(getDefaultProperties().maxCount(1).maxDamage(2000)));
-
     public static final Item FISHING_NET = registerItem("fishing_net", new Item(getDefaultProperties().maxCount(1)));
+    public static final Item TROPICAL_FERTILIZER = registerItem("tropical_fertilizer", new TropicalFertilizerItem(getDefaultProperties()));
+
+    //Spawnables - Buckets of Fish
 
     public static final Item KOA_SPAWN_EGG = registerItem("koa_spawn_egg", Builder.spawnEgg(TropicraftEntities.KOA_HUNTER));
     public static final Item TROPICREEPER_SPAWN_EGG = registerItem("tropicreeper_spawn_egg", Builder.spawnEgg(TropicraftEntities.TROPI_CREEPER));
@@ -183,6 +185,12 @@ public class TropicraftItems {
     public static final Item MAN_O_WAR_SPAWN_EGG = registerItem("man_o_war_spawn_egg", Builder.spawnEgg(TropicraftEntities.MAN_O_WAR));
     public static final Item TROPIBEE_SPAWN_EGG = registerItem("tropibee_spawn_egg", Builder.spawnEgg(TropicraftEntities.TROPI_BEE));
 
+    public static final Item TROPICAL_FISH_BUCKET = registerItem("tropical_fish_bucket", Builder.fishBucket(TropicraftEntities.TROPICAL_FISH));
+    public static final Item SARDINE_BUCKET = registerItem("sardine_bucket", Builder.fishBucket(TropicraftEntities.RIVER_SARDINE));
+    public static final Item PIRANHA_BUCKET = registerItem("piranha_bucket", Builder.fishBucket(TropicraftEntities.PIRANHA));
+
+    //Furniture Entity's
+
     public static final ImmutableMap<DyeColor, FurnitureItem<UmbrellaEntity>> UMBRELLAS = Arrays.stream(DyeColor.values())
             .collect(Maps.<DyeColor, DyeColor, FurnitureItem<UmbrellaEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<UmbrellaEntity>) registerItem(c.asString() + "_umbrella", Builder.umbrella(c))));
 
@@ -191,10 +199,6 @@ public class TropicraftItems {
 
     public static final ImmutableMap<DyeColor, FurnitureItem<BeachFloatEntity>> BEACH_FLOATS = Arrays.stream(DyeColor.values())
             .collect(Maps.<DyeColor, DyeColor, FurnitureItem<BeachFloatEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<BeachFloatEntity>) registerItem(c.asString() + "_beach_float", Builder.beachFloat(c))));
-
-    public static final Item TROPICAL_FISH_BUCKET = registerItem("tropical_fish_bucket", Builder.fishBucket(TropicraftEntities.TROPICAL_FISH));
-    public static final Item SARDINE_BUCKET = registerItem("sardine_bucket", Builder.fishBucket(TropicraftEntities.RIVER_SARDINE));
-    public static final Item PIRANHA_BUCKET = registerItem("piranha_bucket", Builder.fishBucket(TropicraftEntities.PIRANHA));
 
     //--------------------ITEMS HARDER TO PORT STILL--------------------
 
