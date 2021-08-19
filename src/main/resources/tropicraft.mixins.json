@@ -4,7 +4,6 @@
   "package": "net.tropicraftFabric.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "TropicraftPlantableMixins",
     "ItemFrameEntityInvoker",
     "SeaTurtleInvoker",
     "SeaTurtleAccessor",
@@ -18,7 +17,9 @@
     "StructureMixin",
     "StructureProcessorMixin",
     "ModelLoaderSTATICDEFINITIONS",
-    "StructureAccessor"
+    "StructureAccessor",
+    "CactusBlockInjection",
+    "SugarCaneBlockInjection"
   ],
   "client": [
   ],

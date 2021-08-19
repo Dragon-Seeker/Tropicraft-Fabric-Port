@@ -47,11 +47,11 @@ public class TropicraftBlocks {
 
     public static final Block PURIFIED_SAND = registerBlock("purified_sand", Builder.Sand());
     public static final Block PACKED_PURIFIED_SAND = registerBlock("packed_purified_sand", Builder.Sand(2.0F, 30.0F));
-
     public static final Block CORAL_SAND = registerBlock("coral_sand", Builder.Sand(MapColor.PINK));
     public static final Block FOAMY_SAND = registerBlock("foamy_sand", Builder.Sand(MapColor.GREEN));
     public static final Block VOLCANIC_SAND = registerBlock("volcanic_sand", Builder.Sand(MapColor.LIGHT_GRAY));
     public static final Block MINERAL_SAND = registerBlock("mineral_sand", Builder.Sand());
+
 
     public static final Block MAHOGANY_LOG = registerBlock("mahogany_log", Builder.Log(Material.WOOD, MapColor.OAK_TAN, MapColor.BROWN, BlockSoundGroup.WOOD)); //Was MaterialColor.WOOD
     public static final Block MAHOGANY_WOOD = registerBlock("mahogany_wood", Builder.Bark(Material.WOOD, BlockSoundGroup.WOOD));
@@ -73,7 +73,6 @@ public class TropicraftBlocks {
 
     public static final Block COCONUT = registerBlock("coconut", new TropicraftCoconutBlock());
     public static final CoffeeBushBlock COFFEE_BUSH = registerNoItem("coffee_bush", new CoffeeBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).strength(0.15f).sounds(BlockSoundGroup.GRASS).noCollision()));//Was MaterialColor.GRASS
-
 
     public static final Block BAMBOO_SLAB = registerBlock("bamboo_slab", Builder.Slab(BAMBOO_BUNDLE));
     public static final Block THATCH_SLAB = registerBlock("thatch_slab", Builder.Slab(THATCH_BUNDLE));
