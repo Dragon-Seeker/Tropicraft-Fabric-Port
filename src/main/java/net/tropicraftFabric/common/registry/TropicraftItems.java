@@ -39,7 +39,6 @@ public class TropicraftItems {
 
     public static final Item BAMBOO_STICK = registerItem("bamboo_stick", new TropicItem());
 
-
     public static final Item SOLONOX_SHELL = registerItem("solonox_shell", new TropicItem());
     public static final Item FROX_CONCH = registerItem("frox_conch", new TropicItem());
     public static final Item RUBE_NAUTILUS = registerItem("rube_nautilus", new TropicItem());
@@ -53,7 +52,6 @@ public class TropicraftItems {
     public static final Item ORANGE = registerItem("orange", new Item(getDefaultProperties().food(TropicFood.ORANGE)));
     public static final Item PINEAPPLE_CUBES = registerItem("pineapple_cubes", new Item(getDefaultProperties().food(TropicFood.PINEAPPLE_CUBES)));
     public static final Item COCONUT_CHUNK = registerItem("coconut_chunk", new Item(getDefaultProperties().food(TropicFood.COCONUT_CHUNK)));
-
 
     public static final Item FRESH_MARLIN = registerItem("fresh_marlin", new Item(getDefaultProperties().food(TropicFood.FRESH_MARLIN)));
     public static final Item SEARED_MARLIN = registerItem("seared_marlin", new Item(getDefaultProperties().food(TropicFood.SEARED_MARLIN)));
@@ -82,13 +80,12 @@ public class TropicraftItems {
             Drink.DRINKS.values().stream()
                 .collect(Collectors.toMap(Function.identity(), d -> registerItem(d.name, Builder.cocktail(d)))));
 
-
     public static final Item WHITE_PEARL = registerItem("white_pearl", new TropicItem());
     public static final Item BLACK_PEARL = registerItem("black_pearl", new TropicItem());
     public static final Item SCALE = registerItem("scale", new TropicItem());
 
     //TODO: Not done with this item as it isn't correct
-    public static final Item NIGEL_STACHE = registerItem("nigel_stache", new TropicItem());
+    public static final Item NIGEL_STACHE = registerItem("nigel_stache", new NigelStacheItem(getDefaultProperties().maxCount(1)));
     /*
     public static final RegistryObject<Item> NIGEL_STACHE = register(
             "nigel_stache", () -> new NigelStacheItem(new Item.Properties().group(Tropicraft.TROPICRAFT_ITEM_GROUP)));
@@ -98,11 +95,10 @@ public class TropicraftItems {
     public static final Item IGUANA_LEATHER = registerItem("iguana_leather", new TropicItem());
 
     public enum TropicTiers{
-        BAMBOO(new TropicItemTier(1,110, 1F, 6, 1.2F, TropicraftItems.BAMBOO_STICK)),
-        ZIRCON(new TropicItemTier(2,200, 1F, 14, 4.5F, TropicraftItems.ZIRCON)),
+        BAMBOO(new TropicItemTier(0,110, 1F, 6, 1.2F, TropicraftItems.BAMBOO_STICK)),
+        ZIRCON(new TropicItemTier(1,200, 1F, 14, 4.5F, TropicraftItems.ZIRCON)),
         EUDIALYTE(new TropicItemTier(2,750, 2F, 14, 6.5F, TropicraftItems.EUDIALYTE)),
         ZIRCONIUM(new TropicItemTier(3,1800, 3F, 10, 8.5f, TropicraftItems.ZIRCONIUM));
-
 
         public final TropicItemTier defaultTier;
 

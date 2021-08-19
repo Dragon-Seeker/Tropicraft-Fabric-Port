@@ -70,6 +70,21 @@ public class Builder {
                 .breakByTool(FabricToolTags.PICKAXES, 2));
     }
 
+    public static TropicOreBlock OreBlock(MapColor baseColor, int miningLevel){
+        return new TropicOreBlock(FabricBlockSettings
+                .of(Material.STONE, baseColor)
+                .hardness(3.0F)
+                .resistance(3.0F)
+                .requiresTool().breakByTool(FabricToolTags.PICKAXES, miningLevel)
+                .sounds(BlockSoundGroup.STONE));
+    }
+
+    public static TropicOreBlock OreBlock(MapColor baseColor){
+        return OreBlock(baseColor, 2);
+    }
+
+
+
     public static Block Sand() {
         return Sand(SAND);
     }
@@ -90,6 +105,8 @@ public class Builder {
                 .resistance(resistance)
                 .sounds(BlockSoundGroup.SAND));
     }
+
+
 
     //LogBlock
     public static Block Log(Material baseMaterial, MapColor color1, MapColor color2, BlockSoundGroup baseSound) {

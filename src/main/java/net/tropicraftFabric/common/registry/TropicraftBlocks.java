@@ -32,11 +32,11 @@ public class TropicraftBlocks {
     public static final Block CHUNK_WALL = registerBlock("chunk_wall", Builder.Wall(CHUNK));
     public static final VolcanoBlock VOLCANO = registerNoItem("volcano", new VolcanoBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).dropsNothing()));
 
-    public static final Block AZURITE_ORE = registerBlock("azurite_ore", new TropicOreBlock(MapColor.GRAY));
-    public static final Block EUDIALYTE_ORE = registerBlock("eudialyte_ore", new TropicOreBlock(MapColor.GRAY));
-    public static final Block MANGANESE_ORE = registerBlock("manganese_ore", new TropicOreBlock(MapColor.GRAY));
-    public static final Block SHAKA_ORE = registerBlock("shaka_ore", new TropicOreBlock(MapColor.GRAY));
-    public static final Block ZIRCON_ORE = registerBlock("zircon_ore", new TropicOreBlock(MapColor.GRAY));
+    public static final TropicOreBlock MANGANESE_ORE = registerBlock("manganese_ore", Builder.OreBlock(MapColor.GRAY));
+    public static final TropicOreBlock SHAKA_ORE = registerBlock("shaka_ore", Builder.OreBlock(MapColor.GRAY));
+    public static final TropicOreBlock EUDIALYTE_ORE = registerBlock("eudialyte_ore", Builder.OreBlock(MapColor.GRAY, 2));
+    public static final TropicOreBlock AZURITE_ORE = registerBlock("azurite_ore", Builder.OreBlock(MapColor.GRAY, 2));
+    public static final TropicOreBlock ZIRCON_ORE = registerBlock("zircon_ore", Builder.OreBlock(MapColor.GRAY, 1));
 
     public static final Block AZURITE_BLOCK = registerBlock("azurite_block", Builder.MetalBlock(MapColor.LIGHT_BLUE));
     public static final Block EUDIALYTE_BLOCK = registerBlock("eudialyte_block", Builder.MetalBlock(MapColor.PINK));
@@ -51,7 +51,6 @@ public class TropicraftBlocks {
     public static final Block FOAMY_SAND = registerBlock("foamy_sand", Builder.Sand(MapColor.GREEN));
     public static final Block VOLCANIC_SAND = registerBlock("volcanic_sand", Builder.Sand(MapColor.LIGHT_GRAY));
     public static final Block MINERAL_SAND = registerBlock("mineral_sand", Builder.Sand());
-
 
     public static final Block MAHOGANY_LOG = registerBlock("mahogany_log", Builder.Log(Material.WOOD, MapColor.OAK_TAN, MapColor.BROWN, BlockSoundGroup.WOOD)); //Was MaterialColor.WOOD
     public static final Block MAHOGANY_WOOD = registerBlock("mahogany_wood", Builder.Bark(Material.WOOD, BlockSoundGroup.WOOD));

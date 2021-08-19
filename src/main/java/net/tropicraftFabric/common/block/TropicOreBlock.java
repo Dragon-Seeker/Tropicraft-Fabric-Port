@@ -2,42 +2,38 @@ package net.tropicraftFabric.common.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.block.OreBlock;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.math.MathHelper;
+import net.tropicraftFabric.Tropicraft;
+import net.tropicraftFabric.common.registry.TropicraftBlocks;
+
+import java.util.Random;
 
 public class TropicOreBlock extends OreBlock {
 
-
-    public TropicOreBlock() {
-        super(FabricBlockSettings
-                .of(Material.STONE, MapColor.PALE_YELLOW)//Sand Color
-                .hardness(3F)
-                .resistance(9F)
-                .requiresTool().breakByTool(FabricToolTags.PICKAXES, 2)
-                .sounds(BlockSoundGroup.STONE));
+    @Override
+    protected int getExperienceWhenMined(Random random) {
+        if (this == TropicraftBlocks.AZURITE_ORE) { //Coal
+            return MathHelper.nextInt(random, 0, 2);
+        } else if (this == Blocks.DIAMOND_ORE) {
+            return MathHelper.nextInt(random, 3, 7);
+        } else if (this == Blocks.EMERALD_ORE) {
+            return MathHelper.nextInt(random, 3, 7);
+        } else if (this == Blocks.LAPIS_ORE) {
+            return MathHelper.nextInt(random, 2, 5);
+        } else if (this == Blocks.NETHER_QUARTZ_ORE) {
+            return MathHelper.nextInt(random, 2, 5);
+        } else {
+            return this == Blocks.NETHER_GOLD_ORE ? MathHelper.nextInt(random, 0, 1) : 0;
+        }
     }
 
-    public TropicOreBlock(MapColor baseColor) {
-        super(FabricBlockSettings
-                .of(Material.STONE, baseColor)
-                .hardness(3.0F)
-                .resistance(3.0F)
-                .requiresTool().breakByTool(FabricToolTags.PICKAXES, 2)
-                .sounds(BlockSoundGroup.STONE));
+    public TropicOreBlock(FabricBlockSettings settings) {
+        super(settings);
     }
-
-    public TropicOreBlock(MapColor baseColor, float hardness, float resistance) {
-        super(FabricBlockSettings
-                .of(Material.STONE, baseColor)
-                .hardness(hardness)
-                .resistance(resistance)
-                .requiresTool().breakByTool(FabricToolTags.PICKAXES, 2)
-                .sounds(BlockSoundGroup.STONE));
-    }
-
-
-
 
 }
