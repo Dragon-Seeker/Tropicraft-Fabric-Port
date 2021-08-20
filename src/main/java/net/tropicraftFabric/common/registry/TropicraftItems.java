@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 import static net.tropicraftFabric.common.item.Builder.getDefaultProperties;
 
 public class TropicraftItems {
-    //public static BlockItem COCONUT = new TropicBlockItem(TropicBlocks.COCONUT);
-
     public static BlockItem BAMBOO_CHEST = new TropicBlockItem(TropicraftBlocks.BAMBOO_CHEST);
 
     public static final Item AZURITE = registerItem("azurite_gem", new TropicItem());
@@ -84,43 +82,24 @@ public class TropicraftItems {
     public static final Item POISON_FROG_SKIN = registerItem("poison_frog_skin", new TropicItem());
     public static final Item IGUANA_LEATHER = registerItem("iguana_leather", new TropicItem());
 
-    /*
-    public enum TropicTiers{
-        BAMBOO(new TropicItemTier(0,110, 1F, 6, 1.2F, TropicraftItems.BAMBOO_STICK)),
-        ZIRCON(new TropicItemTier(1,200, 1F, 14, 4.5F, TropicraftItems.ZIRCON)),
-        EUDIALYTE(new TropicItemTier(2,750, 2F, 14, 6.5F, TropicraftItems.EUDIALYTE)),
-        ZIRCONIUM(new TropicItemTier(3,1800, 3F, 10, 8.5f, TropicraftItems.ZIRCONIUM));
-
-        public final TropicItemTier defaultTier;
-
-        TropicTiers(TropicItemTier defaultTier) {
-            this.defaultTier = defaultTier;
-        }
-
-        public TropicItemTier getDefaultTier() {
-            return this.defaultTier;
-        }
-    }
-
-     */
-
-    public static final Item ZIRCON_HOE = registerItem("zircon_hoe", new TropicHoe(TropicTiers.ZIRCON, 0, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCON_AXE = registerItem("zircon_axe", new TropicAxe(TropicTiers.ZIRCON, 5.0F, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCON_PICKAXE = registerItem("zircon_pickaxe", new TropicPickaxe(TropicTiers.ZIRCON, 2, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCON_SHOVEL = registerItem("zircon_shovel", new TropicShovel(TropicTiers.ZIRCON, 2.0F, -3.0f, getDefaultProperties()));
     public static final Item ZIRCON_SWORD = registerItem("zircon_sword", new TropicSword(TropicTiers.ZIRCON, 3, -3.0f, getDefaultProperties()));
+    public static final Item ZIRCON_SHOVEL = registerItem("zircon_shovel", new TropicShovel(TropicTiers.ZIRCON, 2.0F, -3.0f, getDefaultProperties()));
+    public static final Item ZIRCON_PICKAXE = registerItem("zircon_pickaxe", new TropicPickaxe(TropicTiers.ZIRCON, 2, -2.0f, getDefaultProperties()));
+    public static final Item ZIRCON_AXE = registerItem("zircon_axe", new TropicAxe(TropicTiers.ZIRCON, 5.0F, -2.0f, getDefaultProperties()));
+    public static final Item ZIRCON_HOE = registerItem("zircon_hoe", new TropicHoe(TropicTiers.ZIRCON, 0, -2.0f, getDefaultProperties()));
 
-    public static final Item ZIRCONIUM_HOE = registerItem("zirconium_hoe", new TropicHoe(TropicTiers.EUDIALYTE, 0, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCONIUM_AXE = registerItem("zirconium_axe", new TropicAxe(TropicTiers.EUDIALYTE, 5.0F, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCONIUM_PICKAXE = registerItem("zirconium_pickaxe", new TropicPickaxe(TropicTiers.EUDIALYTE, 2, -2.0f, getDefaultProperties()));
-    public static final Item ZIRCONIUM_SHOVEL = registerItem("zirconium_shovel", new TropicShovel(TropicTiers.EUDIALYTE, 2.0F, -3.0f, getDefaultProperties()));
+
     public static final Item ZIRCONIUM_SWORD = registerItem("zirconium_sword", new TropicSword(TropicTiers.EUDIALYTE, 3, -3.0f, getDefaultProperties()));
+    public static final Item ZIRCONIUM_SHOVEL = registerItem("zirconium_shovel", new TropicShovel(TropicTiers.EUDIALYTE, 2.0F, -3.0f, getDefaultProperties()));
+    public static final Item ZIRCONIUM_PICKAXE = registerItem("zirconium_pickaxe", new TropicPickaxe(TropicTiers.EUDIALYTE, 2, -2.0f, getDefaultProperties()));
+    public static final Item ZIRCONIUM_AXE = registerItem("zirconium_axe", new TropicAxe(TropicTiers.EUDIALYTE, 5.0F, -2.0f, getDefaultProperties()));
+    public static final Item ZIRCONIUM_HOE = registerItem("zirconium_hoe", new TropicHoe(TropicTiers.EUDIALYTE, 0, -2.0f, getDefaultProperties()));
 
-    public static final Item EUDIALYTE_HOE = registerItem("eudialyte_hoe", new TropicHoe(TropicTiers.ZIRCONIUM, 0, -2.0f, getDefaultProperties()));
-    public static final Item EUDIALYTE_AXE = registerItem("eudialyte_axe", new TropicAxe(TropicTiers.ZIRCONIUM, 5.0F, -2.0f, getDefaultProperties()));
-    public static final Item EUDIALYTE_PICKAXE = registerItem("eudialyte_pickaxe", new TropicPickaxe(TropicTiers.ZIRCONIUM, 2, -2.0f, getDefaultProperties()));
-    public static final Item EUDIALYTE_SHOVEL = registerItem("eudialyte_shovel", new TropicShovel(TropicTiers.ZIRCONIUM, 2.0F, -3.0f, getDefaultProperties()));
     public static final Item EUDIALYTE_SWORD = registerItem("eudialyte_sword", new TropicSword(TropicTiers.ZIRCONIUM, 3, -3.0f, getDefaultProperties()));
+    public static final Item EUDIALYTE_SHOVEL = registerItem("eudialyte_shovel", new TropicShovel(TropicTiers.ZIRCONIUM, 2.0F, -3.0f, getDefaultProperties()));
+    public static final Item EUDIALYTE_PICKAXE = registerItem("eudialyte_pickaxe", new TropicPickaxe(TropicTiers.ZIRCONIUM, 2, -2.0f, getDefaultProperties()));
+    public static final Item EUDIALYTE_AXE = registerItem("eudialyte_axe", new TropicAxe(TropicTiers.ZIRCONIUM, 5.0F, -2.0f, getDefaultProperties()));
+    public static final Item EUDIALYTE_HOE = registerItem("eudialyte_hoe", new TropicHoe(TropicTiers.ZIRCONIUM, 0, -2.0f, getDefaultProperties()));
 
     public static final Item DAGGER = registerItem("dagger", new DaggerItem(TropicTiers.ZIRCON, getDefaultProperties().maxCount(1)));
     public static final Item BAMBOO_SPEAR = registerItem("bamboo_spear", new SpearItem(TropicTiers.BAMBOO, 3, -2.4F, getDefaultProperties().maxCount(1)));

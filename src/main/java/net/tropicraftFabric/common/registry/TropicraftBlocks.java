@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TropicraftBlocks {
-
-
     public static final PortalWaterBlock PORTAL_WATER = registerNoItem(
             "portal_water", new PortalWaterBlock(FabricBlockSettings.of(Material.WATER).dropsNothing()));
 
@@ -305,19 +303,4 @@ public class TropicraftBlocks {
     public static void init() {
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

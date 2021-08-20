@@ -1,5 +1,6 @@
 package net.tropicraftFabric.common.item;
 
+import net.minecraft.item.DyeItem;
 import net.tropicraftFabric.common.entity.placeable.FurnitureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -18,6 +19,8 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.tropicraftFabric.mixins.DyeColorAccessor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,11 +38,15 @@ public class FurnitureItem<T extends FurnitureEntity> extends Item implements IC
 
     @Override
     public int getColor(ItemStack stack, int pass) {
+        return (pass == 0 ? 16777215 : ((DyeColorAccessor) ((Object) this.color)).getColor());
+        /*
         float[] colorComponents = color.getColorComponents();
         //TODO:Check if this is working at all
         int result = ((int) colorComponents[0] << 16) + ((int) colorComponents[1] << 8) + (int) colorComponents[2];
 
         return (pass == 0 ? 16777215 : result);
+
+         */
     }
 
     @Override

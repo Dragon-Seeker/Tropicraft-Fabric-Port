@@ -50,6 +50,21 @@ public class Tropicraft implements ModInitializer {
             new Identifier(Constants.MODID, "items"),
             () -> new ItemStack(TropicraftBlocks.RED_ANTHURIUM)); //RED_ANTHURIUM
 
+    /*
+    public static ItemGroup ITEM_GROUP_FOOD = FabricItemGroupBuilder.build(
+            new Identifier(Constants.MODID, "food"),
+            () -> new ItemStack(TropicraftItems.ORANGE)); //RED_ANTHURIUM
+
+     */
+
+    /*
+    public static ItemGroup ITEM_GROUP_ARMOR_TOOLS = FabricItemGroupBuilder.build(
+            new Identifier(Constants.MODID, "armorAndTools"),
+            () -> new ItemStack(TropicraftItems.ORANGE)); //RED_ANTHURIUM
+
+     */
+
+
 
     @Override
     public void onInitialize() {

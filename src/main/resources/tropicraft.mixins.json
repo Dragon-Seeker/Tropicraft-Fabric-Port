@@ -19,7 +19,8 @@
     "ModelLoaderSTATICDEFINITIONS",
     "StructureAccessor",
     "CactusBlockInjection",
-    "SugarCaneBlockInjection"
+    "SugarCaneBlockInjection",
+    "DyeColorAccessor"
   ],
   "client": [
   ],

@@ -53,7 +53,7 @@ public class ChairEntity extends FurnitureEntity {
 
     @Environment(EnvType.CLIENT)
     public ChairEntity(World world, double x, double y, double z, int id, UUID uuid) {
-        super(TropicraftEntities.BEACH_FLOAT, world, TropicraftItems.CHAIRS);
+        super(TropicraftEntities.CHAIR, world, TropicraftItems.CHAIRS);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
         setEntityId(id);
@@ -247,7 +247,7 @@ public class ChairEntity extends FurnitureEntity {
     @Override
     protected void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.setComeSailAway(Boolean.valueOf(nbt.getBoolean("COME_SAIL_AWAY")));
+        this.setComeSailAway(Boolean.valueOf(nbt.getBoolean("true")));
     }
 
     @Override
