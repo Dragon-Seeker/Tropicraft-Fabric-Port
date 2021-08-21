@@ -2,6 +2,18 @@
   <img src="https://github.com/Dragon-Seeker/fabric-Tropicraft-First-Release/blob/main/.github/logo.png">
 </p>  
 
+<p align="center">
+  <a href="https://discord.gg/Q24TRnx">
+      <img src="https://img.shields.io/discord/870127395250794528.svg?colorB=7289DA&label=Discord&style=flat-square" alt="Discord">
+  </a>
+  <a href="https://minecraft.curseforge.com/projects/tropicraft">
+      <img src="http://cf.way2muchnoise.eu/versions/For%20MC_tropicraft_latest.svg" alt="Minecraft Version">
+      <img src="http://cf.way2muchnoise.eu/short_tropicraft.svg" alt="Minecraft Version">
+  </a>
+  <br>
+  <strong><a href="https://tropicraft.net/">Website</a> | <a href="https://www.minecraftforum.net/topic/533512">Minecraft Forum Thread</a> </strong>
+</p> 
+
 # A UNOFFICIAL FABRIC VERSION OF TROPICRAFT
 
 The goal of this mod is to create a version of tropicraft that can run on the fabric launcher. In most cases, this mod will keep continuity with the orginal forge version of the mod but in the future, I am decided to add some blocks that I feel were missing from the original. If such happens, I will keep continuity with the art style as I love the orginal.
@@ -9,27 +21,17 @@ The goal of this mod is to create a version of tropicraft that can run on the fa
 
 FAQ
 ===
+**Current Development Outlook**
+Most of the blocks, items and main parts from the forge mod has been ported over but some parts are going to require more polish than others. With this said, ## THIS IS STILL INDEVLEOPMENT AND THERE CAN STILL BE MAJOR BUGS SO PROCEED WITH CAUTION.
 
-**What is this?**
-I did state uptop that this is a fabric port at the moment with possiblity of future features later down the road.
-
-**Cool, so A full version of tropicraft for the fabric loader! Right?**
-Sadly not yet. There are alot of differences between the forge mod loader and fabric mod loader meaning I've had to create a lot of things from scratch. My hope is to keep continuity with the original mod but have some minor plans in the future to possibly add new blocks.
-
-**What does the development cycle currently look like then?**
-The development cycle will most likely follow this order:
-
--Stage 1: Get most basic blocks and items working. I'm leaving out the more complex blocks and items as they will require rewriting a lot of the code base due to the incompatibilities between forge and fabric.
-
--Stage 2: Start working on the generation features of tropicraft. That would be the main tropic dimension with inclusion of all the generations like biomes and structures.
-
--Stage 3: Start work on the tougher blocks and items with inclusion of the entities and harder features like the volcanos and dungeons trees
+**Please Report any bugs not documented within the project tab or with the Issues tab**
 
 
 **Can I use Tropicraft in my public/private mod pack?**
 I would say yes but until most of the bugs and glitches are sorted, you might not want to do so. You also should ask for permission from the original creators. You can find the team on Discord to receive permission and find out what is required from you.
 
 ## WARNING: All support will be handled on this github page, NOT THE ORIGINAL DISCORD SERVER OR THE FORGE VERSION'S GITHUB
+
 
 **How do I contact the Original creator?**
 
