@@ -2,10 +2,12 @@ package net.tropicraft;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.tropicraft.core.client.data.TropicraftTags;
+import net.tropicraft.core.common.TropicraftCommands;
 import net.tropicraft.core.common.dimension.TropicraftDimension;
 import net.tropicraft.core.common.dimension.biome.TropicraftBiomeProvider;
 import net.tropicraft.core.common.dimension.biome.TropicraftBiomes;
@@ -76,7 +78,12 @@ public class Tropicraft implements ModInitializer {
         TropicScreenHandler.init();
 
         TropicraftDimension.addDefaultDimensionKey();
+        registerWorldGen();
 
+        TropicraftCommands.commandInitalization();
+    }
+
+    public static void registerWorldGen(){
         TropicraftBlockStateProviders.init();
 
         TropicraftProcessorLists.processorListsRegister();

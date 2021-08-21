@@ -1,5 +1,8 @@
 package net.tropicraft.core.common.drinks;
 
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.tropicraft.core.common.dimension.TropicraftDimension;
+import net.tropicraft.core.common.entity.placeable.ChairEntity;
 import net.tropicraft.core.common.registry.TropicraftItems;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -24,8 +27,8 @@ public class Drink {
         
         @Override
         public void onDrink(PlayerEntity player) {
-            if (!player.world.isClient() && isSunset(player.world)){//&& player.getRidingEntity() instanceof ChairEntity) {
-                //TropicraftWorldUtils.teleportPlayer((ServerPlayerEntity) player, TropicraftWorldUtils.TROPICS_DIMENSION);
+            if (!player.world.isClient() && isSunset(player.world) && player.getVehicle() instanceof ChairEntity) {
+                TropicraftDimension.teleportPlayer((ServerPlayerEntity) player, TropicraftDimension.WORLD);
             }
         }
 
