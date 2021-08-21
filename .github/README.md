@@ -17,13 +17,13 @@ The goal of this mod is to create a version of tropicraft that can run on the fa
 
 FAQ
 ===
-**Current Development Outlook**
+> **Current Development Outlook**
 Most of the blocks, items and main parts from the forge mod has been ported over but some parts are going to require more polish than others. With this said, ## THIS IS STILL INDEVLEOPMENT AND THERE CAN STILL BE MAJOR BUGS SO PROCEED WITH CAUTION.
 
 **Please Report any bugs not documented within the project tab or with the Issues tab**
 
 
-**Can I use Tropicraft in my public/private mod pack?**
+> **Can I use Tropicraft in my public/private mod pack?**
 I would say yes but until most of the bugs and glitches are sorted, you might not want to do so. You also should ask for permission from the original creators. You can find the team on Discord to receive permission and find out what is required from you.
 
 ## WARNING: All support will be handled on this github page, NOT THE ORIGINAL DISCORD SERVER OR THE FORGE VERSION'S GITHUB
