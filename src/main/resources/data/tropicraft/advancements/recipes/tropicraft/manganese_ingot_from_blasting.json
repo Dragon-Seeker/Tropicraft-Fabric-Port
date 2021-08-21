@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ores/manganese"
+            "tag": "tropicraft:manganese_ore"
           }
         ]
       }

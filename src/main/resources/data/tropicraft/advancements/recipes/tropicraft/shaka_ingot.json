@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ores/shaka"
+            "tag": "tropicraft:shaka_ores"
           }
         ]
       }
