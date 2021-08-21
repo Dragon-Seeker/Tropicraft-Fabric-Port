@@ -22,10 +22,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.tropicraftFabric.Tropicraft"
+      "net.tropicraft.Tropicraft"
     ],
     "client": [
-      "net.tropicraftFabric.client.TropicraftClient"
+      "net.tropicraft.core.client.TropicraftClient"
     ]
   },
   "mixins": [
