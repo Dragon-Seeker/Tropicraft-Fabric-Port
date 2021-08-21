@@ -39,14 +39,6 @@ public class FurnitureItem<T extends FurnitureEntity> extends Item implements IC
     @Override
     public int getColor(ItemStack stack, int pass) {
         return (pass == 0 ? 16777215 : ((DyeColorAccessor) ((Object) this.color)).getColor());
-        /*
-        float[] colorComponents = color.getColorComponents();
-        //TODO:Check if this is working at all
-        int result = ((int) colorComponents[0] << 16) + ((int) colorComponents[1] << 8) + (int) colorComponents[2];
-
-        return (pass == 0 ? 16777215 : result);
-
-         */
     }
 
     @Override

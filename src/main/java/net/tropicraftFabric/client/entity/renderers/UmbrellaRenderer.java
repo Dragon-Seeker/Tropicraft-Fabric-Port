@@ -13,6 +13,8 @@ public class UmbrellaRenderer extends FurnitureRenderer<UmbrellaEntity> {
         this.shadowRadius = 2.5f;
     }
 
+
+
     //TODO
 //    @Override
 //    public void doRenderShadowAndFire(Entity entityIn, double x, double y, double z, float yaw, float partialTicks) {

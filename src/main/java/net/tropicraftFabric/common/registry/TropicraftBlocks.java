@@ -183,8 +183,8 @@ public class TropicraftBlocks {
     //public static final RegistryObject<PineappleBlock> PINEAPPLE = register(
     //        "pineapple", () -> new PineappleBlock(Block.Properties.create(Material.TALL_PLANTS).tickRandomly().doesNotBlockMovement().hardnessAndResistance(0).sound(SoundType.PLANT)));
 
-    //TODO: Need to properlly add the fuctionality to pineapples
-    public static final Block PINEAPPLE = registerBlock("pineapple", new TropicPineapple());
+
+    public static final TropicPineapple PINEAPPLE = registerBlock("pineapple", new TropicPineapple());
 
     public static final Block IRIS = registerBlock("iris", new TropicTallPlant());
 

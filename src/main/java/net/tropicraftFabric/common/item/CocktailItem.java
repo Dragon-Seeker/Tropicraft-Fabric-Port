@@ -112,7 +112,7 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 
 
 	public static ItemStack makeCocktail(final List<ItemStack> itemStacks) {
-		// TODO fixme this is so ugly ugh
+		//TODO: fixme this is so ugly ugh
 		final ItemStack stack = new ItemStack(TropicraftItems.COCKTAILS.get(Drink.COCKTAIL));
 		NbtCompound tag = new NbtCompound();
 		tag.putByte("DrinkID", (byte) Drink.COCKTAIL.drinkId);

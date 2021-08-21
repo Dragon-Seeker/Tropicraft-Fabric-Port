@@ -54,7 +54,6 @@ public class TropicraftEntities {
     public static final EntityType<EIHEntity> EIH = registerEntity("eih", eih());
     public static final EntityType<WallItemEntity> WALL_ITEM = registerEntity("wall_item", wallItem());
     public static final EntityType<BambooItemFrameEntity> BAMBOO_ITEM_FRAME = registerEntity("bamboo_item_frame", bambooItemFrame());
-    // TODO: Register again when volcano eruption is finished
     public static final EntityType<LavaBallEntity> LAVA_BALL = registerEntity("lava_ball", lavaBall());
     public static final EntityType<SeaTurtleEntity> SEA_TURTLE = registerEntity("turtle", turtle());
     public static final EntityType<MarlinEntity> MARLIN = registerEntity("marlin", marlin());
@@ -517,6 +516,7 @@ public class TropicraftEntities {
         registerLandSpawn(FAILGULL, MobEntity::canMobSpawn);
         registerLandSpawn(TROPI_BEE, MobEntity::canMobSpawn);
         // TODO tropibee, or from nests?
+        //TODO: Add tropical hives and replace this when finished
     }
 
     public static void registerEntityAttributes(){

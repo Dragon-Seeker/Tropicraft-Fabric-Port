@@ -22,7 +22,7 @@ import net.tropicraft.core.common.entity.placeable.BeachFloatEntity;
 import net.tropicraft.core.common.entity.placeable.FurnitureEntity;
  */
 
-
+//TODO: Get this working as it requires a custom event
 //@EventBusSubscriber(value = Dist.CLIENT, modid = Constants.MODID)
 public class PlayerRotationHandler {
     /*
