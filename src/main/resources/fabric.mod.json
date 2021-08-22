@@ -17,7 +17,7 @@
   ],
 
   "license": "mpl-2.0",
-  "icon": "assets/tropicraft/icon.png",
+  "icon": "assets/tropicraft/icon1.png",
 
   "environment": "*",
   "entrypoints": {
