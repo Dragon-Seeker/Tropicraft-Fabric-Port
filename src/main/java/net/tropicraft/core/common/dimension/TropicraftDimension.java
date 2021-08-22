@@ -17,6 +17,7 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.dimension.biome.TropicraftBiomeProvider;
 import net.tropicraft.core.common.dimension.chunk.TropicraftChunkGenerator;
+import net.tropicraft.core.mixins.DimensionsOptionsAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -73,6 +74,14 @@ public class TropicraftDimension {
     public static void addDefaultDimensionKey() {
         //Field dimensionKeysField = ObfuscationReflectionHelper.findField(DimensionOptions.class, "field_236056_e_");
 
+        LinkedHashSet<RegistryKey<DimensionOptions>> keys = DimensionsOptionsAccessor.getBaseDimensions();
+        keys.add(DIMENSION);
+        DimensionsOptionsAccessor.setBaseDimensions(keys);
+
+
+
+
+        /*
         Field dimensionKeysField = null;
 
         try{
@@ -89,6 +98,8 @@ public class TropicraftDimension {
         } catch(IllegalAccessException e){
             LOGGER.error("Failed to add tropics as a default dimension key", e);
         }
+
+         */
 
 
 

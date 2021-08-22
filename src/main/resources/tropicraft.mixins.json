@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.tropicraft.core.mixins",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "ItemFrameEntityInvoker",
     "SeaTurtleInvoker",
@@ -20,7 +20,8 @@
     "StructureAccessor",
     "CactusBlockInjection",
     "SugarCaneBlockInjection",
-    "DyeColorAccessor"
+    "DyeColorAccessor",
+    "DimensionsOptionsAccessor"
   ],
   "client": [
   ],

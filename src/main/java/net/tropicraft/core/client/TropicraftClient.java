@@ -43,6 +43,7 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class TropicraftClient implements ClientModInitializer {
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void onInitializeClient() {
         TropicClientPackets.init();
@@ -62,13 +63,14 @@ public class TropicraftClient implements ClientModInitializer {
 
         ArmorRenderingRegistryInitialization();
 
-        bamboItemFrameModelLoaderInit();
+        //bamboItemFrameModelLoaderInit();
 
         setupDimensionRenderInfo();
 
 
     }
 
+    @Environment(EnvType.CLIENT)
     public static void bamboItemFrameModelLoaderInit(){
         //TODO:Check if item frames are now working
         StateManager<Block, BlockState> frameState = new StateManager.Builder<Block, BlockState>(Blocks.AIR).add(BooleanProperty.of("map")).build(Block::getDefaultState, BlockState::new);
@@ -81,7 +83,7 @@ public class TropicraftClient implements ClientModInitializer {
                 .build());
     }
 
-
+    @Environment(EnvType.CLIENT)
     public static void ArmorRenderingRegistryInitialization() {
         ArrayList<MaskArmorProvider> MASK_PROVIDER = new ArrayList<>();
         final List<AshenMaskItem> values = TropicraftItems.ASHEN_MASKS.values().asList();
@@ -102,6 +104,7 @@ public class TropicraftClient implements ClientModInitializer {
 
     }
 
+    @Environment(EnvType.CLIENT)
     public static void itemColorinit(){
         for(Item item : TropicraftItems.COCKTAILS.values().asList()) {
             ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ((IColoredItem) stack.getItem()).getColor(stack, tintIndex), item); //tintIndex > 0 ? CocktailItem.getCocktailColor(stack) :
@@ -118,6 +121,7 @@ public class TropicraftClient implements ClientModInitializer {
             ColorProviderRegistry.ITEM.register((stack, tintIndex) -> ((IColoredItem) stack.getItem()).getColor(stack, tintIndex), item); }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void setupBlockRenderLayers() {
 
         BlockRenderLayerMap.INSTANCE.putBlock(TropicraftBlocks.THATCH_STAIRS_FUZZY, RenderLayer.getCutoutMipped());
@@ -169,7 +173,7 @@ public class TropicraftClient implements ClientModInitializer {
         TropicraftBlocks.VANILLA_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
     }
 
-
+    @Environment(EnvType.CLIENT)
     public static void setupEntityRenderers() {
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.KOA_HUNTER, (dispatcher, context) -> new KoaRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_CREEPER, (dispatcher, context) -> new TropiCreeperRenderer(dispatcher));
@@ -215,7 +219,7 @@ public class TropicraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MAN_O_WAR, (dispatcher, context) -> new ManOWarRenderer(dispatcher));
     }
 
-
+    @Environment(EnvType.CLIENT)
     public static void setupBlockEntityRenderers() {
         BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST, (itemStack, transform, stack, source, light, overlay) ->
@@ -229,8 +233,7 @@ public class TropicraftClient implements ClientModInitializer {
          */
     }
 
-
-
+    @Environment(EnvType.CLIENT)
     public static void setupDimensionRenderInfo() {
 
         SkyProperties.BY_IDENTIFIER.put(TropicraftDimension.WORLD.getValue(), new SkyProperties(192.0F, true, SkyProperties.SkyType.NORMAL, false, false) {

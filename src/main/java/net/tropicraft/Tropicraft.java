@@ -70,9 +70,13 @@ public class Tropicraft implements ModInitializer {
         TropicraftTags.Blocks.init();
         TropicraftTags.Items.init();
 
+        TropicraftEntityAttributes.init();
+
         TropicraftEntities.init();
         TropicraftEntities.registerSpawns();
         TropicraftEntities.registerEntityAttributes();
+
+
 
         TropicBlockEntities.init();
         TropicScreenHandler.init();
