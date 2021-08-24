@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MaskArmorProvider implements ArmorRenderingRegistry.ModelProvider, ArmorRenderingRegistry.TextureProvider {
+public class MaskArmorProvider implements ArmorRender.ModelProvider, ArmorRenderingRegistry.TextureProvider {
 
     AshenMasks maskType;
 

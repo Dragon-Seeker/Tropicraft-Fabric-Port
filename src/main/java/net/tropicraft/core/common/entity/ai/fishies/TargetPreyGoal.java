@@ -33,7 +33,7 @@ public class TargetPreyGoal extends Goal {
         
         // Target selection
         Box entityBB = entity.getBoundingBox();
-        if (entity.age % 80 == 0 && entity.aggressTarget == null || entity.getEntityWorld().getEntityById(entity.aggressTarget.getEntityId()) == null) {
+        if (entity.age % 80 == 0 && entity.aggressTarget == null || entity.getEntityWorld().getEntityById(entity.aggressTarget.getId()) == null) {
                 List<Entity> list = entity.world.getOtherEntities(entity, entityBB.expand(20D, 20D, 20D).offset(0.0D, -8.0D, 0.0D), e -> e.isAlive());
                 if(list.size() > 0) {
                     Entity ent = list.get(rand.nextInt(list.size()));
@@ -98,7 +98,7 @@ public class TargetPreyGoal extends Goal {
             }
         }
 
-        if(entity.aggressTarget == null || entity.world.getEntityById(entity.aggressTarget.getEntityId()) == null || !entity.aggressTarget.isAlive()) {
+        if(entity.aggressTarget == null || entity.world.getEntityById(entity.aggressTarget.getId()) == null || !entity.aggressTarget.isAlive()) {
             entity.aggressTarget = null;
             entity.setRandomTargetHeading();
         }

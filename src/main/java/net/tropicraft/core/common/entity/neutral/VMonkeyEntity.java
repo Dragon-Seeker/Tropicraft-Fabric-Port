@@ -163,7 +163,7 @@ public class VMonkeyEntity extends TameableEntity {
                 setAttacking(false);
             }
         } else if (!stack.isEmpty() && isBreedingItem(stack)) {
-            if (!player.abilities.creativeMode) {
+            if (!player.getAbilities().creativeMode) {
                 stack.decrement(1);
             }
 
@@ -210,7 +210,7 @@ public class VMonkeyEntity extends TameableEntity {
         boolean damaged = entity.damage(DamageSource.mob(this), (float) getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue());
 
         if (damaged) {
-            dealDamage(this, entity);
+            applyDamageEffects(this, entity);
         }
 
         return damaged;

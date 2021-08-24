@@ -55,7 +55,7 @@ public class SinkInGroundProcessor extends CheatyStructureProcessor {
             
             // Only sink solid blocks, or blocks that are above air/water -- delete all others
             if (Block.isShapeFullCube(blockInfo.state.getOutlineShape(worldReaderIn, pos.down())) || isAirOrWater(worldReaderIn, pos.down())) {
-                return new StructureBlockInfo(pos.down(), blockInfo.state, blockInfo.tag);
+                return new StructureBlockInfo(pos.down(), blockInfo.state, blockInfo.nbt);
             }
             return null;
         }

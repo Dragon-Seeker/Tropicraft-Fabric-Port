@@ -17,7 +17,7 @@ public class StructureVoidProcessor extends StructureProcessor {
     @Override
     public StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos p_230386_3_, StructureBlockInfo originalInfo, StructureBlockInfo blockInfo, StructurePlacementData placementSettings) {
         if (blockInfo.state.getBlock() == Blocks.STRUCTURE_VOID) {
-            return new StructureBlockInfo(blockInfo.pos, Blocks.AIR.getDefaultState(), blockInfo.tag);
+            return new StructureBlockInfo(blockInfo.pos, Blocks.AIR.getDefaultState(), blockInfo.nbt);
         }
         return blockInfo;
     }

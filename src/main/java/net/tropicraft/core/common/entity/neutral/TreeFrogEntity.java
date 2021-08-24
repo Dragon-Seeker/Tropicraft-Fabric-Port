@@ -59,7 +59,8 @@ public class TreeFrogEntity extends TropicraftCreatureEntity implements Monster,
 
     public TreeFrogEntity(EntityType<? extends PathAwareEntity> type, World world) {
         super(type, world);
-        pushSpeedReduction = 0.8F;
+        //TODO: Welp, figure out how to readd this later
+        //pushSpeedReduction = 0.8F;
         experiencePoints = 5;
     }
 
@@ -158,12 +159,12 @@ public class TreeFrogEntity extends TropicraftCreatureEntity implements Monster,
             final PoisonBlotEntity poison = new PoisonBlotEntity(TropicraftEntities.POISON_BLOT, this, world);
             poison.setPosition(poison.getX(), poison.getY() + 1.3999999761581421D, poison.getZ());
             final double shotHeight = (entity.getY() + (double) entity.getStandingEyeHeight()) - 0.20000000298023224D - poison.getY();
-            float f1 = MathHelper.sqrt(d * d + d1 * d1) * 0.2F;
+            float f1 = (float) Math.sqrt(d * d + d1 * d1) * 0.2F;
             entity.getEntityWorld().playSound(null, entity.getBlockPos(), Sounds.FROG_SPIT, SoundCategory.HOSTILE, 1, 1);
             world.spawnEntity(poison);
             poison.setVelocity(d, shotHeight + (double) f1, d1, 0.6F, 12F);
             attackTime = 50;
-            yaw = (float) ((Math.atan2(d1, d) * 180D) / 3.1415927410125732D) - 90F;
+            this.setYaw((float) ((Math.atan2(d1, d) * 180D) / 3.1415927410125732D) - 90F);
         }
     }
 

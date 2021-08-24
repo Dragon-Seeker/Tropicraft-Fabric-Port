@@ -36,7 +36,7 @@ public class PiranhaEntity extends SchoolingFishEntity implements IAtlasFish {
     }
 
     @Override
-    protected ItemStack getFishBucketItem() {
+    public ItemStack getBucketItem() {
         return ItemStack.EMPTY;
     }
 

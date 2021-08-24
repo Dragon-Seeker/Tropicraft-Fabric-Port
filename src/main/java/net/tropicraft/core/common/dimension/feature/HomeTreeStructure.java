@@ -62,7 +62,7 @@ public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConf
         @Override
         public void init(DynamicRegistryManager registries, ChunkGenerator generator, StructureManager templates, int chunkX, int chunkZ, Biome biome, StructurePoolFeatureConfig config) {
             BlockPos pos = new BlockPos(chunkX << 4, 0, chunkZ << 4);
-            StructurePoolBasedGenerator.method_30419(registries, config, Piece::new, generator, templates, pos, this.children, this.random, true, true);
+            StructurePoolBasedGenerator.generate(registries, config, Piece::new, generator, templates, pos, this.children, this.random, true, true);
             this.setBoundingBoxFromChildren();
         }
 
@@ -70,12 +70,12 @@ public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConf
         protected void setBoundingBoxFromChildren() {
             super.setBoundingBoxFromChildren();
             int margin = 24; // Double vanilla's margin
+            this.boundingBox.maxZ -= margin;
             this.boundingBox.minX -= margin;
             this.boundingBox.minY -= margin;
-            this.boundingBox.minZ -= margin;
+            this.boundingBox.minZ += margin;
             this.boundingBox.maxX += margin;
             this.boundingBox.maxY += margin;
-            this.boundingBox.maxZ += margin;
         }
     }
 
@@ -93,12 +93,12 @@ public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConf
             if (this.poolElement instanceof FeaturePoolElement) {
                 BlockBox ret = super.getBoundingBox();
                 ret = new BlockBox(ret);
+                ret.maxZ -= 32;
                 ret.minX -= 32;
                 ret.minY -= 32;
-                ret.minZ -= 32;
+                ret.minZ += 32;
                 ret.maxX += 32;
                 ret.maxY += 32;
-                ret.maxZ += 32;
             }
             return super.getBoundingBox();
         }

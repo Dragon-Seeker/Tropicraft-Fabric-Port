@@ -66,7 +66,7 @@ public class MarlinEntity extends FishEntity {
     }
 
     @Override
-    protected ItemStack getFishBucketItem() {
+    public ItemStack getBucketItem() {
         return ItemStack.EMPTY;
     }
 

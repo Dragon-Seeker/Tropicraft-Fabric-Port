@@ -92,7 +92,7 @@ public class TropicTikiTorch extends Block {
             return getDefaultState().with(SECTION, TorchSection.UPPER);
         }
         BlockState ret = getDefaultState().with(SECTION, TorchSection.LOWER);
-        return blockpos.getY() < context.getWorld().getDimension().getLogicalHeight() - 1 &&
+        return blockpos.getY() < context.getWorld().getDimension().getMinimumY() - 1 &&
                 context.getWorld().getBlockState(blockpos.up()).canReplace(context) &&
                 context.getWorld().getBlockState(blockpos.up(2)).canReplace(context) ? ret : null;
     }

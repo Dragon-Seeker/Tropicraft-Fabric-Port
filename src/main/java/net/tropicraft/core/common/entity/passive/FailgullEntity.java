@@ -1,9 +1,11 @@
 package net.tropicraft.core.common.entity.passive;
 
+import net.minecraft.entity.ai.AboveGroundTargeting;
+import net.minecraft.entity.ai.NoPenaltySolidTargeting;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.TargetFinder;
+//import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.control.FlightMoveControl;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.pathing.BirdNavigation;
@@ -160,6 +162,11 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 		return dataTracker.get(FLOCK_LEADER_UUID).isPresent();
 	}
 
+	@Override
+	public boolean isInAir() {
+		return !this.onGround;
+	}
+
 	@Nullable
 	private Entity getFlockLeader() {
 		if (world instanceof ServerWorld && hasFlockLeader()) {
@@ -184,8 +191,8 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 
 		Vec3d Vector3d = getRotationVec(0.0F);
 
-		Vec3d Vector3d2 = TargetFinder.findAirTarget(FailgullEntity.this, 40, 3, Vector3d, ((float)Math.PI / 2F), 2, 1);
-		final Vec3d groundTarget = TargetFinder.findGroundTarget(FailgullEntity.this, 40, 4, -2, Vector3d, (double) ((float) Math.PI / 2F));
+		Vec3d Vector3d2 = AboveGroundTargeting.find(FailgullEntity.this, 40, 3, Vector3d.getX(), Vector3d.getZ(), ((float)Math.PI / 2F), 2, 1);
+		final Vec3d groundTarget = NoPenaltySolidTargeting.find(FailgullEntity.this, 40, 4, -2, Vector3d.getX(), Vector3d.getZ(), (double) ((float) Math.PI / 2F));
 		return Vector3d2 != null ? new BlockPos(Vector3d2) : groundTarget != null ? new BlockPos(groundTarget) : null;
 	}
 	/*
@@ -299,7 +306,7 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 			List<FailgullEntity> list = mob.world.getNonSpectatingEntities(FailgullEntity.class, mob.getBoundingBox().expand(10D, 10D, 10D));
 			list.remove(mob);
 
-			final Optional<FailgullEntity> oldest = list.stream().min(Comparator.comparingInt(FailgullEntity::getEntityId));
+			final Optional<FailgullEntity> oldest = list.stream().min(Comparator.comparingInt(FailgullEntity::getId));
 			// Found an older one nearby, set it as the flock leader
 			if (oldest.isPresent() && !oldest.get().uuid.equals(mob.getUuid())) {
 				final FailgullEntity oldestFailgull = oldest.get();

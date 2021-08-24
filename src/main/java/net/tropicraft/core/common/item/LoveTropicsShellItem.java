@@ -32,7 +32,7 @@ public class LoveTropicsShellItem extends ShellItem implements IColoredItem {
 
     @Override
     public int getColor(ItemStack itemstack, int pass) {
-        final NbtCompound tag = itemstack.getTag();
+        final NbtCompound tag = itemstack.getNbt();
         if (tag != null && !tag.isEmpty() && tag.contains("Name")) {
             return pass == 0 ? 0xFFFFFFFF : LTUtil.colors.get(tag.getString("Name"));
         }
@@ -41,10 +41,10 @@ public class LoveTropicsShellItem extends ShellItem implements IColoredItem {
 
     @Override
     public Text getName(final ItemStack stack) {
-        if (!stack.hasTag() || !stack.getTag().contains("Name")) {
+        if (!stack.hasNbt() || !stack.getNbt().contains("Name")) {
             return super.getName(stack);
         }
-        final String name = stack.getTag().getString("Name");
+        final String name = stack.getNbt().getString("Name");
         final String type = name.endsWith("s") ? "with_s" : "normal";
         return new TranslatableText("item.tropicraft.shell.owned." + type, name);
     }

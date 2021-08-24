@@ -119,15 +119,15 @@ public class EIHEntity extends TropicraftCreatureEntity {
         }
 
         if (!isAsleep()) {
-            prevYaw = yaw;
-            prevPitch = pitch;
+            prevYaw = this.getYaw();
+            prevPitch = this.getPitch();
         }
 
         if (age % 20 == 0) {
             final LivingEntity attackTarget = getTarget();
             if (attackTarget == null) {
                 final PlayerEntity closestPlayer = world.getClosestPlayer(this, 10);
-                if (closestPlayer != null && !closestPlayer.abilities.creativeMode && !closestPlayer.isSpectator()) {
+                if (closestPlayer != null && !closestPlayer.getAbilities().creativeMode && !closestPlayer.isSpectator()) {
                     setTarget(closestPlayer);
                 }
             } else if (distanceTo(attackTarget) > 16) {
@@ -140,11 +140,11 @@ public class EIHEntity extends TropicraftCreatureEntity {
             if (attackTarget != null && !isNavigating() && !isAngry()) {
                 if (attackTarget instanceof PlayerEntity) {
                     final PlayerEntity player = (PlayerEntity) attackTarget;
-                    if (!player.abilities.creativeMode && !player.isSpectator()) {
+                    if (!player.getAbilities().creativeMode && !player.isSpectator()) {
                         final float distance = distanceTo(player);
                         if (distance < 10F) {
                             setAwake(true);
-                            final ItemStack itemstack = player.inventory.getMainHandStack();
+                            final ItemStack itemstack = player.getInventory().getMainHandStack();
 
                             if (!itemstack.isEmpty()) {
                                 if (isAware() && itemstack.getItem() == TropicraftBlocks.CHUNK.asItem()) {
@@ -247,7 +247,7 @@ public class EIHEntity extends TropicraftCreatureEntity {
 
         if (source.getSource() instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) source.getSource();
-            if (player.abilities.creativeMode || player.isSpectator()) {
+            if (player.getAbilities().creativeMode || player.isSpectator()) {
                 return super.damage(source, amount);
             }
             ItemStack heldItemStack = player.getMainHandStack();

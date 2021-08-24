@@ -79,8 +79,8 @@ public class TropiCreeperEntity extends PathAwareEntity {
     }
 
     @Override
-    public boolean handleFallDamage(float distance, float damageMultiplier) {
-        boolean fall = super.handleFallDamage(distance, damageMultiplier);
+    public boolean handleFallDamage(float distance, float damageMultiplier, DamageSource damageSource) {
+        boolean fall = super.handleFallDamage(distance, damageMultiplier, damageSource);
         this.timeSinceIgnited = (int)((float)this.timeSinceIgnited + distance * 1.5F);
         if (this.timeSinceIgnited > this.fuseTime - 5) {
             this.timeSinceIgnited = this.fuseTime - 5;
@@ -247,7 +247,7 @@ public class TropiCreeperEntity extends PathAwareEntity {
                     }
                 }
             }
-            this.remove();
+            this.discard();
             this.spawnLingeringCloud();
         } else {
             world.addParticle(ParticleTypes.EXPLOSION_EMITTER, getX(), getY() + 1F, getZ(), 1.0D, 0.0D, 0.0D);

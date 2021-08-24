@@ -55,7 +55,8 @@ public abstract class FurnitureEntity extends Entity {
         this.itemLookup = itemLookup;
         this.ignoreCameraFrustum = true;
         this.inanimate = true;
-        this.pushSpeedReduction = .95F;
+        //TODO: Welp, figure out how to readd this later
+        //this.pushSpeedReduction = .95F;
     }
     /*
     @Environment(EnvType.CLIENT)
@@ -69,7 +70,9 @@ public abstract class FurnitureEntity extends Entity {
      */
     
     public void setRotation(float yaw) {
-        this.lerpYaw = this.yaw = MathHelper.wrapDegrees(yaw);
+        float tempYaw = MathHelper.wrapDegrees(yaw);
+        this.setYaw(tempYaw);
+        this.lerpYaw = tempYaw;
     }
 
 
@@ -88,7 +91,7 @@ public abstract class FurnitureEntity extends Entity {
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
@@ -158,7 +161,7 @@ public abstract class FurnitureEntity extends Entity {
                 this.lerpYaw = MathHelper.wrapDegrees((double) yaw);
             }
             this.lerpSteps = 10;
-            this.pitch = pitch;
+            this.setPitch(pitch);
         }
     }
 
@@ -167,12 +170,12 @@ public abstract class FurnitureEntity extends Entity {
             double d0 = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
             double d1 = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
             double d2 = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
-            double d3 = MathHelper.wrapDegrees(this.lerpYaw - (double)this.yaw);
-            this.yaw = (float)((double)this.yaw + d3 / (double)this.lerpSteps);
-            this.pitch = (float)((double)this.pitch + (this.lerpPitch - (double)this.pitch) / (double)this.lerpSteps);
+            double d3 = MathHelper.wrapDegrees(this.lerpYaw - (double)this.getYaw());
+            this.setYaw((float)((double)this.getYaw() + d3 / (double)this.lerpSteps));
+            this.setPitch((float)((double)this.getPitch() + (this.lerpPitch - (double)this.getPitch()) / (double)this.lerpSteps));
             --this.lerpSteps;
             this.setPosition(d0, d1, d2);
-            this.setRotation(this.yaw, this.pitch);
+            this.setRotation(this.getYaw(), this.getPitch());
         }
     }
 
@@ -186,7 +189,7 @@ public abstract class FurnitureEntity extends Entity {
             this.setTimeSinceHit(10);
             this.setDamage(this.getDamage() + amount * 10.0F);
             this.scheduleVelocityUpdate();
-            boolean flag = damageSource.getAttacker() instanceof PlayerEntity && ((PlayerEntity)damageSource.getAttacker()).abilities.creativeMode;
+            boolean flag = damageSource.getAttacker() instanceof PlayerEntity && ((PlayerEntity)damageSource.getAttacker()).getAbilities().creativeMode;
     
             if (flag || this.getDamage() > DAMAGE_THRESHOLD) {
                 Entity rider = this.getPrimaryPassenger();
@@ -198,7 +201,7 @@ public abstract class FurnitureEntity extends Entity {
                     this.dropStack(getItemStack(), 0.0F);
                 }
     
-                this.remove();
+                this.remove(RemovalReason.KILLED);
             }
         }
     
@@ -220,11 +223,12 @@ public abstract class FurnitureEntity extends Entity {
         this.setTimeSinceHit(10);
         this.setDamage(this.getDamage() * 10.0F);
     }
-
+    /*
     @Override
     protected boolean canClimb() {
         return false;
     }
+     */
 
     @Override
     public boolean collides() {

@@ -35,7 +35,7 @@ public interface StructureExtensions {
         for(Structure.StructureEntityInfo entityInfo : infos) {
             Vec3d pos = transformedVec3d(settings, entityInfo.pos).add(Vec3d.of(blockPos));
             BlockPos blockpos = net.minecraft.structure.Structure.transform(settings, entityInfo.blockPos).add(blockPos);
-            Structure.StructureEntityInfo info = new Structure.StructureEntityInfo(pos, blockpos, entityInfo.tag);
+            Structure.StructureEntityInfo info = new Structure.StructureEntityInfo(pos, blockpos, entityInfo.nbt);
             for (StructureProcessor proc : settings.getProcessors()) {
                 if(proc instanceof AdjustBuildingHeightProcessor){
                     info = ((AdjustBuildingHeightProcessor) proc).processEntity(world, blockPos, entityInfo, info, settings, structure);
@@ -59,7 +59,7 @@ public interface StructureExtensions {
             BlockPos blockpos = Structure.transformAround(Structure$entityinfo.blockPos, settings.getMirror(), settings.getRotation(), settings.getPosition()).add(blockPos);
             blockpos = Structure$entityinfo.blockPos;
             if (settings.getBoundingBox() == null || settings.getBoundingBox().contains(blockpos)) {
-                NbtCompound compoundnbt = Structure$entityinfo.tag.copy();
+                NbtCompound compoundnbt = Structure$entityinfo.nbt.copy();
                 Vec3d vector3d1 = Structure$entityinfo.pos;
                 NbtList listnbt = new NbtList();
                 listnbt.add(NbtDouble.of(vector3d1.x));
@@ -90,7 +90,7 @@ public interface StructureExtensions {
         while(var6.hasNext()) {
             Structure.StructureBlockInfo structureBlockInfo = (Structure.StructureBlockInfo)var6.next();
             BlockPos blockPos2 = Structure.transform(placementData, structureBlockInfo.pos).add(pos);
-            Structure.StructureBlockInfo structureBlockInfo2 = new Structure.StructureBlockInfo(blockPos2, structureBlockInfo.state, structureBlockInfo.tag != null ? structureBlockInfo.tag.copy() : null);
+            Structure.StructureBlockInfo structureBlockInfo2 = new Structure.StructureBlockInfo(blockPos2, structureBlockInfo.state, structureBlockInfo.nbt != null ? structureBlockInfo.nbt.copy() : null);
 
             for(Iterator iterator = placementData.getProcessors().iterator(); structureBlockInfo2 != null && iterator.hasNext();) {
                 StructureProcessor processor = ((StructureProcessor)iterator.next());

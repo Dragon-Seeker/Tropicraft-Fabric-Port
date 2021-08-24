@@ -66,8 +66,8 @@ public abstract class TropicraftFishEntity extends WaterCreatureEntity {
         // Client Side
         if (world.isClient) {
             // TODO if we ever use this class with turtles again - if(!(this instanceof IAmphibian)) {
-                this.pitch = -this.swimPitch;
-                this.yaw = -this.swimYaw;
+                this.setPitch(-this.swimPitch);
+                this.setYaw(-this.swimYaw);
                 this.headYaw = -this.swimYaw;
                 this.prevHeadYaw = -this.prevSwimYaw;
                 this.bodyYaw = 0;
@@ -91,7 +91,7 @@ public abstract class TropicraftFishEntity extends WaterCreatureEntity {
                 if (this.getY() == this.prevY) {
                     pitch = this.swimPitch;
                 } else {
-                    pitch = (float) (-((Math.atan2(y, MathHelper.sqrt(x * x + z * z)) * 180D) / Math.PI));
+                    pitch = (float) (-((Math.atan2(y, Math.sqrt(x * x + z * z)) * 180D) / Math.PI));
                 }
 
                 this.swimYaw = lerp(swimYaw, (int)-yaw, this.swimSpeedTurn*4);
@@ -273,7 +273,7 @@ public abstract class TropicraftFishEntity extends WaterCreatureEntity {
         double y = (int) (posY - this.getY());
         double z = (int) (posZ - this.getZ());
         float yaw = (float) ((Math.atan2(z, x) * 180D) / Math.PI) - 90f;
-        float pitch = (float) (-((Math.atan2(y, MathHelper.sqrt(x * x + z * z)) * 180D) / Math.PI));
+        float pitch = (float) (-((Math.atan2(y, Math.sqrt(x * x + z * z)) * 180D) / Math.PI));
         targetVector = new Vec3d((int) posX, (int) posY, (int) posZ);
         targetVectorHeading = new Vec2f(yaw, pitch);
         return true;
@@ -319,7 +319,7 @@ public abstract class TropicraftFishEntity extends WaterCreatureEntity {
         double y = ent.getY() - this.getY();
         double z = ent.getZ() - this.getZ();
         float yaw = (float) ((Math.atan2(z, x) * 180D) / Math.PI) - 90F;
-        float pitch = (float) (-((Math.atan2(y, MathHelper.sqrt(x * x + z * z)) * 180D) / Math.PI));
+        float pitch = (float) (-((Math.atan2(y, Math.sqrt(x * x + z * z)) * 180D) / Math.PI));
 
         if (targetVector == null) {
             targetVector = new Vec3d(ent.getX(), ent.getY() - 5 + random.nextInt(10), ent.getZ());

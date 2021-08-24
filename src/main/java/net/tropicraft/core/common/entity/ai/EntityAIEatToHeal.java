@@ -1,9 +1,10 @@
 package net.tropicraft.core.common.entity.ai;
 
+import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.entity.ai.TargetFinder;
+//import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -97,7 +98,7 @@ public class EntityAIEatToHeal extends Goal
                     boolean success = false;
 
                     if (this.entityObj.squaredDistanceTo(Vec3d.ofCenter(blockposGoal)) > 256.0D) {
-                        Vec3d Vector3d = TargetFinder.method_27929(this.entityObj, 14, 3, new Vec3d((double) i + 0.5D, (double) j, (double) k + 0.5D));
+                        Vec3d Vector3d = NoPenaltyTargeting.find(this.entityObj, 14, 3, new Vec3d((double) i + 0.5D, (double) j, (double) k + 0.5D));
 
                         if (Vector3d != null) {
                             success = this.entityObj.getNavigation().startMovingTo(Vector3d.x, Vector3d.y, Vector3d.z, 1.0D);

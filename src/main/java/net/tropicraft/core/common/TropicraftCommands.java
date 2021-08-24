@@ -1,14 +1,12 @@
 package net.tropicraft.core.common;
 
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.command.CommandSource;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.tropicraft.core.common.dimension.TropicraftDimension;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;

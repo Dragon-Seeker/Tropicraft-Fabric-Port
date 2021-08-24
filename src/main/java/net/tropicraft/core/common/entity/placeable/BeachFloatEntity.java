@@ -65,8 +65,9 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
         this.ignoreCameraFrustum = true;
         this.isEmpty = true;
         this.inanimate = true;
-        this.pushSpeedReduction = .95F;
-        setEntityId(this.getEntityId());
+        //TODO: Welp, figure out how to readd this later
+        //this.pushSpeedReduction = .95F;
+        setId(this.getId());
     }
 
     @Environment(EnvType.CLIENT)
@@ -74,13 +75,13 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
         super(TropicraftEntities.BEACH_FLOAT, world, TropicraftItems.BEACH_FLOATS);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
-        setEntityId(id);
+        setId(id);
         setUuid(uuid);
     }
     
     @Override
-    public void setEntityId(int id) {
-        super.setEntityId(id);
+    public void setId(int id) {
+        super.setId(id);
         random.setSeed(id);
         this.windModifier = (1 + (random.nextGaussian() * 0.1)) - 0.05;
     }
@@ -94,7 +95,7 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
             float rot = -controller.sidewaysSpeed;
             rotationSpeed += rot * 0.25f;
 
-            float ang = yaw;
+            float ang = this.getYaw();
             float moveX = MathHelper.sin(-ang * 0.017453292F) * move * 0.0035f;
             float moveZ = MathHelper.cos(ang * 0.017453292F) * move * 0.0035f;
             setVelocity(getVelocity().add(moveX, 0, moveZ));
@@ -107,7 +108,7 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
             setVelocity(getVelocity().add(windX, 0, windZ));
             // Rotate towards a target yaw with some random perturbance
             double targetYaw = Math.toDegrees(windAng) + ((windModifier - 1) * 45);
-            double yaw = (MathHelper.wrapDegrees(this.yaw) + 180 - 35) % 360;
+            double yaw = (MathHelper.wrapDegrees(this.getYaw()) + 180 - 35) % 360;
             double angleDiff = targetYaw - yaw;
             if (angleDiff > 0) {
                 this.rotationSpeed += Math.min(0.005 * windModifier, angleDiff);
@@ -134,7 +135,9 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
         
         super.tick();
 
-        yaw += rotationSpeed;
+        this.setYaw(this.getYaw() + rotationSpeed);
+        //yaw += rotationSpeed;
+
         move(MovementType.PLAYER, getVelocity());
 
         setVelocity(getVelocity().multiply(0.9, 0.9, 0.9));
@@ -236,15 +239,16 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
             }
 
             float len = 0.6f;
-            double x = this.getX() + (-MathHelper.sin(-this.yaw * 0.017453292F) * len);
-            double z = this.getZ() + (-MathHelper.cos(this.yaw * 0.017453292F) * len);
+            double x = this.getX() + (-MathHelper.sin(-this.getYaw() * 0.017453292F) * len);
+            double z = this.getZ() + (-MathHelper.cos(this.getYaw() * 0.017453292F) * len);
             passenger.setPosition(x, this.getY() + (double) f1, z);
-            passenger.yaw += this.rotationSpeed;
+            passenger.setYaw(this.getYaw() + this.rotationSpeed);
+            //passenger.yaw += this.rotationSpeed;
             passenger.setHeadYaw(passenger.getHeadYaw() + this.rotationSpeed);
             this.applyYawToEntity(passenger);
 
             if (passenger instanceof LivingEntity && this.getPassengerList().size() > 1) {
-                int j = passenger.getEntityId() % 2 == 0 ? 90 : 270;
+                int j = passenger.getId() % 2 == 0 ? 90 : 270;
                 passenger.setBodyYaw(((LivingEntity) passenger).bodyYaw + (float) j);
                 passenger.setHeadYaw(passenger.getHeadYaw() + (float) j);
             }
@@ -265,16 +269,20 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
 
     protected void applyYawToEntity(Entity entityToUpdate) {
         if (!entityToUpdate.world.isClient || isClientFirstPerson()) {
-            entityToUpdate.setBodyYaw(this.yaw);
-            float yaw = MathHelper.wrapDegrees(entityToUpdate.yaw - this.yaw);
-            float pitch = MathHelper.wrapDegrees(entityToUpdate.pitch - this.pitch);
+            entityToUpdate.setBodyYaw(this.getYaw());
+            float yaw = MathHelper.wrapDegrees(entityToUpdate.getYaw() - this.getYaw());
+            float pitch = MathHelper.wrapDegrees(entityToUpdate.getPitch() - this.getPitch());
             float clampedYaw = MathHelper.clamp(yaw, -105.0F, 105.0F);
             float clampedPitch = MathHelper.clamp(pitch, -100F, -10F);
             entityToUpdate.prevYaw += clampedYaw - yaw;
-            entityToUpdate.yaw += clampedYaw - yaw;
+            entityToUpdate.setYaw(this.getYaw() + (clampedYaw - yaw));
+            //entityToUpdate.yaw += clampedYaw - yaw;
+
             entityToUpdate.prevPitch += clampedPitch - pitch;
-            entityToUpdate.pitch += clampedPitch - pitch;
-            entityToUpdate.setHeadYaw(entityToUpdate.yaw);
+            entityToUpdate.setPitch(this.getPitch() + (clampedPitch - pitch));
+            //entityToUpdate.pitch += clampedPitch - pitch;
+
+            entityToUpdate.setHeadYaw(entityToUpdate.getYaw());
         }
     }
 
@@ -379,7 +387,7 @@ public class BeachFloatEntity extends FurnitureEntity {//implements IEntityAddit
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
         packet.writeDouble(this.lerpYaw);
 

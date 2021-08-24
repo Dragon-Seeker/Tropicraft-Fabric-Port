@@ -22,7 +22,7 @@ public class AirToCaveAirProcessor extends StructureProcessor {
     @Nullable
     public StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pos2, StructureBlockInfo originalInfo, StructureBlockInfo blockInfo, StructurePlacementData placementSettingsIn) {
         if (blockInfo.state.getBlock() == Blocks.AIR) {
-            return new StructureBlockInfo(blockInfo.pos, Blocks.CAVE_AIR.getDefaultState(), blockInfo.tag);
+            return new StructureBlockInfo(blockInfo.pos, Blocks.CAVE_AIR.getDefaultState(), blockInfo.nbt);
         }
         return blockInfo;
         //super.process();

@@ -21,7 +21,6 @@ import net.tropicraft.core.mixins.DimensionsOptionsAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
 import java.util.function.Supplier;
 
@@ -34,7 +33,7 @@ public class TropicraftDimension {
     public static final RegistryKey<World> WORLD = RegistryKey.of(Registry.WORLD_KEY, ID);
     public static final RegistryKey<DimensionOptions> DIMENSION = RegistryKey.of(Registry.DIMENSION_KEY, ID);
     public static final RegistryKey<DimensionType> DIMENSION_TYPE = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, ID);
-    public static final RegistryKey<ChunkGeneratorSettings> DIMENSION_SETTINGS = RegistryKey.of(Registry.NOISE_SETTINGS_WORLDGEN, ID);
+    public static final RegistryKey<ChunkGeneratorSettings> DIMENSION_SETTINGS = RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, ID);
 
     //public static DimensionType DIMENSION_TYPE_TEST = Registry.register(DIMENSION)
 

@@ -296,8 +296,8 @@ public class SeaTurtleEntity extends TurtleEntity {
                 PlayerEntity p = (PlayerEntity)passenger;
                 if(this.isTouchingWater()) {
                     if(p.forwardSpeed > 0f) {
-                        this.pitch = this.lerp(pitch, -(passenger.pitch*0.5f), 6f);
-                        this.yaw = this.lerp(yaw, -passenger.yaw, 6f);
+                        this.setPitch(this.lerp(getPitch(), -(passenger.getPitch()*0.5f), 6f));
+                        this.setYaw(this.lerp(getYaw(), -passenger.getYaw(), 6f));
 //                        this.targetVector = null;
 //                        this.targetVectorHeading = null;
                         this.swimSpeedCurrent += 0.05f;
@@ -355,12 +355,12 @@ public class SeaTurtleEntity extends TurtleEntity {
 
                 final LivingEntity controllingEntity = (LivingEntity) controllingPassenger;
 
-                this.yaw = controllingPassenger.yaw;
-                this.prevYaw = this.yaw;
-                this.pitch = controllingPassenger.pitch;
-                this.setRotation(this.yaw, this.pitch);
-                this.bodyYaw = this.yaw;
-                this.headYaw = this.yaw;
+                this.setYaw(controllingPassenger.getYaw());
+                this.prevYaw = this.getYaw();
+                this.setPitch(controllingPassenger.getPitch());
+                this.setRotation(this.getYaw(), this.getPitch());
+                this.bodyYaw = this.getYaw();
+                this.headYaw = this.getYaw();
                 this.stepHeight = 1.0F;
                 this.flyingSpeed = this.getMovementSpeed() * 0.1F;
 
@@ -368,8 +368,8 @@ public class SeaTurtleEntity extends TurtleEntity {
                 float forward = getNoBrakes() ? 1 : controllingEntity.forwardSpeed;
                 float vertical = controllingEntity.upwardSpeed; // Players never use this?
 
-                double verticalFromPitch = -Math.sin(Math.toRadians(pitch)) * forward;
-                forward *= MathHelper.clamp(1 - (Math.abs(pitch) / 90), 0.01f, 1);
+                double verticalFromPitch = -Math.sin(Math.toRadians(getPitch())) * forward;
+                forward *= MathHelper.clamp(1 - (Math.abs(getPitch()) / 90), 0.01f, 1);
 
                 if (!isTouchingWater()) {
                     if (getCanFly()) {
@@ -400,7 +400,7 @@ public class SeaTurtleEntity extends TurtleEntity {
                 this.lastLimbDistance = this.limbDistance;
                 double d1 = this.getX() - this.prevX;
                 double d0 = this.getZ() - this.prevZ;
-                float swinger = MathHelper.sqrt(d1 * d1 + d0 * d0) * 4.0F;
+                float swinger = (float) Math.sqrt(d1 * d1 + d0 * d0) * 4.0F;
                 if (swinger > 1.0F) {
                     swinger = 1.0F;
                 }

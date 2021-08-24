@@ -48,8 +48,8 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext flag) {
 		Drink drink = getDrink(stack);
 
-		if (drink == Drink.COCKTAIL && stack.hasTag() && stack.getTag().contains("Ingredients")) {
-    		final NbtList ingredients = stack.getTag().getList("Ingredients", 10);
+		if (drink == Drink.COCKTAIL && stack.hasNbt() && stack.getNbt().contains("Ingredients")) {
+    		final NbtList ingredients = stack.getNbt().getList("Ingredients", 10);
     
     		for (int i = 0; i < ingredients.size(); ++i) {
 				NbtCompound ingredient = ingredients.getCompound(i);
@@ -64,7 +64,7 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	}
 
 	public static int getCocktailColor(ItemStack stack) {
-		final NbtCompound tag = stack.getTag();
+		final NbtCompound tag = stack.getNbt();
 		if (tag != null && !tag.isEmpty()) {
 			if (tag.contains("Color")) {
 				return tag.getInt("Color");
@@ -105,7 +105,7 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 
 		tag.putInt("Color", color);
 
-		stack.setTag(tag);
+		stack.setNbt(tag);
 		return stack;
 	}
 
@@ -149,17 +149,17 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 
 		tag.putInt("Color", color);
 
-		stack.setTag(tag);
+		stack.setNbt(tag);
 		return stack;
 
 	}
 
 	public static Ingredient[] getIngredients(ItemStack stack) {
-		if (!Drink.isDrink(stack.getItem()) || !stack.hasTag()) {
+		if (!Drink.isDrink(stack.getItem()) || !stack.hasNbt()) {
 			return new Ingredient[0];
 		}
 
-		NbtCompound nbt = stack.getTag();
+		NbtCompound nbt = stack.getNbt();
 		NbtList tagList = nbt.getList("Ingredients", 10);
 		Ingredient[] ingredients = new Ingredient[tagList.size()];
 

@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 
 import java.util.HashMap;
 
-public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimationProgress> extends BlockEntityRenderer<TropicBambooChestBlockEntity> {
+public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimationProgress> implements BlockEntityRenderer<TropicBambooChestBlockEntity> {
     private static final HashMap<Block, RenderLayer[]> LAYERS = Maps.newHashMap();
     private static final RenderLayer[] defaultLayer;
     private static final RenderLayer[] bambooChestLayer;

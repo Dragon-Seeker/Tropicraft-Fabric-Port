@@ -1,5 +1,6 @@
 package net.tropicraft.core.common.block.blockentity;
 
+import net.minecraft.util.math.BlockPos;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.ChestBlockEntity;
@@ -11,8 +12,8 @@ public class TropicBambooChestBlockEntity extends ChestBlockEntity {
 
     private boolean unbreakable = false;
 
-    public TropicBambooChestBlockEntity() {
-        super(TropicBlockEntities.BAMBOO_CHEST);
+    public TropicBambooChestBlockEntity(BlockPos pos, BlockState state) {
+        super(TropicBlockEntities.BAMBOO_CHEST, pos, state);
     }
 
     /*
@@ -33,8 +34,8 @@ public class TropicBambooChestBlockEntity extends ChestBlockEntity {
         //return new TranslatableText(Tropicfabricport.MOD_ID + "container.bamboo_chest");
     }
     @Override
-    public void fromTag(BlockState state, NbtCompound compound) {
-        super.fromTag(state, compound);
+    public void readNbt(NbtCompound compound) {
+        super.readNbt(compound);
         unbreakable = compound.getBoolean("unbreakable");
     }
     @Override

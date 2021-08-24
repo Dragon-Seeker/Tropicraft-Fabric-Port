@@ -26,7 +26,7 @@ public class SingleNoAirJigsawPiece extends SinglePoolElement {
                 .apply(instance, SingleNoAirJigsawPiece::new);
     });
 
-    private static final StructurePoolElementType<SingleNoAirJigsawPiece> TYPE = StructurePoolElementType.method_28885(Constants.MODID + ":single_no_air", CODEC);
+    private static final StructurePoolElementType<SingleNoAirJigsawPiece> TYPE = StructurePoolElementType.register(Constants.MODID + ":single_no_air", CODEC);
 
     public SingleNoAirJigsawPiece(Either<Identifier, Structure> template, Supplier<StructureProcessorList> processors, StructurePool.Projection placementBehaviour) {
         super(template, processors, placementBehaviour);

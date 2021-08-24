@@ -30,7 +30,7 @@ public class AdjustBuildingHeightProcessor extends StructurePassProcessor  {
     @Override
     public StructureBlockInfo process(WorldView worldReaderIn, BlockPos seedPos, BlockPos p, StructureBlockInfo p_215194_3_, StructureBlockInfo blockInfo, StructurePlacementData placementSettingsIn, Structure template) {
         if (seedPos.getY() < base) {
-            return new StructureBlockInfo(blockInfo.pos.up(), blockInfo.state, blockInfo.tag);
+            return new StructureBlockInfo(blockInfo.pos.up(), blockInfo.state, blockInfo.nbt);
         }
         return blockInfo;
     }
@@ -38,7 +38,7 @@ public class AdjustBuildingHeightProcessor extends StructurePassProcessor  {
     @Override
     public StructureEntityInfo processEntity(WorldView world, BlockPos seedPos, StructureEntityInfo rawEntityInfo, StructureEntityInfo entityInfo, StructurePlacementData placementSettings, Structure template) {
         if (seedPos.getY() < base) {
-            return new StructureEntityInfo(entityInfo.pos.add(0, 1, 0), entityInfo.blockPos.up(), entityInfo.tag);
+            return new StructureEntityInfo(entityInfo.pos.add(0, 1, 0), entityInfo.blockPos.up(), entityInfo.nbt);
         }
         return entityInfo;
     }

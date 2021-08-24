@@ -45,7 +45,7 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 		super(TropicraftEntities.BAMBOO_ITEM_FRAME, world);
 		updatePosition(x, y, z);
 		updateTrackedPosition(x, y, z);
-		setEntityId(id);
+		setId(id);
 		setUuid(uuid);
 		setFacing(facing);
 	}
@@ -96,7 +96,7 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 		packet.writeDouble(getZ());
 
 		// entity id & uuid
-		packet.writeInt(getEntityId());
+		packet.writeInt(getId());
 		packet.writeUuid(getUuid());
 
 		//Entity Facing direction

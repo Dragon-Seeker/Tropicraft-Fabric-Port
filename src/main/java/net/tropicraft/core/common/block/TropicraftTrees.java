@@ -60,7 +60,7 @@ public class TropicraftTrees {
         return new SaplingGenerator() {
             @Nullable
             @Override
-            protected ConfiguredFeature<TreeFeatureConfig, ?> createTreeFeature(Random random, boolean beehive) {
+            protected ConfiguredFeature<TreeFeatureConfig, ?> getTreeFeature(Random random, boolean beehive) {
                 return null;
             }
 

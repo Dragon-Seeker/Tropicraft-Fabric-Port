@@ -110,7 +110,7 @@ public class TropicraftFeatures {
 
     public static RegistryKey<ConfiguredFeature<?, ?>> registerConfiguredFeatureKey(String id){
         Identifier tropicID = new Identifier(Constants.MODID, id);
-        return RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, tropicID);
+        return RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, tropicID);
     }
 
     public static <C extends FeatureConfig, F extends Feature<C>> F registerFeature(String id, F feature){

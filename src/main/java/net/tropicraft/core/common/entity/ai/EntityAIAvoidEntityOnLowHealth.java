@@ -1,7 +1,8 @@
 package net.tropicraft.core.common.entity.ai;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.TargetFinder;
+import net.minecraft.entity.ai.FuzzyTargeting;
+//import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
 import net.minecraft.entity.ai.pathing.Path;
@@ -67,7 +68,9 @@ public class EntityAIAvoidEntityOnLowHealth<T extends Entity> extends Goal {
             return false;
         } else {
             this.closestLivingEntity = list.get(0);
-            Vec3d Vector3d = TargetFinder.findTargetAwayFrom(this.theEntity, 16, 7, new Vec3d(this.closestLivingEntity.getX(), this.closestLivingEntity.getY(), this.closestLivingEntity.getZ()));
+            //Vec3d Vector3d = TargetFinder.findTargetAwayFrom(this.theEntity, 16, 7, new Vec3d(this.closestLivingEntity.getX(), this.closestLivingEntity.getY(), this.closestLivingEntity.getZ()));
+
+            Vec3d Vector3d = FuzzyTargeting.findFrom(this.theEntity, 16, 7, new Vec3d(this.closestLivingEntity.getX(), this.closestLivingEntity.getY(), this.closestLivingEntity.getZ()));
 
             if (Vector3d == null) {
                 return false;

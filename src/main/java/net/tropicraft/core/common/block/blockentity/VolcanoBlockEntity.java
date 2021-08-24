@@ -9,9 +9,10 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Tickable;
+//import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.tropicraft.core.common.TropicsConfigs;
 import net.tropicraft.core.common.dimension.chunk.VolcanoGenerator;
 import net.tropicraft.core.common.entity.projectile.LavaBallEntity;
@@ -21,7 +22,7 @@ import net.tropicraft.core.common.registry.TropicraftEntities;
 import net.tropicraft.core.common.volcano.VolcanoState;
 import org.jetbrains.annotations.Nullable;
 
-public class VolcanoBlockEntity extends BlockEntity implements Tickable
+public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 {
 
 	private static final int RAND_DORMANT_DURATION = 4000;
@@ -45,81 +46,81 @@ public class VolcanoBlockEntity extends BlockEntity implements Tickable
 	private VolcanoState state = VolcanoState.DORMANT;
 	private int heightOffset = Integer.MIN_VALUE;
 
-	public VolcanoBlockEntity() {
-		super(TropicBlockEntities.VOLCANO);
+	public VolcanoBlockEntity(BlockPos pos, BlockState state) {
+		super(TropicBlockEntities.VOLCANO, pos, state);
 	}
 
-	@Override
-	public void tick() {
+
+	public static void tick(World world, BlockPos pos, BlockState state, VolcanoBlockEntity blockEntity) {
 		if (!TropicsConfigs.allowVolcanoEruption)
 		{
 			return;
 		}
 
-		if (this.heightOffset == Integer.MIN_VALUE) {
-			this.heightOffset = VolcanoGenerator.getHeightOffsetForBiome(this.getPos().getY());
+		if (blockEntity.heightOffset == Integer.MIN_VALUE) {
+			blockEntity.heightOffset = VolcanoGenerator.getHeightOffsetForBiome(blockEntity.getPos().getY());
 		}
 
-		if (!getWorld().isClient) {
+		if (!world.isClient) {
 			//System.out.println(radius + " Volcano Update: " + pos.getX() + " " + pos.getZ() + " State:" + state + " lvl: " + lavaLevel);
 			//System.out.println("smoking: " + ticksUntilSmoking + " rising: " + ticksUntilRising + " eruption: " + ticksUntilEruption + " retreating: " + ticksUntilRetreating + " dormant: " + ticksUntilDormant);	
 		}
 
 		// If radius needs to be initialized
-		if (radius == -1) {
-			radius = findRadius();
+		if (blockEntity.radius == -1) {
+			blockEntity.radius = blockEntity.findRadius();
 		}
 
-		if (lavaLevel == -1) {
-			setLavaLevel();
+		if (blockEntity.lavaLevel == -1) {
+			blockEntity.setLavaLevel();
 		}
 
-		if (radius == -1 || lavaLevel == -1) {
+		if (blockEntity.radius == -1 || blockEntity.lavaLevel == -1) {
 			return;
 		}
 
-		updateStates();
+		blockEntity.updateStates();
 
-		switch(state) {
+		switch(blockEntity.state) {
 		case DORMANT:
 			break;
 		case ERUPTING:
-			if (!getWorld().isClient) {
-				//	if ((ticksUntilRetreating % (getWorld().rand.nextInt(40) + 10) == 0)/* && time > 800 && !falling*/) {
-				if (getWorld().random.nextInt(15) == 0)
+			if (!world.isClient) {
+				//	if ((ticksUntilRetreating % (getWorld().rand.nextInt(40) + 10) == 0)/* && time > 800 && !falling) {
+				if (world.random.nextInt(15) == 0)
 				{
-					throwLavaFromCaldera(0.05 + Math.abs(getWorld().random.nextGaussian()) * (lavaLevel > 90 ? LAVA_ERUPT_LEVEL + this.heightOffset : 0.75));
+					blockEntity.throwLavaFromCaldera(0.05 + Math.abs(world.random.nextGaussian()) * (blockEntity.lavaLevel > 90 ? LAVA_ERUPT_LEVEL + blockEntity.heightOffset : 0.75));
 				}
 				//	}
 
 				//	if ((ticksUntilRetreating % (getWorld().rand.nextInt(40) + 10) == 0) && lavaLevel > 90) {
-				if (getWorld().random.nextInt(15) == 0)
+				if (world.random.nextInt(15) == 0)
 				{
-					throwLavaFromCaldera(0.05 + Math.abs(getWorld().random.nextGaussian()) * (lavaLevel > LAVA_ERUPT_LEVEL + this.heightOffset ? 1 : 0.75));
+					blockEntity.throwLavaFromCaldera(0.05 + Math.abs(world.random.nextGaussian()) * (blockEntity.lavaLevel > LAVA_ERUPT_LEVEL + blockEntity.heightOffset ? 1 : 0.75));
 				}
 				//	}
 			}
 			break;
 		case RETREATING:
-			if (ticksUntilDormant % 30 == 0) {
-				lowerLavaLevels();
+			if (blockEntity.ticksUntilDormant % 30 == 0) {
+				blockEntity.lowerLavaLevels();
 			}
 			break;
 		case RISING:
-			if (getWorld().isClient) {
-				spewSmoke();
+			if (world.isClient) {
+				blockEntity.spewSmoke();
 			}
 
-			if (ticksUntilEruption % 20 == 0) {
-				if (lavaLevel < MAX_LAVA_LEVEL_DURING_ERUPTION + this.heightOffset) {
-					raiseLavaLevels();	
+			if (blockEntity.ticksUntilEruption % 20 == 0) {
+				if (blockEntity.lavaLevel < MAX_LAVA_LEVEL_DURING_ERUPTION + blockEntity.heightOffset) {
+					blockEntity.raiseLavaLevels();
 				} else {
-					ticksUntilEruption = 0;
-					getWorld().playSound(this.pos.getX(), 73, this.pos.getY(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1.0F, getWorld().random.nextFloat() / 4 + 0.825F, false);
-					int balls = getWorld().random.nextInt(25) + 15;
+					blockEntity.ticksUntilEruption = 0;
+					world.playSound(blockEntity.pos.getX(), 73, blockEntity.pos.getY(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1.0F, world.random.nextFloat() / 4 + 0.825F, false);
+					int balls = world.random.nextInt(25) + 15;
 
 					for (int i = 0; i < balls; i++) {
-						throwLavaFromCaldera((getWorld().random.nextDouble() * 0.5) + 1.25);
+						blockEntity.throwLavaFromCaldera((world.random.nextDouble() * 0.5) + 1.25);
 					}
 					break;
 				}
@@ -127,10 +128,10 @@ public class VolcanoBlockEntity extends BlockEntity implements Tickable
 			break;
 		case SMOKING:
 			// TODO: Client only in the future if this is particles
-			if (getWorld().isClient) {
+			if (world.isClient) {
 				//if (ticksUntilRising % 100 == 0) {
 				//if (getWorld().rand.nextInt(10) == 0)
-				spewSmoke();
+				blockEntity.spewSmoke();
 				//}
 			}
 			break;
@@ -315,8 +316,8 @@ public class VolcanoBlockEntity extends BlockEntity implements Tickable
 	}
 
 	@Override
-	public void fromTag(BlockState blockState, NbtCompound nbt) {
-		super.fromTag(blockState, nbt);
+	public void readNbt(NbtCompound nbt) {
+		super.readNbt(nbt);
 		state = VolcanoState.valueOf(nbt.getString("state"));
 		ticksUntilDormant = nbt.getInt("ticksUntilDormant");
 		ticksUntilSmoking = nbt.getInt("ticksUntilSmoking");

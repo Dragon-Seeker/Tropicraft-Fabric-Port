@@ -33,7 +33,7 @@ public class NoRotateSingleJigsawPiece extends SinglePoolElement {
                 .apply(instance, NoRotateSingleJigsawPiece::new);
     });
 
-    private static final StructurePoolElementType<NoRotateSingleJigsawPiece> TYPE = StructurePoolElementType.method_28885(Constants.MODID + ":single_no_rotate", CODEC);
+    private static final StructurePoolElementType<NoRotateSingleJigsawPiece> TYPE = StructurePoolElementType.register(Constants.MODID + ":single_no_rotate", CODEC);
 
     public NoRotateSingleJigsawPiece(Either<Identifier, Structure> template, Supplier<StructureProcessorList> processors, StructurePool.Projection placementBehaviour) {
         super(template, processors, placementBehaviour);

@@ -51,7 +51,7 @@ public class SmoothingGravityProcessor extends PathStructureProcessor {
         int heightBackward = world.getTopY(heightmap, posBackward.getX(), posBackward.getZ()) + offset;
         int height = world.getTopY(heightmap, pos.getX(), pos.getZ()) + offset;
         if (heightForward > height && heightBackward > height) {
-            return new StructureBlockInfo(new BlockPos(pos.getX(), Math.min(heightForward, heightBackward), pos.getZ()), blockInfo.state, blockInfo.tag);
+            return new StructureBlockInfo(new BlockPos(pos.getX(), Math.min(heightForward, heightBackward), pos.getZ()), blockInfo.state, blockInfo.nbt);
         }
         return baseline.process(world, seedPos, pos2, originalBlockInfo, blockInfo, placementSettingsIn);
     }

@@ -44,7 +44,7 @@ public class TropiSkellyEntity extends HostileEntity {
     public void tick() {
         super.tick();
         if (!this.world.isClient && this.world.getDifficulty() == Difficulty.PEACEFUL) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 

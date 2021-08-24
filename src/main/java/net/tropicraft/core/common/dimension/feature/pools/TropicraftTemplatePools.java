@@ -338,14 +338,14 @@ public final class TropicraftTemplatePools {
 
     private static Pair<Function<StructurePool.Projection, ? extends StructurePoolElement>, Integer> singlePiece(String path, StructureProcessorList processors, int weight) {
         return new Pair<>(
-                StructurePoolElement.method_30435(Constants.MODID + ":" + path, processors),
+                StructurePoolElement.ofProcessedSingle(Constants.MODID + ":" + path, processors),
                 weight
         );
     }
 
     private static Pair<Function<StructurePool.Projection, ? extends StructurePoolElement>, Integer> singlePiece(String path, int weight) {
         return new Pair<>(
-                StructurePoolElement.method_30434(Constants.MODID + ":" + path),
+                StructurePoolElement.ofSingle(Constants.MODID + ":" + path),
                 weight
         );
     }
@@ -373,7 +373,7 @@ public final class TropicraftTemplatePools {
 
     private static Pair<Function<StructurePool.Projection, ? extends StructurePoolElement>, Integer> feature(ConfiguredFeature<?, ?> feature, int weight) {
         return new Pair<>(
-                StructurePoolElement.method_30421(feature),
+                StructurePoolElement.ofFeature(feature),
                 weight
         );
     }

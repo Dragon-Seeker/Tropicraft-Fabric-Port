@@ -21,8 +21,8 @@ public class BoxChestBlock extends BlockWithEntity {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new BoxChestBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new BoxChestBlockEntity(pos, state);
     }
 
     @Override

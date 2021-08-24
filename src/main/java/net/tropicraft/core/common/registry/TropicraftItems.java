@@ -17,8 +17,6 @@ import net.tropicraft.core.common.item.*;
 import net.tropicraft.core.common.item.armor.FireArmorItem;
 import net.tropicraft.core.common.item.armor.ScaleArmorItem;
 import net.tropicraft.core.common.item.tools.*;
-import net.tropicraft.core.common.item.tools.TropicTiers;
-
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Function;

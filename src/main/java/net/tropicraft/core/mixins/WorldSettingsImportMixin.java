@@ -47,7 +47,7 @@ public class WorldSettingsImportMixin {
         DimensionOptions dimension = TropicraftDimension.createDimension(
                 this.registryManager.get(Registry.DIMENSION_TYPE_KEY),
                 this.registryManager.get(Registry.BIOME_KEY),
-                this.registryManager.get(Registry.NOISE_SETTINGS_WORLDGEN),
+                this.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY),
                 seed
         );
         registry.replace(OptionalInt.empty(), TropicraftDimension.DIMENSION, dimension, Lifecycle.stable());

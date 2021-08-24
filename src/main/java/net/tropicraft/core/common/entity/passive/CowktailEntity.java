@@ -60,7 +60,7 @@ public class CowktailEntity extends CowEntity implements Shearable {
 	public ActionResult interactMob(PlayerEntity player, Hand hand) {
 		ItemStack itemstack = player.getStackInHand(hand);
 		if (itemstack.getItem() == TropicraftItems.BAMBOO_MUG && !this.isBaby()) {
-			if (player.abilities.creativeMode) {
+			if (player.getAbilities().creativeMode) {
 				itemstack.decrement(1);
 			}
 
@@ -71,7 +71,7 @@ public class CowktailEntity extends CowEntity implements Shearable {
 
 			if (itemstack.isEmpty()) {
 				player.setStackInHand(hand, cocktailItem);
-			} else if (!player.inventory.insertStack(cocktailItem)) {
+			} else if (!player.getInventory().insertStack(cocktailItem)) {
 				player.dropItem(cocktailItem, false);
 			}
 
@@ -138,9 +138,9 @@ public class CowktailEntity extends CowEntity implements Shearable {
 		List<ItemStack> ret = new ArrayList<>();
 		this.world.addParticle(ParticleTypes.EXPLOSION, this.getX(), this.getBodyY(0.5D), this.getZ(), 0.0D, 0.0D, 0.0D);
 		if (!this.world.isClient) {
-			this.remove();
+			this.discard();
 			CowEntity cowentity = EntityType.COW.create(this.world);
-			cowentity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.yaw, this.pitch);
+			cowentity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
 			cowentity.setHealth(this.getHealth());
 			cowentity.bodyYaw = this.bodyYaw;
 			if (this.hasCustomName()) {

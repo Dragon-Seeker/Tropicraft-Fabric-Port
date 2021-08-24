@@ -1,5 +1,6 @@
 package net.tropicraft.core.common.registry;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.tropicraft.Constants;
 //import com.dragonseeker.tropicfabricport.common.block.entity.CoconutBlockEntity;
 import net.tropicraft.core.common.block.blockentity.TropicBambooChestBlockEntity;
@@ -23,8 +24,8 @@ public class TropicBlockEntities<T extends BlockEntity>{
 
     static {
         //BOX_BLOCK_ENTITY = registerBlockEntityType("box_block", BlockEntityType.Builder.create(BoxBlockEntity::new, TropicBlocks.BOX_BLOCK));
-        BAMBOO_CHEST = registerBlockEntityType("bamboo_chest", BlockEntityType.Builder.create(TropicBambooChestBlockEntity::new, TropicraftBlocks.BAMBOO_CHEST));
-        VOLCANO = registerBlockEntityType("tile_entity_volcano", BlockEntityType.Builder.create(VolcanoBlockEntity::new, TropicraftBlocks.VOLCANO));
+        BAMBOO_CHEST = registerBlockEntityType("bamboo_chest", FabricBlockEntityTypeBuilder.create(TropicBambooChestBlockEntity::new, TropicraftBlocks.BAMBOO_CHEST));
+        VOLCANO = registerBlockEntityType("tile_entity_volcano", FabricBlockEntityTypeBuilder.create(VolcanoBlockEntity::new, TropicraftBlocks.VOLCANO));
         //BOX_BLOCK_CHEST_ENTITY = registerBlockEntityType("box_chest_block", BlockEntityType.Builder.create(BoxChestBlockEntity::new, TropicBlocks.BOX_BLOCK_CHEST));
     }
 
@@ -32,7 +33,7 @@ public class TropicBlockEntities<T extends BlockEntity>{
 
     }
 
-    public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntityType(String id, BlockEntityType.Builder<T> builder) {
+    public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntityType(String id, FabricBlockEntityTypeBuilder<T> builder) {
         return (BlockEntityType)Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MODID, id), builder.build(null));
     }
 

@@ -64,7 +64,7 @@ public class TropicBambooPot extends Block {
                 world.setBlockState(pos, block.getDefaultState(), 3);
                 player.incrementStat(Stats.POT_FLOWER);
 
-                if (!player.abilities.creativeMode) {
+                if (!player.getAbilities().creativeMode) {
                     possibleFloralItem.decrement(1);
                 }
             }

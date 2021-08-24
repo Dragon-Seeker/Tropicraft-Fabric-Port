@@ -104,7 +104,7 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
     }
 
     @Override
-    protected ItemStack getFishBucketItem() {
+    public ItemStack getBucketItem() {
         return new ItemStack(TropicraftItems.TROPICAL_FISH_BUCKET);
     }
 
@@ -146,7 +146,7 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
             final int firstHotbarSlot = 0;
             int bucketSlot = -1;
             for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-                ItemStack s = player.inventory.getStack(firstHotbarSlot + i);
+                ItemStack s = player.getInventory().getStack(firstHotbarSlot + i);
                 if (isFishHolder(s)) {
                     bucketSlot = firstHotbarSlot + i;
                     break;
@@ -158,15 +158,15 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
             }
 
             if (bucketSlot >= 0) {
-                ItemStack fishHolder = player.inventory.getStack(bucketSlot);
+                ItemStack fishHolder = player.getInventory().getStack(bucketSlot);
                 if (fishHolder.getItem() == Items.WATER_BUCKET) {
                     fishHolder = new ItemStack(TropicraftItems.TROPICAL_FISH_BUCKET);
-                    player.inventory.setStack(bucketSlot, fishHolder);
+                    player.getInventory().setStack(bucketSlot, fishHolder);
                 }
                 copyDataToStack(fishHolder);
                 player.swingHand(hand);
                 world.playSound(player, getBlockPos(), SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.25f, 1f + (random.nextFloat() * 0.4f));
-                remove();
+                remove(RemovalReason.DISCARDED);
                 return ActionResult.SUCCESS;
             }
         }
@@ -190,9 +190,9 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
      * Add extra data to the bucket that just picked this fish up
      */
     @Override
-    protected void copyDataToStack(final ItemStack bucket) {
+    public void copyDataToStack(final ItemStack bucket) {
         super.copyDataToStack(bucket);
-        NbtCompound compoundnbt = bucket.getOrCreateTag();
+        NbtCompound compoundnbt = bucket.getOrCreateNbt();
         compoundnbt.putInt("BucketVariantTag", getFishType().id);
     }
 

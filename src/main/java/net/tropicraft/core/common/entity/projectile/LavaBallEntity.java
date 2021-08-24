@@ -69,7 +69,7 @@ public class LavaBallEntity extends Entity {
         super(TropicraftEntities.LAVA_BALL, world);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
-        setEntityId(id);
+        setId(id);
         setUuid(uuid);
     }
 
@@ -114,7 +114,7 @@ public class LavaBallEntity extends Entity {
         }
         else
         {
-            this.remove();
+            this.remove(RemovalReason.KILLED);
         }
 
         double motionX = this.getVelocity().x;
@@ -158,7 +158,7 @@ public class LavaBallEntity extends Entity {
         if (!world.isAir(posBelow) && stateBelow.getMaterial() != Material.LAVA && !held) {
             if (setFire) {
                 world.setBlockState(posCurrent, Blocks.LAVA.getDefaultState(), 3);
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
 
             if (!setFire) {
@@ -219,7 +219,7 @@ public class LavaBallEntity extends Entity {
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);

@@ -94,8 +94,10 @@ public abstract class EchinodermEntity extends WaterCreatureEntity {
         compound.putInt("Age", getGrowingAge());
     }
 
+
+
     @Override
-    public void takeKnockback(float strength, double ratioX, double ratioZ) {
+    public void takeKnockback(double strength, double ratioX, double ratioZ) {
     }
 
     @Override

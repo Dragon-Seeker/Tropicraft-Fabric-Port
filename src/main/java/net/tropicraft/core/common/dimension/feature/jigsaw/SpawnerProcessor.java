@@ -59,9 +59,9 @@ public class SpawnerProcessor extends StructureProcessor {
 
             tag.putString("id", Registry.ENTITY_TYPE.getId(entityTypes.get(0)).toString());
 
-            blockInfo.tag.getCompound("SpawnData").putString("id", typeName);
+            blockInfo.nbt.getCompound("SpawnData").putString("id", typeName);
             // TODO not working
-            final NbtList list = blockInfo.tag.getList("SpawnPotentials", 9);
+            final NbtList list = blockInfo.nbt.getList("SpawnPotentials", 9);
             for (int i = 0; i < list.size(); i++) {
                 final NbtCompound nbt = list.getCompound(i);
                 nbt.getCompound("Entity").putString("id", typeName);

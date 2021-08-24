@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.fabricmc.fabric.impl.client.rendering.ArmorRendererRegistryImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -92,6 +93,7 @@ public class TropicraftClient implements ClientModInitializer {
         for (int i = 0; i < size; i++) {
             AshenMaskItem maskItem = values.get(i);
             MASK_PROVIDER.add(new MaskArmorProvider(maskItem.getMaskType()));
+            ArmorRendererRegistryImpl.register();
             ArmorRenderingRegistry.registerModel(MASK_PROVIDER.get(i), maskItem);
             ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
         }
@@ -223,7 +225,7 @@ public class TropicraftClient implements ClientModInitializer {
     public static void setupBlockEntityRenderers() {
         BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST, (itemStack, transform, stack, source, light, overlay) ->
-                BlockEntityRenderDispatcher.INSTANCE.renderEntity(new TropicBambooChestBlockEntity(), stack, source, light, overlay));
+                BlockEntityRenderDispatcher.renderEntity(new TropicBambooChestBlockEntity(), stack, source, light, overlay));
 
         /*
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.BAMBOO_CHEST, BambooChestRenderer::new);

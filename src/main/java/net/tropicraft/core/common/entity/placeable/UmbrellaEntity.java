@@ -28,7 +28,7 @@ public class UmbrellaEntity extends FurnitureEntity {
         super(TropicraftEntities.UMBRELLA, world, TropicraftItems.UMBRELLAS);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
-        setEntityId(id);
+        setId(id);
         setUuid(uuid);
     }
 
@@ -53,7 +53,7 @@ public class UmbrellaEntity extends FurnitureEntity {
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);

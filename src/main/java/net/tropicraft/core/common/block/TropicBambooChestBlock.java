@@ -22,8 +22,8 @@ public class TropicBambooChestBlock extends ChestBlock {
 
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new TropicBambooChestBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new TropicBambooChestBlockEntity(pos, state);
     }
 
     @Override

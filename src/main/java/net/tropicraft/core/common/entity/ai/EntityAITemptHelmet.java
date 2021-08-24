@@ -82,7 +82,7 @@ public class EntityAITemptHelmet extends Goal
             }
             else
             {
-                return isTempting(this.temptingPlayer.inventory.armor.get(3));
+                return isTempting(this.temptingPlayer.getInventory().armor.get(3));
                 //return this.isTempting(this.temptingPlayer.getHeldItemMainhand()) || this.isTempting(this.temptingPlayer.getHeldItemOffhand());
             }
         }

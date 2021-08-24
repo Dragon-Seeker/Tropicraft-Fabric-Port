@@ -138,7 +138,7 @@ public class AshenEntity extends TropicraftCreatureEntity implements RangedAttac
         double d0 = target.getX() - getX();
         double d1 = target.getBoundingBox().minY + (double)(target.getHeight() / 3.0F) - tippedArrow.getY();
         double d2 = target.getZ() - getZ();
-        double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
         tippedArrow.setVelocity(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, velocity);
 
         tippedArrow.setDamage(1);
@@ -178,7 +178,7 @@ public class AshenEntity extends TropicraftCreatureEntity implements RangedAttac
         setActionState(AshenState.LOST_MASK);
         maskToTrack = new AshenMaskEntity(TropicraftEntities.ASHEN_MASK, world);
         maskToTrack.setMaskType(getMaskType());
-        maskToTrack.updatePositionAndAngles(getX(), getY(), getZ(), yaw, 0);
+        maskToTrack.updatePositionAndAngles(getX(), getY(), getZ(), this.getYaw(), 0);
         world.spawnEntity(maskToTrack);
     }
 
@@ -186,7 +186,7 @@ public class AshenEntity extends TropicraftCreatureEntity implements RangedAttac
         setActionState(AshenState.HOSTILE);
         maskToTrack = null;
         setMaskType(mask.getMaskType());
-        mask.remove();
+        mask.remove(RemovalReason.DISCARDED);
     }
 
     /*

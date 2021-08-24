@@ -38,7 +38,7 @@ public class SeahorseEntity extends AbstractTexturedFishEntity {
 	}
 
 	@Override
-	protected ItemStack getFishBucketItem() {
+	public ItemStack getBucketItem() {
 		return ItemStack.EMPTY;
 	}
 

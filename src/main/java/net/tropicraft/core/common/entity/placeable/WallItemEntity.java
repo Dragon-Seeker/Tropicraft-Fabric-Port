@@ -36,7 +36,7 @@ public class WallItemEntity extends BambooItemFrameEntity {
 		super(TropicraftEntities.BAMBOO_ITEM_FRAME, world);
 		updatePosition(x, y, z);
 		updateTrackedPosition(x, y, z);
-		setEntityId(id);
+		setId(id);
 		setUuid(uuid);
 		setFacing(facing);
 	}
@@ -54,7 +54,7 @@ public class WallItemEntity extends BambooItemFrameEntity {
     @Override
     public void invokedropHeldStack(@Nullable Entity entityIn, boolean p_146065_2_) {
     	super.invokedropHeldStack(entityIn, false);
-    	this.remove();
+    	this.remove(RemovalReason.KILLED);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class WallItemEntity extends BambooItemFrameEntity {
 		packet.writeDouble(getZ());
 
 		// entity id & uuid
-		packet.writeInt(getEntityId());
+		packet.writeInt(getId());
 		packet.writeUuid(getUuid());
 
 		//Entity Facing direction

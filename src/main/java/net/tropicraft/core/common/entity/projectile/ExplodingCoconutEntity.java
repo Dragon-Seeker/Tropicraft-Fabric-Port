@@ -37,7 +37,7 @@ public class ExplodingCoconutEntity extends ThrownItemEntity {
         super(TropicraftEntities.EXPLODING_COCONUT, world);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
-        setEntityId(id);
+        setId(id);
         setUuid(uuid);
     }
 
@@ -55,7 +55,7 @@ public class ExplodingCoconutEntity extends ThrownItemEntity {
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
@@ -66,7 +66,7 @@ public class ExplodingCoconutEntity extends ThrownItemEntity {
 		// TODO - why isn't this being called?
 		if (!world.isClient) {
 			world.createExplosion(this, getX(), getY(), getZ(), 2.4F, Explosion.DestructionType.DESTROY);
-			remove();
+			remove(RemovalReason.DISCARDED);
 		}
 	}
 

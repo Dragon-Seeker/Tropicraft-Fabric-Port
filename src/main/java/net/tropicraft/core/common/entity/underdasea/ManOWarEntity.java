@@ -44,7 +44,7 @@ public class ManOWarEntity extends WaterCreatureEntity {
 
     public ManOWarEntity(final EntityType<? extends ManOWarEntity> type, World world){
         super(type, world);
-        this.random.setSeed(this.getEntityId());
+        this.random.setSeed(this.getId());
         this.rotationVelocity = 1.0F / (this.random.nextFloat() + 1.0F) * 0.2F;
         this.experiencePoints = 7;
     }
@@ -71,10 +71,12 @@ public class ManOWarEntity extends WaterCreatureEntity {
         return 0.4F;
     }
 
+    /*
     @Override
     protected boolean canClimb() {
         return false;
     }
+     */
 
     @Override
     public boolean canBreatheInWater() {
@@ -145,9 +147,9 @@ public class ManOWarEntity extends WaterCreatureEntity {
             }
 
             Vec3d motion = this.getVelocity();
-            float lvt_2_1_ = MathHelper.sqrt(squaredHorizontalLength(motion));
+            float lvt_2_1_ = (float) Math.sqrt(motion.horizontalLengthSquared());
             this.bodyYaw += (-((float)MathHelper.atan2(motion.x, motion.z)) * 57.295776F - this.bodyYaw) * 0.1F;
-            this.yaw = this.bodyYaw;
+            this.setYaw(this.bodyYaw);
             this.squidYaw = (float)((double)this.squidYaw + 3.141592653589793D * (double)this.rotateSpeed * 1.5D);
             this.squidPitch += (-((float)MathHelper.atan2(lvt_2_1_, motion.y)) * 57.295776F - this.squidPitch) * 0.1F;
         } else {

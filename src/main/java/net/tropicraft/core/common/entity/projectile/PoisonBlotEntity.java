@@ -39,7 +39,7 @@ public class PoisonBlotEntity extends ThrownEntity {
         super(TropicraftEntities.POISON_BLOT, world);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
-        setEntityId(id);
+        setId(id);
         setUuid(uuid);
     }
 
@@ -51,7 +51,7 @@ public class PoisonBlotEntity extends ThrownEntity {
             if (entity instanceof PlayerEntity) {
                 PlayerEntity player = (PlayerEntity) entity;
                 player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 12 * 20, 0));
-                remove();
+                remove(RemovalReason.DISCARDED);
             }
         }
     }
@@ -75,7 +75,7 @@ public class PoisonBlotEntity extends ThrownEntity {
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);

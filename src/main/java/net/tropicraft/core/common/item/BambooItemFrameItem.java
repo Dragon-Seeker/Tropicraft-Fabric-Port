@@ -34,7 +34,7 @@ public class BambooItemFrameItem extends DecorationItem {
            World world = context.getWorld();
            BambooItemFrameEntity hangingentity = new BambooItemFrameEntity(world, blockpos1, direction);
 
-            NbtCompound compoundtag = itemstack.getTag();
+            NbtCompound compoundtag = itemstack.getNbt();
            if (compoundtag != null) {
               EntityType.loadFromEntityNbt(world, playerentity, hangingentity, compoundtag);
            }

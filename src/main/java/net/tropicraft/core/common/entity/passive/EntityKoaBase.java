@@ -594,7 +594,7 @@ public class EntityKoaBase extends VillagerEntity {
         {
             if (knockback > 0 && entityIn instanceof LivingEntity)
             {
-                ((LivingEntity)entityIn).takeKnockback(knockback * 0.5F, MathHelper.sin(this.yaw * 0.017453292F), -MathHelper.cos(this.yaw * 0.017453292F));
+                ((LivingEntity)entityIn).takeKnockback(knockback * 0.5F, MathHelper.sin(this.getYaw() * 0.017453292F), -MathHelper.cos(this.getYaw() * 0.017453292F));
                 this.setVelocity(this.getVelocity().x * 0.6D, this.getVelocity().y, this.getVelocity().z * 0.6D);
                 /*this.motionX *= 0.6D;
                 this.motionZ *= 0.6D;*/
@@ -625,7 +625,7 @@ public class EntityKoaBase extends VillagerEntity {
                 }
             }
 
-            this.dealDamage(this, entityIn);
+            this.applyDamageEffects(this, entityIn);
         }
 
         return flag;
@@ -982,7 +982,7 @@ public class EntityKoaBase extends VillagerEntity {
 
     public void findAndSetHomeToCloseChest(boolean force) {
 
-        if (!force && (world.getTime()+this.getEntityId()) % (20*30) != 0) return;
+        if (!force && (world.getTime()+this.getId()) % (20*30) != 0) return;
 
         //validate home position
         boolean tryFind = false;
@@ -1016,7 +1016,7 @@ public class EntityKoaBase extends VillagerEntity {
     }
 
     public boolean findAndSetTownID(boolean force) {
-        if (!force && (world.getTime()+this.getEntityId()) % (20*30) != 0) return false;
+        if (!force && (world.getTime()+this.getId()) % (20*30) != 0) return false;
 
         boolean tryFind = false;
 
@@ -1044,7 +1044,7 @@ public class EntityKoaBase extends VillagerEntity {
 
         //this.setHomePosAndDistance(this.getRestrictCenter(), 128);
 
-        if (!force && (world.getTime()+this.getEntityId()) % (20*30) != 0) return;
+        if (!force && (world.getTime()+this.getId()) % (20*30) != 0) return;
 
         //validate fire source
         boolean tryFind = false;
@@ -1092,7 +1092,7 @@ public class EntityKoaBase extends VillagerEntity {
 
     //for other system not used
     public void syncBPM() {
-        if ((world.getTime()+this.getEntityId()) % (20) != 0) return;
+        if ((world.getTime()+this.getId()) % (20) != 0) return;
 
         List<EntityKoaBase> listEnts = world.getNonSpectatingEntities(EntityKoaBase.class, new Box(this.getBlockPos()).expand(10, 5, 10));
         //Collections.shuffle(listEnts);
@@ -1123,7 +1123,7 @@ public class EntityKoaBase extends VillagerEntity {
 
         //this.setHomePosAndDistance(this.getRestrictCenter(), 128);
 
-        if (!force && (world.getTime()+this.getEntityId()) % (20*30) != 0) return;
+        if (!force && (world.getTime()+this.getId()) % (20*30) != 0) return;
 
         Iterator<BlockPos> it = listPosDrums.iterator();
         while (it.hasNext()) {
@@ -1485,8 +1485,8 @@ public class EntityKoaBase extends VillagerEntity {
     }*/
 
     @Override
-    public void remove() {
-        super.remove();
+    public void remove(RemovalReason reason) {
+        super.remove(reason);
         if (!world.isClient) {
             //System.out.println("hook dead " + this);
             //TODO: 1.14 readd
@@ -1517,7 +1517,7 @@ public class EntityKoaBase extends VillagerEntity {
         this.lure = lure;
         if (!this.world.isClient) {
             if (lure != null) {
-                this.getDataTracker().set(LURE_ID, this.lure.getEntityId());
+                this.getDataTracker().set(LURE_ID, this.lure.getId());
             } else {
                 this.getDataTracker().set(LURE_ID, -1);
             }

@@ -60,7 +60,7 @@ public abstract class PathStructureProcessor extends StructurePassProcessor {
          */
         return VECTOR_CACHE.computeIfAbsent(settings, s ->
                 template.getInfosForBlock(seedPos, settings, Blocks.JIGSAW).stream() // Find all jigsaw blocks
-                        .filter(b -> b.tag.getString("attachement_type").equals(Constants.MODID + ":path_center")) // Filter for vector markers
+                        .filter(b -> b.nbt.getString("attachement_type").equals(Constants.MODID + ":path_center")) // Filter for vector markers
                         .map(bi -> new PathVector(bi.pos.subtract(seedPos), JigsawBlock.getFacing(bi.state))) // Convert pos to structure local, extract facing
                         .collect(Collectors.toList()))
                 .stream()

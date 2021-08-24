@@ -56,7 +56,7 @@ public class ChairEntity extends FurnitureEntity {
         super(TropicraftEntities.CHAIR, world, TropicraftItems.CHAIRS);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
-        setEntityId(id);
+        setId(id);
         setUuid(uuid);
     }
 
@@ -87,8 +87,8 @@ public class ChairEntity extends FurnitureEntity {
         int j;
 
         if (/*this.getComeSailAway() && */d10 > 0.26249999999999996D) {
-            d2 = Math.cos((double) this.yaw * Math.PI / 180.0D);
-            d4 = Math.sin((double) this.yaw * Math.PI / 180.0D);
+            d2 = Math.cos((double) this.getYaw() * Math.PI / 180.0D);
+            d4 = Math.sin((double) this.getYaw() * Math.PI / 180.0D);
 
             if (this.getComeSailAway())
                 for (j = 0; (double)j < 1.0D + d10 * 60.0D; ++j) {
@@ -125,7 +125,7 @@ public class ChairEntity extends FurnitureEntity {
 
             if (this.getComeSailAway() && this.getPrimaryPassenger() != null && this.getPrimaryPassenger() instanceof LivingEntity) {
                 LivingEntity entitylivingbase = (LivingEntity)this.getPrimaryPassenger();
-                float f = this.getPrimaryPassenger().yaw + -entitylivingbase.sidewaysSpeed * 90.0F;
+                float f = this.getPrimaryPassenger().getYaw() + -entitylivingbase.sidewaysSpeed * 90.0F;
                 double moveX = -Math.sin((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.forwardSpeed * 0.05000000074505806D;
                 double moveZ = Math.cos((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.forwardSpeed * 0.05000000074505806D;
                 setVelocity(getVelocity().add(moveX, 0, moveZ));
@@ -189,8 +189,8 @@ public class ChairEntity extends FurnitureEntity {
                 setVelocity(getVelocity().multiply(0.9900000095367432D, 0.949999988079071D, 0.9900000095367432D));
             }
 
-            this.pitch = 0.0F;
-            d4 = (double)this.yaw;
+            this.setPitch(0.0F);
+            d4 = (double)this.getYaw();
             d11 = this.prevX - this.getX();
             d12 = this.prevZ - this.getZ();
 
@@ -198,7 +198,7 @@ public class ChairEntity extends FurnitureEntity {
                 d4 = (double)((float)(Math.atan2(d12, d11) * 180.0D / Math.PI));
             }
 
-            double d7 = MathHelper.wrapDegrees(d4 - (double)this.yaw);
+            double d7 = MathHelper.wrapDegrees(d4 - (double)this.getYaw());
 
             if (d7 > 20.0D) {
                 d7 = 20.0D;
@@ -208,8 +208,8 @@ public class ChairEntity extends FurnitureEntity {
                 d7 = -20.0D;
             }
 
-            this.yaw = (float)((double)this.yaw + d7);
-            this.setRotation(this.yaw, this.pitch);
+            this.setYaw((float)((double)this.getYaw() + d7));
+            this.setRotation(this.getYaw(), this.getPitch());
 
             if (!this.world.isClient) {
                 List<?> list = this.world.getOtherEntities(this, this.getBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
@@ -289,7 +289,7 @@ public class ChairEntity extends FurnitureEntity {
     @Override
     public void updatePassengerPosition(Entity passenger) {
         if (this.hasPassenger(passenger)) {
-            Vec3d xzOffset = new Vec3d(0, 0, -0.125).rotateY((float) Math.toRadians(-yaw));
+            Vec3d xzOffset = new Vec3d(0, 0, -0.125).rotateY((float) Math.toRadians(-getYaw()));
             passenger.setPosition(getX() + xzOffset.x, getY() + getMountedHeightOffset() + passenger.getHeightOffset(), getZ() + xzOffset.z);
         }
     }
@@ -316,7 +316,7 @@ public class ChairEntity extends FurnitureEntity {
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);

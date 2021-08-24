@@ -32,7 +32,7 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
     private final MinecraftClient mc = MinecraftClient.getInstance();
     private final ItemRenderer itemRenderer;
 
-    public BambooItemFrameEntityRenderer(EntityRenderDispatcher entityRenderDispatcher, EntityRendererRegistry.Context context) {
+    public BambooItemFrameEntityRenderer(EntityRenderDispatcher entityRenderDispatcher, EntityRendererRegistry) {
         super(entityRenderDispatcher);
         itemRenderer = context.getItemRenderer();
     }

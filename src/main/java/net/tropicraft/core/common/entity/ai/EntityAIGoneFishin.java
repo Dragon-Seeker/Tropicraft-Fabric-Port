@@ -371,7 +371,7 @@ public class EntityAIGoneFishin extends Goal {
             walkingTimeout = walkingTimeoutMax;
             boolean success = Util.tryMoveToXYZLongDist(entity, pos, moveSpeedAmp);
             if (!success) {
-                debug("repathing failed - " + this.entity.getEntityId() + " - " + this.state + " - " + pos);
+                debug("repathing failed - " + this.entity.getId() + " - " + this.state + " - " + pos);
                 repathPenalty = repathPenaltyMax;
             }
         }
@@ -380,10 +380,10 @@ public class EntityAIGoneFishin extends Goal {
     private boolean retryPathOrAbort(BlockPos pos) {
         boolean success = Util.tryMoveToXYZLongDist(entity, pos, moveSpeedAmp);
         if (!success) {
-            debug("repathing failed, resetting - " + this.entity.getEntityId() + " - " + this.state + " - " + pos);
+            debug("repathing failed, resetting - " + this.entity.getId() + " - " + this.state + " - " + pos);
             stop();
         } else {
-            debug("repathing success - " + this.entity.getEntityId() + " - " + this.state + " - " + pos);
+            debug("repathing success - " + this.entity.getId() + " - " + this.state + " - " + pos);
             walkingTimeout = walkingTimeoutMax;
         }
         return success;

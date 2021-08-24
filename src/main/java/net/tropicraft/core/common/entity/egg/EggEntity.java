@@ -26,7 +26,7 @@ public abstract class EggEntity extends LivingEntity {
         rotationRand = 0;
         ignoreCameraFrustum = true;
        
-        yaw = random.nextInt(360);
+        this.setYaw(random.nextInt(360));
     }
 
     public static DefaultAttributeContainer.Builder createAttributes() {
@@ -102,7 +102,7 @@ public abstract class EggEntity extends LivingEntity {
                     final Entity ent = onHatch();
                     ent.refreshPositionAndAngles(getX(), getY(), getZ(), 0.0F, 0.0F);
                     world.spawnEntity(ent);
-                    remove();
+                    remove(RemovalReason.DISCARDED);
                 }
             }
         } 

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NoteBlock;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
@@ -136,7 +137,7 @@ public class EntityAIPartyTime extends Goal
 
                     //keep for testing, was neat sounding
                     int amp = 1;//entityObj.level.random.nextInt(10) + 1;
-                    int rate = 4 + (entityObj.getEntityId() % 7);
+                    int rate = 4 + (entityObj.getId() % 7);
 
                     int index1 = 0;
 
@@ -262,7 +263,7 @@ public class EntityAIPartyTime extends Goal
                 boolean success = false;
 
                 if (this.entityObj.squaredDistanceTo(Vec3d.ofCenter(blockposGoal)) > 256.0) {
-                    Vec3d Vector3d = TargetFinder.method_27929(this.entityObj, 14, 3, new Vec3d((double) i + 0.5D, (double) j, (double) k + 0.5D));
+                    Vec3d Vector3d = NoPenaltyTargeting.find(this.entityObj, 14, 3, new Vec3d((double) i + 0.5D, (double) j, (double) k + 0.5D));
 
                     if (Vector3d != null) {
                         success = this.entityObj.getNavigation().startMovingTo(Vector3d.x, Vector3d.y, Vector3d.z, 1.0D);

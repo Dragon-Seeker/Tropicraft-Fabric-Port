@@ -42,7 +42,7 @@ public class AshenMaskEntity extends Entity {
         super(TropicraftEntities.ASHEN_MASK, world);
         updatePosition(x, y, z);
         updateTrackedPosition(x, y, z);
-        setEntityId(id);
+        setId(id);
         setUuid(uuid);
     }
 
@@ -87,7 +87,7 @@ public class AshenMaskEntity extends Entity {
         packet.writeDouble(getZ());
 
         // entity id & uuid
-        packet.writeInt(getEntityId());
+        packet.writeInt(getId());
         packet.writeUuid(getUuid());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
@@ -107,7 +107,7 @@ public class AshenMaskEntity extends Entity {
         if (!world.isClient) {
             // Remove masks that have been on the ground abandoned for over a day
             if (age >= MAX_TICKS_ALIVE) {
-                remove();
+                remove(RemovalReason.DISCARDED);
             }
         }
 
@@ -132,7 +132,7 @@ public class AshenMaskEntity extends Entity {
             return false;
         } else {
             if (isAlive() && !world.isClient) {
-                remove();
+                remove(RemovalReason.KILLED);
                 scheduleVelocityUpdate();
                 dropItemStack();
             }

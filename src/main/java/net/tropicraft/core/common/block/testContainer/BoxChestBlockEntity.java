@@ -1,5 +1,6 @@
 package net.tropicraft.core.common.block.testContainer;
 
+import net.minecraft.util.math.BlockPos;
 import net.tropicraft.core.common.interfaces.ImplementedInventory;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
 import net.minecraft.block.BlockState;
@@ -18,8 +19,8 @@ import net.minecraft.util.collection.DefaultedList;
 public class BoxChestBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
-    public BoxChestBlockEntity() {
-        super(TropicBlockEntities.BOX_BLOCK_CHEST_ENTITY);
+    public BoxChestBlockEntity(BlockPos pos, BlockState state) {
+        super(TropicBlockEntities.BOX_BLOCK_CHEST_ENTITY, pos, state);
     }
 
 
@@ -48,8 +49,8 @@ public class BoxChestBlockEntity extends BlockEntity implements NamedScreenHandl
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         Inventories.readNbt(tag, this.inventory);
     }
 

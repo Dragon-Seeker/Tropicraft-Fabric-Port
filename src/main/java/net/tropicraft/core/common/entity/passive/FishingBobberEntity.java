@@ -65,8 +65,8 @@ public class FishingBobberEntity extends Entity {
 
    public FishingBobberEntity(EntityKoaBase p_i50220_1_, World p_i50220_2_, int p_i50220_3_, int p_i50220_4_) {
       this(p_i50220_2_, p_i50220_1_, p_i50220_3_, p_i50220_4_);
-      float f = this.angler.pitch;
-      float f1 = this.angler.yaw;
+      float f = this.angler.getPitch();
+      float f1 = this.angler.getYaw();
       float f2 = MathHelper.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
       float f3 = MathHelper.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
       float f4 = -MathHelper.cos(-f * ((float)Math.PI / 180F));
@@ -79,10 +79,12 @@ public class FishingBobberEntity extends Entity {
       double d3 = Vector3d.length();
       Vector3d = Vector3d.multiply(0.6D / d3 + 0.5D + this.random.nextGaussian() * 0.0045D, 0.6D / d3 + 0.5D + this.random.nextGaussian() * 0.0045D, 0.6D / d3 + 0.5D + this.random.nextGaussian() * 0.0045D);
       this.setVelocity(Vector3d);
-      this.yaw = (float)(MathHelper.atan2(Vector3d.x, Vector3d.z) * (double)(180F / (float)Math.PI));
-      this.pitch = (float)(MathHelper.atan2(Vector3d.y, MathHelper.sqrt(squaredDistanceTo(Vector3d))) * (double)(180F / (float)Math.PI));
-      this.prevYaw = this.yaw;
-      this.prevPitch = this.pitch;
+      float tempYaw = (float)(MathHelper.atan2(Vector3d.x, Vector3d.z) * (double)(180F / (float)Math.PI));
+      float tempPitch = (float)(MathHelper.atan2(Vector3d.y, Math.sqrt(squaredDistanceTo(Vector3d))) * (double)(180F / (float)Math.PI));
+      this.setYaw(tempYaw);
+      this.setPitch(tempPitch);
+      this.prevYaw = this.getYaw();
+      this.prevPitch = this.getPitch();
    }
 
    @Override
@@ -118,18 +120,18 @@ public class FishingBobberEntity extends Entity {
 
       if (this.angler == null) {
          if (this.age > 40) {
-            remove();
+            remove(RemovalReason.DISCARDED);
          }
          return;
       }
 
       if (this.angler == null) {
-         this.remove();
+         this.remove(RemovalReason.DISCARDED);
       } else if (this.world.isClient || !this.shouldStopFishing()) {
          if (this.inGround) {
             ++this.ticksInGround;
             if (this.ticksInGround >= 1200) {
-               this.remove();
+               this.remove(RemovalReason.DISCARDED);
                return;
             }
          }
@@ -167,7 +169,7 @@ public class FishingBobberEntity extends Entity {
          } else {
             if (this.currentState == State.HOOKED_IN_ENTITY) {
                if (this.caughtEntity != null) {
-                  if (this.caughtEntity.removed) {
+                  if (this.caughtEntity.isRemoved()) {
                      this.caughtEntity = null;
                      this.currentState = State.FLYING;
                   } else {
@@ -210,36 +212,37 @@ public class FishingBobberEntity extends Entity {
       ItemStack itemstack1 = this.angler.getOffHandStack();
       boolean flag = itemstack.getItem() instanceof net.minecraft.item.FishingRodItem;
       boolean flag1 = itemstack1.getItem() instanceof net.minecraft.item.FishingRodItem;
-      if (!this.angler.removed && this.angler.isAlive() && (flag || flag1) && !(this.squaredDistanceTo(this.angler) > 1024.0D)) {
+      if (!this.angler.isRemoved() && this.angler.isAlive() && (flag || flag1) && !(this.squaredDistanceTo(this.angler) > 1024.0D)) {
          return false;
       } else {
-         this.remove();
+         this.remove(RemovalReason.DISCARDED);
          return true;
       }
    }
 
    private void updateRotation() {
       Vec3d Vector3d = this.getVelocity();
-      float f = MathHelper.sqrt(squaredDistanceTo(Vector3d));
-      this.yaw = (float)(MathHelper.atan2(Vector3d.x, Vector3d.z) * (double)(180F / (float)Math.PI));
+      double f = Math.sqrt(squaredDistanceTo(Vector3d));
+      float tempYaw1 = (float)(MathHelper.atan2(Vector3d.x, Vector3d.z) * (double)(180F / (float)Math.PI));
+      this.setYaw(tempYaw1);
 
-      for(this.pitch = (float)(MathHelper.atan2(Vector3d.y, (double)f) * (double)(180F / (float)Math.PI)); this.pitch - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
+      for(this.setPitch((float)(MathHelper.atan2(Vector3d.y, (double)f) * (double)(180F / (float)Math.PI))); this.getPitch() - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
       }
 
-      while(this.pitch - this.prevPitch >= 180.0F) {
+      while(this.getPitch() - this.prevPitch >= 180.0F) {
          this.prevPitch += 360.0F;
       }
 
-      while(this.yaw - this.prevYaw < -180.0F) {
+      while(this.getYaw()- this.prevYaw < -180.0F) {
          this.prevYaw -= 360.0F;
       }
 
-      while(this.yaw - this.prevYaw >= 180.0F) {
+      while(this.getYaw() - this.prevYaw >= 180.0F) {
          this.prevYaw += 360.0F;
       }
 
-      this.pitch = MathHelper.lerp(0.2F, this.prevPitch, this.pitch);
-      this.yaw = MathHelper.lerp(0.2F, this.prevYaw, this.yaw);
+      this.setPitch(MathHelper.lerp(0.2F, this.prevPitch, this.getPitch()));
+      this.setYaw(MathHelper.lerp(0.2F, this.prevYaw, this.getYaw()));
    }
 
    private void checkCollision() {
@@ -258,7 +261,7 @@ public class FishingBobberEntity extends Entity {
    }
 
    private void setHookedEntity() {
-      this.getDataTracker().set(DATA_HOOKED_ENTITY, this.caughtEntity.getEntityId() + 1);
+      this.getDataTracker().set(DATA_HOOKED_ENTITY, this.caughtEntity.getId() + 1);
    }
 
    private void catchingFish(BlockPos p_190621_1_) {
@@ -376,21 +379,24 @@ public class FishingBobberEntity extends Entity {
       }
    }
 
+
    /**
     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
     * prevent them from trampling crops
     */
+   /*
    @Override
    protected boolean canClimb() {
       return false;
    }
+    */
 
    /**
     * Queues the entity for removal from the world on the next tick.
     */
    @Override
-   public void remove() {
-      super.remove();
+   public void remove(RemovalReason reason) {
+      super.remove(reason);
       if (this.angler != null) {
          this.angler.setLure(null);
       }
@@ -413,7 +419,7 @@ public class FishingBobberEntity extends Entity {
    @Override
    public Packet<?> createSpawnPacket() {
       Entity entity = this.getAngler();
-      return new EntitySpawnS2CPacket(this, entity == null ? this.getEntityId() : entity.getEntityId());
+      return new EntitySpawnS2CPacket(this, entity == null ? this.getId() : entity.getId());
    }
 
    enum State {
