@@ -1,6 +1,7 @@
 package net.tropicraft.core.common.entity.ai;
 
-import net.minecraft.entity.ai.TargetFinder;
+import net.minecraft.entity.ai.FuzzyTargeting;
+//import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.Vec3d;
@@ -48,7 +49,7 @@ public class EntityAIWanderNotLazy extends Goal {
             }
         }
 
-        Vec3d vec = TargetFinder.findTarget(this.entity, 10, 7);
+        Vec3d vec = FuzzyTargeting.find(this.entity, 10, 7);
         if (vec == null)
         {
             return false;

@@ -40,11 +40,12 @@ public class ExplodingCoconutItem extends Item {
             itemstack.decrement(1);
         }
 
-        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (RANDOM.nextFloat() * 0.4F + 0.8F));
+
+        world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.random.nextFloat() * 0.4F + 0.8F));
         if (!world.isClient) {
             ExplodingCoconutEntity snowballentity = new ExplodingCoconutEntity(world, player);
             snowballentity.setItem(itemstack);
-            snowballentity.setProperties(player, player.pitch, player.yaw, 0.0F, 1.5F, 1.0F);
+            snowballentity.setProperties(player, player.getPitch(), player.getYaw(), 0.0F, 1.5F, 1.0F);
             world.spawnEntity(snowballentity);
         }
 

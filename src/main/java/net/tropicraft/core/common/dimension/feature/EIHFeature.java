@@ -29,6 +29,9 @@ public class EIHFeature extends Feature<DefaultFeatureConfig> {
 
     @Override
     public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, DefaultFeatureConfig config) {
+        //StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, DefaultFeatureConfig config
+
+
         byte height = 5;
         int i = pos.getX();
         int j = pos.getY() + 1;

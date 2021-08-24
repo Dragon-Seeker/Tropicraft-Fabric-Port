@@ -1,5 +1,6 @@
 package net.tropicraft.core.common.entity.ai;
 
+import net.minecraft.entity.Entity;
 import net.tropicraft.core.common.Util;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
 import net.tropicraft.core.common.entity.passive.FishingBobberEntity;
@@ -421,7 +422,7 @@ public class EntityAIGoneFishin extends Goal {
     }
 
     private void retractLine() {
-        if (entity.getLure() != null) entity.getLure().remove();
+        if (entity.getLure() != null) entity.getLure().remove(Entity.RemovalReason.DISCARDED);
     }
 
     public void faceCoord(BlockPos coord, float maxDeltaYaw, float maxDeltaPitch) {
@@ -434,11 +435,11 @@ public class EntityAIGoneFishin extends Goal {
         double d1;
         d1 = y+0.5F - (entity.getY() + (double)entity.getStandingEyeHeight());
 
-        double d3 = MathHelper.sqrt(d * d + d2 * d2);
+        double d3 = Math.sqrt(d * d + d2 * d2);
         float f2 = (float)((Math.atan2(d2, d) * 180D) / 3.1415927410125732D) - 90F;
         float f3 = (float)(-((Math.atan2(d1, d3) * 180D) / 3.1415927410125732D));
-        entity.pitch = -updateRotation(entity.pitch, f3, maxDeltaPitch);
-        entity.yaw = updateRotation(entity.yaw, f2, maxDeltaYaw);
+        entity.setPitch(-updateRotation(entity.getPitch(), f3, maxDeltaPitch));
+        entity.setYaw(updateRotation(entity.getYaw(), f2, maxDeltaYaw));
     }
 
     public float updateRotation(float curRotation, float targetRotation, float maxDeltaRotation) {

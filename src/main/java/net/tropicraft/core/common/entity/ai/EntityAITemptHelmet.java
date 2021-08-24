@@ -107,7 +107,7 @@ public class EntityAITemptHelmet extends Goal
                     return false;
                 }
 
-                if (Math.abs((double)this.temptingPlayer.pitch - this.pitch) > 5.0D || Math.abs((double)this.temptingPlayer.yaw - this.yaw) > 5.0D) {
+                if (Math.abs((double)this.temptingPlayer.getPitch() - this.pitch) > 5.0D || Math.abs((double)this.temptingPlayer.getYaw() - this.yaw) > 5.0D) {
                     return false;
                 }
             } else {
@@ -116,8 +116,8 @@ public class EntityAITemptHelmet extends Goal
                 this.targetZ = this.temptingPlayer.getZ();
             }
 
-            pitch = temptingPlayer.pitch;
-            yaw = temptingPlayer.yaw;
+            pitch = temptingPlayer.getPitch();
+            yaw = temptingPlayer.getYaw();
         }
 
         return this.canStart();

@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.NoteBlock;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
-import net.minecraft.entity.ai.TargetFinder;
+//import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -128,7 +128,7 @@ public class EntityAIPartyTime extends Goal
                 //entityObj.setSitting(true);
                 entityObj.setDancing(true);
                 this.entityObj.getJumpControl().setActive();
-                this.entityObj.yaw = entityObj.world.random.nextInt(360);
+                this.entityObj.setYaw(entityObj.world.random.nextInt(360));
             } else {
                 entityObj.setDancing(false);
                 if (true || lookUpdateTimer <= 0) {

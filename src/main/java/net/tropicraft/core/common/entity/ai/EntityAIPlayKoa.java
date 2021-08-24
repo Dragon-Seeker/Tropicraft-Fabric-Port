@@ -1,8 +1,9 @@
 package net.tropicraft.core.common.entity.ai;
 
+import net.minecraft.entity.ai.FuzzyTargeting;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetFinder;
+//import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.Vec3d;
 
@@ -58,7 +59,7 @@ public class EntityAIPlayKoa extends Goal
 
             if (this.targetVillager == null)
             {
-                Vec3d vec = TargetFinder.findTarget(this.villagerObj, 16, 3);
+                Vec3d vec = FuzzyTargeting.find(this.villagerObj, 16, 3);
                 return vec != null;
             }
 
@@ -120,7 +121,7 @@ public class EntityAIPlayKoa extends Goal
         }
         else if (this.villagerObj.getNavigation().isIdle())
         {
-            Vec3d vec = TargetFinder.findTarget(this.villagerObj, 16, 3);
+            Vec3d vec = FuzzyTargeting.find(this.villagerObj, 16, 3);
             if (vec == null)
             {
                 return;

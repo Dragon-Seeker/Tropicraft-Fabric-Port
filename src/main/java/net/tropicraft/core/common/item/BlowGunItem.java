@@ -37,7 +37,7 @@ public class BlowGunItem extends RangedWeaponItem {
         ItemStack heldStack = player.getStackInHand(hand);
         ItemStack ammo = getAmmo(player, heldStack);
         if (!ammo.isEmpty()) {
-            fireProjectile(world, player, hand, heldStack, ammo, 1.0F, player.abilities.creativeMode, 10, 0);
+            fireProjectile(world, player, hand, heldStack, ammo, 1.0F, player.getAbilities().creativeMode, 10, 0);
             //return new ActionResult<>(ActionResultType.SUCCESS, heldStack);
             return TypedActionResult.success(heldStack);
         } else {
@@ -46,7 +46,7 @@ public class BlowGunItem extends RangedWeaponItem {
     }
 
     private static ItemStack getAmmo(LivingEntity entityIn, ItemStack stack) {
-        final boolean isCreativeMode = entityIn instanceof PlayerEntity && ((PlayerEntity)entityIn).abilities.creativeMode;
+        final boolean isCreativeMode = entityIn instanceof PlayerEntity && ((PlayerEntity)entityIn).getAbilities().creativeMode;
         final ItemStack ammo = entityIn.getArrowType(stack);
         if (isCreativeMode) {
             return getProjectile();
@@ -89,14 +89,14 @@ public class BlowGunItem extends RangedWeaponItem {
 
             arrowEntity.setDamage(dmg);
             arrowEntity.setVelocity(look3f.getX(), look3f.getY(), look3f.getZ());
-            arrowEntity.pitch = pitch;
+            arrowEntity.setPitch(pitch);
             //arrowEntity.setVelocity((double)look3f.getX(), (double)look3f.getY(), (double)look3f.getZ(), dmg, pitch); //shoot();
 
             heldItem.damage(1, shooter, (i) -> i.sendToolBreakStatus(hand));
 
             projectile.split(1);
             if (projectile.isEmpty() && shooter instanceof PlayerEntity) {
-                ((PlayerEntity) shooter).inventory.removeOne(projectile);
+                ((PlayerEntity) shooter).getInventory().removeOne(projectile);
             }
 
             world.spawnEntity(arrowEntity);

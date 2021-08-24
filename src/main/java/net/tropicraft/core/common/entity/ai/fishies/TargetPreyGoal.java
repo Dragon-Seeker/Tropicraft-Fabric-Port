@@ -79,7 +79,7 @@ public class TargetPreyGoal extends Goal {
                     // Was eaten, cancel smoke
                     Box aggressBB = entity.aggressTarget.getBoundingBox();
                     if(entityBB.maxY - entityBB.minY > aggressBB.maxY - aggressBB.minY) {
-                        entity.aggressTarget.remove();
+                        entity.aggressTarget.remove(Entity.RemovalReason.KILLED);
                         entity.heal(1);
                         entity.eatenFishAmount++;
                     }

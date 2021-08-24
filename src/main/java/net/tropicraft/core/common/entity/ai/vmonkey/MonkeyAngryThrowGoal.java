@@ -92,7 +92,7 @@ public class MonkeyAngryThrowGoal extends Goal {
         moveTowardsEntity(this.trackedMug);
       } else {
         entity.setStackInHand(Hand.MAIN_HAND, this.trackedMug.getStack());
-        this.trackedMug.remove();
+        this.trackedMug.remove(Entity.RemovalReason.DISCARDED);
       }
       return;
     }
@@ -145,7 +145,7 @@ public class MonkeyAngryThrowGoal extends Goal {
 
     double d0 = leapTarget.getX() - entity.getX();
     double d1 = leapTarget.getZ() - entity.getZ();
-    float f = MathHelper.sqrt(d0 * d0 + d1 * d1);
+    float f = (float) Math.sqrt(d0 * d0 + d1 * d1);
     final Vec3d motion = entity.getVelocity();
 
     if ((double)f >= 1.0E-4D) {

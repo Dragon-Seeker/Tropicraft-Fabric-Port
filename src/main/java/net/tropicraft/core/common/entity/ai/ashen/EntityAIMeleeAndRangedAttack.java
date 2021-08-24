@@ -119,7 +119,7 @@ public class EntityAIMeleeAndRangedAttack extends Goal
 		//System.out.println(rangedAttackTime);
 
 		if (--rangedAttackTime <= 0) {
-			f = MathHelper.sqrt(d0) / shootCutoffRange;
+			f = (float) Math.sqrt(d0) / shootCutoffRange;
 			float f1 = f;
 
 			if (f < 0.1F) {

@@ -69,8 +69,8 @@ public interface StructureExtensions {
                 compoundnbt.remove("UUID");
                 StructureAccessor.getEntity(world, compoundnbt).ifPresent((entity) -> {
                     float f = entity.applyMirror(settings.getMirror());
-                    f = f + (entity.yaw - entity.applyRotation(settings.getRotation()));
-                    entity.refreshPositionAndAngles(vector3d1.x, vector3d1.y, vector3d1.z, f, entity.pitch);
+                    f = f + (entity.getYaw() - entity.applyRotation(settings.getRotation()));
+                    entity.refreshPositionAndAngles(vector3d1.x, vector3d1.y, vector3d1.z, f, entity.getPitch());
                     if (settings.method_27265() && entity instanceof MobEntity) {
                         ((MobEntity) entity).initialize(world, world.getLocalDifficulty(new BlockPos(vector3d1)), SpawnReason.STRUCTURE, (EntityData)null, compoundnbt);
                     }

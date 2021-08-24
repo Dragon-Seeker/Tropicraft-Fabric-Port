@@ -94,7 +94,7 @@ public class TropicraftSpawnEgg<T extends Entity> extends Item {
                     if (type.spawnFromItemStack((ServerWorld) world, heldItem, player, tracePos, SpawnReason.SPAWN_EGG, false, false) == null) {
                         return TypedActionResult.pass(heldItem);
                     } else {
-                        if (!player.abilities.creativeMode) {
+                        if (!player.getAbilities().creativeMode) {
                             heldItem.decrement(1);
                         }
 

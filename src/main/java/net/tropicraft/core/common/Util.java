@@ -78,7 +78,7 @@ public class Util {
                 double d1;
                 d1 = y+0.5F - (ent.getY() + (double)ent.getStandingEyeHeight());
 
-                double d3 = MathHelper.sqrt(d * d + d2 * d2);
+                double d3 = Math.sqrt(d * d + d2 * d2);
                 float f2 = (float)((Math.atan2(d2, d) * 180D) / 3.1415927410125732D) - 90F;
                 float f3 = (float)(-((Math.atan2(d1, d3) * 180D) / 3.1415927410125732D));
                 float rotationPitch = -f3;//-ent.updateRotation(rotationPitch, f3, 180D);
@@ -237,7 +237,7 @@ public class Util {
         double d0 = ent.getX() - x;
         double d1 = ent.getY() - y;
         double d2 = ent.getZ() - z;
-        return (double)MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+        return Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
     }
 
     public static Field findField(Class<?> clazz, String... fieldNames)

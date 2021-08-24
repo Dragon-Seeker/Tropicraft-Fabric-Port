@@ -67,7 +67,7 @@ public class FurnitureItem<T extends FurnitureEntity> extends Item implements IC
                 final T entity = this.entityType.create(world);
                 entity.refreshPositionAndAngles(new BlockPos(hitVec.x, hitVec.y, hitVec.z), 0, 0);
                 entity.setVelocity(Vec3d.ZERO);
-                entity.setRotation(placer.yaw + 180);
+                entity.setRotation(placer.getYaw() + 180);
                 entity.setColor(this.color);
 
                 if (!world.isSpaceEmpty(entity, entity.getBoundingBox().expand(-0.1D))) {
@@ -77,7 +77,7 @@ public class FurnitureItem<T extends FurnitureEntity> extends Item implements IC
                         world.spawnEntity(entity);
                     }
 
-                    if (!placer.abilities.creativeMode) {
+                    if (!placer.getAbilities().creativeMode) {
                         heldItem.decrement(1);
                     }
 

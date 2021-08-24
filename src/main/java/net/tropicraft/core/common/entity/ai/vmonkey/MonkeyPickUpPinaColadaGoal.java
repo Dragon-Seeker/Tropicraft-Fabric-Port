@@ -1,5 +1,6 @@
 package net.tropicraft.core.common.entity.ai.vmonkey;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.pathing.EntityNavigation;
@@ -114,7 +115,7 @@ public class MonkeyPickUpPinaColadaGoal extends Goal {
                 }
             } else {
                 entity.setStackInHand(Hand.MAIN_HAND, drinkEntity.getStack());
-                drinkEntity.remove();
+                drinkEntity.remove(Entity.RemovalReason.KILLED);
             }
         }
     }

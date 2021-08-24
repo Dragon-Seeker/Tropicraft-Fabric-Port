@@ -1,8 +1,9 @@
 package net.tropicraft.core.common.entity.ai.ashen;
 
+import net.minecraft.entity.ai.FuzzyTargeting;
 import net.tropicraft.core.common.entity.hostile.AshenEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetFinder;
+//import net.minecraft.entity.ai.TargetFinder;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.Vec3d;
 
@@ -37,7 +38,7 @@ public class AIAshenChaseAndPickupLostMask extends Goal {
 			panicTime--;
 
 			if (ashen.world.getTime() % 10 == 0) {
-				Vec3d vec3 = TargetFinder.findTarget(ashen, 10, 7);
+				Vec3d vec3 = FuzzyTargeting.find(ashen, 10, 7);
 
 				if (vec3 != null) {
 					ashen.getNavigation().startMovingTo(vec3.x, vec3.y, vec3.z, speed);

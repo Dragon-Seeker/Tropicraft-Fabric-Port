@@ -48,7 +48,7 @@ public class TropicraftChunkGenerator extends NoiseChunkGenerator {
         new OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-7, 0));
         new OctaveSimplexNoiseSampler(random, IntStream.rangeClosed(-3, 0));
 
-        random.consume(2620);
+        random.next(2620);
         ((NoiseChuckGeneratorAccessor)this).setDensityNoise(new OctavePerlinNoiseSampler(random, IntStream.rangeClosed(-15, 0)));
 
         //this.densityNoise =

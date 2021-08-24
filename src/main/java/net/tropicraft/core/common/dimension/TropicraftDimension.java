@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 //@Mod.EventBusSubscriber(modid = Constants.MODID)
@@ -73,7 +74,7 @@ public class TropicraftDimension {
     public static void addDefaultDimensionKey() {
         //Field dimensionKeysField = ObfuscationReflectionHelper.findField(DimensionOptions.class, "field_236056_e_");
 
-        LinkedHashSet<RegistryKey<DimensionOptions>> keys = DimensionsOptionsAccessor.getBaseDimensions();
+        Set<RegistryKey<DimensionOptions>> keys = DimensionsOptionsAccessor.getBaseDimensions();
         keys.add(DIMENSION);
         DimensionsOptionsAccessor.setBaseDimensions(keys);
 
@@ -160,7 +161,7 @@ public class TropicraftDimension {
 
         WorldChunk chunk = world.getChunk(x >> 4, z >> 4);
         int topY = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE, x & 15, z & 15);
-        player.teleport(world, x + 0.5, topY + 1.0, z + 0.5, player.yaw, player.pitch);
+        player.teleport(world, x + 0.5, topY + 1.0, z + 0.5, player.getYaw(), player.getPitch());
 
 
         //BasicEventHooks.firePlayerChangedDimensionEvent(player, destination, destination);

@@ -54,7 +54,7 @@ public class BambooItemFrameItem extends DecorationItem {
 
     @Override
     protected boolean canPlaceOn(PlayerEntity player, Direction side, ItemStack stack, BlockPos pos) {
-        return player.canPlaceOn(pos, side, stack) && !World.isOutOfBuildLimitVertically(pos);
+        return player.canPlaceOn(pos, side, stack) && !player.world.isOutOfHeightLimit(pos);
     }
 
 }
