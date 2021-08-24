@@ -6,6 +6,10 @@
   <a href="https://discord.gg/Q24TRnx">
       <img src="https://img.shields.io/discord/870127395250794528.svg?colorB=7289DA&label=Discord&style=flat-square" alt="Discord">
   </a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/tropicraft-unoffical-port">
+      <img src="http://cf.way2muchnoise.eu/versions/For%20MC_254794_latest.svg" alt="Minecraft Version">
+      <img src="http://cf.way2muchnoise.eu/short_254794.svg" alt="Minecraft Version">
+  </a>
   <br>
   <strong><a href="https://tropicraft.net/">Website</a> | <a href="https://www.minecraftforum.net/topic/533512">Minecraft Forum Thread</a> </strong>
 </p> 
