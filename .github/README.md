@@ -36,8 +36,13 @@ FAQ
 **Can I use Tropicraft in my public/private mod pack?**
 > I would say yes but until most of the bugs and glitches are sorted, you might not want to do so. You also should ask for permission from the original creators. You can find the team on Discord to receive permission and find out what is required from you.
 
-## WARNING: All support will be handled on this github page, NOT THE ORIGINAL DISCORD SERVER OR THE FORGE VERSION'S GITHUB
+**When is 1.17 going to be supported?**
+> When I can find the time to convert the nessarcy stuff over, world gen has changed slightly in 1.17 and everything currently is quite broken so don't ask me or Ill take your knee caps.
 
+**When is a forge port coming?**
+> I don't understand why you would ask unless you want your knee caps stolen cause one already exists...
+
+## WARNING: All support will be handled on this github page, NOT THE ORIGINAL DISCORD SERVER OR THE FORGE VERSION'S GITHUB
 
 **How do I contact the Original creator?**
 
