@@ -218,8 +218,8 @@ public class FireArmorItem extends TropicraftArmorItem {
             float look = -180F;
             double dist = 0.5F;
 
-            double gatherX = player.getX() + (-Math.sin((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
-            double gatherZ = player.getZ() + (Math.cos((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
+            double gatherX = player.getX() + (-Math.sin((player.yaw+look) / 180.0F * 3.1415927F) * Math.cos(player.pitch / 180.0F * 3.1415927F) * dist);
+            double gatherZ = player.getZ() + (Math.cos((player.yaw+look) / 180.0F * 3.1415927F) * Math.cos(player.pitch / 180.0F * 3.1415927F) * dist);
 
             ParticleEffect particle = ParticleTypes.FLAME;
             if (rand.nextInt(2) == 0) particle = ParticleTypes.LARGE_SMOKE;
@@ -240,8 +240,8 @@ public class FireArmorItem extends TropicraftArmorItem {
 
             range = 2F;
 
-            double gatherX = player.getX() + (-Math.sin((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
-            double gatherZ = player.getZ() + (Math.cos((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
+            double gatherX = player.getX() + (-Math.sin((player.yaw+look) / 180.0F * 3.1415927F) * Math.cos(player.pitch / 180.0F * 3.1415927F) * dist);
+            double gatherZ = player.getZ() + (Math.cos((player.yaw+look) / 180.0F * 3.1415927F) * Math.cos(player.pitch / 180.0F * 3.1415927F) * dist);
 
             ParticleEffect particle = ParticleTypes.FLAME;
             if (rand.nextInt(2) == 0) particle = ParticleTypes.LARGE_SMOKE;
