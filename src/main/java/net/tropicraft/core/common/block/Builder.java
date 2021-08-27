@@ -155,6 +155,20 @@ public class Builder {
         return new FlowerPotBlock(block, FabricBlockSettings.copyOf(Blocks.FLOWER_POT));
     }
 
+    public static FabricBlockSettings  leaveSettings(){
+        return FabricBlockSettings.copyOf(Blocks.OAK_LEAVES)
+                .breakByTool(FabricToolTags.HOES)
+                .strength(0.2f)
+                .nonOpaque()
+                .sounds(BlockSoundGroup.GRASS)
+                .breakByTool(FabricToolTags.SHEARS)
+                .breakByHand(true);
+    }
+
+    public static TropicLeavesBlock leaves(boolean decay) {
+        return new TropicLeavesBlock(leaveSettings(), decay);
+    }
+
     @SafeVarargs
     public static SaplingBlock sapling(final SaplingGenerator tree, FabricBlockSettings settings, final Block... validPlantBlocks) {
         return new SaplingBlock(tree, settings) {
