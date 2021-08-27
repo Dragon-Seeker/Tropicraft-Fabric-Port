@@ -14,7 +14,7 @@
   <a href="https://www.curseforge.com/minecraft/mc-mods/518419">
       <img src="http://cf.way2muchnoise.eu/versions/For%20MC_tropicraft-unoffical-port_latest.svg" alt="Minecraft Version">
       <img src="https://img.shields.io/badge/Mod%20Loader-Fabric-deaa6a?labelColor=2D2D2D&color=da9e54">
-      <img src="http://cf.way2muchnoise.eu/518419.svg">
+      <img src="http://cf.way2muchnoise.eu/tropicraft-unoffical-port.svg">
   </a>
   <br>
   <strong><a href="https://tropicraft.net/">Orignal Website</a> | <a href="https://www.minecraftforum.net/topic/533512">Minecraft Forum Thread</a> </strong>
