@@ -172,7 +172,7 @@ public class TropicraftBlocks {
     */
 
     public static final Block MAHOGANY_LEAVES = registerBlock("mahogany_leaves", Builder.leaves(false));
-    public static final Block PALM_LEAVES = registerBlock("palm_leaves", Builder.leaves(false));
+    public static final Block PALM_LEAVES = registerBlock("palm_leaves", new TropicTestLeavesBlock(Builder.leaveSettings(), true));
     public static final Block KAPOK_LEAVES = registerBlock("kapok_leaves", Builder.leaves(false));
 
     public static final Block FRUIT_LEAVES = registerBlock("fruit_leaves", Builder.leaves(true));
