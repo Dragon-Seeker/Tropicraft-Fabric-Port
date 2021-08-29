@@ -5,4 +5,3 @@ accessible field net/minecraft/client/render/SkyProperties BY_IDENTIFIER Lit/uni
 accessible method net/minecraft/world/gen/stateprovider/BlockStateProviderType <init> (Lcom/mojang/serialization/Codec;)V
 accessible field net/minecraft/structure/pool/StructurePool$Projection PROJECTIONS_BY_ID Ljava/util/Map;
 mutable field net/minecraft/world/gen/chunk/NoiseChunkGenerator densityNoise Lnet/minecraft/util/math/noise/OctavePerlinNoiseSampler;
-extendable method net/minecraft/block/AbstractBlock$AbstractBlockState updateNeighbors (net/minecraft/world/WorldAccess;net/minecraft/util/math/BlockPos;II)V
