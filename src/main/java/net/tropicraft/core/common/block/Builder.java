@@ -165,8 +165,8 @@ public class Builder {
                 .breakByHand(true);
     }
 
-    public static TropicLeavesBlock leaves(boolean decay) {
-        return new TropicLeavesBlock(leaveSettings(), decay);
+    public static DepreciatedTropicLeavesBlock leaves(boolean decay) {
+        return new DepreciatedTropicLeavesBlock(leaveSettings(), decay);
     }
 
     @SafeVarargs

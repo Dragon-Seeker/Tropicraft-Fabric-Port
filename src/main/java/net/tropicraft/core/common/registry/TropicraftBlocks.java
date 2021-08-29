@@ -170,9 +170,9 @@ public class TropicraftBlocks {
             "palm_sapling", Builder.sapling(TropicraftTrees.PALM, () -> Blocks.SAND, CORAL_SAND, FOAMY_SAND, VOLCANIC_SAND, PURIFIED_SAND, MINERAL_SAND));
     */
 
-    public static final Block MAHOGANY_LEAVES = registerBlock("mahogany_leaves", Builder.leaves(false));
-    public static final Block PALM_LEAVES = registerBlock("palm_leaves", new PalmLeaveBlock(Builder.leaveSettings()));
-    public static final Block KAPOK_LEAVES = registerBlock("kapok_leaves", Builder.leaves(false));
+    public static final Block MAHOGANY_LEAVES = registerBlock("mahogany_leaves", new TropicraftLeaveBlock(Builder.leaveSettings()));
+    public static final Block PALM_LEAVES = registerBlock("palm_leaves", new TropicraftLeaveBlock(Builder.leaveSettings()));
+    public static final Block KAPOK_LEAVES = registerBlock("kapok_leaves", new TropicraftLeaveBlock(Builder.leaveSettings()));
 
     public static final Block FRUIT_LEAVES = registerBlock("fruit_leaves", Builder.leaves(true));
     public static final Block GRAPEFRUIT_LEAVES = registerBlock("grapefruit_leaves", Builder.leaves(true));

@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.tag.BlockTags;
@@ -14,17 +15,18 @@ import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.Random;
 
-public class PalmLeaveBlock extends LeavesBlock {
-    public static final IntProperty EXTRADISTANCE;
+public class TropicraftLeaveBlock extends LeavesBlock {
+    public static IntProperty EXTRADISTANCE;
+    public static BooleanProperty PASTFIRSTCYCLE; //Property to check if there has even been a block update to prevent unwanted decay instantly
 
-    public PalmLeaveBlock(FabricBlockSettings settings) {
+    public TropicraftLeaveBlock(FabricBlockSettings settings) {
         super(settings);
 
-        this.setDefaultState(this.getDefaultState().with(DISTANCE, 7).with(EXTRADISTANCE, 12));
+        this.setDefaultState(this.getDefaultState().with(DISTANCE, 7).with(EXTRADISTANCE, 20).with(PASTFIRSTCYCLE, false));
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) { //*
         //super.scheduledTick(state, world, pos, random);
         world.setBlockState(pos, updateDistanceFromLeave(state, world, pos), 3);
     }
@@ -40,7 +42,7 @@ public class PalmLeaveBlock extends LeavesBlock {
             DiagonalDirections direction = directions[index];
             mutable.set(pos, direction.getX(), direction.getY(), direction.getZ());
             BlockState blockState = world.getBlockState(mutable);
-            if (blockState != Blocks.AIR.getDefaultState() && blockState.getBlock() == TropicraftBlocks.PALM_LEAVES) {
+            if (blockState != Blocks.AIR.getDefaultState() && blockState.getBlock() == this) {
                 BlockState blockState2 = blockState.getStateForNeighborUpdate(Direction.UP, state, world, mutable, pos);
                 Block.replace(blockState, blockState2, world, mutable, flags, maxUpdateDepth);
             }
@@ -48,13 +50,13 @@ public class PalmLeaveBlock extends LeavesBlock {
     }
 
     @Override
-    public boolean hasRandomTicks(BlockState state) {
-        return !(Boolean)state.get(PERSISTENT) && (Integer)state.get(EXTRADISTANCE) == 12;
+    public boolean hasRandomTicks(BlockState state) { //*
+        return !(Boolean)state.get(PERSISTENT) && (Integer)state.get(EXTRADISTANCE) == 20;
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (state.get(EXTRADISTANCE) == 12) {
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) { //*
+        if (state.get(EXTRADISTANCE) == 20 && state.get(PASTFIRSTCYCLE) == true) {
             super.randomTick(state, world, pos, random);
         }
     }
@@ -70,10 +72,11 @@ public class PalmLeaveBlock extends LeavesBlock {
     }
 
     //TODO: MUST CHANGE DUE TO MINCRAFT CODE STUFFF
-    private static BlockState updateDistanceFromLeave(BlockState state, WorldAccess world, BlockPos pos) {
+    private static BlockState updateDistanceFromLeave(BlockState state, WorldAccess world, BlockPos pos) { //*
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         DiagonalDirections[] directionDiagonals = DiagonalDirections.values();
-        int currentExtraDistance = 12;
+
+        int currentExtraDistance = 20; //*
         int length = directionDiagonals.length;
 
         for(int i = 0; i < length; ++i) {
@@ -85,7 +88,7 @@ public class PalmLeaveBlock extends LeavesBlock {
             }
         }
 
-        return state.with(EXTRADISTANCE, currentExtraDistance);
+        return state.with(EXTRADISTANCE, currentExtraDistance).with(PASTFIRSTCYCLE, true);
     }
 
     private static int getDistanceFromLeave(BlockState state) {
@@ -94,16 +97,18 @@ public class PalmLeaveBlock extends LeavesBlock {
         }
 
         else {
-            return (state.getBlock() instanceof PalmLeaveBlock) ? state.get(EXTRADISTANCE) : 12;
+            return (state.getBlock() instanceof TropicraftLeaveBlock) ? state.get(EXTRADISTANCE) : 20;
         }
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(new Property[]{DISTANCE, PERSISTENT, EXTRADISTANCE});
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) { //*
+        builder.add(new Property[]{DISTANCE, PERSISTENT, EXTRADISTANCE, PASTFIRSTCYCLE});
     }
 
     static {
-        EXTRADISTANCE = IntProperty.of("extradistance", 1, 12);
+        EXTRADISTANCE = IntProperty.of("extradistance", 1, 20);
+        PASTFIRSTCYCLE = BooleanProperty.of("pastfirstcycle");
     }
+
 }

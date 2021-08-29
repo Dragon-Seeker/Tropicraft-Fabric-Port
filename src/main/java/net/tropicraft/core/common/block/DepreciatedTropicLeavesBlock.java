@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
-public class TropicLeavesBlock extends LeavesBlock {
-    public TropicLeavesBlock(FabricBlockSettings settings, boolean decay) {
+public class DepreciatedTropicLeavesBlock extends LeavesBlock {
+    public DepreciatedTropicLeavesBlock(FabricBlockSettings settings, boolean decay) {
         super(settings);
         this.setDefaultState(this.getDefaultState().with(PERSISTENT, !decay));
     }
