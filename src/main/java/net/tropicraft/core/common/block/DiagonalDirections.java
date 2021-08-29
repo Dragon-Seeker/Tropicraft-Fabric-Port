@@ -2,7 +2,7 @@ package net.tropicraft.core.common.block;
 
 import net.minecraft.util.math.Vec3i;
 
-public enum TestDirection {
+public enum DiagonalDirections {
     DOWN(0,  new Vec3i(0, -1, 0),1),
 
     DOWN_N(1,  new Vec3i(0, -1, -1),2),
@@ -45,7 +45,7 @@ public enum TestDirection {
     public final Vec3i vector;
     public final int additionAmount;
 
-    TestDirection(int id, Vec3i vector, int additionAmount) {
+    DiagonalDirections(int id, Vec3i vector, int additionAmount) {
         this.id = id;
         this.vector = vector;
         this.additionAmount = additionAmount;

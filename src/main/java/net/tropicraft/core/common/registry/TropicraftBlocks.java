@@ -3,7 +3,6 @@ package net.tropicraft.core.common.registry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.BlockSoundGroup;
@@ -172,7 +171,7 @@ public class TropicraftBlocks {
     */
 
     public static final Block MAHOGANY_LEAVES = registerBlock("mahogany_leaves", Builder.leaves(false));
-    public static final Block PALM_LEAVES = registerBlock("palm_leaves", new TropicTestLeavesBlock(Builder.leaveSettings(), true));
+    public static final Block PALM_LEAVES = registerBlock("palm_leaves", new PalmLeaveBlock(Builder.leaveSettings()));
     public static final Block KAPOK_LEAVES = registerBlock("kapok_leaves", Builder.leaves(false));
 
     public static final Block FRUIT_LEAVES = registerBlock("fruit_leaves", Builder.leaves(true));

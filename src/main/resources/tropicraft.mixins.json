@@ -21,9 +21,7 @@
     "CactusBlockInjection",
     "SugarCaneBlockInjection",
     "DyeColorAccessor",
-    "DimensionsOptionsAccessor",
-    "AbstractBlockstateInjection",
-    "AbstractBlockstateAccessor"
+    "DimensionsOptionsAccessor"
   ],
   "client": [
   ],
