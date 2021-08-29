@@ -165,8 +165,12 @@ public class Builder {
                 .breakByHand(true);
     }
 
-    public static DepreciatedTropicLeavesBlock leaves(boolean decay) {
-        return new DepreciatedTropicLeavesBlock(leaveSettings(), decay);
+    public static TropicraftLeaveBlock tropicalLeves() {
+        return new TropicraftLeaveBlock(leaveSettings());
+    }
+
+    public static Block vanillaLikeLeves() {
+        return new LeavesBlock(leaveSettings());
     }
 
     @SafeVarargs

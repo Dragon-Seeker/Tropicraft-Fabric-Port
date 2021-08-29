@@ -170,15 +170,15 @@ public class TropicraftBlocks {
             "palm_sapling", Builder.sapling(TropicraftTrees.PALM, () -> Blocks.SAND, CORAL_SAND, FOAMY_SAND, VOLCANIC_SAND, PURIFIED_SAND, MINERAL_SAND));
     */
 
-    public static final Block MAHOGANY_LEAVES = registerBlock("mahogany_leaves", new TropicraftLeaveBlock(Builder.leaveSettings()));
-    public static final Block PALM_LEAVES = registerBlock("palm_leaves", new TropicraftLeaveBlock(Builder.leaveSettings()));
-    public static final Block KAPOK_LEAVES = registerBlock("kapok_leaves", new TropicraftLeaveBlock(Builder.leaveSettings()));
+    public static final TropicraftLeaveBlock MAHOGANY_LEAVES = registerBlock("mahogany_leaves", Builder.tropicalLeves());
+    public static final TropicraftLeaveBlock PALM_LEAVES = registerBlock("palm_leaves", Builder.tropicalLeves());
+    public static final TropicraftLeaveBlock KAPOK_LEAVES = registerBlock("kapok_leaves", Builder.tropicalLeves());
 
-    public static final Block FRUIT_LEAVES = registerBlock("fruit_leaves", Builder.leaves(true));
-    public static final Block GRAPEFRUIT_LEAVES = registerBlock("grapefruit_leaves", Builder.leaves(true));
-    public static final Block LEMON_LEAVES = registerBlock("lemon_leaves", Builder.leaves(true));
-    public static final Block LIME_LEAVES = registerBlock("lime_leaves", Builder.leaves(true));
-    public static final Block ORANGE_LEAVES = registerBlock("orange_leaves", Builder.leaves(true));
+    public static final Block FRUIT_LEAVES = registerBlock("fruit_leaves", Builder.vanillaLikeLeves());
+    public static final Block GRAPEFRUIT_LEAVES = registerBlock("grapefruit_leaves", Builder.vanillaLikeLeves());
+    public static final Block LEMON_LEAVES = registerBlock("lemon_leaves", Builder.vanillaLikeLeves());
+    public static final Block LIME_LEAVES = registerBlock("lime_leaves", Builder.vanillaLikeLeves());
+    public static final Block ORANGE_LEAVES = registerBlock("orange_leaves", Builder.vanillaLikeLeves());
 
     //public static final RegistryObject<PineappleBlock> PINEAPPLE = register(
     //        "pineapple", () -> new PineappleBlock(Block.Properties.create(Material.TALL_PLANTS).tickRandomly().doesNotBlockMovement().hardnessAndResistance(0).sound(SoundType.PLANT)));
