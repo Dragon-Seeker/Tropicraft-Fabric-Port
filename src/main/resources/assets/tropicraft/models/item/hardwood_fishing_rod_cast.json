@@ -1,0 +1,6 @@
+{
+    "parent": "tropicraft:item/hardwood_fishing_rod",
+    "textures": {
+        "layer0": "tropicraft:item/hardwood_fishing_rod_cast"
+    }
+}

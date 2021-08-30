@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -87,7 +89,6 @@ public class TropicraftItems {
     public static final Item ZIRCON_PICKAXE = registerItem("zircon_pickaxe", new TropicPickaxe(TropicTiers.ZIRCON, 2, -2.0f, getDefaultProperties()));
     public static final Item ZIRCON_AXE = registerItem("zircon_axe", new TropicAxe(TropicTiers.ZIRCON, 5.0F, -2.0f, getDefaultProperties()));
     public static final Item ZIRCON_HOE = registerItem("zircon_hoe", new TropicHoe(TropicTiers.ZIRCON, 0, -2.0f, getDefaultProperties()));
-
 
     public static final Item ZIRCONIUM_SWORD = registerItem("zirconium_sword", new TropicSword(TropicTiers.EUDIALYTE, 3, -3.0f, getDefaultProperties()));
     public static final Item ZIRCONIUM_SHOVEL = registerItem("zirconium_shovel", new TropicShovel(TropicTiers.EUDIALYTE, 2.0F, -3.0f, getDefaultProperties()));
@@ -179,6 +180,9 @@ public class TropicraftItems {
     public static final ImmutableMap<DyeColor, FurnitureItem<BeachFloatEntity>> BEACH_FLOATS = Arrays.stream(DyeColor.values())
             .collect(Maps.<DyeColor, DyeColor, FurnitureItem<BeachFloatEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<BeachFloatEntity>) registerItem(c.asString() + "_beach_float", Builder.beachFloat(c))));
 
+
+
+
     //--------------------ITEMS HARDER TO PORT STILL--------------------
 
     /*
@@ -193,6 +197,11 @@ public class TropicraftItems {
     public static final RegistryObject<ScubaFlippersItem> PINK_SCUBA_FLIPPERS = register("pink_scuba_flippers", Builder.scubaFlippers(ScubaType.PINK));
 
      */
+
+    //------Possible Fabric Additions------
+    //Credits to The_Island_Survivor, may be used for furture update
+    //public static final Item HARDWOOD_STICK = registerItem("hardwood_stick", new TropicItem());
+    //public static final Item HARDWOOD_FISHING_ROD = registerItem("hardwood_fishing_rod", new FishingRodItem((getDefaultProperties().maxDamage(64))));
 
     public static void init() {}
 
