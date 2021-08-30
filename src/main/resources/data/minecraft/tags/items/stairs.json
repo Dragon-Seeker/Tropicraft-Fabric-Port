@@ -1,8 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tropicraft:palm_stairs",
-    "tropicraft:mahogany_stairs",
+    "#tropicraft:wooden_stairs",
     "tropicraft:bamboo_stairs",
     "tropicraft:chunk_stairs",
     "tropicraft:thatch_stairs"

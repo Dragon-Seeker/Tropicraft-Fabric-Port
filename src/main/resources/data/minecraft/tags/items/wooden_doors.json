@@ -1,8 +1,6 @@
 {
   "replace": false,
   "values": [
-    "tropicraft:bamboo_door",
-    "tropicraft:thatch_door",
     "tropicraft:palm_door",
     "tropicraft:mahogany_door"
   ]
