@@ -24,6 +24,8 @@ public class BambooMugModel extends Model {
     public boolean renderLiquid;
     public int liquidColor;
 
+    //Function<Identifier, RenderLayer> renderTypeIn
+
     public BambooMugModel(Function<Identifier, RenderLayer> renderTypeIn) {
         super(renderTypeIn);
         textureWidth = 64;

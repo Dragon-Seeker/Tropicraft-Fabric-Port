@@ -1,16 +1,21 @@
 package net.tropicraft.core.client.entity.models;
 
+import net.minecraft.client.model.*;
 import net.tropicraft.core.common.entity.egg.EggEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class EggModel extends CompositeEntityModel<EggEntity> {
-    public ModelPart body;
+    private ModelPart body;
+    private ModelPart root;
 
-    public EggModel() {
+    public EggModel(ModelPart root) {
+        this.root = root;
+        this.body = root.getChild("body");
+
+        /*
         textureWidth = 64;
         textureHeight = 32;
 
@@ -23,8 +28,28 @@ public class EggModel extends CompositeEntityModel<EggEntity> {
         body.setTextureOffset(24, 9).addCuboid(-1.5F, -7F, 3F, 3, 6, 1);
         body.setTextureOffset(16, 7).addCuboid(-4F, -7F, -1.5F, 1, 6, 3);
         body.setTextureOffset(8, 9).addCuboid(-1.5F, -7F, -4F, 3, 6, 1);
+         */
     }
 
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        //body.mirror = true;
+        modelPartData.addChild("body", ModelPartBuilder.create().mirrored(true)
+                .uv(0,16)
+                .cuboid(-3F, -10F, -3F, 6, 10, 6)
+                .uv(0,0)
+                .cuboid(-1.5F, -11F, -1.5F, 3, 1, 3)
+                .uv(0,7)
+                .cuboid(3F, -7F, -1.5F, 1, 6, 3)
+                .uv(24,9)
+                .cuboid(-1.5F, -7F, 3F, 3, 6, 1)
+                .uv(16,7)
+                .cuboid(-4F, -7F, -1.5F, 1, 6, 3)
+                .uv(8,9)
+                .cuboid(-1.5F, -7F, -4F, 3, 6, 1), ModelTransform.pivot(0F,24F,0F));
+        return TexturedModelData.of(modelData,64,64);
+    }
     @Override
     public void setAngles(EggEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 

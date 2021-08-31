@@ -7,7 +7,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.tropicraft.core.client.entity.models.PlayerHeadpieceRenderer;
+import net.tropicraft.core.client.entity.models.PlayerHeadpieceModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +19,7 @@ public class StacheArmorProvider implements ArmorRenderer.ModelProvider, ArmorRe
 
     @Override
     public @NotNull BipedEntityModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, BipedEntityModel<LivingEntity> defaultModel) {
-        return slot == EquipmentSlot.HEAD ? new PlayerHeadpieceRenderer(0) : null;
+        return slot == EquipmentSlot.HEAD ? new PlayerHeadpieceModel(0) : null;
     }
 
     @Override

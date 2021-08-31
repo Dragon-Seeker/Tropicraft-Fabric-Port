@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.EagleRayModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.EagleRayEntity;
@@ -16,8 +17,8 @@ public class EagleRayRenderer extends MobEntityRenderer<EagleRayEntity, EagleRay
 
     public static final Identifier RAY_TEXTURE_LOC = TropicraftRenderUtils.bindTextureEntity("ray/eagleray");
 
-    public EagleRayRenderer(EntityRenderDispatcher manager) {
-        super(manager, new EagleRayModel(), 0.8f);
+    public EagleRayRenderer(EntityRendererFactory.Context context) {
+        super(context, new EagleRayModel(context.getPart()), 0.8f);
     }
 
     @Override

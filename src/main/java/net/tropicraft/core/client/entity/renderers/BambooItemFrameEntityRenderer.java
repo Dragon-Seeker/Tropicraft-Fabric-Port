@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -32,8 +33,8 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
     private final MinecraftClient mc = MinecraftClient.getInstance();
     private final ItemRenderer itemRenderer;
 
-    public BambooItemFrameEntityRenderer(EntityRenderDispatcher entityRenderDispatcher, EntityRendererRegistry) {
-        super(entityRenderDispatcher);
+    public BambooItemFrameEntityRenderer(EntityRendererFactory.Context context) {
+        super(context);
         itemRenderer = context.getItemRenderer();
     }
 
@@ -48,8 +49,8 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
         double d0 = 0.46875D;
 
         matrixStackIn.translate((double) direction.getOffsetX() * 0.46875D, (double) direction.getOffsetY() * 0.46875D, (double) direction.getOffsetZ() * 0.46875D);
-        matrixStackIn.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entityIn.pitch)); //matrixStackIn.rotate(Vector3f.XP.rotationDegrees(entityIn.rotationPitch));
-        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - entityIn.yaw));
+        matrixStackIn.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entityIn.getPitch())); //matrixStackIn.rotate(Vector3f.XP.rotationDegrees(entityIn.rotationPitch));
+        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - entityIn.getYaw()));
 
         boolean isFrameInvis = entityIn.isInvisible();
 
@@ -64,8 +65,9 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
         }
 
         ItemStack itemstack = entityIn.getHeldItemStack();
+        Integer idFromItemstack = FilledMapItem.getMapId(itemstack);
         if (!itemstack.isEmpty()) {
-            MapState mapstate = FilledMapItem.getMapState(itemstack, entityIn.world);
+            MapState mapstate = FilledMapItem.getMapState(idFromItemstack, entityIn.world);
             matrixStackIn.translate(0.0D, 0.0D, 0.4375D);
 
             if (isFrameInvis == true) {
@@ -85,11 +87,11 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
                 matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
                 matrixStackIn.translate(0.0D, 0.0D, -1.0D);
                 if (mapstate != null) {
-                    this.mc.gameRenderer.getMapRenderer().draw(matrixStackIn, bufferIn, mapstate, true, packedLightIn);
+                    this.mc.gameRenderer.getMapRenderer().draw(matrixStackIn, bufferIn, idFromItemstack, mapstate, true, packedLightIn);
                 }
             } else {
                 matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-                this.itemRenderer.renderItem(itemstack, ModelTransformation.Mode.FIXED, packedLightIn, OverlayTexture.DEFAULT_UV, matrixStackIn, bufferIn);
+                this.itemRenderer.renderItem(itemstack, ModelTransformation.Mode.FIXED, packedLightIn, OverlayTexture.DEFAULT_UV, matrixStackIn, bufferIn, entityIn.getId());
             }
         }
 

@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.placeable.WallItemEntity;
 import net.minecraft.client.render.OverlayTexture;
@@ -14,15 +15,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class WallItemRenderer extends EntityRenderer<WallItemEntity> {
 
-    public WallItemRenderer(final EntityRenderDispatcher entityRendererManager) {
-        super(entityRendererManager);
+    public WallItemRenderer(EntityRendererFactory.Context context) {
+        super(context);
     }
     
     @Override
     public void render(final WallItemEntity entity, float entityYaw, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
         stack.push();
-        stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.pitch));
-        stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - entity.yaw));
+        stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch()));
+        stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - entity.getYaw()));
         stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(entity.getRotation() * 360 / 8F));        
         TropicraftRenderUtils.renderItem(entity.getHeldItemStack(), 1, false, stack, bufferIn, packedLightIn, OverlayTexture.DEFAULT_UV, null);
         stack.pop();

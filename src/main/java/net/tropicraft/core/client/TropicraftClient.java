@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -19,12 +20,15 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.SkyProperties;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.item.Item;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.tropicraft.Constants;
 import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
 import net.tropicraft.core.client.item.MaskArmorProvider;
 import net.tropicraft.core.client.entity.renderers.*;
@@ -173,11 +177,13 @@ public class TropicraftClient implements ClientModInitializer {
         TropicraftBlocks.BAMBOO_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
         TropicraftBlocks.BAMBOO_POTTED_VANILLA_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
         TropicraftBlocks.VANILLA_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
+
+        EntityModelLayers
     }
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityRenderers() {
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.KOA_HUNTER, (dispatcher, context) -> new KoaRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.KOA_HUNTER, KoaRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_CREEPER, (dispatcher, context) -> new TropiCreeperRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.IGUANA, (dispatcher, context) -> new IguanaRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.UMBRELLA, (dispatcher, context) -> new UmbrellaRenderer(dispatcher));
@@ -207,7 +213,7 @@ public class TropicraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.PIRANHA, (dispatcher, context) -> new PiranhaRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.RIVER_SARDINE, (dispatcher, context) -> new SardineRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPICAL_FISH, (dispatcher, context) -> new TropicraftTropicalFishRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EAGLE_RAY, (dispatcher, context) -> new EagleRayRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EAGLE_RAY, EagleRayRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER, (dispatcher, context) -> new TropiSpiderRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN, (dispatcher, context) -> new AshenRenderer(dispatcher));
@@ -234,6 +240,8 @@ public class TropicraftClient implements ClientModInitializer {
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.AIR_COMPRESSOR, AirCompressorRenderer::new);
          */
     }
+
+
 
     @Environment(EnvType.CLIENT)
     public static void setupDimensionRenderInfo() {

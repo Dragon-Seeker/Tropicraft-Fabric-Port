@@ -1,8 +1,8 @@
 package net.tropicraft.core.client.entity.models;
 
+import net.minecraft.client.model.*;
 import net.tropicraft.core.common.entity.underdasea.EagleRayEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -17,16 +17,30 @@ public class EagleRayModel extends CompositeEntityModel<EagleRayEntity> {
 	private float[] interpolatedWingAmplitudes = new float[EagleRayEntity.WING_JOINTS];
 
 	private ModelPart body;
+	private ModelPart root;
 
-	public EagleRayModel() {
-		textureWidth = 128;
-		textureHeight = 64;
+	public EagleRayModel(ModelPart root) {
+		this.root = root;
+		this.body = root.getChild("body");
 
-		body = new ModelPart(this, 32, 0);
-		body.addCuboid(-2F, 0F, 0F, 5, 3, 32);
-		body.setPivot(0F, 0F, -8F);
-		body.setTextureSize(128, 64);
-		body.mirror = true;
+		//textureWidth = 128;
+		//textureHeight = 64;
+
+		//body = new ModelPart(this, 32, 0);
+		//body.addCuboid(-2F, 0F, 0F, 5, 3, 32);
+		//body.setPivot(0F, 0F, -8F);
+		//body.setTextureSize(128, 64);
+		//body.mirror = true;
+	}
+
+	public static TexturedModelData getTexturedModelData() {
+		ModelData modelData = new ModelData();
+		ModelPartData modelPartData = modelData.getRoot();
+		//body.addCuboid(-2F, 0F, 0F, 5, 3, 32);
+		//body.setTextureSize(128, 64);
+		//body.mirror = true;
+		modelPartData.addChild("body", ModelPartBuilder.create().uv(128, 64).cuboid(-2F, 0F, 0F, 5, 3, 32).mirrored(true), ModelTransform.pivot(0F,0F,8F));
+		return TexturedModelData.of(modelData,128,128);
 	}
 
 	@Override

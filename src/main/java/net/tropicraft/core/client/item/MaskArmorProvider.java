@@ -1,6 +1,6 @@
 package net.tropicraft.core.client.item;
 
-import net.tropicraft.core.client.entity.models.PlayerHeadpieceRenderer;
+import net.tropicraft.core.client.entity.models.PlayerHeadpieceModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.item.AshenMasks;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
@@ -23,7 +23,7 @@ public class MaskArmorProvider implements ArmorRender.ModelProvider, ArmorRender
 
     @Override
     public @NotNull BipedEntityModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, BipedEntityModel<LivingEntity> defaultModel) {
-        return slot == EquipmentSlot.HEAD ? new PlayerHeadpieceRenderer(maskType.ordinal(), maskType.getXOffset(), maskType.getYOffset()) : null;
+        return slot == EquipmentSlot.HEAD ? new PlayerHeadpieceModel(maskType.ordinal(), maskType.getXOffset(), maskType.getYOffset()) : null;
     }
 
     @Override
