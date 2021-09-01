@@ -145,14 +145,15 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
             float red, float green, float blue, float alpha) {
 
         ms.push();
-//        if (isSitting) {
-//            if (isChild) {
-//                ms.translate(0, 0.3, 0);
-//            } else {
-//                ms.translate(0, 0.6, 0);
-//            }
-//        }
-        
+        if (this.riding) {
+           if (this.child) {
+               ms.translate(0, 0.3, 0);
+           }
+           else {
+               ms.translate(0, 0.6, 0);
+            }
+        }
+
         if (this.child) {
             ms.push();
             ms.scale(0.75F, 0.75F, 0.75F);
@@ -183,9 +184,8 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
     public void setAngles(EntityKoaBase entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         hat.visible = false;
 
-        riding = entityIn.isSitting() || entityIn.hasVehicle();
+        this.riding = entityIn.isSitting() || entityIn.hasVehicle();
         final boolean isDancing = entityIn.isDancing();
-
 
         float ticks = (entityIn.age + MinecraftClient.getInstance().getTickDelta()) % 360;
 
@@ -207,6 +207,8 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
         }
 
         super.setAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+
 
         if (isDancing) {
             this.head.pitch += (float) Math.sin(Math.toRadians((entityIn.world.getTime() % 360) * 35F)) * 0.05F;
