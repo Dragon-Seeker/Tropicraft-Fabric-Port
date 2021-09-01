@@ -201,33 +201,50 @@ public class AshenModel extends CompositeEntityModel<AshenEntity> implements Mod
         rightArm.setTextureOffset(0, 24).addCuboid(-6F, -0.5F, -0.5F, 6, 1, 1);
          */
 
+        modelPartData.addChild("right_arm_sub",
+                ModelPartBuilder.create()
+                        .mirrored(true)
+                        .uv(64, 32)
+                        .cuboid(-2F, -3F, -1F, 4, 3, 4),
+                ModelTransform.rotation(0F, 3.141593F, 0F).pivot(0F, 10F, 1F));
+        /*
         rightArmSub = new ModelPart(this);
         rightArmSub.setPivot(-5.5F, 0F, 0F);
         setRotation(rightArmSub, 0F, 0F, 0F);
         rightArmSub.mirror = true;
         rightArmSub.setTextureOffset(31, 0).addCuboid(-0.5F, -6F, -0.5F, 1, 6, 1);
         rightArm.addChild(rightArmSub);
+         */
 
+        modelPartData.addChild("right_arm_sub",
+                ModelPartBuilder.create()
+                        .mirrored(true)
+                        .uv(64, 32)
+                        .cuboid(-2F, -3F, -1F, 4, 3, 4),
+                ModelTransform.rotation(0F, 3.141593F, 0F).pivot(0F, 10F, 1F));
+        /*
         leftArm = new ModelPart(this);
         leftArm.setPivot(2F, 10.46667F, 0.5F);
         setRotation(leftArm, 0F, 0F, 0F);
         leftArm.mirror = true;
         leftArm.setTextureOffset(0, 24).addCuboid(0F, -0.5F, -0.5F, 6, 1, 1);
+         */
 
+        modelPartData.addChild("right_arm_sub",
+                ModelPartBuilder.create()
+                        .mirrored(true)
+                        .uv(64, 32)
+                        .cuboid(-2F, -3F, -1F, 4, 3, 4),
+                ModelTransform.rotation(0F, 3.141593F, 0F).pivot(0F, 10F, 1F));
+        /*
         leftArmSub = new ModelPart(this);
         leftArmSub.setPivot(5.5F, 0F, 0F);
         setRotation(leftArmSub, 0F, 0F, 0F);
         leftArmSub.mirror = true;
         leftArmSub.setTextureOffset(31, 0).addCuboid(-0.5F, -6F, -0.5F, 1, 6, 1);
         leftArm.addChild(leftArmSub);
+        */
 
-
-
-
-
-        modelPartData.addChild("body", ModelPartBuilder.create()
-                .cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,16F,0F));
-        modelPartData.addChild("tail", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,0F,1F));
         return TexturedModelData.of(modelData,0,0);
     }
 
