@@ -7,7 +7,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3f;
-
+/*
 public class SeaUrchinModel extends CompositeEntityModel<SeaUrchinEntity> {
 	private static final int VERTICAL_SPINES = 12;
 	private static final int HORIZONTAL_SPINES = 12;
@@ -155,3 +155,5 @@ public class SeaUrchinModel extends CompositeEntityModel<SeaUrchinEntity> {
 		model.roll = z;
 	}
 }
+
+ */

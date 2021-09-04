@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
+//import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -29,12 +29,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.tropicraft.Constants;
-import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
-import net.tropicraft.core.client.item.MaskArmorProvider;
+//import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
+//import net.tropicraft.core.client.item.MaskArmorProvider;
 import net.tropicraft.core.client.entity.renderers.*;
-import net.tropicraft.core.client.item.StacheArmorProvider;
+//import net.tropicraft.core.client.item.StacheArmorProvider;
 import net.tropicraft.core.common.block.blockentity.TropicBambooChestBlockEntity;
-import net.tropicraft.core.common.block.testContainer.BoxChestScreen;
+//import net.tropicraft.core.common.block.testContainer.BoxChestScreen;
 import net.tropicraft.core.common.dimension.TropicraftDimension;
 import net.tropicraft.core.common.item.AshenMaskItem;
 import net.tropicraft.core.common.item.IColoredItem;
@@ -57,7 +57,7 @@ public class TropicraftClient implements ClientModInitializer {
         //TropicBambooChestBlockEntity renderEntity = new ChestBlockEntity(ChestCommon.getBlockEntityType(), ((ChestBlock) item.getBlock()).blockId());
 
         //ScreenRegistry.register(TropicScreenHandler.BOX_SCREEN_HANDLER, BoxScreen::new);
-        ScreenRegistry.register(TropicScreenHandler.BOX_CHEST_SCREEN_HANDLER, BoxChestScreen::new);
+        //ScreenRegistry.register(TropicScreenHandler.BOX_CHEST_SCREEN_HANDLER, BoxChestScreen::new);
 
         setupEntityRenderers();
 
@@ -66,7 +66,7 @@ public class TropicraftClient implements ClientModInitializer {
         setupBlockRenderLayers();
         setupBlockEntityRenderers();
 
-        ArmorRenderingRegistryInitialization();
+        //ArmorRenderingRegistryInitialization();
 
         //bamboItemFrameModelLoaderInit();
 
@@ -88,6 +88,7 @@ public class TropicraftClient implements ClientModInitializer {
                 .build());
     }
 
+    /*
     @Environment(EnvType.CLIENT)
     public static void ArmorRenderingRegistryInitialization() {
         ArrayList<MaskArmorProvider> MASK_PROVIDER = new ArrayList<>();
@@ -106,9 +107,8 @@ public class TropicraftClient implements ClientModInitializer {
 
         ArmorRenderingRegistry.registerModel(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
         ArmorRenderingRegistry.registerTexture(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
-
-
     }
+     */
 
     @Environment(EnvType.CLIENT)
     public static void itemColorinit(){
@@ -178,60 +178,60 @@ public class TropicraftClient implements ClientModInitializer {
         TropicraftBlocks.BAMBOO_POTTED_VANILLA_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
         TropicraftBlocks.VANILLA_POTTED_TROPICS_PLANTS.forEach(value -> BlockRenderLayerMap.INSTANCE.putBlock(value, RenderLayer.getCutout()));
 
-        EntityModelLayers
+
     }
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityRenderers() {
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.KOA_HUNTER, KoaRenderer::new);
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_CREEPER, (dispatcher, context) -> new TropiCreeperRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.IGUANA, (dispatcher, context) -> new IguanaRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.UMBRELLA, (dispatcher, context) -> new UmbrellaRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.KOA_HUNTER, KoaRenderer::new);
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_CREEPER, (dispatcher, context) -> new TropiCreeperRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.IGUANA, (dispatcher, context) -> new IguanaRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.UMBRELLA, (dispatcher, context) -> new UmbrellaRenderer(dispatcher));
 
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.BEACH_FLOAT, (dispatcher, context) -> new BeachFloatRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.CHAIR, (dispatcher, context) -> new ChairRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.BEACH_FLOAT, (dispatcher, context) -> new BeachFloatRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.CHAIR, (dispatcher, context) -> new ChairRenderer(dispatcher));
 
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SKELLY, (dispatcher, context) -> new TropiSkellyRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EIH, (dispatcher, context) -> new EIHRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.WALL_ITEM, (dispatcher, context) -> new WallItemRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SKELLY, (dispatcher, context) -> new TropiSkellyRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EIH, (dispatcher, context) -> new EIHRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.WALL_ITEM, (dispatcher, context) -> new WallItemRenderer(dispatcher));
 
         //TODO: Currently Rendering, something (It seems to render the eneity as the item idk why tho) >:
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.BAMBOO_ITEM_FRAME, BambooItemFrameEntityRenderer::new);
 
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE, (dispatcher, context) -> new SeaTurtleRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MARLIN, (dispatcher, context) -> new MarlinRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.FAILGULL, (dispatcher, context) -> new FailgullRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.DOLPHIN, (dispatcher, context) -> new TropicraftDolphinRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEAHORSE, (dispatcher, context) -> new SeahorseRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TREE_FROG, (dispatcher, context) -> new TreeFrogRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.POISON_BLOT, (dispatcher, context) -> new PoisonBlotRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN, (dispatcher, context) -> new SeaUrchinRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN_EGG_ENTITY, (dispatcher, context) -> new EggRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH, (dispatcher, context) -> new StarfishRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.V_MONKEY, (dispatcher, context) -> new VMonkeyRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.PIRANHA, (dispatcher, context) -> new PiranhaRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.RIVER_SARDINE, (dispatcher, context) -> new SardineRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPICAL_FISH, (dispatcher, context) -> new TropicraftTropicalFishRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE, (dispatcher, context) -> new SeaTurtleRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MARLIN, (dispatcher, context) -> new MarlinRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.FAILGULL, (dispatcher, context) -> new FailgullRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.DOLPHIN, (dispatcher, context) -> new TropicraftDolphinRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEAHORSE, (dispatcher, context) -> new SeahorseRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TREE_FROG, (dispatcher, context) -> new TreeFrogRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.POISON_BLOT, (dispatcher, context) -> new PoisonBlotRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN, (dispatcher, context) -> new SeaUrchinRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN_EGG_ENTITY, (dispatcher, context) -> new EggRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH, (dispatcher, context) -> new StarfishRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.V_MONKEY, (dispatcher, context) -> new VMonkeyRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.PIRANHA, PiranhaRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.RIVER_SARDINE, SardineRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPICAL_FISH, TropicraftTropicalFishRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EAGLE_RAY, EagleRayRenderer::new);
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER, (dispatcher, context) -> new TropiSpiderRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN, (dispatcher, context) -> new AshenRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN_MASK, (dispatcher, context) -> new AshenMaskRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EXPLODING_COCONUT, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER, (dispatcher, context) -> new TropiSpiderRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN, (dispatcher, context) -> new AshenRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN_MASK, (dispatcher, context) -> new AshenMaskRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EXPLODING_COCONUT, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.LAVA_BALL, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.HAMMERHEAD, (dispatcher, context) -> new SharkRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_BEE, (dispatcher, context) -> new TropiBeeRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.COWKTAIL, (dispatcher, context) -> new CowktailRenderer(dispatcher));
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MAN_O_WAR, (dispatcher, context) -> new ManOWarRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.HAMMERHEAD, (dispatcher, context) -> new SharkRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_BEE, (dispatcher, context) -> new TropiBeeRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.COWKTAIL, CowktailRenderer::new);
+        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MAN_O_WAR, (dispatcher, context) -> new ManOWarRenderer(dispatcher));
     }
 
     @Environment(EnvType.CLIENT)
     public static void setupBlockEntityRenderers() {
-        BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
-        BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST, (itemStack, transform, stack, source, light, overlay) ->
-                BlockEntityRenderDispatcher.renderEntity(new TropicBambooChestBlockEntity(), stack, source, light, overlay));
+        //BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
+        //BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST, (itemStack, transform, stack, source, light, overlay) ->
+        //        BlockEntityRenderDispatcher.renderEntity(new TropicBambooChestBlockEntity(), stack, source, light, overlay));
 
         /*
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.BAMBOO_CHEST, BambooChestRenderer::new);

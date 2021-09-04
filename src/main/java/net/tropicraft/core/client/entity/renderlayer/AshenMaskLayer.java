@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderlayer;
-
+/*
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
 import net.tropicraft.core.client.entity.models.AshenModel;
@@ -38,3 +38,5 @@ public class AshenMaskLayer extends FeatureRenderer<AshenEntity, AshenModel> {
         }
     }
 }
+
+ */

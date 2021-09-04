@@ -4,7 +4,7 @@ import net.tropicraft.core.common.entity.neutral.EIHEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-
+/*
 public class EIHModel extends CompositeEntityModel<EIHEntity> {
     private ModelPart body;
     private ModelPart base;
@@ -56,3 +56,5 @@ public class EIHModel extends CompositeEntityModel<EIHEntity> {
         return ImmutableList.of(body, base, nose, mouth, top, leye, reye);
     }
 }
+
+ */

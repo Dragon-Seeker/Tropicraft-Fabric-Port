@@ -9,6 +9,7 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.TreeFeature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.Random;
@@ -23,7 +24,12 @@ public class UndergrowthFeature extends Feature<DefaultFeatureConfig> {
     }
     
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, DefaultFeatureConfig config) {
+    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
+        StructureWorldAccess world = context.getWorld();
+        Random rand = context.getRandom();
+        BlockPos pos = context.getOrigin();
+
+
         int size = 2;
         if (rand.nextInt(LARGE_BUSH_CHANCE) == 0) {
             size = 3;

@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.hostile.TropiSpiderEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -46,3 +46,5 @@ public class TropiSpiderRenderer extends SpiderEntityRenderer<TropiSpiderEntity>
 		return scale;
 	}
 }
+
+ */

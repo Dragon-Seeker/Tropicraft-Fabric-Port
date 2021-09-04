@@ -3,7 +3,7 @@ package net.tropicraft.core.client.entity.models;
 import net.tropicraft.core.common.entity.TropiBeeEntity;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BeeEntityModel;
-
+/*
 public class TropiBeeModel extends BeeEntityModel<TropiBeeEntity> {
     private final ModelPart hat1;
     private final ModelPart hat2;
@@ -38,3 +38,5 @@ public class TropiBeeModel extends BeeEntityModel<TropiBeeEntity> {
         return body;
     }
 }
+
+ */

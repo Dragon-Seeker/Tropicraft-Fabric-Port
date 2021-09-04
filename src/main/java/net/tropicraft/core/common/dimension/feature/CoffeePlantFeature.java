@@ -9,6 +9,7 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.Random;
@@ -24,7 +25,13 @@ public class CoffeePlantFeature extends Feature<DefaultFeatureConfig> {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos, DefaultFeatureConfig config) {
+    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
+        StructureWorldAccess world = context.getWorld();
+        Random random = context.getRandom();
+        BlockPos pos = context.getOrigin();
+
+
+
         final BlockPos genPos = new BlockPos(
                 (pos.getX() + random.nextInt(8)) - random.nextInt(8),
                 pos.getY(),
@@ -72,4 +79,5 @@ public class CoffeePlantFeature extends Feature<DefaultFeatureConfig> {
 
         return true;
     }
+
 }

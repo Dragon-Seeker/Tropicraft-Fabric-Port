@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.placeable.WallItemEntity;
@@ -36,3 +36,5 @@ public class WallItemRenderer extends EntityRenderer<WallItemEntity> {
         return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE;
     }
 }
+
+ */

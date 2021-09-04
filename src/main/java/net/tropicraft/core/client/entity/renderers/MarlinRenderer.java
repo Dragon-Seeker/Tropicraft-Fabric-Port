@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.MarlinModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.MarlinEntity;
@@ -31,3 +31,6 @@ public class MarlinRenderer extends MobEntityRenderer<MarlinEntity, MarlinModel>
         return TropicraftRenderUtils.getTextureEntity(marlin.getTexture());
     }
 }
+
+
+ */

@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.SeahorseModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.SeahorseEntity;
@@ -33,3 +33,5 @@ public class SeahorseRenderer extends MobEntityRenderer<SeahorseEntity, Seahorse
 		return TropicraftRenderUtils.getTextureEntity(String.format("seahorse/%s", seahorseEntity.getTexture()));
 	}
 }
+
+ */

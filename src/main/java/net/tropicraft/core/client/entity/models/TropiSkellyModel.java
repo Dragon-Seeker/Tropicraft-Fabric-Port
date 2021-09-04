@@ -6,7 +6,7 @@ import net.minecraft.client.render.entity.model.AbstractZombieModel;
 import net.minecraft.client.render.entity.model.ModelWithArms;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Arm;
-
+/*
 public class TropiSkellyModel extends AbstractZombieModel<TropiSkellyEntity> implements ModelWithArms {
     
     private final ModelPart skirt;
@@ -48,3 +48,5 @@ public class TropiSkellyModel extends AbstractZombieModel<TropiSkellyEntity> imp
         return entityIn.isAttacking();
     }
 }
+
+ */

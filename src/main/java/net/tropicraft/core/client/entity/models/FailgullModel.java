@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-
+/*
 public class FailgullModel extends CompositeEntityModel<FailgullEntity> {
 	final ModelPart baseFootLeft;
 	final ModelPart baseFootRight;
@@ -82,3 +82,4 @@ public class FailgullModel extends CompositeEntityModel<FailgullEntity> {
 		return ImmutableList.of(baseFootLeft, baseFootRight, lowerLeg1, lowerLeg11, rightWing, leftWing, neck, newShape1, lowestBody, lowerBody1, lowerBody2);
 	}
 }
+ */

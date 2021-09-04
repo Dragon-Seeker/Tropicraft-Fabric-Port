@@ -7,7 +7,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-
+/*
 public class SharkModel extends CompositeEntityModel<SharkEntity> {
     ModelPart Head1;
     ModelPart Head3;
@@ -222,3 +222,5 @@ public class SharkModel extends CompositeEntityModel<SharkEntity> {
         model.roll = z;
     }
 }
+
+ */

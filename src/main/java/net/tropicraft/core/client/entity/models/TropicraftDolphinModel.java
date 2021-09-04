@@ -4,7 +4,7 @@ import net.tropicraft.core.common.entity.underdasea.TropicraftDolphinEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-
+/*
 public class TropicraftDolphinModel extends CompositeEntityModel<TropicraftDolphinEntity> {
 	ModelPart body1;
 	ModelPart body2;
@@ -395,3 +395,5 @@ public class TropicraftDolphinModel extends CompositeEntityModel<TropicraftDolph
 		dorsalFin5.pitch = -0.7285004F;
 	}
 }
+
+ */

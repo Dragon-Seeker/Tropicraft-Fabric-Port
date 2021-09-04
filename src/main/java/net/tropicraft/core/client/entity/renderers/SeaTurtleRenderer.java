@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.SeaTurtleModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.SeaTurtleEntity;
@@ -48,3 +48,5 @@ public class SeaTurtleRenderer extends MobEntityRenderer<SeaTurtleEntity, SeaTur
         return TropicraftRenderUtils.getTextureEntity(String.format("turtle/sea_turtle%s", seaTurtleEntity.getTurtleType()));
     }
 }
+
+ */

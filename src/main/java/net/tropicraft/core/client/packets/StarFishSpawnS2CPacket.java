@@ -28,7 +28,7 @@ public class StarFishSpawnS2CPacket extends MobSpawnS2CPacket {
         }
 
     }
-
+    /*
     @Override
     public void read(PacketByteBuf buf) throws IOException {
         super.read(buf);
@@ -38,6 +38,7 @@ public class StarFishSpawnS2CPacket extends MobSpawnS2CPacket {
     public void write(PacketByteBuf buf) throws IOException {
         super.write(buf);
     }
+     */
 
     @Environment(EnvType.CLIENT)
     public byte getStarFishType() {

@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.SharkModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.SharkEntity;
@@ -46,3 +46,5 @@ public class SharkRenderer extends MobEntityRenderer<SharkEntity, SharkModel> {
         stack.scale(scale, scale, scale);
     }
 }
+
+ */

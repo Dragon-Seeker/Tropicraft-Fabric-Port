@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.TropiSkellyModel;
 import net.tropicraft.core.common.entity.hostile.TropiSkellyEntity;
@@ -29,3 +29,5 @@ public class TropiSkellyRenderer extends BipedEntityRenderer<TropiSkellyEntity, 
         return TEXTURE;
     }
 }
+
+ */

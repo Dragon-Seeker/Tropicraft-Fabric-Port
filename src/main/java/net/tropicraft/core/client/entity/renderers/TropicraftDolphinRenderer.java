@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.TropicraftDolphinModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.TropicraftDolphinEntity;
@@ -24,3 +24,5 @@ public class TropicraftDolphinRenderer extends MobEntityRenderer<TropicraftDolph
         return TropicraftRenderUtils.getTextureEntity(dolphin.getTexture());
     }
 }
+
+ */

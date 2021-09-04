@@ -1,5 +1,5 @@
 package net.tropicraft.core.common.block.testContainer;
-
+/*
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -49,3 +49,5 @@ public class BoxChestScreen extends HandledScreen<ScreenHandler> {
         //playerInventoryTitleY
     }
 }
+
+ */

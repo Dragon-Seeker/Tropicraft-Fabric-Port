@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.placeable.FurnitureEntity;
 import net.minecraft.client.render.OverlayTexture;
@@ -96,3 +96,6 @@ public class FurnitureRenderer<T extends FurnitureEntity> extends EntityRenderer
         return null;
     }
 }
+
+
+ */

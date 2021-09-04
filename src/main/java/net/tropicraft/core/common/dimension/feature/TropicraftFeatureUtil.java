@@ -11,14 +11,14 @@ import net.minecraft.world.gen.feature.TreeFeature;
 public class TropicraftFeatureUtil {
 
     public static boolean goesBeyondWorldSize(final StructureWorldAccess world, final int y, final int height) {
-        return y < 1 || y + height + 1 > world.getDimensionHeight();
+        return y < 1 || y + height + 1 > world.getLogicalHeight();
     }
 
     public static boolean isBBAvailable(final StructureWorldAccess world, final BlockPos pos, final int height) {
         for (int y = 0; y <= 1 + height; y++) {
             BlockPos checkPos = pos.up(y);
             int size = 1;
-            if (checkPos.getY() < 0 || checkPos.getY() >= world.getDimensionHeight()) {
+            if (checkPos.getY() < 0 || checkPos.getY() >= world.getLogicalHeight()) {
                 return false;
             }
 

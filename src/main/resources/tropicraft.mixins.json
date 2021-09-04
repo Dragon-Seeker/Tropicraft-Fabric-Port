@@ -21,7 +21,9 @@
     "CactusBlockInjection",
     "SugarCaneBlockInjection",
     "DyeColorAccessor",
-    "DimensionsOptionsAccessor"
+    "DimensionsOptionsAccessor",
+    "CarveRavineInvoker",
+    "StructureStartAccessor"
   ],
   "client": [
   ],

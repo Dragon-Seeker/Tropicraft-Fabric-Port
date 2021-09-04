@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(NoiseChunkGenerator.class)
 public interface NoiseChuckGeneratorAccessor {
-    @Accessor("densityNoise")
-    public void setDensityNoise(OctavePerlinNoiseSampler densityNoise);
+    //@Accessor("densityNoise")
+    //public void setDensityNoise(OctavePerlinNoiseSampler densityNoise);
 }

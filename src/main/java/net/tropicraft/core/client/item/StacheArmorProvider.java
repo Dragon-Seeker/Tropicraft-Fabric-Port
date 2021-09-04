@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.item;
-
+/*
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -27,3 +27,5 @@ public class StacheArmorProvider implements ArmorRenderer.ModelProvider, ArmorRe
         return TropicraftRenderUtils.getTextureArmor("nigel_layer_1");
     }
 }
+
+ */

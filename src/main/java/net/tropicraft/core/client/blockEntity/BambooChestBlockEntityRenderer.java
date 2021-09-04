@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.blockEntity;
-
+/*
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.block.blockentity.TropicBambooChestBlockEntity;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
@@ -174,6 +174,7 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
     }
      */
 
+/*
     static {
         defaultLayer = new RenderLayer[] {
                 RenderLayer.getEntityCutout(new Identifier("textures/entity/chest/normal.png")),
@@ -189,3 +190,5 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
     }
 
 }
+
+ */

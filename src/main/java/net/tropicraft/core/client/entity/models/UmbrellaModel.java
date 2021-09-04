@@ -4,7 +4,7 @@ import net.tropicraft.core.common.entity.placeable.UmbrellaEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-
+/*
 public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
 
     public ModelPart base;
@@ -119,3 +119,5 @@ public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
         );
     }
 }
+
+ */

@@ -1,5 +1,7 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.renderlayer.CowktailLayer;
 import net.tropicraft.core.common.entity.passive.CowktailEntity;
@@ -23,8 +25,8 @@ public class CowktailRenderer extends MobEntityRenderer<CowktailEntity, CowEntit
 		map.put(CowktailEntity.Type.ANEMONE, new Identifier(Constants.MODID, "textures/entity/cowktail/anemone_cowktail.png"));
 	});
 
-	public CowktailRenderer(EntityRenderDispatcher renderManagerIn) {
-		super(renderManagerIn, new CowEntityModel<>(), 0.7F);
+	public CowktailRenderer(EntityRendererFactory.Context context) {
+		super(context, new CowEntityModel<>(context.getPart(EntityModelLayers.COW)), 0.7F);
 		this.addFeature(new CowktailLayer<>(this));
 	}
 

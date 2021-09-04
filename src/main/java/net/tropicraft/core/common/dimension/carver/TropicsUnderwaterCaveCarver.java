@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ProbabilityConfig;
+import net.minecraft.world.gen.carver.CaveCarverConfig;
 import net.minecraft.world.gen.carver.UnderwaterCaveCarver;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
@@ -12,7 +13,7 @@ import java.util.Random;
 
 public class TropicsUnderwaterCaveCarver extends UnderwaterCaveCarver {
 
-    public TropicsUnderwaterCaveCarver(Codec<ProbabilityConfig> codec) {
+    public TropicsUnderwaterCaveCarver(Codec<CaveCarverConfig> codec) {
         super(codec);
         this.alwaysCarvableBlocks = ImmutableSet.<Block> builder().addAll(this.alwaysCarvableBlocks)
                 .add(TropicraftBlocks.CORAL_SAND)
@@ -24,11 +25,6 @@ public class TropicsUnderwaterCaveCarver extends UnderwaterCaveCarver {
     }
 
     @Override
-    protected boolean isRegionUncarvable(Chunk chunkIn, int chunkX, int chunkZ, int minX, int maxX, int minY, int maxY, int minZ, int maxZ) {
-        return false;
-    }
-    
-    @Override
     protected float getTunnelSystemWidth(Random rand) {
         float f = rand.nextFloat() * 3.0F + rand.nextFloat();
         if (rand.nextInt(10) == 0) {
@@ -37,9 +33,10 @@ public class TropicsUnderwaterCaveCarver extends UnderwaterCaveCarver {
 
         return f;
     }
-    
-    @Override
+
+    //TODO: SEE ABOUT IMPLEMNTING A SIMILAR MECHANISM WITH THE CARVER CONFIG LATER
     protected int getCaveY(Random random) {
         return random.nextInt(random.nextInt(240) + 8);
     }
+
 }

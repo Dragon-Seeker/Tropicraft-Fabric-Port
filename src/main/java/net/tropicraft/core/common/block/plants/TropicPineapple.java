@@ -68,7 +68,7 @@ public class TropicPineapple extends TallFlowerBlock {
     @Override
     protected boolean canPlantOnTop(BlockState state, BlockView worldIn, BlockPos pos) {
         //worldIn.getBlockState(pos.down());
-        return state.isOf(Blocks.GRASS_BLOCK) || state.getBlock().isIn(TagRegistry.block(new Identifier("c", "dirt"))) || state.isOf(Blocks.FARMLAND) || state.isOf(Blocks.DIRT) || state.isOf(Blocks.COARSE_DIRT) || state.isOf(Blocks.PODZOL) || state.isOf(TropicraftBlocks.MINERAL_SAND);
+        return state.isOf(Blocks.GRASS_BLOCK) || state.isIn(TagRegistry.block(new Identifier("c", "dirt"))) || state.isOf(Blocks.FARMLAND) || state.isOf(Blocks.DIRT) || state.isOf(Blocks.COARSE_DIRT) || state.isOf(Blocks.PODZOL) || state.isOf(TropicraftBlocks.MINERAL_SAND);
     }
 
     @Override

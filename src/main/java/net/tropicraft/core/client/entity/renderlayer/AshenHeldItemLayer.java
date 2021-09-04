@@ -19,7 +19,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
-
+/*
 @Environment(EnvType.CLIENT)
 public class AshenHeldItemLayer<T extends AshenEntity, M extends EntityModel<T> & ModelWithArms> extends HeldItemFeatureRenderer<T, M> {
 
@@ -94,3 +94,5 @@ public class AshenHeldItemLayer<T extends AshenEntity, M extends EntityModel<T> 
         }
     }
 }
+
+ */

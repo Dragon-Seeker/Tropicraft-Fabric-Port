@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.BeachFloatModel;
 import net.tropicraft.core.common.entity.placeable.BeachFloatEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -33,3 +33,6 @@ public class BeachFloatRenderer extends FurnitureRenderer<BeachFloatEntity> {
         return 25;
     }
 }
+
+
+ */

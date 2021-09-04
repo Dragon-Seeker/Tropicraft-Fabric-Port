@@ -4,7 +4,7 @@ import net.tropicraft.core.common.entity.underdasea.MarlinEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-
+/*
 public class MarlinModel extends CompositeEntityModel<MarlinEntity> {
     ModelPart body;
     ModelPart dorsalFin1;
@@ -124,3 +124,6 @@ public class MarlinModel extends CompositeEntityModel<MarlinEntity> {
         model.roll = z;
     }
 }
+
+
+ */

@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.VMonkeyModel;
 import net.tropicraft.core.client.entity.renderlayer.VMonkeyHeldItemLayer;
@@ -22,8 +22,13 @@ public class VMonkeyRenderer extends MobEntityRenderer<VMonkeyEntity, VMonkeyMod
     /**
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
+
+/*
     @Override
     public Identifier getTexture(VMonkeyEntity entity) {
         return entity.isAttacking() ? ANGRY_TEXTURE : TEXTURE;
     }
 }
+
+ */
+

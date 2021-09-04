@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-
+/*
 public class IguanaModel extends CompositeEntityModel<IguanaEntity> {
     public ModelPart head;
     public ModelPart headTop1;
@@ -122,3 +122,5 @@ public class IguanaModel extends CompositeEntityModel<IguanaEntity> {
         miscPart.yaw = tailMid.yaw + MathHelper.cos(f * 0.6662F) * .75F * f1;;
     }
 }
+
+ */

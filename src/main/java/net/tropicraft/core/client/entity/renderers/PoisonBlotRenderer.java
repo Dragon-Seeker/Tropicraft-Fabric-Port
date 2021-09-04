@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.projectile.PoisonBlotEntity;
 import net.fabricmc.api.EnvType;
@@ -39,3 +39,5 @@ public class PoisonBlotRenderer extends EntityRenderer<PoisonBlotEntity> {
         return TropicraftRenderUtils.getTextureEntity("treefrog/blot");
     }
 }
+
+ */

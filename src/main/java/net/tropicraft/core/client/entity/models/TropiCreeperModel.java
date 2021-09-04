@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-
+/*
 public class TropiCreeperModel extends CompositeEntityModel<TropiCreeperEntity> {
     private final ModelPart head;
     private final ModelPart body;
@@ -75,3 +75,5 @@ public class TropiCreeperModel extends CompositeEntityModel<TropiCreeperEntity> 
         );
     }
 }
+
+ */

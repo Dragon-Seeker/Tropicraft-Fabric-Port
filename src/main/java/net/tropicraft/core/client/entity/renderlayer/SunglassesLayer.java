@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderlayer;
-
+/*
 import net.tropicraft.core.client.entity.models.TropiBeeModel;
 import net.tropicraft.core.client.entity.renderers.TropiBeeRenderer;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
@@ -42,3 +42,5 @@ public class SunglassesLayer extends FeatureRenderer<TropiBeeEntity, TropiBeeMod
         stack.pop();
     }
 }
+
+ */

@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.TropiBeeModel;
 import net.tropicraft.core.client.entity.renderlayer.SunglassesLayer;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
@@ -24,3 +24,5 @@ public class TropiBeeRenderer extends MobEntityRenderer<TropiBeeEntity, TropiBee
         return TropicraftRenderUtils.getTextureEntity("tropibee");
     }
 }
+
+ */

@@ -10,6 +10,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.tropicraft.core.common.dimension.feature.config.RainforestVinesConfig;
 
 import java.util.Random;
@@ -23,10 +24,15 @@ public class RainforestVinesFeature extends Feature<RainforestVinesConfig> {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, RainforestVinesConfig config) {
+    public boolean generate(FeatureContext<RainforestVinesConfig> context) {
+        StructureWorldAccess world = context.getWorld();
+        Random rand = context.getRandom();
+        BlockPos pos = context.getOrigin();
+        RainforestVinesConfig config = context.getConfig();
+
         BlockPos.Mutable mutablePos = pos.mutableCopy();
 
-        int maxY = Math.min(pos.getY() + config.height, world.getDimensionHeight());
+        int maxY = Math.min(pos.getY() + config.height, world.getLogicalHeight());
         for (int y = pos.getY(); y < maxY; ++y) {
             for (int i = 0; i < config.rollsPerY; i++) {
                 mutablePos.set(pos);

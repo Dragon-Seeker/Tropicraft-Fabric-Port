@@ -6,7 +6,7 @@ import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3f;
-
+/*
 public class PlayerHeadpieceModel extends BipedEntityModel<LivingEntity> {
 	private int textureIndex;
 	private final double xOffset, yOffset;
@@ -51,3 +51,6 @@ public class PlayerHeadpieceModel extends BipedEntityModel<LivingEntity> {
 	
 	
 }
+
+
+ */

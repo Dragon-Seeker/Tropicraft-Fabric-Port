@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-
+/*
 public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
     ModelPart head1;
     ModelPart snout1;
@@ -257,3 +257,6 @@ public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
         );
     }
 }
+
+
+ */

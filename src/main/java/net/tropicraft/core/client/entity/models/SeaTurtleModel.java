@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-
+/*
 // TODO - extend QuadrupedModel?
 public class SeaTurtleModel extends CompositeEntityModel<SeaTurtleEntity> {
     public ModelPart body;
@@ -123,3 +123,5 @@ public class SeaTurtleModel extends CompositeEntityModel<SeaTurtleEntity> {
         model.roll = z;
     }
 }
+
+ */

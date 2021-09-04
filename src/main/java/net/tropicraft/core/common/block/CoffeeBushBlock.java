@@ -102,6 +102,6 @@ public class CoffeeBushBlock extends CropBlock {
     //TODO: Check if the tag check for canPlantOnTop is working wth other blocks dirt
     @Override
     protected boolean canPlantOnTop(BlockState state, BlockView worldIn, BlockPos pos) {
-        return state.getBlock() == Blocks.GRASS_BLOCK || state.getBlock().isIn(TagRegistry.block(new Identifier("c", "dirt")))  || state.getBlock() == Blocks.FARMLAND || state.getBlock() == this;
+        return state.getBlock() == Blocks.GRASS_BLOCK || state.isIn(TagRegistry.block(new Identifier("c", "dirt")))  || state.getBlock() == Blocks.FARMLAND || state.getBlock() == this;
     }
 }

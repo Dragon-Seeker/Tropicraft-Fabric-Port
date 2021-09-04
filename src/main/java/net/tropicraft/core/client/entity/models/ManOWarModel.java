@@ -4,7 +4,7 @@ import net.tropicraft.core.common.entity.underdasea.ManOWarEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-
+/*
 public class ManOWarModel extends CompositeEntityModel<ManOWarEntity> {
     ModelPart Body;
     ModelPart CenterTent;
@@ -115,3 +115,6 @@ public class ManOWarModel extends CompositeEntityModel<ManOWarEntity> {
         }
     }
 }
+
+
+ */

@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
 import net.tropicraft.core.common.entity.placeable.AshenMaskEntity;
@@ -16,8 +17,8 @@ import net.minecraft.util.math.Vec3f;
 public class AshenMaskRenderer extends EntityRenderer<AshenMaskEntity> {
 	protected TropicraftSpecialRenderHelper mask;
 
-	public AshenMaskRenderer(final EntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public AshenMaskRenderer(final EntityRendererFactory.Context context) {
+		super(context);
 		shadowRadius = 0.5F;
 		shadowOpacity  = 0.5f;
 		mask = new TropicraftSpecialRenderHelper();

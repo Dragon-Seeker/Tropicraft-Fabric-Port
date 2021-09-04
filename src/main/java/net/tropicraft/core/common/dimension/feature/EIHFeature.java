@@ -10,6 +10,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.Random;
@@ -28,8 +29,12 @@ public class EIHFeature extends Feature<DefaultFeatureConfig> {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, DefaultFeatureConfig config) {
-        //StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, DefaultFeatureConfig config
+    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
+        StructureWorldAccess world = context.getWorld();
+        Random random = context.getRandom();
+        BlockPos pos = context.getOrigin();
+        DefaultFeatureConfig config = context.getConfig();
+        ChunkGenerator generator = context.getGenerator();
 
 
         byte height = 5;

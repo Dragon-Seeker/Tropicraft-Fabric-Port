@@ -1,15 +1,17 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.client.entity.models.AshenModel;
-import net.tropicraft.core.client.entity.renderlayer.AshenHeldItemLayer;
-import net.tropicraft.core.client.entity.renderlayer.AshenMaskLayer;
+//import net.tropicraft.core.client.entity.renderlayer.AshenHeldItemLayer;
+//import net.tropicraft.core.client.entity.renderlayer.AshenMaskLayer;
 import net.tropicraft.core.common.entity.hostile.AshenEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.tropicraft.core.common.registry.TropicraftEntityModelLayers;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -17,14 +19,15 @@ public class AshenRenderer extends MobEntityRenderer<AshenEntity, AshenModel> {
 
     private static final Identifier ASHEN_TEXTURE_LOCATION = TropicraftRenderUtils.bindTextureEntity("ashen/ashen");
 
-    public AshenRenderer(EntityRenderDispatcher manager) {
-        super(manager, new AshenModel(), 0.5f);
+    public AshenRenderer(EntityRendererFactory.Context context) {
+        super(context, new AshenModel(context.getPart(TropicraftEntityModelLayers.ASHEN_LAYER)), 0.5f);
 
-        addFeature(new AshenMaskLayer(this));
-        AshenHeldItemLayer<AshenEntity, AshenModel> layer = new AshenHeldItemLayer<>(this);
-        layer.setAshenModel(model);
+        //addFeature(new AshenMaskLayer(this));
+        //AshenHeldItemLayer<AshenEntity, AshenModel> layer = new AshenHeldItemLayer<>(this);
+        //layer.setAshenModel(model);
 
-        addFeature(layer);
+        //addFeature(layer);
+
         //addLayer(layer);
 
         shadowOpacity = 0.5f;

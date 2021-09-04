@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.EIHModel;
 import net.tropicraft.core.common.entity.neutral.EIHEntity;
@@ -37,3 +37,5 @@ public class EIHRenderer extends MobEntityRenderer<EIHEntity, EIHModel> {
         }
     }
 }
+
+ */

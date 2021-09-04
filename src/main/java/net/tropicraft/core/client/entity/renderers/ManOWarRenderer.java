@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.ManOWarModel;
 import net.tropicraft.core.client.entity.renderlayer.ManOWarGelLayer;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
@@ -20,3 +20,6 @@ public class ManOWarRenderer extends MobEntityRenderer<ManOWarEntity, ManOWarMod
         return TropicraftRenderUtils.getTextureEntity("manowar");
     }
 }
+
+
+ */

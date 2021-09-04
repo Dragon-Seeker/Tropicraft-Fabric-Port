@@ -7,7 +7,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-
+/*
 public class KoaModel extends BipedEntityModel<EntityKoaBase> {
     
     private static class ModelRendererCull extends ModelPart {
@@ -234,3 +234,5 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
         model.roll = z;
     }
 }
+
+ */

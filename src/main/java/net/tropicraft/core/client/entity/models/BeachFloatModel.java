@@ -7,7 +7,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3f;
-
+/*
 public class BeachFloatModel extends CompositeEntityModel<BeachFloatEntity> {
     public ModelPart floatCross4;
     public ModelPart floatCross3;
@@ -107,3 +107,5 @@ public class BeachFloatModel extends CompositeEntityModel<BeachFloatEntity> {
         matrixStackIn.pop();
     }
 }
+
+ */

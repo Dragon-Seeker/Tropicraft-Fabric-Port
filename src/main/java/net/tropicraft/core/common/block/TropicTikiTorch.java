@@ -143,7 +143,7 @@ public class TropicTikiTorch extends Block {
 
     private boolean placeShortTorchOn(BlockState state) {
         // Only place top block if it's on a fence/wall
-        return state.getBlock().isIn(BlockTags.FENCES) || state.getBlock().isIn(BlockTags.WALLS);
+        return state.isIn(BlockTags.FENCES) || state.isIn(BlockTags.WALLS);
     }
 
     @Override

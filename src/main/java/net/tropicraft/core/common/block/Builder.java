@@ -2,6 +2,7 @@ package net.tropicraft.core.common.block;
 
 import net.minecraft.block.sapling.SaplingGenerator;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.BlockView;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -69,20 +70,22 @@ public class Builder {
                 .breakByTool(FabricToolTags.PICKAXES, 2));
     }
 
+    public static TropicOreBlock OreBlock(MapColor baseColor, UniformIntProvider provider){
+        return OreBlock(baseColor, 2, provider);
+    }
+
     public static TropicOreBlock OreBlock(MapColor baseColor, int miningLevel){
+        return OreBlock(baseColor, miningLevel, UniformIntProvider.create(0,0));
+    }
+
+    public static TropicOreBlock OreBlock(MapColor baseColor, int miningLevel, UniformIntProvider provider){
         return new TropicOreBlock(FabricBlockSettings
                 .of(Material.STONE, baseColor)
                 .hardness(3.0F)
                 .resistance(3.0F)
                 .requiresTool().breakByTool(FabricToolTags.PICKAXES, miningLevel)
-                .sounds(BlockSoundGroup.STONE));
+                .sounds(BlockSoundGroup.STONE), provider);
     }
-
-    public static TropicOreBlock OreBlock(MapColor baseColor){
-        return OreBlock(baseColor, 2);
-    }
-
-
 
     public static Block Sand() {
         return Sand(SAND);

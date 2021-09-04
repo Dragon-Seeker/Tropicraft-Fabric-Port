@@ -7,6 +7,7 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.TreeFeature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 
 import java.util.Random;
 
@@ -19,10 +20,15 @@ public class NormalPalmTreeFeature extends PalmTreeFeature {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos, DefaultFeatureConfig config) {
+    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
+        StructureWorldAccess world = context.getWorld();
+        Random rand = context.getRandom();
+        BlockPos pos = context.getOrigin();
+
+
         pos = pos.toImmutable();
 
-        int height = random.nextInt(4) + 6;
+        int height = rand.nextInt(4) + 6;
 
         if (goesBeyondWorldSize(world, pos.getY(), height)) {
             return false;
@@ -79,7 +85,7 @@ public class NormalPalmTreeFeature extends PalmTreeFeature {
             }
         }
 
-        spawnCoconuts(world, new BlockPos(i, j + height, k), random, 2, getLeaf());
+        spawnCoconuts(world, new BlockPos(i, j + height, k), rand, 2, getLeaf());
 
         return true;
     }

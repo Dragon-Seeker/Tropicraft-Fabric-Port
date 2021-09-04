@@ -7,6 +7,7 @@ import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 
 import java.util.Random;
 
@@ -28,7 +29,11 @@ public class TallRainforestTreeFeature extends RainforestTreeFeature {
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, DefaultFeatureConfig config) {
+    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
+        StructureWorldAccess world = context.getWorld();
+        Random rand = context.getRandom();
+        BlockPos pos = context.getOrigin();
+
         pos = pos.toImmutable();
         int i = pos.getX(); int j = pos.getY(); int k = pos.getZ();
         final int height = rand.nextInt(15) + 15;

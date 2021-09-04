@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.EggModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
@@ -14,11 +15,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
-
+import net.tropicraft.core.common.registry.TropicraftEntityModelLayers;
+/*
 public class EggRenderer extends LivingEntityRenderer<EggEntity, EggModel> {
 
-	public EggRenderer(final EntityRenderDispatcher rendererManager) {
-		super(rendererManager, new EggModel(), 1f);
+	public EggRenderer(final EntityRendererFactory.Context context) {
+		super(context, new EggModel(context.getPart()), 1f);
 		shadowOpacity = 0.5f;
 	}
 
@@ -59,16 +61,11 @@ public class EggRenderer extends LivingEntityRenderer<EggEntity, EggModel> {
 		stack.pop();
 	}
 
-	/*
-	@Override
-	protected boolean canRenderName(EggEntity entity) {
-		return entity.hasCustomName();
-	}
 
-	 */
-	
 	@Override
 	public Identifier getTexture(EggEntity entity) {
 		return TropicraftRenderUtils.bindTextureEntity(entity.getEggTexture());
 	}
 }
+
+ */

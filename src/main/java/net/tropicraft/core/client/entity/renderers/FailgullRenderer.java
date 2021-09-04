@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.FailgullModel;
 import net.tropicraft.core.common.entity.passive.FailgullEntity;
@@ -22,3 +22,5 @@ public class FailgullRenderer extends MobEntityRenderer<FailgullEntity, Failgull
         return FAILGULL_TEXTURE;
     }
 }
+
+ */

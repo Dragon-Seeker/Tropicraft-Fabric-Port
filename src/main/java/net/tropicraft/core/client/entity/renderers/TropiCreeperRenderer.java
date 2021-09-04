@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.TropiCreeperModel;
 import net.tropicraft.core.common.entity.passive.TropiCreeperEntity;
@@ -44,3 +44,5 @@ public class TropiCreeperRenderer extends MobEntityRenderer<TropiCreeperEntity, 
         return CREEPER_TEXTURE;
     }
 }
+
+ */

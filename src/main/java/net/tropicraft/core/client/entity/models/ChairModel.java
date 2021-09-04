@@ -4,7 +4,7 @@ import net.tropicraft.core.common.entity.placeable.ChairEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-
+/*
 public class ChairModel extends CompositeEntityModel<ChairEntity> {
     public ModelPart seat;
     public ModelPart back;
@@ -68,3 +68,5 @@ public class ChairModel extends CompositeEntityModel<ChairEntity> {
         );
     }
 }
+
+ */

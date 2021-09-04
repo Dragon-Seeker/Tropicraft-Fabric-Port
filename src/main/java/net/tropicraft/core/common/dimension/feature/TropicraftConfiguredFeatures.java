@@ -1,6 +1,8 @@
 package net.tropicraft.core.common.dimension.feature;
 
 import com.google.common.collect.ImmutableList;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.loom.configuration.FabricApiExtension;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
@@ -8,6 +10,7 @@ import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.YOffset;
 import net.minecraft.world.gen.decorator.CarvingMaskDecoratorConfig;
 import net.minecraft.world.gen.decorator.CountExtraDecoratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
@@ -29,7 +32,7 @@ import net.tropicraft.core.common.registry.TropicraftBlocks;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-public final class TropicraftConfiguredFeatures {
+public final class TropicraftConfiguredFeatures extends ConfiguredFeatures{
     //private static ConfiguredFeature<?,?> grapefruitTree;
     public static ConfiguredFeature<?, ?> grapefruitTree;
     public static ConfiguredFeature<?, ?> orangeTree;
@@ -79,6 +82,8 @@ public final class TropicraftConfiguredFeatures {
     public static ConfiguredFeature<?, ?> homeTreeBranchWestExact;
     public static ConfiguredFeature<?, ?> homeTreeBranchSouthWest;
     public static ConfiguredFeature<?, ?> homeTreeBranchSouthWestExact;
+
+
     /*
     public TropicraftConfiguredFeatures(WorldgenDataConsumer<ConfiguredFeature<?, ?>> worldgen) {
         Register features = new Register(worldgen);
@@ -242,6 +247,7 @@ public final class TropicraftConfiguredFeatures {
             RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, SimpleBlockPlacer.INSTANCE).tries(64).build();
             return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(12));
         });
+
         rainforestFlowers = register("rainforest_flowers", Feature.FLOWER, feature -> {
             //BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.RAINFOREST_FLOWERS);
             BlockStateProvider stateProvider = new NoiseFromTagRainForestFlowerBlockStateProvider();
@@ -263,49 +269,54 @@ public final class TropicraftConfiguredFeatures {
 
         undergroundSeagrassOnStone = register("underground_seagrass_on_stone", Feature.SIMPLE_BLOCK, feature -> {
             SimpleBlockFeatureConfig config = new SimpleBlockFeatureConfig(
-                    Blocks.SEAGRASS.getDefaultState(),
+                    new SimpleBlockStateProvider(Blocks.SEAGRASS.getDefaultState()),
                     ImmutableList.of(Blocks.STONE.getDefaultState()),
                     ImmutableList.of(Blocks.WATER.getDefaultState()),
                     ImmutableList.of(Blocks.WATER.getDefaultState())
             );
-            return feature.configure(config).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.1F)));
+            return feature.configure(config).applyChance(10).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID)));
         });
         undergroundSeagrassOnDirt = register("underground_seagrass_on_dirt", Feature.SIMPLE_BLOCK, feature -> {
             SimpleBlockFeatureConfig config = new SimpleBlockFeatureConfig(
-                    Blocks.SEAGRASS.getDefaultState(),
+                    new SimpleBlockStateProvider(Blocks.SEAGRASS.getDefaultState()),
                     ImmutableList.of(Blocks.DIRT.getDefaultState()),
                     ImmutableList.of(Blocks.WATER.getDefaultState()),
                     ImmutableList.of(Blocks.WATER.getDefaultState())
             );
-            return feature.configure(config).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.5F)));
+            return feature.configure(config).applyChance(5).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID)));//.decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.5F)));
         });
         undergroundSeaPickles = noConfig("underground_sea_pickles", TropicraftFeatures.UNDERGROUND_SEA_PICKLE, feature -> {
-            return feature.decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.05F)));
+            return feature.applyChance(5).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID)));//.decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.05F)));
         });
 
         azurite = register("azurite", Feature.ORE, f -> {
             return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.AZURITE_ORE.getDefaultState(), 8))
-                    .decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
+                    .uniformRange(YOffset.fixed(100), YOffset.fixed(128))
+                    //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
                     .spreadHorizontally().repeat(3);
         });
         eudialyte = register("eudialyte", Feature.ORE, f -> {
             return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.EUDIALYTE_ORE.getDefaultState(), 12))
-                    .decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
+                    .uniformRange(YOffset.fixed(100), YOffset.fixed(128))
+                    //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
                     .spreadHorizontally().repeat(10);
         });
         zircon = register("zircon", Feature.ORE, f -> {
             return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.ZIRCON_ORE.getDefaultState(), 14))
-                    .decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
+                    .uniformRange(YOffset.fixed(100), YOffset.fixed(128))
+                    //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
                     .spreadHorizontally().repeat(15);
         });
         manganese = register("manganese", Feature.ORE, f -> {
             return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.MANGANESE_ORE.getDefaultState(), 10))
-                    .decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(32, 0, 32)))
+                    .uniformRange(YOffset.fixed(32), YOffset.fixed(32))
+                    //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(32, 0, 32)))
                     .spreadHorizontally().repeat(8);
         });
         shaka = register("shaka", Feature.ORE, f -> {
             return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.SHAKA_ORE.getDefaultState(), 8))
-                    .decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(0, 0, 32)))
+                    .uniformRange(YOffset.fixed(0), YOffset.fixed(32))
+                    //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(0, 0, 32)))
                     .spreadHorizontally().repeat(6);
         });
 

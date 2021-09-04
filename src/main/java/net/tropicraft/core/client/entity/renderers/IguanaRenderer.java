@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
@@ -27,3 +27,6 @@ public class IguanaRenderer extends MobEntityRenderer<IguanaEntity, IguanaModel>
         return DEFAULT_TEXTURE;
     }
 }
+
+
+ */

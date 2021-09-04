@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.ChairModel;
 import net.tropicraft.core.common.entity.placeable.ChairEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -17,3 +17,6 @@ public class ChairRenderer extends FurnitureRenderer<ChairEntity> {
         stack.translate(0, 0, -0.15);
     }
 }
+
+
+ */

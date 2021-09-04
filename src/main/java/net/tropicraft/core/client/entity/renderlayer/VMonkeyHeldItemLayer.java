@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderlayer;
-
+/*
 import net.tropicraft.core.common.entity.neutral.VMonkeyEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,3 +32,5 @@ public class VMonkeyHeldItemLayer<T extends VMonkeyEntity, M extends EntityModel
         }
     }
 }
+
+ */

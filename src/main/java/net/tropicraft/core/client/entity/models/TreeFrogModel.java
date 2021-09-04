@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-
+/*
 public class TreeFrogModel extends CompositeEntityModel<TreeFrogEntity> {
     public ModelPart frontLeftLeg;
     public ModelPart frontRightLeg;
@@ -62,3 +62,5 @@ public class TreeFrogModel extends CompositeEntityModel<TreeFrogEntity> {
         );
     }
 }
+
+ */

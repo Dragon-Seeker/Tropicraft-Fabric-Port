@@ -5,14 +5,15 @@ import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
 import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.carver.CaveCarver;
+import net.minecraft.world.gen.carver.CaveCarverConfig;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.Random;
 
 public class TropicsCaveCarver extends CaveCarver {
 
-    public TropicsCaveCarver(Codec<ProbabilityConfig> codec) {
-        super(codec, 256);
+    public TropicsCaveCarver(Codec<CaveCarverConfig> codec) {
+        super(codec);//, 256);
         this.alwaysCarvableBlocks = ImmutableSet.<Block> builder().addAll(this.alwaysCarvableBlocks)
                 .add(TropicraftBlocks.CORAL_SAND)
                 .add(TropicraftBlocks.FOAMY_SAND)
@@ -22,11 +23,12 @@ public class TropicsCaveCarver extends CaveCarver {
                 .add(TropicraftBlocks.VOLCANIC_SAND).build();
     }
 
-    @Override
+    //TODO: SEE ABOUT IMPLEMNTING A SIMILAR MECHANISM WITH THE CARVER CONFIG LATER
     protected int getCaveY(Random rand) {
         if (rand.nextInt(5) == 0) {
             return rand.nextInt(240 + 8); // Add some evenly distributed caves in, in addition to the ones biased towards lower Y
         }
         return rand.nextInt(rand.nextInt(240) + 8);
     }
+
 }

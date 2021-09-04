@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.UmbrellaModel;
 import net.tropicraft.core.common.entity.placeable.UmbrellaEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -54,3 +54,6 @@ public class UmbrellaRenderer extends FurnitureRenderer<UmbrellaEntity> {
         return null;
     }
 }
+
+
+ */

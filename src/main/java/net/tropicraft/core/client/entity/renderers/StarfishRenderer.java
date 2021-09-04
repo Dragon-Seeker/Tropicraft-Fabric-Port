@@ -15,16 +15,17 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
 
-public class StarfishRenderer extends EntityRenderer<StarfishEntity> {
+//public class StarfishRenderer extends EntityRenderer<StarfishEntity> {
 
 	/**
 	 * Amount freshly hatched starfish are scaled down while rendering.
 	 */
-	public static final float BABY_RENDER_SCALE = 0.25f;
+	//public static final float BABY_RENDER_SCALE = 0.25f;
 
 	/**
 	 * Amount mature starfish are scaled down while rendering.
 	 */
+	/*
 	public static final float ADULT_RENDER_SCALE = 1f;
 
 	public StarfishRenderer(EntityRenderDispatcher renderManager) {
@@ -69,3 +70,5 @@ public class StarfishRenderer extends EntityRenderer<StarfishEntity> {
 		return null; // Custom setting this in the render loop
 	}
 }
+
+	 */

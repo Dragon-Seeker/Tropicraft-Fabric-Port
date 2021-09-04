@@ -9,7 +9,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
-
+/*
 public class BambooMugModel extends Model {
     public ModelPart base;
     public ModelPart wall1;
@@ -99,3 +99,5 @@ public class BambooMugModel extends Model {
         }
     }
 }
+
+ */

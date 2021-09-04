@@ -8,6 +8,7 @@ import net.minecraft.block.*;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.registry.Registry;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.block.*;
@@ -28,11 +29,11 @@ public class TropicraftBlocks {
     public static final Block CHUNK_WALL = registerBlock("chunk_wall", Builder.Wall(CHUNK));
     public static final VolcanoBlock VOLCANO = registerNoItem("volcano", new VolcanoBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).dropsNothing()));
 
-    public static final TropicOreBlock MANGANESE_ORE = registerBlock("manganese_ore", Builder.OreBlock(MapColor.GRAY));
-    public static final TropicOreBlock SHAKA_ORE = registerBlock("shaka_ore", Builder.OreBlock(MapColor.GRAY));
-    public static final TropicOreBlock EUDIALYTE_ORE = registerBlock("eudialyte_ore", Builder.OreBlock(MapColor.GRAY, 2));
-    public static final TropicOreBlock AZURITE_ORE = registerBlock("azurite_ore", Builder.OreBlock(MapColor.GRAY, 2));
-    public static final TropicOreBlock ZIRCON_ORE = registerBlock("zircon_ore", Builder.OreBlock(MapColor.GRAY, 1));
+    public static final TropicOreBlock MANGANESE_ORE = registerBlock("manganese_ore", Builder.OreBlock(MapColor.GRAY, UniformIntProvider.create(0, 0)));
+    public static final TropicOreBlock SHAKA_ORE = registerBlock("shaka_ore", Builder.OreBlock(MapColor.GRAY, UniformIntProvider.create(0, 0)));
+    public static final TropicOreBlock EUDIALYTE_ORE = registerBlock("eudialyte_ore", Builder.OreBlock(MapColor.GRAY, 2, UniformIntProvider.create(1, 4)));
+    public static final TropicOreBlock AZURITE_ORE = registerBlock("azurite_ore", Builder.OreBlock(MapColor.GRAY, 2, UniformIntProvider.create(2, 5)));
+    public static final TropicOreBlock ZIRCON_ORE = registerBlock("zircon_ore", Builder.OreBlock(MapColor.GRAY, 1, UniformIntProvider.create(0, 2)));
 
     public static final Block AZURITE_BLOCK = registerBlock("azurite_block", Builder.MetalBlock(MapColor.LIGHT_BLUE));
     public static final Block EUDIALYTE_BLOCK = registerBlock("eudialyte_block", Builder.MetalBlock(MapColor.PINK));

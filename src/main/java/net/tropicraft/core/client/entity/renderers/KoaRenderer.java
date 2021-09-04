@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.KoaModel;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
@@ -24,6 +24,7 @@ public class KoaRenderer extends BipedEntityRenderer<EntityKoaBase, KoaModel> {
     /**
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
+/*
     @Override
     public Identifier getTexture(EntityKoaBase entity) {
         if (entity.getGender() == EntityKoaBase.Genders.MALE) {
@@ -46,3 +47,6 @@ public class KoaRenderer extends BipedEntityRenderer<EntityKoaBase, KoaModel> {
     }
 
 }
+
+ */
+

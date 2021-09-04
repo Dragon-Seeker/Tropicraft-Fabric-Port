@@ -10,7 +10,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
-
+/*
 public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements ModelWithArms {
     public ModelPart body;
     public ModelPart lLegUpper;
@@ -282,3 +282,4 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         stack.translate(0.09375F, 0.1875F, 0.0F);
     }
 }
+ */

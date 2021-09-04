@@ -9,7 +9,9 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.tropicraft.core.common.dimension.feature.config.HomeTreeBranchConfig;
 import net.tropicraft.core.common.dimension.feature.config.RainforestVinesConfig;
 import net.tropicraft.core.common.dimension.feature.tree.RainforestVinesFeature;
@@ -30,7 +32,14 @@ public class HomeTreeBranchFeature<T extends HomeTreeBranchConfig> extends Featu
     }
 
     @Override
-    public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos, T config) {
+    public boolean generate(FeatureContext<T> context) {
+        StructureWorldAccess world = context.getWorld();
+        Random random = context.getRandom();
+        BlockPos pos = context.getOrigin();
+        T config = context.getConfig();
+        ChunkGenerator generator = context.getGenerator();
+
+
         ChunkRandom rand = new ChunkRandom();
         rand.setPopulationSeed(world.getSeed(), pos.getX(), pos.getZ());
         final int branchLength = rand.nextInt(10) + 15;

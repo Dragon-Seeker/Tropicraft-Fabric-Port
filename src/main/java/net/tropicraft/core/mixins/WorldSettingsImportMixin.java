@@ -20,7 +20,8 @@ import java.util.OptionalInt;
 public class WorldSettingsImportMixin {
     @Shadow
     @Final
-    private DynamicRegistryManager.Impl registryManager;
+    //private DynamicRegistryManager.Impl registryManager;
+    private DynamicRegistryManager registryManager;
 
     /**
      * Add the tropicraft dimension to both new worlds and existing worlds when they get loaded.

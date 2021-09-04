@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderlayer;
-
+/*
 import net.tropicraft.core.client.entity.models.ManOWarModel;
 import net.tropicraft.core.client.entity.renderers.ManOWarRenderer;
 import net.tropicraft.core.common.entity.underdasea.ManOWarEntity;
@@ -33,3 +33,5 @@ public class ManOWarGelLayer extends FeatureRenderer<ManOWarEntity, ManOWarModel
         }
     }
 }
+
+ */

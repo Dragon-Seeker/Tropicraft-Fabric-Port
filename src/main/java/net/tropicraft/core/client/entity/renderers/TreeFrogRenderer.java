@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-
+/*
 import net.tropicraft.core.client.entity.models.TreeFrogModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.neutral.TreeFrogEntity;
@@ -20,3 +20,5 @@ public class TreeFrogRenderer extends MobEntityRenderer<TreeFrogEntity, TreeFrog
         return TropicraftRenderUtils.getTextureEntity("treefrog/treefrog" + entity.getColor());
     }
 }
+
+ */

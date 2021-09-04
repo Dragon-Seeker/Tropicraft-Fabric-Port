@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.item;
-
+/*
 import net.tropicraft.core.client.entity.models.PlayerHeadpieceModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.item.AshenMasks;
@@ -31,3 +31,5 @@ public class MaskArmorProvider implements ArmorRender.ModelProvider, ArmorRender
         return TropicraftRenderUtils.getTextureEntity("ashen/mask");
     }
 }
+
+ */

@@ -9,8 +9,10 @@ import net.minecraft.world.ModifiableTestableWorld;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.TestableWorld;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.TreeFeature;
+import net.minecraft.world.gen.feature.util.FeatureContext;
 import net.tropicraft.core.common.dimension.feature.config.FruitTreeConfig;
 
 import java.util.Random;
@@ -24,7 +26,12 @@ public class FruitTreeFeature extends Feature<FruitTreeConfig> {
 	}
 
 	@Override
-	public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random rand, BlockPos pos, FruitTreeConfig config) {
+	public boolean generate(FeatureContext<FruitTreeConfig> context) {
+		StructureWorldAccess world = context.getWorld();
+		Random rand = context.getRandom();
+		BlockPos pos = context.getOrigin();
+		FruitTreeConfig config = context.getConfig();
+
 		pos = pos.toImmutable();
 		int height = rand.nextInt(3) + 4;
 
@@ -78,7 +85,7 @@ public class FruitTreeFeature extends Feature<FruitTreeConfig> {
 	protected static boolean isDirt(TestableWorld world, BlockPos pos) {
 		return world.testBlockState(pos, (state) -> {
 			Block block = state.getBlock();
-			return isSoil(block) && block != Blocks.GRASS_BLOCK && block != Blocks.MYCELIUM;
+			return isSoil(block.getDefaultState()) && block != Blocks.GRASS_BLOCK && block != Blocks.MYCELIUM;
 		});
 	}
 

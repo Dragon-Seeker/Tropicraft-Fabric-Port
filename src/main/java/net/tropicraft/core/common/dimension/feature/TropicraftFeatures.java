@@ -29,7 +29,7 @@ import net.tropicraft.core.mixins.ProjectionFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TropicraftFeatures {
+public class TropicraftFeatures extends ConfiguredFeatures{
 
     public static List<Feature<?>> features = new ArrayList<>();
 

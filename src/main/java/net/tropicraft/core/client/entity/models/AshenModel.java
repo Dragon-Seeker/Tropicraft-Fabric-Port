@@ -123,14 +123,14 @@ public class AshenModel extends CompositeEntityModel<AshenEntity> implements Mod
         modelPartData.addChild("right_leg",
                 ModelPartBuilder.create()
                     .mirrored(true)
-                    .uv(64, 32)
+                    .uv(25, 0) //TODO: UV IS NOT TEXTURE SIZE, ITS TEXTURE OFFSET
                         .cuboid(0F, 0F, 0F, 1, 7, 1),
-                ModelTransform.rotation(0F, 0F, 0F).pivot(1F, 17F, 0F));
+                ModelTransform.rotation(0F, 0F, 0F).pivot(1F, 17F, 0F)).createPart(64, 32);
         /*
-        rightLeg = new ModelPart(this, 25, 0);
+        rightLeg = new ModelPart(this, 25, 0); //<---- This is UV Value
         rightLeg.addCuboid(0F, 0F, 0F, 1, 7, 1);
         rightLeg.setPivot(1F, 17F, 0F);
-        rightLeg.setTextureSize(64, 32);
+        rightLeg.setTextureSize(64, 32); <---- This is the texture size
         rightLeg.mirror = true;
         setRotation(rightLeg, 0F, 0F, 0F);
          */
@@ -138,7 +138,7 @@ public class AshenModel extends CompositeEntityModel<AshenEntity> implements Mod
         modelPartData.addChild("left_leg",
                 ModelPartBuilder.create()
                         .mirrored(true)
-                        .uv(64, 32)
+                        .uv(25, 0)
                             .cuboid(-1F, 0F, 0F, 1, 7, 1),
                 ModelTransform.rotation(0F, 0F, 0F).pivot(-1F, 17F, 0F));
         /*
@@ -153,7 +153,7 @@ public class AshenModel extends CompositeEntityModel<AshenEntity> implements Mod
         modelPartData.addChild("body",
                 ModelPartBuilder.create()
                         .mirrored(true)
-                        .uv(64, 32)
+                        .uv(24, 8)
                             .cuboid(-2F, -3F, 0F, 4, 7, 3),
                 ModelTransform.rotation(0F, 3.141593F, 0F).pivot(0F, 13F, 2F));
         /*
@@ -227,7 +227,8 @@ public class AshenModel extends CompositeEntityModel<AshenEntity> implements Mod
         leftArm.setPivot(2F, 10.46667F, 0.5F);
         setRotation(leftArm, 0F, 0F, 0F);
         leftArm.mirror = true;
-        leftArm.setTextureOffset(0, 24).addCuboid(0F, -0.5F, -0.5F, 6, 1, 1);
+        leftArm.setTextureOffset(0, 24)
+                .addCuboid(0F, -0.5F, -0.5F, 6, 1, 1);
          */
 
         modelPartData.addChild("right_arm_sub",
