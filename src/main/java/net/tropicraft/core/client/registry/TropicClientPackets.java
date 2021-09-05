@@ -1,4 +1,4 @@
-package net.tropicraft.core.common.registry;
+package net.tropicraft.core.client.registry;
 
 import net.tropicraft.core.common.entity.placeable.*;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;

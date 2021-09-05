@@ -1,6 +1,6 @@
 package net.tropicraft.core.common.block.testContainer;
 
-import net.tropicraft.core.common.registry.TropicScreenHandler;
+import net.tropicraft.core.client.registry.TropicScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;

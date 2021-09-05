@@ -5,11 +5,10 @@ import net.tropicraft.core.client.entity.models.EagleRayModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.EagleRayEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.tropicraft.core.common.registry.TropicraftEntityModelLayers;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -19,7 +18,7 @@ public class EagleRayRenderer extends MobEntityRenderer<EagleRayEntity, EagleRay
     public static final Identifier RAY_TEXTURE_LOC = TropicraftRenderUtils.bindTextureEntity("ray/eagleray");
 
     public EagleRayRenderer(EntityRendererFactory.Context context) {
-        super(context, new EagleRayModel(context.getPart(TropicraftEntityModelLayers.EAGLE_RAY_LAYER)), 0.8f);
+        super(context, new EagleRayModel(context.getPart(TropicraftEntityRendering.EAGLE_RAY_LAYER)), 0.8f);
     }
 
     @Override

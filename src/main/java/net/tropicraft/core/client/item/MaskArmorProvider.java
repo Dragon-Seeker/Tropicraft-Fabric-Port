@@ -1,6 +1,7 @@
 package net.tropicraft.core.client.item;
 
 import net.tropicraft.core.client.entity.models.PlayerHeadpieceModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.item.AshenMasks;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -23,7 +24,7 @@ public class MaskArmorProvider implements ArmorRenderingRegistry.ModelProvider, 
 
     @Override
     public @NotNull BipedEntityModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, BipedEntityModel<LivingEntity> defaultModel) {
-        return slot == EquipmentSlot.HEAD ? new PlayerHeadpieceModel(maskType.ordinal(), maskType.getXOffset(), maskType.getYOffset()) : null;
+        return slot == EquipmentSlot.HEAD ? PlayerHeadpieceModel.createModel(TropicraftEntityRendering.ASHEN_MASK_LAYERS.get(maskType.ordinal()), null, maskType.ordinal(), maskType.getXOffset(), maskType.getYOffset()) : null;
     }
 
     @Override

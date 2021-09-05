@@ -1,21 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.tropicraft.core.client.entity.models.EggModel;
-import net.tropicraft.core.client.util.TropicraftRenderUtils;
-import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
-import net.tropicraft.core.common.entity.egg.EggEntity;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
-import net.tropicraft.core.common.registry.TropicraftEntityModelLayers;
 /*
 public class EggRenderer extends LivingEntityRenderer<EggEntity, EggModel> {
 

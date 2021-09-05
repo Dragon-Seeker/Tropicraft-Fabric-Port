@@ -3,13 +3,12 @@ package net.tropicraft.core.client.entity.renderers;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.PiranhaModel;
 import net.tropicraft.core.common.entity.underdasea.PiranhaEntity;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.tropicraft.core.common.registry.TropicraftEntityModelLayers;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 
 public class PiranhaRenderer extends TropicraftFishRenderer<PiranhaEntity, PiranhaModel> {
 
     public PiranhaRenderer(EntityRendererFactory.Context context) {
-        super(context, new PiranhaModel(context.getPart(TropicraftEntityModelLayers.PIRANHA_LAYER)), 0.2f);
+        super(context, new PiranhaModel(context.getPart(TropicraftEntityRendering.PIRANHA_LAYER)), 0.2f);
     }
 }
 

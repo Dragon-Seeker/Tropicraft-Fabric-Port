@@ -6,6 +6,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.tropicraft.core.client.data.TropicraftTags;
+import net.tropicraft.core.client.registry.TropicScreenHandler;
 import net.tropicraft.core.common.TropicraftCommands;
 import net.tropicraft.core.common.dimension.TropicraftDimension;
 import net.tropicraft.core.common.dimension.biome.TropicraftBiomeProvider;

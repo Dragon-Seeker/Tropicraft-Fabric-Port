@@ -1,4 +1,4 @@
-package net.tropicraft.core.common.registry;
+package net.tropicraft.core.client.registry;
 
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.block.testContainer.BoxChestScreenHandler;
