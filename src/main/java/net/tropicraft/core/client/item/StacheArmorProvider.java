@@ -1,7 +1,5 @@
 package net.tropicraft.core.client.item;
-/*
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
+
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -11,8 +9,9 @@ import net.tropicraft.core.client.entity.models.PlayerHeadpieceModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import shadow.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 
-public class StacheArmorProvider implements ArmorRenderer.ModelProvider, ArmorRenderingRegistry.TextureProvider {
+public class StacheArmorProvider implements ArmorRenderingRegistry.ModelProvider, ArmorRenderingRegistry.TextureProvider {
 
     public StacheArmorProvider(){
     }
@@ -28,4 +27,4 @@ public class StacheArmorProvider implements ArmorRenderer.ModelProvider, ArmorRe
     }
 }
 
- */
+

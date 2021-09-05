@@ -1,9 +1,8 @@
 package net.tropicraft.core.client.item;
-/*
+
 import net.tropicraft.core.client.entity.models.PlayerHeadpieceModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.item.AshenMasks;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -11,8 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import shadow.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 
-public class MaskArmorProvider implements ArmorRender.ModelProvider, ArmorRenderingRegistry.TextureProvider {
+public class MaskArmorProvider implements ArmorRenderingRegistry.ModelProvider, ArmorRenderingRegistry.TextureProvider {
 
     AshenMasks maskType;
 
@@ -32,4 +32,4 @@ public class MaskArmorProvider implements ArmorRender.ModelProvider, ArmorRender
     }
 }
 
- */
+

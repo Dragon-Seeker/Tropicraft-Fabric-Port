@@ -20,13 +20,17 @@ public abstract class AbstractFishModel<T extends FishEntity> extends CompositeE
         //tail.addCuboid(0, 0, 0, 0, 1, 1);
         //body.addChild(tail);
         modelPartData.addChild("body", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,16F,0F));
-        modelPartData.addChild("tail", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,0F,1F));
+        modelPartData.addChild("tail", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,0F,-1F));
         return TexturedModelData.of(modelData,0,0);
     }
 
     @Override
     public Iterable<ModelPart> getParts() {
         return ImmutableList.of(body);
+    }
+
+    public ModelPart getPart() {
+        return this.root;
     }
 
     @Override

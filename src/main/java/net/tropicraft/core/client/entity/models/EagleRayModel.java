@@ -39,8 +39,8 @@ public class EagleRayModel extends CompositeEntityModel<EagleRayEntity> {
 		//body.addCuboid(-2F, 0F, 0F, 5, 3, 32);
 		//body.setTextureSize(128, 64);
 		//body.mirror = true;
-		modelPartData.addChild("body", ModelPartBuilder.create().uv(128, 64).cuboid(-2F, 0F, 0F, 5, 3, 32).mirrored(true), ModelTransform.pivot(0F,0F,8F));
-		return TexturedModelData.of(modelData,128,128);
+		modelPartData.addChild("body", ModelPartBuilder.create().uv(32, 0).cuboid(-2F, 0F, 0F, 5, 3, 32).mirrored(true), ModelTransform.pivot(0F,0F,8F));
+		return TexturedModelData.of(modelData,128,64);
 	}
 
 	@Override

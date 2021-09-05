@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 //import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -30,9 +31,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.tropicraft.Constants;
 //import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
-//import net.tropicraft.core.client.item.MaskArmorProvider;
+import net.tropicraft.core.client.item.MaskArmorProvider;
 import net.tropicraft.core.client.entity.renderers.*;
-//import net.tropicraft.core.client.item.StacheArmorProvider;
+import net.tropicraft.core.client.item.StacheArmorProvider;
 import net.tropicraft.core.common.block.blockentity.TropicBambooChestBlockEntity;
 //import net.tropicraft.core.common.block.testContainer.BoxChestScreen;
 import net.tropicraft.core.common.dimension.TropicraftDimension;
@@ -40,6 +41,7 @@ import net.tropicraft.core.common.item.AshenMaskItem;
 import net.tropicraft.core.common.item.IColoredItem;
 import net.tropicraft.core.common.registry.*;
 import net.tropicraft.core.mixins.ModelLoaderSTATICDEFINITIONS;
+import shadow.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +89,29 @@ public class TropicraftClient implements ClientModInitializer {
                 .put(Registry.ITEM.getId(TropicraftItems.BAMBOO_ITEM_FRAME), frameState)
                 .build());
     }
+
+
+    @Environment(EnvType.CLIENT)
+    public static void ArmorRenderingRegistryInitialization() {
+        ArrayList<MaskArmorProvider> MASK_PROVIDER = new ArrayList<>();
+        final List<AshenMaskItem> values = TropicraftItems.ASHEN_MASKS.values().asList();
+        final int size = values.size();
+
+        for (int i = 0; i < size; i++) {
+            AshenMaskItem maskItem = values.get(i);
+            MASK_PROVIDER.add(new MaskArmorProvider(maskItem.getMaskType()));
+            ArmorRendererRegistryImpl.register();
+            ArmorRenderingRegistry.registerModel(MASK_PROVIDER.get(i), maskItem);
+            ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
+        }
+
+        final StacheArmorProvider STACHPROVIDER = new StacheArmorProvider();
+
+        ArmorRenderingRegistry.registerModel(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
+        ArmorRenderingRegistry.registerTexture(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
+    }
+
+
 
     /*
     @Environment(EnvType.CLIENT)

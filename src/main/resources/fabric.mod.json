@@ -29,7 +29,8 @@
     ]
   },
   "mixins": [
-    "tropicraft.mixins.json"
+    "tropicraft.mixins.json",
+    "tropicraft.mixins.shadow.json"
   ],
 
   "accessWidener" : "tropicraftFabric.accesswidener",
