@@ -11,7 +11,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.math.MathHelper;
 
 public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEntity> implements ModelWithArms {
-    public static ModelPart root;
+    //public static ModelPart root;
 
     public ModelPart rightLeg;
     public ModelPart leftLeg;
@@ -29,7 +29,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
     public static int textureHeight;
 
     public AshenModel(ModelPart root) {
-        this.root = root;
+        //this.root = root;
         this.rightLeg = root.getChild("right_leg");
         this.leftLeg = root.getChild("left_leg");
         this.body = root.getChild("body");

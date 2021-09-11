@@ -1,15 +1,14 @@
 package net.tropicraft.core.client.entity.models;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
-/*
+
 public class BambooMugModel extends Model {
     public ModelPart base;
     public ModelPart wall1;
@@ -26,56 +25,35 @@ public class BambooMugModel extends Model {
 
     //Function<Identifier, RenderLayer> renderTypeIn
 
-    public BambooMugModel(Function<Identifier, RenderLayer> renderTypeIn) {
-        super(renderTypeIn);
-        textureWidth = 64;
-        textureHeight = 32;
+    public BambooMugModel(ModelPart root) {
+        super(RenderLayer::getEntityCutout);
+        this.base = root.getChild("base");
+        this.wall1 = root.getChild("wall1");
+        this.wall2 = root.getChild("wall2");
+        this.wall3 = root.getChild("wall3");
+        this.wall4 = root.getChild("wall4");
+        this.liquid = root.getChild("liquid");
+        this.handletop = root.getChild("handletop");
+        this.handlebottom = root.getChild("handlebottom");
+        this.handle = root.getChild("handle");
 
-        base = new ModelPart(this, 10, 0);
-        base.addCuboid(-2F, 23F, -2F, 4, 1, 4);
-        base.setPivot(0F, 0F, 0F);
-        base.setTextureSize(64, 32);
-        base.mirror = true;
-        wall1 = new ModelPart(this, 0, 10);
-        wall1.mirror = true;
-        wall1.addCuboid(-2F, 17F, -3F, 4, 6, 1);
-        wall1.setPivot(0F, 0F, 0F);
-        wall1.setTextureSize(64, 32);
-        wall2 = new ModelPart(this, 0, 10);
-        wall2.addCuboid(-2F, 17F, 2F, 4, 6, 1);
-        wall2.setPivot(0F, 0F, 0F);
-        wall2.setTextureSize(64, 32);
-        wall2.mirror = true;
-        wall3 = new ModelPart(this, 0, 0);
-        wall3.addCuboid(2F, 17F, -2F, 1, 6, 4);
-        wall3.setPivot(0F, 0F, 0F);
-        wall3.setTextureSize(64, 32);
-        wall3.mirror = true;
-        wall4 = new ModelPart(this, 0, 0);
-        wall4.addCuboid(-3F, 17F, -2F, 1, 6, 4);
-        wall4.setPivot(0F, 0F, 0F);
-        wall4.setTextureSize(64, 32);
-        wall4.mirror = true;
-        liquid = new ModelPart(this, 10, 5);
-        liquid.addCuboid(-2F, 18F, -2F, 4, 1, 4);
-        liquid.setPivot(0F, 0F, 0F);
-        liquid.setTextureSize(64, 32);
-        liquid.mirror = true;
-        handletop = new ModelPart(this, 26, 0);
-        handletop.addCuboid(-1F, 18F, -4F, 2, 1, 1);
-        handletop.setPivot(0F, 0F, 0F);
-        handletop.setTextureSize(64, 32);
-        handletop.mirror = true;
-        handlebottom = new ModelPart(this, 26, 2);
-        handlebottom.addCuboid(-1F, 21F, -4F, 2, 1, 1);
-        handlebottom.setPivot(0F, 0F, 0F);
-        handlebottom.setTextureSize(64, 32);
-        handlebottom.mirror = true;
-        handle = new ModelPart(this, 32, 0);
-        handle.addCuboid(-1F, 19F, -5F, 2, 2, 1);
-        handle.setPivot(0F, 0F, 0F);
-        handle.setTextureSize(64, 32);
-        handle.mirror = true;
+    }
+
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+
+        modelPartData.addChild("base", ModelPartBuilder.create().uv(10,0).mirrored().cuboid(-2F, 23F, -2F, 4, 1, 4),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("wall1", ModelPartBuilder.create().uv(0,10).mirrored().cuboid(-2F, 17F, -3F, 4, 6, 1),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("wall2", ModelPartBuilder.create().uv(0,10).mirrored().cuboid(-2F, 17F, 2F, 4, 6, 1),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("wall3", ModelPartBuilder.create().uv(0,0).mirrored().cuboid(2F, 17F, -2F, 1, 6, 4),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("wall4", ModelPartBuilder.create().uv(0,0).mirrored().cuboid(-3F, 17F, -2F, 1, 6, 4),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("liquid", ModelPartBuilder.create().uv(10,5).mirrored().cuboid(-2F, 18F, -2F, 4, 1, 4),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("handletop", ModelPartBuilder.create().uv(26,0).mirrored().cuboid(-1F, 18F, -4F, 2, 1, 1),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("handlebottom", ModelPartBuilder.create().uv(26,2).mirrored().cuboid(-1F, 21F, -4F, 2, 1, 1),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addChild("handle", ModelPartBuilder.create().uv(32,0).mirrored().cuboid(-1F, 19F, -5F, 2, 2, 1),ModelTransform.pivot(0F, 0F, 0F));
+
+        return TexturedModelData.of(modelData,64,32);
     }
 
     public Iterable<ModelPart> getMugParts() {
@@ -100,4 +78,4 @@ public class BambooMugModel extends Model {
     }
 }
 
- */
+

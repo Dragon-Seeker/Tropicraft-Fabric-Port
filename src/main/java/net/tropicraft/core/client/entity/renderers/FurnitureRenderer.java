@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.placeable.FurnitureEntity;
 import net.minecraft.client.render.OverlayTexture;
@@ -20,12 +21,12 @@ public class FurnitureRenderer<T extends FurnitureEntity> extends EntityRenderer
     private final float scale;
     private float red = 0.0F, green = 0.0F, blue = 0.0F;
 
-    public FurnitureRenderer(EntityRenderDispatcher renderManager, String textureName, EntityModel<T> model) {
-        this(renderManager, textureName, model, 1);
+    public FurnitureRenderer(EntityRendererFactory.Context context, String textureName, EntityModel<T> model) {
+        this(context, textureName, model, 1);
     }
     
-    public FurnitureRenderer(EntityRenderDispatcher renderManager, String textureName, EntityModel<T> model, float scale) {
-        super(renderManager);
+    public FurnitureRenderer(EntityRendererFactory.Context context, String textureName, EntityModel<T> model, float scale) {
+        super(context);
         this.textureName = textureName;
         this.model = model;
         this.scale = scale;
@@ -98,4 +99,3 @@ public class FurnitureRenderer<T extends FurnitureEntity> extends EntityRenderer
 }
 
 
- */

@@ -1,14 +1,15 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
-import net.tropicraft.core.client.entity.models.ChairModel;
-import net.tropicraft.core.common.entity.placeable.ChairEntity;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.tropicraft.core.client.entity.models.ChairModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
+import net.tropicraft.core.common.entity.placeable.ChairEntity;
 
 public class ChairRenderer extends FurnitureRenderer<ChairEntity> {
 
-    public ChairRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, "chair", new ChairModel());
+    public ChairRenderer(EntityRendererFactory.Context context) {
+        super(context, "chair", new ChairModel(context.getPart(TropicraftEntityRendering.CHAIR_LAYER)));
         shadowRadius = 0.65f;
     }
     
@@ -17,6 +18,3 @@ public class ChairRenderer extends FurnitureRenderer<ChairEntity> {
         stack.translate(0, 0, -0.15);
     }
 }
-
-
- */
