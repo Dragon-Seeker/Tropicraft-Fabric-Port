@@ -1,10 +1,26 @@
 package net.tropicraft.core.client.entity.renderers;
 
-/*
+
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.LivingEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Matrix3f;
+import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
+import net.tropicraft.core.client.entity.models.EggModel;
+import net.tropicraft.core.client.util.TropicraftRenderUtils;
+import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
+import net.tropicraft.core.common.entity.egg.EggEntity;
+
 public class EggRenderer extends LivingEntityRenderer<EggEntity, EggModel> {
 
-	public EggRenderer(final EntityRendererFactory.Context context) {
-		super(context, new EggModel(context.getPart()), 1f);
+	public EggRenderer(final EntityRendererFactory.Context context, EntityModelLayer layer) {
+		super(context, new EggModel(context.getPart(layer)), 1f);
 		shadowOpacity = 0.5f;
 	}
 
@@ -52,4 +68,3 @@ public class EggRenderer extends LivingEntityRenderer<EggEntity, EggModel> {
 	}
 }
 
- */

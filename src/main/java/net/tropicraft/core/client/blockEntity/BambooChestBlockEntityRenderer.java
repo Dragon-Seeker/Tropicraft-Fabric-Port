@@ -1,6 +1,9 @@
 package net.tropicraft.core.client.blockEntity;
-/*
+
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.tropicraft.Constants;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.common.block.blockentity.TropicBambooChestBlockEntity;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 import net.tropicraft.core.common.registry.TropicraftItems;
@@ -11,11 +14,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.block.ChestAnimationProgress;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.LightmapCoordinatesRetriever;
 import net.minecraft.client.util.math.MatrixStack;
@@ -52,39 +53,95 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
     private final ModelPart partLeftB; //doubleChestLeftLatch
 
 
-    public BambooChestBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    public BambooChestBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        ModelPart modelPart = ctx.getLayerModelPart(TropicraftEntityRendering.BAMBOO_CHEST);
+        this.partC = modelPart.getChild("bottom");
+        this.partA = modelPart.getChild("lid");
+        this.partB = modelPart.getChild("lock");
 
+        ModelPart doubleChestLeft = ctx.getLayerModelPart(TropicraftEntityRendering.BAMBOO_DOUBLE_CHEST_RIGHT);
+        this.partRightC = doubleChestLeft.getChild("bottom");
+        this.partRightA = doubleChestLeft.getChild("lid");
+        this.partRightB = doubleChestLeft.getChild("lock");
+
+        ModelPart doubleChestRight = ctx.getLayerModelPart(TropicraftEntityRendering.BAMBOO_DOUBLE_CHEST_LEFT);
+        this.partLeftC = doubleChestRight.getChild("bottom");
+        this.partLeftA = doubleChestRight.getChild("lid");
+        this.partLeftB = doubleChestRight.getChild("lock");
+
+    }
+
+    public static TexturedModelData getSingleTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        /*
         this.partC = new ModelPart(64, 64, 0, 19);
         this.partC.addCuboid(1.0F, 0.0F, 1.0F, 14.0F, 9.0F, 14.0F, 0.0F);
+
         this.partA = new ModelPart(64, 64, 0, 0);
         this.partA.addCuboid(1.0F, 0.0F, 0.0F, 14.0F, 5.0F, 14.0F, 0.0F);
         this.partA.pivotY = 9.0F;
         this.partA.pivotZ = 1.0F;
+
         this.partB = new ModelPart(64, 64, 0, 0);
         this.partB.addCuboid(7.0F, -1.0F, 15.0F, 2.0F, 4.0F, 1.0F, 0.0F);
         this.partB.pivotY = 8.0F;
+         */
+
+        modelPartData.addChild("bottom", ModelPartBuilder.create().uv(0, 19).cuboid(1.0F, 0.0F, 1.0F, 14.0F, 9.0F, 14.0F), ModelTransform.NONE);
+        modelPartData.addChild("lid", ModelPartBuilder.create().uv(0, 0).cuboid(1.0F, 0.0F, 0.0F, 14.0F, 5.0F, 14.0F), ModelTransform.pivot(0.0F, 9.0F, 1.0F));
+        modelPartData.addChild("lock", ModelPartBuilder.create().uv(0, 0).cuboid(7.0F, -1.0F, 15.0F, 2.0F, 4.0F, 1.0F), ModelTransform.pivot(0.0F, 8.0F, 0.0F));
+
+        return TexturedModelData.of(modelData, 64, 64);
+    }
+
+    public static TexturedModelData getRightDoubleTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        /*
         this.partRightC = new ModelPart(64, 64, 0, 19);
         this.partRightC.addCuboid(1.0F, 0.0F, 1.0F, 15.0F, 9.0F, 14.0F, 0.0F);
+
         this.partRightA = new ModelPart(64, 64, 0, 0);
         this.partRightA.addCuboid(1.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F, 0.0F);
         this.partRightA.pivotY = 9.0F;
         this.partRightA.pivotZ = 1.0F;
+
         this.partRightB = new ModelPart(64, 64, 0, 0);
         this.partRightB.addCuboid(15.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F, 0.0F);
         this.partRightB.pivotY = 8.0F;
+         */
+
+        modelPartData.addChild("bottom", ModelPartBuilder.create().uv(0, 19).cuboid(1.0F, 0.0F, 1.0F, 15.0F, 9.0F, 14.0F), ModelTransform.NONE);
+        modelPartData.addChild("lid", ModelPartBuilder.create().uv(0, 0).cuboid(1.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F), ModelTransform.pivot(0.0F, 9.0F, 1.0F));
+        modelPartData.addChild("lock", ModelPartBuilder.create().uv(0, 0).cuboid(15.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F), ModelTransform.pivot(0.0F, 8.0F, 0.0F));
+
+        return TexturedModelData.of(modelData, 64, 64);
+    }
+
+    public static TexturedModelData getLeftDoubleTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        /*
         this.partLeftC = new ModelPart(64, 64, 0, 19);
         this.partLeftC.addCuboid(0.0F, 0.0F, 1.0F, 15.0F, 9.0F, 14.0F, 0.0F);
+
         this.partLeftA = new ModelPart(64, 64, 0, 0);
         this.partLeftA.addCuboid(0.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F, 0.0F);
         this.partLeftA.pivotY = 9.0F;
         this.partLeftA.pivotZ = 1.0F;
+
         this.partLeftB = new ModelPart(64, 64, 0, 0);
         this.partLeftB.addCuboid(0.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F, 0.0F);
         this.partLeftB.pivotY = 8.0F;
+         */
+
+        modelPartData.addChild("bottom", ModelPartBuilder.create().uv(0, 19).cuboid(0.0F, 0.0F, 1.0F, 15.0F, 9.0F, 14.0F), ModelTransform.NONE);
+        modelPartData.addChild("lid", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, 0.0F, 0.0F, 15.0F, 5.0F, 14.0F), ModelTransform.pivot(0.0F, 9.0F, 1.0F));
+        modelPartData.addChild("lock", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -1.0F, 15.0F, 1.0F, 4.0F, 1.0F), ModelTransform.pivot(0.0F, 8.0F, 0.0F));
+
+        return TexturedModelData.of(modelData, 64, 64);
     }
-
-
 
     public void render(TropicBambooChestBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         World world = entity.getWorld();
@@ -141,7 +198,6 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
         chestbase.render(matrices, vertices, light, overlay);
     }
 
-
     private static RenderLayer getChestTexture(ChestType type, RenderLayer[] layers) {
         switch (type) {
             case LEFT:
@@ -159,9 +215,8 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
         return provider.getBuffer(getChestTexture(chestType, layers));
     }
 
-
     //For the future of dynamic creation of chests rather than hard coding such
-    /*
+
     public static void registerRenderLayer(Block block) {
         Identifier blockId = Registry.BLOCK.getId(block);
         String modId = blockId.getNamespace();
@@ -172,9 +227,7 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
                 RenderLayer.getEntityCutout(new Identifier(modId, "textures/entity/chest/" + path + "_right.png"))
         });
     }
-     */
 
-/*
     static {
         defaultLayer = new RenderLayer[] {
                 RenderLayer.getEntityCutout(new Identifier("textures/entity/chest/normal.png")),
@@ -191,4 +244,4 @@ public class BambooChestBlockEntityRenderer<T extends BlockEntity & ChestAnimati
 
 }
 
- */
+

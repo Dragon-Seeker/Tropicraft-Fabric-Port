@@ -48,6 +48,8 @@ public class TropicraftClient implements ClientModInitializer {
 
         TropicraftEntityRendering.setupEntityModelLayers();
         TropicraftEntityRendering.setupEntityRenderers();
+
+        TropicraftEntityRendering.setupBlockEntityLayers();
         TropicraftEntityRendering.setupBlockEntityRenderers();
 
         //Test comment
@@ -83,10 +85,6 @@ public class TropicraftClient implements ClientModInitializer {
                 .put(Registry.ITEM.getId(TropicraftItems.BAMBOO_ITEM_FRAME), frameState)
                 .build());
     }
-
-
-
-
 
 
     /*
@@ -181,10 +179,6 @@ public class TropicraftClient implements ClientModInitializer {
 
 
     }
-
-
-
-
 
     @Environment(EnvType.CLIENT)
     public static void setupDimensionRenderInfo() {

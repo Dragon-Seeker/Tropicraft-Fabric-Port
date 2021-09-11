@@ -2,19 +2,29 @@ package net.tropicraft.core.client.registry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.impl.client.rendering.ArmorRendererRegistryImpl;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.model.TexturedModelData;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
+import net.fabricmc.fabric.impl.client.rendering.BuiltinItemRendererRegistryImpl;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.client.render.entity.model.*;
+import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.tropicraft.Constants;
+import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
 import net.tropicraft.core.client.entity.models.*;
 import net.tropicraft.core.client.entity.renderers.*;
 import net.tropicraft.core.client.item.MaskArmorProvider;
 import net.tropicraft.core.client.item.StacheArmorProvider;
+import net.tropicraft.core.common.block.blockentity.TropicBambooChestBlockEntity;
 import net.tropicraft.core.common.item.AshenMaskItem;
+import net.tropicraft.core.common.registry.TropicBlockEntities;
+import net.tropicraft.core.common.registry.TropicraftBlocks;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 import net.tropicraft.core.common.registry.TropicraftItems;
 import shadow.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
@@ -23,7 +33,6 @@ import shadow.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class TropicraftEntityRendering {
@@ -69,7 +78,9 @@ public class TropicraftEntityRendering {
 
     public static EntityModelLayer STACHE_LAYER;
 
-
+    public static EntityModelLayer BAMBOO_CHEST;
+    public static EntityModelLayer BAMBOO_DOUBLE_CHEST_LEFT;
+    public static EntityModelLayer BAMBOO_DOUBLE_CHEST_RIGHT;
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityModelLayers() {
@@ -92,25 +103,25 @@ public class TropicraftEntityRendering {
         //TREE_FROG_LAYER = registerMain("tree_frog", () -> TreeFrogModel.getTexturedModelData());
         //POISON_BLOT_LAYER = registerMain("eih", () -> EIHModel.getTexturedModelData());
         //SEA_URCHIN_LAYER = registerMain("sea_urchin", () -> SeaUrchinModel.getTexturedModelData());
-        //SEA_URCHIN_EGG_ENTITY_LAYER = registerMain("sea_urchin_egg", () -> EggModel.getTexturedModelData());
+        SEA_URCHIN_EGG_ENTITY_LAYER = registerMain("sea_urchin_egg", () -> EggModel.getTexturedModelData());
         //STARFISH_LAYER = registerMain("starfish", () -> StarfishRenderer.getTexturedModelData());
-        //STARFISH_EGG_LAYER = registerMain("starfish_egg", () -> EggModel.getTexturedModelData());
+        STARFISH_EGG_LAYER = registerMain("starfish_egg", () -> EggModel.getTexturedModelData());
         //V_MONKEY_LAYER = registerMain("v_monkey", () -> VMonkeyModel.getTexturedModelData());
         PIRANHA_LAYER = registerMain("piranha", PiranhaModel::getTexturedModelData);
         RIVER_SARDINE_LAYER = registerMain("river_sardine", SardineModel::getTexturedModelData);
         TROPICAL_FISH_LAYER = registerMain("tropical_fish", TropicraftTropicalFishModel::getTexturedModelData);
         EAGLE_RAY_LAYER = registerMain("eagle_ray", EagleRayModel::getTexturedModelData);
         TROPI_SPIDER_LAYER = registerMain("tropi_spider", SpiderEntityModel::getTexturedModelData);
-        // TROPI_SPIDER_EGG_LAYER =  = registerMain("sea_urchin_egg", () -> EggModel.getTexturedModelData());
+        TROPI_SPIDER_EGG_LAYER = registerMain("tropi_spider_egg", () -> EggModel.getTexturedModelData());
         ASHEN_LAYER = registerMain("ashen", AshenModel::getTexturedModelData);
         //ASHEN_MASK_LAYER = registerMain("ashen_mask", () -> AshenMaskLayer.getTexturedModelData());
-        // EXPLODING_COCONUT_LAYER;
-        // LAVA_BALL_LAYER;
-        // HAMMERHEAD_LAYER = registerMain("hammerhead", () -> SharkModel.getTexturedModelData());
-        // SEA_TURTLE_EGG_LAYER  = registerMain("sea_urchin_egg", () -> EggModel.getTexturedModelData());
-        // TROPI_BEE_LAYER = registerMain("tropi_bee", () -> TropiBeeModel.getTexturedModelData());
-        // COWKTAIL_LAYER = registerMain("cowktail", () -> CowEntityModel.getTexturedModelData());
-        // MAN_O_WAR_LAYER = registerMain("man_o_war", () -> ManOWarModel.getTexturedModelData());
+        //EXPLODING_COCONUT_LAYER;
+        //LAVA_BALL_LAYER;
+        //HAMMERHEAD_LAYER = registerMain("hammerhead", () -> SharkModel.getTexturedModelData());
+        SEA_TURTLE_EGG_LAYER  = registerMain("turtle_egg", () -> EggModel.getTexturedModelData());
+        //TROPI_BEE_LAYER = registerMain("tropi_bee", () -> TropiBeeModel.getTexturedModelData());
+        //COWKTAIL_LAYER = registerMain("cowktail", () -> CowEntityModel.getTexturedModelData());
+        //MAN_O_WAR_LAYER = registerMain("man_o_war", () -> ManOWarModel.getTexturedModelData());
 
         armorRenderingRegistryInitialization();
     }
@@ -137,33 +148,41 @@ public class TropicraftEntityRendering {
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TREE_FROG, (dispatcher, context) -> new TreeFrogRenderer(dispatcher));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.POISON_BLOT, (dispatcher, context) -> new PoisonBlotRenderer(dispatcher));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN, (dispatcher, context) -> new SeaUrchinRenderer(dispatcher));
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN_EGG_ENTITY, (dispatcher, context) -> new EggRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN_EGG_ENTITY, (context) -> new EggRenderer(context, SEA_URCHIN_EGG_ENTITY_LAYER));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH, (dispatcher, context) -> new StarfishRenderer(dispatcher));
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH_EGG, (context) -> new EggRenderer(context, STARFISH_EGG_LAYER));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.V_MONKEY, (dispatcher, context) -> new VMonkeyRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.PIRANHA, PiranhaRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.RIVER_SARDINE, SardineRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPICAL_FISH, TropicraftTropicalFishRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EAGLE_RAY, EagleRayRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER, (dispatcher, context) -> new TropiSpiderRenderer(dispatcher));
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER_EGG, (context) -> new EggRenderer(context, TROPI_SPIDER_EGG_LAYER));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN, AshenRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN_MASK, AshenMaskRenderer::new);
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EXPLODING_COCONUT, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EXPLODING_COCONUT, (context) -> new FlyingItemEntityRenderer(context));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.LAVA_BALL, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.HAMMERHEAD, (dispatcher, context) -> new SharkRenderer(dispatcher));
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE_EGG, (context) -> new EggRenderer(context, SEA_TURTLE_EGG_LAYER));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_BEE, (dispatcher, context) -> new TropiBeeRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.COWKTAIL, CowktailRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MAN_O_WAR, (dispatcher, context) -> new ManOWarRenderer(dispatcher));
     }
 
+    public static void setupBlockEntityLayers(){
+        BAMBOO_CHEST = registerMain("bamboo_chest", () -> BambooChestBlockEntityRenderer.getSingleTexturedModelData());
+        BAMBOO_DOUBLE_CHEST_LEFT = registerMain("bamboo_double_chest_left", () -> BambooChestBlockEntityRenderer.getLeftDoubleTexturedModelData());
+        BAMBOO_DOUBLE_CHEST_RIGHT = registerMain("bamboo_double_chest_right", () -> BambooChestBlockEntityRenderer.getRightDoubleTexturedModelData());
+    }
+
     @Environment(EnvType.CLIENT)
     public static void setupBlockEntityRenderers() {
-        //BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
-        //BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST, (itemStack, transform, stack, source, light, overlay) ->
-        //        BlockEntityRenderDispatcher.renderEntity(new TropicBambooChestBlockEntity(), stack, source, light, overlay));
+        BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
 
+        BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST,
+                (itemStack, transform, stack, source, light, overlay) ->
+                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new TropicBambooChestBlockEntity(BlockPos.ORIGIN, TropicraftBlocks.BAMBOO_CHEST.getDefaultState()), stack, source, light, overlay));
+        
         /*
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.BAMBOO_CHEST, BambooChestRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.SIFTER, SifterRenderer::new);
@@ -175,7 +194,6 @@ public class TropicraftEntityRendering {
     @Environment(EnvType.CLIENT)
     public static void armorRenderingRegistryInitialization() {
         ArrayList<MaskArmorProvider> MASK_PROVIDER = new ArrayList<>();
-        //ArrayList<EntityModelLayer> TEMP_ASHEN_MASK_LAYERS = new ArrayList<>();
         final List<AshenMaskItem> values = TropicraftItems.ASHEN_MASKS.values().asList();
         final int size = values.size();
 
@@ -188,8 +206,6 @@ public class TropicraftEntityRendering {
             //ArmorRendererRegistryImpl.register();
             ArmorRenderingRegistry.registerModel(MASK_PROVIDER.get(i), maskItem);
             ArmorRenderingRegistry.registerTexture(MASK_PROVIDER.get(i), maskItem);
-
-
         }
 
         STACHE_LAYER = registerMain("nigel_stache", PlayerHeadpieceModel::getTexturedModelData);
@@ -198,12 +214,7 @@ public class TropicraftEntityRendering {
 
         ArmorRenderingRegistry.registerModel(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
         ArmorRenderingRegistry.registerTexture(STACHPROVIDER, TropicraftItems.NIGEL_STACHE);
-
-
     }
-
-
-
 
     @Environment(EnvType.CLIENT)
     private static EntityModelLayer registerMain(String id, EntityModelLayerRegistry.TexturedModelDataProvider textureModelData) {
