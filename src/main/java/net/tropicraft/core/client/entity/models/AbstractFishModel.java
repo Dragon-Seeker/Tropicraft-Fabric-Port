@@ -10,17 +10,28 @@ public abstract class AbstractFishModel<T extends FishEntity> extends CompositeE
     public static ModelPart tail;
     public AbstractFishModel(ModelPart root) {
         this.root = root;
-        this.tail = root.getChild("tail");
+        this.body = root.getChild("body");
+        this.tail = this.body.getChild("tail");
     }
 
     public static TexturedModelData getTexturedModelData() {
+        /*
+        body = new ModelPart(this);
+        body.setPivot(0F, 16F, 0F);
+        body.addCuboid(0, 0, 0, 0, 1, 1);
+        tail = new ModelPart(this);
+        tail.setPivot(0, 0, -1);
+        tail.addCuboid(0, 0, 0, 0, 1, 1);
+        body.addChild(tail);
+         */
+
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
         //body.addCuboid(0, 0, 0, 0, 1, 1);
         //tail.addCuboid(0, 0, 0, 0, 1, 1);
         //body.addChild(tail);
-        modelPartData.addChild("body", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,16F,0F));
-        modelPartData.addChild("tail", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,0F,-1F));
+        ModelPartData modelPartDataBody = modelPartData.addChild("body", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,16F,0F));
+        modelPartDataBody.addChild("tail", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,0F,-1F));
         return TexturedModelData.of(modelData,0,0);
     }
 

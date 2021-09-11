@@ -13,15 +13,15 @@ import net.minecraft.util.math.MathHelper;
 public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEntity> implements ModelWithArms {
     public static ModelPart root;
 
-    public static ModelPart rightLeg;
-    public static ModelPart leftLeg;
-    public static ModelPart body;
-    public static ModelPart head;
-    public static ModelPart mask;
-    public static ModelPart rightArm;
-    public static ModelPart leftArm;
-    public static ModelPart rightArmSub;
-    public static ModelPart leftArmSub;
+    public ModelPart rightLeg;
+    public ModelPart leftLeg;
+    public ModelPart body;
+    public ModelPart head;
+    public ModelPart mask;
+    public ModelPart rightArm;
+    public ModelPart leftArm;
+    public ModelPart rightArmSub;
+    public ModelPart leftArmSub;
     public float headAngle;
     public boolean swinging;
     public AshenEntity.AshenState actionState;
@@ -29,18 +29,16 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
     public static int textureHeight;
 
     public AshenModel(ModelPart root) {
-        AshenModel.root = root;
-        rightLeg = root.getChild("right_leg");
-        leftLeg = root.getChild("left_leg");
-        body = root.getChild("body");
-        head = root.getChild("head");
+        this.root = root;
+        this.rightLeg = root.getChild("right_leg");
+        this.leftLeg = root.getChild("left_leg");
+        this.body = root.getChild("body");
+        this.head = root.getChild("head");
         //this.mask = root.getChild("mask");
-        rightArm = root.getChild("right_arm");
-        leftArm = root.getChild("left_arm");
-        rightArmSub = root.getChild("right_arm_sub");
-        leftArmSub = root.getChild("left_arm_sub");
-
-
+        this.rightArm = root.getChild("right_arm");
+        this.leftArm = root.getChild("left_arm");
+        this.rightArmSub = this.rightArm.getChild("right_arm_sub");
+        this.leftArmSub = this.leftArm.getChild("left_arm_sub");
 
         textureWidth = 64;
         textureHeight = 32;
@@ -127,12 +125,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         //AshenEntity.AshenState actionState = AshenEntity.AshenState.PEACEFUL;
         //float headAngle = 0;
 
-        modelPartData.addChild("right_leg",
-                ModelPartBuilder.create()
-                    .mirrored(true)
-                    .uv(25, 0) //TODO: UV IS NOT TEXTURE SIZE, ITS TEXTURE OFFSET
-                        .cuboid(0F, 0F, 0F, 1, 7, 1),
-                ModelTransform.of(1F, 17F, 0F, 0F, 0F, 0F));
+        modelPartData.addChild("right_leg", ModelPartBuilder.create().uv(25, 0).mirrored().cuboid(0F, 0F, 0F, 1, 7, 1), ModelTransform.of(1F, 17F, 0F, 0F, 0F, 0F));
                 //.createPart(64, 32);
         /*
         rightLeg = new ModelPart(this, 25, 0);
@@ -148,12 +141,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         setRotation(rightLeg, 0F, 0F, 0F);
          */
 
-        modelPartData.addChild("left_leg",
-                ModelPartBuilder.create()
-                        .mirrored(true)
-                        .uv(25, 0)
-                            .cuboid(-1F, 0F, 0F, 1, 7, 1),
-                ModelTransform.of(-1F, 17F, 0F, 0F, 0F, 0F));
+        modelPartData.addChild("left_leg", ModelPartBuilder.create().uv(25, 0).mirrored().cuboid(-1F, 0F, 0F, 1, 7, 1), ModelTransform.of(-1F, 17F, 0F, 0F, 0F, 0F));
         /*
         leftLeg = new ModelPart(this, 25, 0);
         leftLeg.addCuboid(-1F, 0F, 0F, 1, 7, 1);
@@ -163,12 +151,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         setRotation(leftLeg, 0F, 0F, 0F);
          */
 
-        modelPartData.addChild("body",
-                ModelPartBuilder.create()
-                        .mirrored(true)
-                        .uv(24, 8)
-                            .cuboid(-2F, -3F, 0F, 4, 7, 3),
-                ModelTransform.of(0F, 13F, 2F, 0F, 3.141593F, 0F));
+        modelPartData.addChild("body", ModelPartBuilder.create().uv(24, 8).mirrored().cuboid(-2F, -3F, 0F, 4, 7, 3), ModelTransform.of(0F, 13F, 2F, 0F, 3.141593F, 0F));
         /*
         body = new ModelPart(this, 24, 8);
         body.addCuboid(-2F, -3F, 0F, 4, 7, 3);
@@ -178,12 +161,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         setRotation(body, 0F, 3.141593F, 0F);
          */
 
-        modelPartData.addChild("head",
-                ModelPartBuilder.create()
-                        .mirrored(true)
-                        .uv(24, 18)
-                            .cuboid(-2F, -3F, -1F, 4, 3, 4),
-                ModelTransform.of(0F, 10F, 1F,0F, 3.141593F, 0F));
+        modelPartData.addChild("head", ModelPartBuilder.create().uv(24, 18).mirrored().cuboid(-2F, -3F, -1F, 4, 3, 4), ModelTransform.of(0F, 10F, 1F,0F, 3.141593F, 0F));
         /*
         head = new ModelPart(this, 24, 18);
         head.addCuboid(-2F, -3F, -1F, 4, 3, 4);
@@ -200,12 +178,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         //mask.mirror = true;
         //setRotation(mask, 0F, 3.141593F, 0F);
 
-        modelPartData.addChild("right_arm",
-                ModelPartBuilder.create()
-                        .mirrored(true)
-                        .uv(0, 24)
-                            .cuboid(-6F, -0.5F, -0.5F, 6, 1, 1),
-                ModelTransform.of(-2F, 10.5F, 0.5F, 0F, 0F, 0F));
+        ModelPartData modelPartDataRightArm = modelPartData.addChild("right_arm", ModelPartBuilder.create().uv(0, 24).mirrored().cuboid(-6F, -0.5F, -0.5F, 6, 1, 1), ModelTransform.of(-2F, 10.5F, 0.5F, 0F, 0F, 0F));
 
         /*
         rightArm = new ModelPart(this);
@@ -215,12 +188,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         rightArm.setTextureOffset(0, 24).addCuboid(-6F, -0.5F, -0.5F, 6, 1, 1);
          */
 
-        modelPartData.addChild("right_arm_sub",
-                ModelPartBuilder.create()
-                        .mirrored(true)
-                        .uv(31, 0)
-                        .cuboid(-0.5F, -6F, -0.5F, 1, 6, 1),
-                ModelTransform.of(-5.5F, 0F, 0F, 0F, 0F, 0F));
+        modelPartDataRightArm.addChild("right_arm_sub", ModelPartBuilder.create().uv(31, 0).mirrored().cuboid(-0.5F, -6F, -0.5F, 1, 6, 1), ModelTransform.of(-5.5F, 0F, 0F, 0F, 0F, 0F));
         /*
         rightArmSub = new ModelPart(this);
         rightArmSub.setPivot(-5.5F, 0F, 0F);
@@ -230,12 +198,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         rightArm.addChild(rightArmSub);
          */
 
-        modelPartData.addChild("left_arm",
-                ModelPartBuilder.create()
-                        .mirrored(true)
-                        .uv(0, 24)
-                        .cuboid(0F, -0.5F, -0.5F, 6, 1, 1),
-                ModelTransform.of(2F, 10.46667F, 0.5F, 0F, 0F, 0F));
+        ModelPartData modelPartDataLeftArm = modelPartData.addChild("left_arm", ModelPartBuilder.create().uv(0, 24).mirrored().cuboid(0F, -0.5F, -0.5F, 6, 1, 1), ModelTransform.of(2F, 10.46667F, 0.5F, 0F, 0F, 0F));
         /*
         leftArm = new ModelPart(this);
         leftArm.setPivot(2F, 10.46667F, 0.5F);
@@ -245,7 +208,7 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
                 .addCuboid(0F, -0.5F, -0.5F, 6, 1, 1);
          */
 
-        modelPartData.addChild("left_arm_sub",
+        modelPartDataLeftArm.addChild("left_arm_sub",
                 ModelPartBuilder.create()
                         .mirrored(true)
                         .uv(31, 0)
@@ -316,8 +279,8 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
 
     @Override
     public Iterable<ModelPart> getParts() {
-        //return ImmutableList.of(body, head, rightArm, leftArm, leftLeg, rightLeg);
-        return ImmutableList.of(body, head, rightArm, leftArm, rightArmSub, leftArmSub, leftLeg, rightLeg);
+        return ImmutableList.of(body, head, rightArm, leftArm, leftLeg, rightLeg);
+        //return ImmutableList.of(body, head, rightArm, leftArm, rightArmSub, leftArmSub, leftLeg, rightLeg);
     }
 
     private void setRotation(ModelPart model, float x, float y, float z) {

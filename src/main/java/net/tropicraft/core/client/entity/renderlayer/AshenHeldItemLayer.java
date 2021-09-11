@@ -75,7 +75,11 @@ public class AshenHeldItemLayer<T extends AshenEntity, M extends EntityModel<T> 
 
                 stack.scale(scale, scale, scale);
                 //TODO: WHAT THE HELL IS SEED AND WHAT VAULE DOSE IT NEED TO BE
-                MinecraftClient.getInstance().getItemRenderer().renderItem(entity, itemstack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, buffer, entity.world, combinedLightIn, OverlayTexture.DEFAULT_UV, 0);
+                //renderItem(LivingEntity entity, ItemStack stack, Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light)
+                //MinecraftClient.getInstance().getItemRenderer().renderItem(entity, itemstack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, buffer, entity.world, combinedLightIn, OverlayTexture.DEFAULT_UV, entity.getId() + renderMode.ordinal());
+
+                //MinecraftClient.getInstance().renderItem
+                MinecraftClient.getInstance().getHeldItemRenderer().renderItem(entity, itemstack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, buffer, combinedLightIn);
                 stack.pop();
             } else {
                 stack.push();
