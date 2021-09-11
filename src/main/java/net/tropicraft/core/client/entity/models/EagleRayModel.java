@@ -31,15 +31,15 @@ public class EagleRayModel extends CompositeEntityModel<EagleRayEntity> {
 		//body.setPivot(0F, 0F, -8F);
 		//body.setTextureSize(128, 64);
 		//body.mirror = true;
+
 	}
 
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		//body.addCuboid(-2F, 0F, 0F, 5, 3, 32);
-		//body.setTextureSize(128, 64);
-		//body.mirror = true;
-		modelPartData.addChild("body", ModelPartBuilder.create().uv(32, 0).cuboid(-2F, 0F, 0F, 5, 3, 32).mirrored(true), ModelTransform.pivot(0F,0F,8F));
+
+		modelPartData.addChild("body", ModelPartBuilder.create().uv(32, 0).mirrored().cuboid(-2F, 0F, 0F, 5, 3, 32), ModelTransform.pivot(0F,0F,-8F));
+
 		return TexturedModelData.of(modelData,128,64);
 	}
 

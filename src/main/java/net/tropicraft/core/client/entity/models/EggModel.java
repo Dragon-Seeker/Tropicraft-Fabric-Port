@@ -9,10 +9,8 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class EggModel extends CompositeEntityModel<EggEntity> {
     private ModelPart body;
-    private ModelPart root;
 
     public EggModel(ModelPart root) {
-        this.root = root;
         this.body = root.getChild("body");
 
         /*
@@ -48,8 +46,9 @@ public class EggModel extends CompositeEntityModel<EggEntity> {
                 .cuboid(-4F, -7F, -1.5F, 1, 6, 3)
                 .uv(8,9)
                 .cuboid(-1.5F, -7F, -4F, 3, 6, 1), ModelTransform.pivot(0F,24F,0F));
-        return TexturedModelData.of(modelData,64,64);
+        return TexturedModelData.of(modelData,64,32);
     }
+
     @Override
     public void setAngles(EggEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
