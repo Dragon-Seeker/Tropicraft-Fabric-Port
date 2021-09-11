@@ -1,5 +1,8 @@
 package net.tropicraft.core.client.entity.renderlayer;
-/*
+
+import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.model.SnowGolemEntityModel;
+import net.minecraft.entity.passive.SnowGolemEntity;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
 import net.tropicraft.core.client.entity.models.AshenModel;
@@ -12,14 +15,15 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class AshenMaskLayer extends FeatureRenderer<AshenEntity, AshenModel> {
+public class AshenMaskFeatureRenderer extends FeatureRenderer<AshenEntity, AshenModel<AshenEntity>> {
 
     private TropicraftSpecialRenderHelper mask;
     private AshenModel modelAshen;
 
-    public AshenMaskLayer(AshenRenderer renderer) {
-        super(renderer);
-        modelAshen = new AshenModel();
+    public AshenMaskFeatureRenderer(FeatureRendererContext<AshenEntity, AshenModel<AshenEntity>> featureRendererContext) {
+        super(featureRendererContext);
+        featureRendererContext.getModel();
+        modelAshen = this.getContextModel();
         mask = new TropicraftSpecialRenderHelper();
     }
 
@@ -39,4 +43,4 @@ public class AshenMaskLayer extends FeatureRenderer<AshenEntity, AshenModel> {
     }
 }
 
- */
+

@@ -19,18 +19,14 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 
-/*
+
 @Environment(EnvType.CLIENT)
 public class AshenHeldItemLayer<T extends AshenEntity, M extends EntityModel<T> & ModelWithArms> extends HeldItemFeatureRenderer<T, M> {
+    private AshenModel ashenModel;
 
-    private AshenModel model;
-
-    public AshenHeldItemLayer(FeatureRendererContext<T, M> renderer) {
-        super(renderer);
-    }
-
-    public void setAshenModel(final AshenModel model) {
-        this.model = model;
+    public AshenHeldItemLayer(FeatureRendererContext<T, M> featureRendererContext) {
+        super(featureRendererContext);
+        ashenModel = (AshenModel) this.getContextModel();
     }
 
     @Override
@@ -46,7 +42,7 @@ public class AshenHeldItemLayer<T extends AshenEntity, M extends EntityModel<T> 
         if (!blowGunHand.isEmpty() || !daggerHand.isEmpty()) {
             stack.push();
 
-            if (model.child) {
+            if (ashenModel.child) {
                 stack.translate(0.0F, 0.625F, 0.0F);
                 stack.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(-20));
                 stack.scale(0.5f, 0.5f, 0.5f);
@@ -70,7 +66,7 @@ public class AshenHeldItemLayer<T extends AshenEntity, M extends EntityModel<T> 
             float scale = 0.5F;
             if (arm == Arm.LEFT) {
                 stack.push();
-                model.leftArm.rotate(stack);
+                ashenModel.leftArm.rotate(stack);
 
                 stack.translate(0.3F, -0.30F, -0.045F);
                 stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180F));
@@ -78,21 +74,22 @@ public class AshenHeldItemLayer<T extends AshenEntity, M extends EntityModel<T> 
                 stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(10F));
 
                 stack.scale(scale, scale, scale);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(entity, itemstack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, buffer, entity.world, combinedLightIn, OverlayTexture.DEFAULT_UV);
+                //TODO: WHAT THE HELL IS SEED AND WHAT VAULE DOSE IT NEED TO BE
+                MinecraftClient.getInstance().getItemRenderer().renderItem(entity, itemstack, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, false, stack, buffer, entity.world, combinedLightIn, OverlayTexture.DEFAULT_UV, 0);
                 stack.pop();
             } else {
                 stack.push();
-                model.rightArm.rotate(stack);
+                ashenModel.rightArm.rotate(stack);
 
                 stack.translate(-0.375F, -0.35F, -0.125F);
                 stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90F));
                 stack.scale(scale, scale, scale);
 
-                MinecraftClient.getInstance().getItemRenderer().renderItem(entity, itemstack, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, false, stack, buffer, entity.world, combinedLightIn, OverlayTexture.DEFAULT_UV);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(entity, itemstack, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, false, stack, buffer, entity.world, combinedLightIn, OverlayTexture.DEFAULT_UV, 0);
                 stack.pop();
             }
         }
     }
 }
 
- */
+

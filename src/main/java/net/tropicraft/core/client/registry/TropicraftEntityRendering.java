@@ -69,10 +69,7 @@ public class TropicraftEntityRendering {
 
     public static EntityModelLayer STACHE_LAYER;
 
-    @Environment(EnvType.CLIENT)
-    public static void init() {
 
-    }
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityModelLayers() {
@@ -106,7 +103,7 @@ public class TropicraftEntityRendering {
         TROPI_SPIDER_LAYER = registerMain("tropi_spider", SpiderEntityModel::getTexturedModelData);
         // TROPI_SPIDER_EGG_LAYER =  = registerMain("sea_urchin_egg", () -> EggModel.getTexturedModelData());
         ASHEN_LAYER = registerMain("ashen", AshenModel::getTexturedModelData);
-        // ASHEN_MASK_LAYER = registerMain("sea_urchin_egg", () -> AshenMaskLayer.getTexturedModelData());
+        //ASHEN_MASK_LAYER = registerMain("ashen_mask", () -> AshenMaskLayer.getTexturedModelData());
         // EXPLODING_COCONUT_LAYER;
         // LAVA_BALL_LAYER;
         // HAMMERHEAD_LAYER = registerMain("hammerhead", () -> SharkModel.getTexturedModelData());
@@ -150,8 +147,8 @@ public class TropicraftEntityRendering {
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EAGLE_RAY, EagleRayRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER, (dispatcher, context) -> new TropiSpiderRenderer(dispatcher));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER_EGG, (dispatcher, context) -> new EggRenderer(dispatcher));
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN, (dispatcher, context) -> new AshenRenderer(dispatcher));
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN_MASK, (dispatcher, context) -> new AshenMaskRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN, AshenRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN_MASK, AshenMaskRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EXPLODING_COCONUT, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.LAVA_BALL, (dispatcher, context) -> new FlyingItemEntityRenderer(dispatcher, context.getItemRenderer()));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.HAMMERHEAD, (dispatcher, context) -> new SharkRenderer(dispatcher));

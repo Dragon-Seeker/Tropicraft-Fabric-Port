@@ -57,10 +57,6 @@ public class TropicraftClient implements ClientModInitializer {
         //ScreenRegistry.register(TropicScreenHandler.BOX_SCREEN_HANDLER, BoxScreen::new);
         //ScreenRegistry.register(TropicScreenHandler.BOX_CHEST_SCREEN_HANDLER, BoxChestScreen::new);
 
-        TropicraftEntityRendering.init();
-
-
-
         itemColorinit();
 
         setupBlockRenderLayers();
