@@ -28,6 +28,8 @@ public class StarFishSpawnS2CPacket extends MobSpawnS2CPacket {
         }
 
     }
+
+    //TODO: Fix/Update packets to support 1.17
     /*
     @Override
     public void read(PacketByteBuf buf) throws IOException {

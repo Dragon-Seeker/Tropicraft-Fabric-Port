@@ -182,7 +182,7 @@ public class TropicraftEntityRendering {
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST,
                 (itemStack, transform, stack, source, light, overlay) ->
                         MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new TropicBambooChestBlockEntity(BlockPos.ORIGIN, TropicraftBlocks.BAMBOO_CHEST.getDefaultState()), stack, source, light, overlay));
-        
+
         /*
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.BAMBOO_CHEST, BambooChestRenderer::new);
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.SIFTER, SifterRenderer::new);
