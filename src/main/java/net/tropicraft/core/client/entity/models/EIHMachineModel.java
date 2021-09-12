@@ -269,7 +269,7 @@ public class EIHMachineModel <T extends BlockEntity & IMachineTile> extends Mach
                         .cuboid(-2F, 0F, -2F, 4, 1, 4),
                 ModelTransform.pivot(3F, -6F, 0F));
 
-        modelPartData.addChild("lidTop",
+        modelPartData.addChild("mouth",
                 ModelPartBuilder.create()
                         .uv(54, 0)
                         .mirrored()

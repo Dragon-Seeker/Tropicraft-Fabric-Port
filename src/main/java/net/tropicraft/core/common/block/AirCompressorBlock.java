@@ -49,7 +49,9 @@ public class AirCompressorBlock extends Block implements BlockEntityProvider {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView worldIn, List<Text> tooltip, TooltipContext flagIn) {
         super.appendTooltip(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new TranslatableText("!! Work In Progress !!").formatted(Formatting.RED, Formatting.BOLD));
         tooltip.add(new TranslatableText(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
+
     }
 
     @Override

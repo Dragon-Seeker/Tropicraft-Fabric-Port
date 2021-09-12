@@ -40,7 +40,7 @@ public class DrinkMixerRenderer extends MachineRenderer<DrinkMixerTileEntity> {
     };
 
     public DrinkMixerRenderer(final BlockEntityRendererFactory.Context ctx) {
-        super(ctx, TropicraftBlocks.DRINK_MIXER, new EIHMachineModel(ctx.getLayerModelPart(TropicraftEntityRendering.EIH_LAYER)));
+        super(ctx, TropicraftBlocks.DRINK_MIXER, new EIHMachineModel(ctx.getLayerModelPart(TropicraftEntityRendering.EIHMACHINE_LAYER))); //PROBLEM
         modelBambooMug = new BambooMugModel(ctx.getLayerModelPart(TropicraftEntityRendering.BAMBOO_MUG));
         this.renderItem = MinecraftClient.getInstance().getItemRenderer();
     }

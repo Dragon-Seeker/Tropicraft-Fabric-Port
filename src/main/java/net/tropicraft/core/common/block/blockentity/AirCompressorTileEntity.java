@@ -15,13 +15,15 @@ import net.minecraft.util.math.BlockPos;
 //import net.tropicraft.core.common.item.scuba.ScubaArmorItem;
 //import net.tropicraft.core.common.network.TropicraftPackets;
 //import net.tropicraft.core.common.network.message.MessageAirCompressorInventory;
+import net.minecraft.util.math.Direction;
+import net.tropicraft.core.common.block.AirCompressorBlock;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
 import org.jetbrains.annotations.NotNull;
 
 
 //import javax.annotation.Nullable;
 
-public class AirCompressorTileEntity extends BlockEntity { //implements IMachineTile {
+public class AirCompressorTileEntity extends BlockEntity implements IMachineTile { //implements IMachineTile {
 
     /** Is the compressor currently giving air */
     private boolean compressing;
@@ -102,6 +104,7 @@ public class AirCompressorTileEntity extends BlockEntity { //implements IMachine
         }
          */
     }
+
     /*
     public boolean addTank(ItemStack stack) {
         if (tank == null && stack.getItem() instanceof ScubaArmorItem && ((ScubaArmorItem)stack.getItem()).providesAir()) {
@@ -164,22 +167,23 @@ public class AirCompressorTileEntity extends BlockEntity { //implements IMachine
     
     /* == IMachineTile == */
 
-    /*
     @Override
     public boolean isActive() {
-        return !getTankStack().isEmpty();
+        return false;
+        //return !getTankStack().isEmpty();
     }
     
     @Override
     public float getProgress(float partialTicks) {
-        return getTickRatio(partialTicks);
+        return 0;
+        //return getTickRatio(partialTicks);
     }
     
     @Override
     public Direction getDirection(BlockState state) {
         return state.get(AirCompressorBlock.FACING);
     }
-     */
+
     /**
      * Called when you receive a TileEntityData packet for the location this
      * TileEntity is currently in. On the client, the NetworkManager will always

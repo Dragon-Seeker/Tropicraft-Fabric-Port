@@ -52,17 +52,9 @@ public class TropicraftClient implements ClientModInitializer {
         TropicraftEntityRendering.setupBlockEntityLayers();
         TropicraftEntityRendering.setupBlockEntityRenderers();
 
-        //Test comment
-        //new TropicBambooChestBlockEntity(getBlockEntityType(), new Identifier(Tropicfabricport.MOD_ID, "bamboo_chest")); //((TropicBambooChestBlock) bamboochest.getBlock()).blockId()
-        //TropicBambooChestBlockEntity renderEntity = new ChestBlockEntity(ChestCommon.getBlockEntityType(), ((ChestBlock) item.getBlock()).blockId());
-
-        //ScreenRegistry.register(TropicScreenHandler.BOX_SCREEN_HANDLER, BoxScreen::new);
-        //ScreenRegistry.register(TropicScreenHandler.BOX_CHEST_SCREEN_HANDLER, BoxChestScreen::new);
-
         itemColorinit();
 
         setupBlockRenderLayers();
-
 
         //ArmorRenderingRegistryInitialization();
 

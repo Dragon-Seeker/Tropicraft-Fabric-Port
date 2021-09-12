@@ -52,6 +52,7 @@ public class DrinkMixerBlock extends Block implements BlockEntityProvider {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext flag) {
         super.appendTooltip(stack, world, tooltip, flag);
+        tooltip.add(new TranslatableText("!! Work In Progress !!").formatted(Formatting.RED, Formatting.BOLD));
         tooltip.add(new TranslatableText(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
     }
 

@@ -16,6 +16,7 @@ import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.tropicraft.Constants;
+import net.tropicraft.core.client.blockEntity.AirCompressorRenderer;
 import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
 import net.tropicraft.core.client.blockEntity.DrinkMixerRenderer;
 import net.tropicraft.core.client.blockEntity.SifterRenderer;
@@ -23,6 +24,8 @@ import net.tropicraft.core.client.entity.models.*;
 import net.tropicraft.core.client.entity.renderers.*;
 import net.tropicraft.core.client.item.MaskArmorProvider;
 import net.tropicraft.core.client.item.StacheArmorProvider;
+import net.tropicraft.core.common.block.blockentity.AirCompressorTileEntity;
+import net.tropicraft.core.common.block.blockentity.DrinkMixerTileEntity;
 import net.tropicraft.core.common.block.blockentity.TropicBambooChestBlockEntity;
 import net.tropicraft.core.common.item.AshenMaskItem;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
@@ -85,7 +88,8 @@ public class TropicraftEntityRendering {
     public static EntityModelLayer BAMBOO_CHEST;
     public static EntityModelLayer BAMBOO_DOUBLE_CHEST_LEFT;
     public static EntityModelLayer BAMBOO_DOUBLE_CHEST_RIGHT;
-    public static EntityModelLayer EIHMACHINE;
+    public static EntityModelLayer EIHMACHINE_LAYER;
+    public static EntityModelLayer AIRCOMPRESSOR_LAYER;
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityModelLayers() {
@@ -181,7 +185,9 @@ public class TropicraftEntityRendering {
         BAMBOO_DOUBLE_CHEST_LEFT = registerMain("bamboo_double_chest_left", () -> BambooChestBlockEntityRenderer.getLeftDoubleTexturedModelData());
         BAMBOO_DOUBLE_CHEST_RIGHT = registerMain("bamboo_double_chest_right", () -> BambooChestBlockEntityRenderer.getRightDoubleTexturedModelData());
 
-        EIHMACHINE = registerMain("drink_mixer", ()-> EIHMachineModel.getTexturedModelData());
+        EIHMACHINE_LAYER = registerMain("drink_mixer", ()-> EIHMachineModel.getTexturedModelData());
+
+        AIRCOMPRESSOR_LAYER = registerMain("air_compressor", ()-> EIHMachineModel.getTexturedModelData());
     }
 
     @Environment(EnvType.CLIENT)
@@ -189,11 +195,20 @@ public class TropicraftEntityRendering {
         BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.DRINK_MIXER, DrinkMixerRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.SIFTER, SifterRenderer::new);
-        //BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.AIR_COMPRESSOR, BambooChestBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.AIR_COMPRESSOR, AirCompressorRenderer::new);
 
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST,
                 (itemStack, transform, stack, source, light, overlay) ->
                         MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new TropicBambooChestBlockEntity(BlockPos.ORIGIN, TropicraftBlocks.BAMBOO_CHEST.getDefaultState()), stack, source, light, overlay));
+
+        BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.DRINK_MIXER,
+                (itemStack, transform, stack, source, light, overlay) ->
+                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new DrinkMixerTileEntity(BlockPos.ORIGIN, TropicraftBlocks.DRINK_MIXER.getDefaultState()), stack, source, light, overlay));
+
+        BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.AIR_COMPRESSOR,
+                (itemStack, transform, stack, source, light, overlay) ->
+                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new AirCompressorTileEntity(BlockPos.ORIGIN, TropicraftBlocks.AIR_COMPRESSOR.getDefaultState()), stack, source, light, overlay));
+
 
         /*
         ClientRegistry.bindTileEntityRenderer(TropicraftTileEntityTypes.BAMBOO_CHEST, BambooChestRenderer::new);
