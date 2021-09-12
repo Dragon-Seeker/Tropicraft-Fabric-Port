@@ -27,7 +27,15 @@ public class TropicraftBlocks {
 
     public static final Block CHUNK = registerBlock("chunk", Builder.tropicBlock(Material.STONE, MapColor.BLACK,6.0F,30F));
     public static final Block CHUNK_WALL = registerBlock("chunk_wall", Builder.Wall(CHUNK));
+
     public static final VolcanoBlock VOLCANO = registerNoItem("volcano", new VolcanoBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).dropsNothing()));
+
+    public static final SifterBlock SIFTER = registerBlock("sifter", new SifterBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque()));
+
+    public static final DrinkMixerBlock DRINK_MIXER = registerBlock("drink_mixer", new DrinkMixerBlock(FabricBlockSettings.of(Material.STONE).strength(2, 30).nonOpaque()));
+
+    public static final AirCompressorBlock AIR_COMPRESSOR = registerBlock("air_compressor", new AirCompressorBlock(FabricBlockSettings.of(Material.STONE).strength(2, 30).nonOpaque()));
+
 
     public static final TropicOreBlock MANGANESE_ORE = registerBlock("manganese_ore", Builder.OreBlock(MapColor.GRAY, UniformIntProvider.create(0, 0)));
     public static final TropicOreBlock SHAKA_ORE = registerBlock("shaka_ore", Builder.OreBlock(MapColor.GRAY, UniformIntProvider.create(0, 0)));

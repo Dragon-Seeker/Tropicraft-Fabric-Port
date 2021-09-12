@@ -1,6 +1,5 @@
 package net.tropicraft.core.client.entity.models;
 
-/*
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.ModelPart;
@@ -8,12 +7,11 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.tropicraft.core.common.block.tileentity.IMachineTile;
+import net.tropicraft.core.common.block.blockentity.IMachineTile;
 
 import java.util.function.Function;
- */
 
-public abstract class MachineModel {/*<T extends BlockEntity & IMachineTile> extends Model {
+public abstract class MachineModel <T extends BlockEntity & IMachineTile> extends Model {
     public MachineModel(Function<Identifier, RenderLayer> renderTypeIn) {
         super(renderTypeIn);
     }
@@ -30,5 +28,5 @@ public abstract class MachineModel {/*<T extends BlockEntity & IMachineTile> ext
             part.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         });
     }
-    */
+
 }

@@ -17,6 +17,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
+import net.tropicraft.core.client.blockEntity.DrinkMixerRenderer;
+import net.tropicraft.core.client.blockEntity.SifterRenderer;
 import net.tropicraft.core.client.entity.models.*;
 import net.tropicraft.core.client.entity.renderers.*;
 import net.tropicraft.core.client.item.MaskArmorProvider;
@@ -74,6 +76,8 @@ public class TropicraftEntityRendering {
     public static EntityModelLayer COWKTAIL_LAYER;
     public static EntityModelLayer MAN_O_WAR_LAYER;
 
+    public static EntityModelLayer BAMBOO_MUG;
+
     public static ArrayList<EntityModelLayer> ASHEN_MASK_LAYERS = new ArrayList<>();//= registerMain("mask", PlayerHeadpieceModel::getTexturedModelData);
 
     public static EntityModelLayer STACHE_LAYER;
@@ -81,6 +85,7 @@ public class TropicraftEntityRendering {
     public static EntityModelLayer BAMBOO_CHEST;
     public static EntityModelLayer BAMBOO_DOUBLE_CHEST_LEFT;
     public static EntityModelLayer BAMBOO_DOUBLE_CHEST_RIGHT;
+    public static EntityModelLayer EIHMACHINE;
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityModelLayers() {
@@ -170,14 +175,21 @@ public class TropicraftEntityRendering {
     }
 
     public static void setupBlockEntityLayers(){
+        BAMBOO_MUG = registerMain("bamboo_mug", () -> BambooMugModel.getTexturedModelData());
+
         BAMBOO_CHEST = registerMain("bamboo_chest", () -> BambooChestBlockEntityRenderer.getSingleTexturedModelData());
         BAMBOO_DOUBLE_CHEST_LEFT = registerMain("bamboo_double_chest_left", () -> BambooChestBlockEntityRenderer.getLeftDoubleTexturedModelData());
         BAMBOO_DOUBLE_CHEST_RIGHT = registerMain("bamboo_double_chest_right", () -> BambooChestBlockEntityRenderer.getRightDoubleTexturedModelData());
+
+        EIHMACHINE = registerMain("drink_mixer", ()-> EIHMachineModel.getTexturedModelData());
     }
 
     @Environment(EnvType.CLIENT)
     public static void setupBlockEntityRenderers() {
         BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.BAMBOO_CHEST, BambooChestBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.DRINK_MIXER, DrinkMixerRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.SIFTER, SifterRenderer::new);
+        //BlockEntityRendererRegistry.INSTANCE.register(TropicBlockEntities.AIR_COMPRESSOR, BambooChestBlockEntityRenderer::new);
 
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST,
                 (itemStack, transform, stack, source, light, overlay) ->
