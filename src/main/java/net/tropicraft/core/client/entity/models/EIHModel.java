@@ -54,9 +54,9 @@ public class EIHModel extends CompositeEntityModel<EIHEntity> {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("body", ModelPartBuilder.create().uv(32,8).cuboid(-4F, 1.0F, -1F, 8, 17, 7), ModelTransform.pivot(0.0F,2F,0.0F));
-        modelPartData.addChild("base", ModelPartBuilder.create().uv(0,0).cuboid(-4F, 11F, -3F, 8, 8, 11), ModelTransform.pivot(0.0F,5F,2F));
-        modelPartData.addChild("nose", ModelPartBuilder.create().uv(27,2).cuboid(13.5F, -1F, -3F, 13, 2, 3), ModelTransform.of(0.0F,-14.8F,1F,0,0, 1.570796F));
+        modelPartData.addChild("body", ModelPartBuilder.create().uv(34,8).cuboid(-4F, 1.0F, -1F, 8, 17, 7), ModelTransform.pivot(0.0F,-2F,0.0F));
+        modelPartData.addChild("base", ModelPartBuilder.create().uv(0,0).cuboid(-4F, 11F, -3F, 8, 8, 11), ModelTransform.pivot(0.0F, 5F, -2F));
+        modelPartData.addChild("nose", ModelPartBuilder.create().uv(27,2).cuboid(13.5F, -1F, -3F, 13, 2, 3), ModelTransform.of(0.0F, -14.8F, -1F,0,0, 1.570796F));
         modelPartData.addChild("mouth", ModelPartBuilder.create().uv(56,11).cuboid(-1.5F, 4F, -1F, 3, 3, 1), ModelTransform.pivot(0.0F,7.5F,-0.5F));
         modelPartData.addChild("top", ModelPartBuilder.create().uv(0,17).cuboid(-4F, -1F, -10F, 8, 5, 10), ModelTransform.pivot(0.0F, -5F, 6F));
         modelPartData.addChild("leye", ModelPartBuilder.create().uv(56,7).mirrored().cuboid(0.0F, 0.0F, 0.0F, 3, 3, 1), ModelTransform.pivot(1.0F, -1F, -2F));

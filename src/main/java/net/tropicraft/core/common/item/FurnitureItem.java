@@ -18,7 +18,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import net.tropicraft.core.mixins.DyeColorAccessor;
 
 import java.util.Iterator;
 import java.util.List;
@@ -26,19 +25,26 @@ import java.util.List;
 public class FurnitureItem<T extends FurnitureEntity> extends Item implements IColoredItem {
 
     private final EntityType<T> entityType;
-    private final DyeColor color;
+    private final DyeColor dyeColor;
+    private final int color;
 
-    public FurnitureItem(final Settings properties, final EntityType<T> entityType, final DyeColor color) {
+    public FurnitureItem(final Settings properties, final EntityType<T> entityType, final DyeColor dyeColor) {
         super(properties);
         this.entityType = entityType;
-        this.color = color;
+        this.dyeColor = dyeColor;
+        float[] colorComponents = dyeColor.getColorComponents();
+
+        int R = (Math.round(colorComponents[0] * 255.0F) << 16) & 0x00FF0000;
+        int G = (Math.round(colorComponents[1] * 255.0F) << 8) & 0x0000FF00;
+        int B = Math.round(colorComponents[2] * 255.0F) & 0x000000FF;
+
+        this.color = 0xFF000000 | R | G | B;
     }
 
     @Override
     public int getColor(ItemStack stack, int pass) {
         //TODO: FIX AND/OR FIND SOLUTION TO THE COLOR ISSUE
-        return 16777215;
-        //return (pass == 0 ? 16777215 : ((DyeColorAccessor) ((Object) this.color)).getColor());
+        return (pass == 0 ? 16777215 : color);
     }
 
     @Override
@@ -70,7 +76,7 @@ public class FurnitureItem<T extends FurnitureEntity> extends Item implements IC
                 entity.refreshPositionAndAngles(new BlockPos(hitVec.x, hitVec.y, hitVec.z), 0, 0);
                 entity.setVelocity(Vec3d.ZERO);
                 entity.setRotation(placer.getYaw() + 180);
-                entity.setColor(this.color);
+                entity.setColor(this.dyeColor);
 
                 if (!world.isSpaceEmpty(entity, entity.getBoundingBox().expand(-0.1D))) {
                     return new TypedActionResult<>(ActionResult.FAIL, heldItem);

@@ -1,5 +1,6 @@
 package net.tropicraft.core.common.entity;
 
+import net.minecraft.item.Items;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 import net.tropicraft.core.common.registry.TropicraftItems;
@@ -18,31 +19,29 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameEntityInvoker {
-
 	public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "bamboo_item_frame");
+
+	public BambooItemFrameEntity(EntityType<? extends ItemFrameEntity> bambooItemFrameEntityEntityType, World world) {
+		super(bambooItemFrameEntityEntityType, world);
+	}
 
 	public BambooItemFrameEntity(World worldIn, BlockPos pos, Direction direction) {
 		this(TropicraftEntities.BAMBOO_ITEM_FRAME, worldIn, pos, direction);
 	}
 
-	protected BambooItemFrameEntity(final EntityType<? extends ItemFrameEntity> type, final World world, final BlockPos pos,
-									final Direction direction) {
-		super(type, world);
-		this.attachmentPos = pos;
-		this.setFacing(direction);
-	}
+	protected BambooItemFrameEntity(final EntityType<? extends ItemFrameEntity> type, final World world, final BlockPos pos, final Direction direction) {
+		super(type, world, pos, direction);
 
-	public BambooItemFrameEntity(EntityType<BambooItemFrameEntity> bambooItemFrameEntityEntityType, World world) {
-		super(bambooItemFrameEntityEntityType, world);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public BambooItemFrameEntity(World world, double x, double y, double z, Direction facing, int id, UUID uuid) {
-		super(TropicraftEntities.BAMBOO_ITEM_FRAME, world);
+	public BambooItemFrameEntity(EntityType<? extends ItemFrameEntity> entityType, World world, double x, double y, double z, Direction facing, int id, UUID uuid) {
+		super(entityType, world);
 		updatePosition(x, y, z);
 		updateTrackedPosition(x, y, z);
 		setId(id);
@@ -50,39 +49,19 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 		setFacing(facing);
 	}
 
-	/*
 	@Override
-	public void dropHeldStack(Entity entityIn, boolean alwaysDrop) {
-		alwaysDrop = false;
+	protected void dropHeldStack(@Nullable Entity entity, boolean alwaysDrop) {
+		super.dropHeldStack(entity, false);
 		if (alwaysDrop) {
-			this.dropItem(TropicItems.BAMBOO_ITEM_FRAME);
-		} else {
-			BambooItemFrameAccessor.dropHeldStackInvoker(entityIn, false);//dropItemOrSelf
-		}
-	}
-
-	 */
-
-	@Override
-	public void invokedropHeldStack(Entity entityIn, boolean dropSelf) {
-		((ItemFrameEntityInvoker) this).invokedropHeldStack(entityIn, false); //??? TODO: Check if this is working
-		if (dropSelf) {
 			this.dropItem(TropicraftItems.BAMBOO_ITEM_FRAME);
 		}
 	}
 
-	/*
-	@Override
-	@Nullable
-	public ItemEntity dropItem(ItemConvertible item) {
-		if(item == Items.ITEM_FRAME){
-			return this.dropItem(TropicItems.BAMBOO_ITEM_FRAME, 0);
-		}
-		else{
-			return this.dropItem(item, 0);
-		}
-	}
-	 */
+	//@Override
+	//protected ItemStack getAsItemStack() {
+	//	return new ItemStack(TropicraftItems.BAMBOO_ITEM_FRAME);
+	//}
+
 
 	@Override
 	public Packet<?> createSpawnPacket() {
@@ -106,8 +85,6 @@ public class BambooItemFrameEntity extends ItemFrameEntity implements ItemFrameE
 
     }
 
-	@Override
-	public ItemStack getHeldItemStack() {
-		return new ItemStack(TropicraftItems.BAMBOO_ITEM_FRAME);
-	}
+
+
 }

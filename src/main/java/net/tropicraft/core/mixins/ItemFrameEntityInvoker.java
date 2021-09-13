@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ItemFrameEntity.class)
 public interface ItemFrameEntityInvoker {
-    @Invoker("dropHeldStack")
-    public void invokedropHeldStack(@Nullable Entity entity, boolean alwaysDrop);
+    //@Invoker("dropHeldStack")
+    //public void invokedropHeldStack(@Nullable Entity entity, boolean alwaysDrop);
 }

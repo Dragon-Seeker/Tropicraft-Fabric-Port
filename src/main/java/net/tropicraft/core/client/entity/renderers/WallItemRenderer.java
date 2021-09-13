@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.placeable.WallItemEntity;
@@ -25,7 +25,7 @@ public class WallItemRenderer extends EntityRenderer<WallItemEntity> {
         stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.getPitch()));
         stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - entity.getYaw()));
         stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(entity.getRotation() * 360 / 8F));        
-        TropicraftRenderUtils.renderItem(entity.getHeldItemStack(), 1, false, stack, bufferIn, packedLightIn, OverlayTexture.DEFAULT_UV, null);
+        TropicraftRenderUtils.renderItem(entity.getHeldItemStack(), 1, false, stack, bufferIn, packedLightIn, OverlayTexture.DEFAULT_UV, null, entity.getId());
         stack.pop();
         super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
     }
@@ -37,4 +37,4 @@ public class WallItemRenderer extends EntityRenderer<WallItemEntity> {
     }
 }
 
- */
+

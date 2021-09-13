@@ -28,18 +28,18 @@ public class AshenMaskItem extends ArmorItem {
     /**
      * Called when this item is used when targetting a Block
      */
-    @Override //Dont know if It needs to be overridden
+    @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockPos pos = context.getBlockPos();
-        Direction direction = context.getPlayerFacing();
-        BlockPos offsetPos = pos.offset(direction);
+        Direction direction = context.getSide();
+        BlockPos pos = context.getBlockPos().offset(direction);
         PlayerEntity player = context.getPlayer();
         ItemStack itemStack = context.getStack();
-        if (player != null && !this.canPlace(player, direction, itemStack, offsetPos)) {
+
+        if (player != null && !this.canPlace(player, direction, itemStack, pos)) {
             return ActionResult.FAIL;
         } else {
             World world = context.getWorld();
-            WallItemEntity wallItem = new WallItemEntity(world, offsetPos, direction);
+            WallItemEntity wallItem = new WallItemEntity(world, pos, direction);
             wallItem.setHeldItemStack(itemStack);
 
             if (wallItem.canStayAttached()) {

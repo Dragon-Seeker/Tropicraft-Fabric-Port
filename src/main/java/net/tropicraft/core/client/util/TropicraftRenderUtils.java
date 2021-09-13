@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.util;
 
+import net.minecraft.client.render.entity.ItemFrameEntityRenderer;
 import net.tropicraft.Constants;
 import com.google.common.collect.Maps;
 import net.minecraft.client.MinecraftClient;
@@ -110,18 +111,19 @@ public class TropicraftRenderUtils {
     }
 
 
-    //public static void renderItem(ItemStack itemStack, final float scale, boolean leftHand, MatrixStack stack, VertexConsumerProvider buffer, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn) {
-    //    if (!itemStack.isEmpty()) {
-    //        stack.push();
-    //        stack.scale(scale, scale, scale);
+    public static void renderItem(ItemStack itemStack, final float scale, boolean leftHand, MatrixStack stack, VertexConsumerProvider buffer, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn, int seed) {
+        if (!itemStack.isEmpty()) {
+            stack.push();
+            stack.scale(scale, scale, scale);
+
 
             // TODO what is this now?
-    //        if (/*!Minecraft.getInstance().getItemRenderer().shouldRenderItemIn3D(stack) || */itemStack.getItem() instanceof SkullItem) {
-    //            stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
-    //        }
-    //        MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, combinedLightIn, combinedOverlayIn, stack, buffer);
-    //        stack.pop();
-    //    }
-    //}
+            if (/*!Minecraft.getInstance().getItemRenderer().shouldRenderItemIn3D(stack) || */itemStack.getItem() instanceof SkullItem) {
+                stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
+            }
+            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, combinedLightIn, combinedOverlayIn, stack, buffer, seed);
+            stack.pop();
+        }
+    }
 
 }

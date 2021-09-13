@@ -23,16 +23,16 @@ public class BambooItemFrameItem extends DecorationItem {
     
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockPos blockpos = context.getBlockPos();
-        Direction direction = context.getPlayerFacing();
-        BlockPos blockpos1 = blockpos.offset(direction);
-        PlayerEntity playerentity = context.getPlayer();
-        ItemStack itemstack = context.getStack();
-        if (playerentity != null && !this.canPlaceOn(playerentity, direction, itemstack, blockpos1)) {
+        final Direction direction = context.getSide();
+        final BlockPos blockpos = context.getBlockPos().offset(direction);
+        final PlayerEntity playerentity = context.getPlayer();
+        final ItemStack itemstack = context.getStack();
+
+        if (playerentity != null && !this.canPlaceOn(playerentity, direction, itemstack, blockpos)) {
            return ActionResult.FAIL;
         } else {
            World world = context.getWorld();
-           BambooItemFrameEntity hangingentity = new BambooItemFrameEntity(world, blockpos1, direction);
+           BambooItemFrameEntity hangingentity = new BambooItemFrameEntity(world, blockpos, direction);
 
             NbtCompound compoundtag = itemstack.getNbt();
            if (compoundtag != null) {

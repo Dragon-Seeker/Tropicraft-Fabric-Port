@@ -1,6 +1,9 @@
 package net.tropicraft.core.client.entity.renderers;
 
 import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.ItemFrameEntityRenderer;
+import net.minecraft.util.registry.Registry;
+import net.tropicraft.Constants;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -24,11 +27,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import net.tropicraft.core.common.registry.TropicraftItems;
 
 public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFrameEntity> {
     private static final String ItemIdName = "bamboo_item_frame";
-    public static final ModelIdentifier LOCATION_MODEL = new ModelIdentifier(ItemIdName, "map=false");
-    private static final ModelIdentifier LOCATION_MODEL_MAP = new ModelIdentifier(ItemIdName, "map=true");
+    public static final ModelIdentifier LOCATION_MODEL = new ModelIdentifier(Constants.MODID + Registry.ITEM.getId(TropicraftItems.BAMBOO_ITEM_FRAME), "map=false");
+    private static final ModelIdentifier LOCATION_MODEL_MAP = new ModelIdentifier(Constants.MODID + Registry.ITEM.getId(TropicraftItems.BAMBOO_ITEM_FRAME), "map=true");
 
     private final MinecraftClient mc = MinecraftClient.getInstance();
     private final ItemRenderer itemRenderer;
@@ -36,6 +40,7 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
     public BambooItemFrameEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
         itemRenderer = context.getItemRenderer();
+        //ItemFrameEntityRenderer
     }
 
 
@@ -56,11 +61,11 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
 
         if (isFrameInvis == false) {
             BlockRenderManager blockrendererdispatcher = this.mc.getBlockRenderManager();
-            BakedModelManager modelmanager = blockrendererdispatcher.getModels().getModelManager();
+            BakedModelManager bakedmodelmanager = blockrendererdispatcher.getModels().getModelManager();
             ModelIdentifier modelresourcelocation = entityIn.getHeldItemStack().getItem() instanceof FilledMapItem ? LOCATION_MODEL_MAP : LOCATION_MODEL;
             matrixStackIn.push();
             matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-            blockrendererdispatcher.getModelRenderer().render(matrixStackIn.peek(), bufferIn.getBuffer(TexturedRenderLayers.getEntitySolid()), null, modelmanager.getModel(modelresourcelocation), 1.0F, 1.0F, 1.0F, packedLightIn, OverlayTexture.DEFAULT_UV);
+            blockrendererdispatcher.getModelRenderer().render(matrixStackIn.peek(), bufferIn.getBuffer(TexturedRenderLayers.getEntitySolid()), null, bakedmodelmanager.getModel(modelresourcelocation), 1.0F, 1.0F, 1.0F, packedLightIn, OverlayTexture.DEFAULT_UV);
             matrixStackIn.pop();
         }
 

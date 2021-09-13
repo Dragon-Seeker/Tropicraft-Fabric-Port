@@ -1,5 +1,9 @@
 package net.tropicraft.core.common.entity.placeable;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.registry.Registry;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import io.netty.buffer.Unpooled;
@@ -15,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.tropicraft.core.common.registry.TropicraftEntities;
+import net.tropicraft.core.common.registry.TropicraftItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -24,21 +29,17 @@ public class WallItemEntity extends BambooItemFrameEntity {
 	public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "wall_item");
 
     public WallItemEntity(EntityType<? extends BambooItemFrameEntity> entityType, World world) {
-        super((EntityType<BambooItemFrameEntity>) entityType, world);
+        super(entityType, world);
     }
 
 	public WallItemEntity(World worldIn, BlockPos pos, Direction on) {
 		super(TropicraftEntities.WALL_ITEM, worldIn, pos, on);
+
 	}
 
 	@Environment(EnvType.CLIENT)
-	public WallItemEntity(World world, double x, double y, double z, Direction facing, int id, UUID uuid) {
-		super(TropicraftEntities.BAMBOO_ITEM_FRAME, world);
-		updatePosition(x, y, z);
-		updateTrackedPosition(x, y, z);
-		setId(id);
-		setUuid(uuid);
-		setFacing(facing);
+	public WallItemEntity(EntityType<? extends BambooItemFrameEntity> entityType, World world, double x, double y, double z, Direction facing, int id, UUID uuid) {
+		super(entityType, world, x, y, z, facing, id, uuid);
 	}
 
 	@Override
@@ -51,15 +52,17 @@ public class WallItemEntity extends BambooItemFrameEntity {
 		return 16;
 	}
 
-    @Override
-    public void invokedropHeldStack(@Nullable Entity entityIn, boolean p_146065_2_) {
-    	super.invokedropHeldStack(entityIn, false);
-    	this.remove(RemovalReason.KILLED);
-    }
+	//@Override
+	//protected ItemStack getAsItemStack() {
+	//	return ItemStack.EMPTY;
+	//}
 
-    @Override
-    public void onPlace() {
-    }
+
+	@Override
+	protected void dropHeldStack(@Nullable Entity entity, boolean alwaysDrop) {
+		super.dropHeldStack(entity, false);
+		this.remove(RemovalReason.KILLED);
+	}
 
 	@Override
 	public Packet<?> createSpawnPacket() {
@@ -77,8 +80,10 @@ public class WallItemEntity extends BambooItemFrameEntity {
 		packet.writeUuid(getUuid());
 
 		//Entity Facing direction
-		packet.writeInt(getHorizontalFacing().getId());
 
+		//packet.writeIdentifier(Registry.ITEM.getId(getAsItemStack().getItem()));
+
+		packet.writeInt(getHorizontalFacing().getId());
 		return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
 
 	}

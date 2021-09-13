@@ -25,7 +25,6 @@ public class TropicalMusicDiscItem extends MusicDiscItem {
     public void appendTooltip(ItemStack stack, World worldIn, List<Text> tooltip, TooltipContext flagIn) {
         super.appendTooltip(stack, worldIn, tooltip, flagIn);
         tooltip.add(getDescLine(1).shallowCopy().formatted(Formatting.GRAY));
-        //tooltip.add(getDescLine(1).applyTextStyle(TextFormatting.GRAY));
     }
     
     private Text getDescLine(int i) {

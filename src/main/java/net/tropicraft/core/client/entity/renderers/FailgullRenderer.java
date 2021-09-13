@@ -1,7 +1,9 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.FailgullModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.common.entity.passive.FailgullEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,8 +15,8 @@ import net.minecraft.util.Identifier;
 public class FailgullRenderer extends MobEntityRenderer<FailgullEntity, FailgullModel> {
     private static final Identifier FAILGULL_TEXTURE = new Identifier(Constants.MODID, "textures/entity/failgull.png");
 
-    public FailgullRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, new FailgullModel(), 0.25F);
+    public FailgullRenderer(EntityRendererFactory.Context context) {
+        super(context, new FailgullModel(context.getPart(TropicraftEntityRendering.FAILGULL_LAYER)), 0.25F);
     }
 
     @Override
@@ -23,4 +25,4 @@ public class FailgullRenderer extends MobEntityRenderer<FailgullEntity, Failgull
     }
 }
 
- */
+

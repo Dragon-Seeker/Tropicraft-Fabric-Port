@@ -1,5 +1,7 @@
 package net.tropicraft.core.client.registry;
 
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.tropicraft.core.common.entity.placeable.*;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import net.tropicraft.core.common.entity.projectile.ExplodingCoconutEntity;
@@ -10,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.Direction;
 import net.tropicraft.core.common.entity.projectile.LavaBallEntity;
 import net.tropicraft.core.common.entity.projectile.PoisonBlotEntity;
+import net.tropicraft.core.common.registry.TropicraftEntities;
 
 import java.util.UUID;
 
@@ -55,7 +58,7 @@ public class TropicClientPackets {
 
             Direction direction = Direction.byId(packet.readInt());
             context.getTaskQueue().execute(() -> {
-                BambooItemFrameEntity bambooFrame = new BambooItemFrameEntity(MinecraftClient.getInstance().world, x, y, z, direction, entityID, entityUUID);;
+                BambooItemFrameEntity bambooFrame = new BambooItemFrameEntity(TropicraftEntities.BAMBOO_ITEM_FRAME, MinecraftClient.getInstance().world, x, y, z, direction, entityID, entityUUID);;
                 MinecraftClient.getInstance().world.addEntity(entityID, bambooFrame);
             });
         });
@@ -67,10 +70,11 @@ public class TropicClientPackets {
 
             int entityID = packet.readInt();
             UUID entityUUID = packet.readUuid();
+            //Identifier itemID = packet.readIdentifier();
 
             Direction direction = Direction.byId(packet.readInt());
             context.getTaskQueue().execute(() -> {
-                WallItemEntity wallItem = new WallItemEntity(MinecraftClient.getInstance().world, x, y, z, direction, entityID, entityUUID);
+                WallItemEntity wallItem = new WallItemEntity(TropicraftEntities.WALL_ITEM, MinecraftClient.getInstance().world, x, y, z, direction, entityID, entityUUID);
                 MinecraftClient.getInstance().world.addEntity(entityID, wallItem);
             });
         });

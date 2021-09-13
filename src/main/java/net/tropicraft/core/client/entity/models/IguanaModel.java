@@ -1,11 +1,11 @@
 package net.tropicraft.core.client.entity.models;
 
+import net.minecraft.client.model.*;
 import net.tropicraft.core.common.entity.neutral.IguanaEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-/*
+
 public class IguanaModel extends CompositeEntityModel<IguanaEntity> {
     public ModelPart head;
     public ModelPart headTop1;
@@ -24,7 +24,26 @@ public class IguanaModel extends CompositeEntityModel<IguanaEntity> {
     public ModelPart tailMid;
     public ModelPart miscPart;
 
-    public IguanaModel() {
+    public IguanaModel(ModelPart root) {
+        head = root.getChild("head");
+        headTop1 = root.getChild("headTop1");
+        headTop2 = root.getChild("headTop2");
+        body = root.getChild("body");
+        frontLeftLeg = root.getChild("frontLeftLeg");
+        rearLeftLeg = root.getChild("rearLeftLeg");
+        frontRightLeg = root.getChild("frontRightLeg");
+        rearRightLeg = root.getChild("rearRightLeg");
+        back1 = root.getChild("back1");
+        back2 = root.getChild("back2");
+        back3 = root.getChild("back3");
+        jaw = root.getChild("jaw");
+        dewLap = root.getChild("dewLap");
+        tailBase = root.getChild("tailBase");
+        tailMid = root.getChild("tailMid");
+        miscPart = root.getChild("miscPart");
+
+
+        /*
         head = new ModelPart(this, 36, 23);
         head.addCuboid(-2.5F, -2F, -6F, 5, 3, 6);
         head.setPivot(0F, 20F, -6F);
@@ -85,6 +104,111 @@ public class IguanaModel extends CompositeEntityModel<IguanaEntity> {
         tailMid.addCuboid(-1F, -0.5F, 0F, 2, 1, 6);
         miscPart = new ModelPart(this, 52, 14);
         miscPart.addCuboid(-0.5F, -0.5F, 0F, 1, 1, 5);
+         */
+    }
+
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+
+        modelPartData.addChild("head",
+                ModelPartBuilder.create()
+                        .uv(36, 23)
+                        .cuboid(-2.5F, -2F, -6F, 5, 3, 6),
+                ModelTransform.pivot(0F, 20F, -6F));
+
+        modelPartData.addChild("body",
+                ModelPartBuilder.create()
+                        .uv(0, 16)
+                        .cuboid(-2.5F, -1.5F, -7.5F, 5, 3, 13),
+                ModelTransform.pivot(0F, 21.5F, 1F));
+
+        modelPartData.addChild("frontLeftLeg",
+                ModelPartBuilder.create()
+                        .uv(24, 21)
+                        .cuboid(0F, 0F, -1.5F, 2, 3, 3),
+                ModelTransform.pivot(2.5F, 21F, -4F));
+
+        modelPartData.addChild("rearLeftLeg",
+                ModelPartBuilder.create()
+                        .uv(24, 21)
+                        .cuboid(0F, 0F, -1.5F, 2, 3, 3),
+                ModelTransform.pivot(2.5F, 21F, 4F));
+
+        modelPartData.addChild("frontRightLeg",
+                ModelPartBuilder.create()
+                        .uv(0, 21)
+                        .cuboid(-2F, 0F, -1.5F, 2, 3, 3),
+                ModelTransform.pivot(-2.5F, 21F, -4F));
+
+        modelPartData.addChild("rearRightLeg",
+                ModelPartBuilder.create()
+                        .uv(0, 21)
+                        .cuboid(-2F, 0F, -1.5F, 2, 3, 3),
+                ModelTransform.pivot(-2.5F, 21F, 4F));
+
+        modelPartData.addChild("back1",
+                ModelPartBuilder.create()
+                        .uv(0, 0)
+                        .cuboid(-1.5F, -1F, 0F, 3, 1, 10),
+                ModelTransform.pivot(0F, 20F, -5F));
+
+        modelPartData.addChild("back2",
+                ModelPartBuilder.create()
+                        .uv(32, 0)
+                        .cuboid(-0.5F, -1F, -3F, 1, 1, 6),
+                ModelTransform.pivot(0F, 19F, 0F));
+
+        modelPartData.addChild("headTop2",
+                ModelPartBuilder.create()
+                        .uv(0, 0)
+                        .cuboid(-0.5F, -4F, -4F, 1, 1, 2),
+                ModelTransform.pivot(0F, 20F, -6F));
+
+        modelPartData.addChild("headTop1",
+                ModelPartBuilder.create()
+                        .uv(32, 7)
+                        .cuboid(-0.5F, -3F, -5F, 1, 1, 4),
+                ModelTransform.pivot(0F, 20F, -6F));
+
+        modelPartData.addChild("jaw",
+                ModelPartBuilder.create()
+                        .uv(0, 11)
+                        .cuboid(-1F, 1F, -4F, 2, 1, 4),
+                ModelTransform.pivot(0F, 20F, -6F));
+
+        modelPartData.addChild("back3",
+                ModelPartBuilder.create()
+                        .uv(32, 7)
+                        .cuboid(-0.5F, 0F, -2F, 1, 1, 4),
+                ModelTransform.pivot(0F, 17F, 0F));
+
+        modelPartData.addChild("dewLap",
+                ModelPartBuilder.create()
+                        .uv(0, 4)
+                        .cuboid(-0.5F, 2F, -3F, 1, 1, 3),
+                ModelTransform.pivot(0F, 20F, -6F));
+
+        modelPartData.addChild("tailBase",
+                ModelPartBuilder.create()
+                        .uv(46, 0)
+                        .cuboid(-1.5F, -0.5F, 0F, 3, 1, 6),
+                ModelTransform.pivot(0F, 21.5F, 6F));
+
+        modelPartData.addChild("tailMid",
+                ModelPartBuilder.create()
+                        .uv(48, 7)
+                        .cuboid(-1F, -0.5F, 0F, 2, 1, 6),
+                ModelTransform.NONE);
+
+        modelPartData.addChild("miscPart",
+                ModelPartBuilder.create()
+                        .uv(52, 14)
+                        .cuboid(-0.5F, -0.5F, 0F, 1, 1, 5),
+                ModelTransform.NONE);
+
+
+        return TexturedModelData.of(modelData, 64, 32);
     }
 
 
@@ -123,4 +247,3 @@ public class IguanaModel extends CompositeEntityModel<IguanaEntity> {
     }
 }
 
- */
