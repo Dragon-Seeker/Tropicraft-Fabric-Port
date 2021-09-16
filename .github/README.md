@@ -13,12 +13,12 @@
       <img src="http://cf.way2muchnoise.eu/tropicraft-unoffical-port.svg">
   </a>
   <br>
-  <strong><a href="https://tropicraft.net/">Orignal Website</a> | <a href="https://www.minecraftforum.net/topic/533512">Minecraft Forum Thread</a> </strong>
+  <strong><a href="https://tropicraft.net/">Origninal Website</a> | <a href="https://www.minecraftforum.net/topic/533512">Minecraft Forum Thread</a> </strong>
 </p> 
 
 # A UNOFFICIAL FABRIC VERSION OF TROPICRAFT
 
-The goal of this mod is to create a version of tropicraft that can run on the fabric launcher. In most cases, this mod will keep continuity with the orginal forge version of the mod but in the future, I am decided to add some blocks that I feel were missing from the original. If such happens, I will keep continuity with the art style as I love the orginal.
+The goal of this mod is to create a version of tropicraft that can run on the fabric launcher. In most cases, this mod will keep continuity with the orginal forge version of the mod but in the future, I am decided to add some blocks that I feel were missing from the origninal. If such happens, I will keep continuity with the art style as I love the orginal.
 
 
 FAQ
