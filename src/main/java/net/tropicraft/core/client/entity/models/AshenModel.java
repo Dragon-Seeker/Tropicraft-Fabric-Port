@@ -126,103 +126,15 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         //float headAngle = 0;
 
         modelPartData.addChild("right_leg", ModelPartBuilder.create().uv(25, 0).mirrored().cuboid(0F, 0F, 0F, 1, 7, 1), ModelTransform.of(1F, 17F, 0F, 0F, 0F, 0F));
-                //.createPart(64, 32);
-        /*
-        rightLeg = new ModelPart(this, 25, 0);
-
-        //Sending this or the model in 1.16.5 would fill the texture size based on the model given as it was set previously
-        //its then would be similar to this.textureWidth, this.textureHeight, textureOffsetU, textureOffsetV into model part
-        //So the call of setTextureOffset is the same as giving only the main model(this) and then giveing the UV vaules
-
-        rightLeg.addCuboid(0F, 0F, 0F, 1, 7, 1);
-        rightLeg.setPivot(1F, 17F, 0F);
-        rightLeg.setTextureSize(64, 32); <---- This is the texture size
-        rightLeg.mirror = true;
-        setRotation(rightLeg, 0F, 0F, 0F);
-         */
-
         modelPartData.addChild("left_leg", ModelPartBuilder.create().uv(25, 0).mirrored().cuboid(-1F, 0F, 0F, 1, 7, 1), ModelTransform.of(-1F, 17F, 0F, 0F, 0F, 0F));
-        /*
-        leftLeg = new ModelPart(this, 25, 0);
-        leftLeg.addCuboid(-1F, 0F, 0F, 1, 7, 1);
-        leftLeg.setPivot(-1F, 17F, 0F);
-        leftLeg.setTextureSize(64, 32);
-        leftLeg.mirror = true;
-        setRotation(leftLeg, 0F, 0F, 0F);
-         */
-
         modelPartData.addChild("body", ModelPartBuilder.create().uv(24, 8).mirrored().cuboid(-2F, -3F, 0F, 4, 7, 3), ModelTransform.of(0F, 13F, 2F, 0F, 3.141593F, 0F));
-        /*
-        body = new ModelPart(this, 24, 8);
-        body.addCuboid(-2F, -3F, 0F, 4, 7, 3);
-        body.setPivot(0F, 13F, 2F);
-        body.setTextureSize(64, 32);
-        body.mirror = true;
-        setRotation(body, 0F, 3.141593F, 0F);
-         */
-
         modelPartData.addChild("head", ModelPartBuilder.create().uv(24, 18).mirrored().cuboid(-2F, -3F, -1F, 4, 3, 4), ModelTransform.of(0F, 10F, 1F,0F, 3.141593F, 0F));
-        /*
-        head = new ModelPart(this, 24, 18);
-        head.addCuboid(-2F, -3F, -1F, 4, 3, 4);
-        head.setPivot(0F, 10F, 1F);
-        head.setTextureSize(64, 32);
-        head.mirror = true;
-        setRotation(head, 0F, 3.141593F, 0F);
-         */
-
-        //mask = new ModelRenderer(this, 0, 0);
-        //mask.addBox(-5.5F, -10F, 3F, 11, 22, 1);
-        //mask.setRotationPoint(0F, 10F, 1F);
-        //mask.setTextureSize(64, 32);
-        //mask.mirror = true;
-        //setRotation(mask, 0F, 3.141593F, 0F);
 
         ModelPartData modelPartDataRightArm = modelPartData.addChild("right_arm", ModelPartBuilder.create().uv(0, 24).mirrored().cuboid(-6F, -0.5F, -0.5F, 6, 1, 1), ModelTransform.of(-2F, 10.5F, 0.5F, 0F, 0F, 0F));
-
-        /*
-        rightArm = new ModelPart(this);
-        rightArm.setPivot(-2F, 10.5F, 0.5F);
-        setRotation(rightArm, 0F, 0F, 0F);
-        rightArm.mirror = true;
-        rightArm.setTextureOffset(0, 24).addCuboid(-6F, -0.5F, -0.5F, 6, 1, 1);
-         */
-
         modelPartDataRightArm.addChild("right_arm_sub", ModelPartBuilder.create().uv(31, 0).mirrored().cuboid(-0.5F, -6F, -0.5F, 1, 6, 1), ModelTransform.of(-5.5F, 0F, 0F, 0F, 0F, 0F));
-        /*
-        rightArmSub = new ModelPart(this);
-        rightArmSub.setPivot(-5.5F, 0F, 0F);
-        setRotation(rightArmSub, 0F, 0F, 0F);
-        rightArmSub.mirror = true;
-        rightArmSub.setTextureOffset(31, 0).addCuboid(-0.5F, -6F, -0.5F, 1, 6, 1);
-        rightArm.addChild(rightArmSub);
-         */
 
         ModelPartData modelPartDataLeftArm = modelPartData.addChild("left_arm", ModelPartBuilder.create().uv(0, 24).mirrored().cuboid(0F, -0.5F, -0.5F, 6, 1, 1), ModelTransform.of(2F, 10.46667F, 0.5F, 0F, 0F, 0F));
-        /*
-        leftArm = new ModelPart(this);
-        leftArm.setPivot(2F, 10.46667F, 0.5F);
-        setRotation(leftArm, 0F, 0F, 0F);
-        leftArm.mirror = true;
-        leftArm.setTextureOffset(0, 24)
-                .addCuboid(0F, -0.5F, -0.5F, 6, 1, 1);
-         */
-
-        modelPartDataLeftArm.addChild("left_arm_sub",
-                ModelPartBuilder.create()
-                        .mirrored(true)
-                        .uv(31, 0)
-                        .cuboid(-0.5F, -6F, -0.5F, 1, 6, 1),
-                ModelTransform.of(5.5F, 0F, 0F, 0F, 0F, 0F));
-        /*
-        leftArmSub = new ModelPart(this);
-        leftArmSub.setPivot(5.5F, 0F, 0F);
-        setRotation(leftArmSub, 0F, 0F, 0F);
-        leftArmSub.mirror = true;
-        leftArmSub.setTextureOffset(31, 0).addCuboid(-0.5F, -6F, -0.5F, 1, 6, 1);
-        leftArm.addChild(leftArmSub);
-        */
-
+        modelPartDataLeftArm.addChild("left_arm_sub", ModelPartBuilder.create().mirrored(true).uv(31, 0).cuboid(-0.5F, -6F, -0.5F, 1, 6, 1), ModelTransform.of(5.5F, 0F, 0F, 0F, 0F, 0F));
         return TexturedModelData.of(modelData,64,32);
     }
 

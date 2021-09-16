@@ -1,7 +1,11 @@
 package net.tropicraft.core.client.entity.renderlayer;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.tropicraft.core.client.entity.models.AshenModel;
 import net.tropicraft.core.client.entity.models.ManOWarModel;
 import net.tropicraft.core.client.entity.renderers.ManOWarRenderer;
+import net.tropicraft.core.common.entity.hostile.AshenEntity;
 import net.tropicraft.core.common.entity.underdasea.ManOWarEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,12 +18,11 @@ import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
 public class ManOWarGelLayer extends FeatureRenderer<ManOWarEntity, ManOWarModel> {
-    private final ManOWarRenderer mowRenderer;
-    private final ManOWarModel mowModel = new ManOWarModel(0, 20, false);
+    private final ManOWarModel mowModel;
 
-    public ManOWarGelLayer(ManOWarRenderer manOWarRenderer) {
-        super(manOWarRenderer);
-        mowRenderer = manOWarRenderer;
+    public ManOWarGelLayer(FeatureRendererContext<ManOWarEntity, ManOWarModel> featureRendererContext) {
+        super(featureRendererContext);
+        mowModel = featureRendererContext.getModel();
     }
 
     @Override
@@ -34,4 +37,3 @@ public class ManOWarGelLayer extends FeatureRenderer<ManOWarEntity, ManOWarModel
     }
 }
 
- */

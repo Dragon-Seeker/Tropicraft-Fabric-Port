@@ -93,7 +93,7 @@ public class TropicraftEntityRendering {
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityModelLayers() {
-        //KOA_HUNTER_LAYER = registerMain("koa_hunter", () -> KoaModel.getTexturedModelData());
+        KOA_HUNTER_LAYER = registerMain("koa_hunter", () -> KoaModel.getTexturedModelData());
         //TROPI_CREEPER_LAYER = registerMain("tropi_creeper", () -> TropiCreeperModel.getTexturedModelData());
         IGUANA_LAYER = registerMain("iguana", () -> IguanaModel.getTexturedModelData());
         //UMBRELLA_LAYER = registerMain("umbrella", () -> UmbrellaModel.getTexturedModelData());
@@ -130,7 +130,7 @@ public class TropicraftEntityRendering {
         SEA_TURTLE_EGG_LAYER  = registerMain("turtle_egg", () -> EggModel.getTexturedModelData());
         //TROPI_BEE_LAYER = registerMain("tropi_bee", () -> TropiBeeModel.getTexturedModelData());
         //COWKTAIL_LAYER = registerMain("cowktail", () -> CowEntityModel.getTexturedModelData());
-        //MAN_O_WAR_LAYER = registerMain("man_o_war", () -> ManOWarModel.getTexturedModelData());
+        MAN_O_WAR_LAYER = registerMain("man_o_war", () -> ManOWarModel.getTexturedModelData());
 
         armorRenderingRegistryInitialization();
     }
@@ -138,7 +138,7 @@ public class TropicraftEntityRendering {
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityRenderers() {
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.KOA_HUNTER, KoaRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.KOA_HUNTER, KoaRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_CREEPER, (dispatcher, context) -> new TropiCreeperRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.IGUANA, IguanaRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.UMBRELLA, (dispatcher, context) -> new UmbrellaRenderer(dispatcher));
@@ -175,7 +175,7 @@ public class TropicraftEntityRendering {
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE_EGG, (context) -> new EggRenderer(context, SEA_TURTLE_EGG_LAYER));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_BEE, (dispatcher, context) -> new TropiBeeRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.COWKTAIL, CowktailRenderer::new);
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MAN_O_WAR, (dispatcher, context) -> new ManOWarRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MAN_O_WAR, ManOWarRenderer::new);
     }
 
     public static void setupBlockEntityLayers(){

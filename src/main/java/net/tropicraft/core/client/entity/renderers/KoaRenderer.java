@@ -1,7 +1,9 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.KoaModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
@@ -16,15 +18,15 @@ public class KoaRenderer extends BipedEntityRenderer<EntityKoaBase, KoaModel> {
     private static final Identifier MALE_HUNTER = new Identifier(Constants.MODID, "textures/entity/koa/koa_man_hunter.png");
     private static final Identifier FEMALE_HUNTER = new Identifier(Constants.MODID, "textures/entity/koa/koa_woman_hunter.png");
 
-    public KoaRenderer(EntityRenderDispatcher rendermanagerIn) {
-        super(rendermanagerIn, new KoaModel(0), 0.5F);
+    public KoaRenderer(EntityRendererFactory.Context context) {
+        super(context, new KoaModel(context.getPart(TropicraftEntityRendering.KOA_HUNTER_LAYER)), 0.5F);
         this.shadowOpacity = 0.5f;
     }
 
     /**
      * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
      */
-/*
+
     @Override
     public Identifier getTexture(EntityKoaBase entity) {
         if (entity.getGender() == EntityKoaBase.Genders.MALE) {
@@ -48,5 +50,5 @@ public class KoaRenderer extends BipedEntityRenderer<EntityKoaBase, KoaModel> {
 
 }
 
- */
+
 
