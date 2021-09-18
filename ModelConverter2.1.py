@@ -32,6 +32,7 @@ def open_file():
     file_line_edit.insert(0,"// Made with Model Converter by Globox_Z\n")
     file_line_edit.insert(1,"// Generate all required imports\n")
 
+    print("Stage: 1")
 
     line_index = 0
     part_ticker = 0
@@ -56,6 +57,7 @@ def open_file():
                 file_line_edit[file_line_edit.index(texture_string)] = ""
                 break
 
+    print("Stage: 2")
 
     java_file_name = str(os.path.basename(path).replace(".java", "()"))
     # add 1.17 methods
@@ -74,6 +76,8 @@ def open_file():
         root.destroy()
         return
 
+    print("Stage: 3")
+
     # check for ModelParts and add them to new model method
     for another_line in file_line_edit:
         if "final ModelPart" in another_line or "final ModelRenderer" in another_line or "public ModelRenderer" in another_line:
@@ -83,6 +87,8 @@ def open_file():
             insert_line = insert_line.replace(";\n",' = root.getChild("'+insert_line.replace(';\n','"'))
             insert_line = "this."+insert_line+");\n"
             file_line_edit.insert(line_index+part_ticker,insert_line)
+
+    print("Stage: 4")
 
     child_ticker = line_index+part_ticker
 
@@ -94,10 +100,14 @@ def open_file():
             replacing_line = "private final ModelPart "+replacing_line
             file_line_edit[file_line_edit.index(replace_line)] = replacing_line
 
+    print("Stage: 4")
+
     # delete new ModePart lines or new ModelRenderer lines if existing
     for delete_line in file_line_edit:
         if "new ModelPart(this" in delete_line or "(new ModelPart(this))" in delete_line or "new ModelRenderer(this" in delete_line:
             file_line_edit[file_line_edit.index(delete_line)] = ""
+
+    print("Stage: 5")
 
     # edit all pivot part lines
     for pivot_line in file_line_edit:
@@ -193,6 +203,7 @@ def open_file():
                 child_ticker+=1
                 # check for child_ticker if its appropiate position for this extra line
 
+    print("Stage: 6")
 
     return_string = "return TexturedModelData.of(modelData,"+ str(texture_x_size)+","+str(texture_y_size)+");\n"
     file_line_edit.insert(line_index+child_ticker, return_string)
@@ -281,17 +292,24 @@ def open_file():
     except:
         print("Something went wrong while child refactoring")
 
+    print("Stage: 7")
+
     # Check if setAngles void is existing
     set_angles_line_number = 0
     for set_angles_line in file_line_edit:
         if "void setAngles(" in set_angles_line:
             set_angles_line_number = file_line_edit.index(set_angles_line)+1
             break
+
+    print("Stage: 8")
+
     # Add setAngles void if non existent
     if set_angles_line_number == 0:
         file_line_edit.insert(len(file_line_edit)-1,'\n')
         file_line_edit.insert(len(file_line_edit)-1,"@Override\n")
         file_line_edit.insert(len(file_line_edit)-1,"public void setAngles(Entity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {\n")
+
+    print("Stage: 9")
 
     # Edit setRotationAngle lines
     for rotation_line in file_line_edit:
@@ -330,6 +348,8 @@ def open_file():
     # Close new setAngles void with bracket
     if set_angles_line_number == 0:
         file_line_edit.insert(file_line_edit.index(file_line_edit[-1]),"}\n")
+
+    print("Stage: 10")
 
     # Add end bracket, might be unnecessary
     # file_line_edit.insert(len(file_line_edit),'\n')

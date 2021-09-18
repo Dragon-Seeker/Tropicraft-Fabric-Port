@@ -1,6 +1,8 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.SeahorseModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.SeahorseEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,8 +13,8 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public class SeahorseRenderer extends MobEntityRenderer<SeahorseEntity, SeahorseModel> {
-	public SeahorseRenderer(EntityRenderDispatcher renderManager) {
-		super(renderManager, new SeahorseModel(), 0.5F);
+	public SeahorseRenderer(EntityRendererFactory.Context context) {
+		super(context, new SeahorseModel(context.getPart(TropicraftEntityRendering.SEAHORSE_LAYER)), 0.5F);
 		shadowOpacity = 0.5f;
 	}
 
@@ -34,4 +36,3 @@ public class SeahorseRenderer extends MobEntityRenderer<SeahorseEntity, Seahorse
 	}
 }
 
- */

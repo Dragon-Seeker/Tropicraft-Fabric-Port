@@ -1,11 +1,11 @@
 package net.tropicraft.core.client.entity.models;
 
+import net.minecraft.client.model.*;
 import net.tropicraft.core.common.entity.underdasea.SeahorseEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.util.math.MathHelper;
-/*
+
 public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
     ModelPart head1;
     ModelPart snout1;
@@ -32,7 +32,33 @@ public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
     ModelPart tail11;
     ModelPart fin1;
 
-    public SeahorseModel() {
+    public SeahorseModel(ModelPart root) {
+        head1 = root.getChild("head1");
+        snout1 = root.getChild("snout1");
+        snout2 = root.getChild("snout2");
+        snout3 = root.getChild("snout3");
+        eye1 = root.getChild("eye1");
+        eye2 = root.getChild("eye2");
+        fin2 = root.getChild("fin2");
+        fin4 = root.getChild("fin4");
+        fin3 = root.getChild("fin3");
+        neck1 = root.getChild("neck1");
+        neck2 = root.getChild("neck2");
+        belly = root.getChild("belly");
+        tail1 = root.getChild("tail1");
+        tail2 = root.getChild("tail2");
+        tail3 = root.getChild("tail3");
+        tail4 = root.getChild("tail4");
+        tail5 = root.getChild("tail5");
+        tail6 = root.getChild("tail6");
+        tail7 = root.getChild("tail7");
+        tail8 = root.getChild("tail8");
+        tail9 = root.getChild("tail9");
+        tail10 = root.getChild("tail10");
+        tail11 = root.getChild("tail11");
+        fin1 = root.getChild("fin1");
+
+        /*
         head1 = new ModelPart( this, 0, 0 );
         head1.setTextureSize( 64, 64 );
         head1.addCuboid( -2.5F, -2.5F, -2.5F, 5, 5, 5);
@@ -103,46 +129,184 @@ public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
         tail2.setTextureSize( 64, 64 );
         tail2.addCuboid( -2F, 0F, -2F, 4, 4, 4);
         tail2.setPivot( 5F, -19F, 0.5F );
+
         tail3 = new ModelPart( this, 0, 49 );
         tail3.setTextureSize( 64, 64 );
         tail3.addCuboid( -2F, 0F, -1.5F, 3, 4, 3);
         tail3.setPivot( 4.5F, -15.5F, 0.5F );
+
         tail4 = new ModelPart( this, 0, 56 );
         tail4.setTextureSize( 64, 64 );
         tail4.addCuboid( -1F, 0F, -1F, 2, 4, 2);
         tail4.setPivot( 2.652397F, -12.89918F, 0.5F );
+
         tail5 = new ModelPart( this, 8, 56 );
         tail5.setTextureSize( 64, 64 );
         tail5.addCuboid( -0.5F, 0F, -0.5F, 1, 2, 1);
         tail5.setPivot( -0.8942064F, -12.51931F, 0.5F );
+
         tail6 = new ModelPart( this, 12, 56 );
         tail6.setTextureSize( 64, 64 );
         tail6.addCuboid( -0.5F, 0F, -0.5F, 1, 2, 1);
         tail6.setPivot( -2.551666F, -13.06961F, 0.5F );
+
         tail7 = new ModelPart( this, 12, 56 );
         tail7.setTextureSize( 64, 64 );
         tail7.addCuboid( -0.5F, 0F, -0.5F, 1, 2, 1);
         tail7.setPivot( -3.685031F, -14.47157F, 0.5F );
+
         tail8 = new ModelPart( this, 12, 56 );
         tail8.setTextureSize( 64, 64 );
         tail8.addCuboid( -0.5F, 0F, -0.5F, 1, 2, 1);
         tail8.setPivot( -3.770199F, -16.05041F, 0.5F );
+
         tail9 = new ModelPart( this, 12, 56 );
         tail9.setTextureSize( 64, 64 );
         tail9.addCuboid( -0.5F, 0F, -0.5F, 1, 2, 1);
         tail9.setPivot( -2.846481F, -17.36065F, 0.5F );
+
         tail10 = new ModelPart( this, 12, 56 );
         tail10.setTextureSize( 64, 64 );
         tail10.addCuboid( -0.5F, 0F, -0.5F, 1, 2, 1);
         tail10.setPivot( -0.2576861F, -15.77428F, 0.5F );
+
         tail11 = new ModelPart( this, 12, 56 );
         tail11.setTextureSize( 64, 64 );
         tail11.addCuboid( -0.5F, -1F, -0.5F, 1, 2, 1);
         tail11.setPivot( -0.856306F, -15.47153F, 0.5F );
+
         fin1 = new ModelPart( this, 40, 22 );
         fin1.setTextureSize( 64, 64 );
         fin1.addCuboid( -2.5F, -4F, 0F, 5, 8, 0);
         fin1.setPivot( 8.5F, -20F, 0.5F );
+         */
+    }
+
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+
+        modelPartData.addChild("head1",
+                ModelPartBuilder.create().uv(0,0)
+                        .cuboid(-2.5F, -2.5F, -2.5F, 5, 5, 5),
+                ModelTransform.pivot(1F, -36F, 0.5F));
+
+        modelPartData.addChild("snout1",
+                ModelPartBuilder.create().uv(20,0)
+                        .cuboid(-1.5F, -1F, -1.5F, 3, 3, 4),
+                ModelTransform.pivot(-2.448189F, -33.97269F, 2.980232E-08F));
+
+        modelPartData.addChild("snout2",
+                ModelPartBuilder.create().uv(34, 0)
+                        .cuboid(-2.5F, -0.5F, -0.5F, 5, 2, 2),
+                ModelTransform.pivot(-5.491952F, -31.3774F, 2.980232E-08F));
+
+        modelPartData.addChild("snout3",
+                ModelPartBuilder.create().uv(23, 7)
+                        .cuboid(-0.5F, -1F, -1F, 1, 3, 3),
+                ModelTransform.pivot(-7.54649F, -29.62558F, 0F));
+
+        modelPartData.addChild("eye1",
+                ModelPartBuilder.create().uv(40, 4)
+                        .cuboid(-1F, -1F, -0.5F, 2, 2, 1),
+                ModelTransform.pivot(-2.955017F, -34.83473F, -2F));
+
+        modelPartData.addChild("eye2",
+                ModelPartBuilder.create().uv(40, 4)
+                        .cuboid(-1F, -1F, -0.5F, 2, 2, 1),
+                ModelTransform.pivot(-2.958766F, -34.83232F, 3F));
+
+        modelPartData.addChild("fin2",
+                ModelPartBuilder.create().uv(39, 15)
+                        .cuboid(-3F, -2.5F, 0F, 6, 5, 0),
+                ModelTransform.pivot(1.222835F, -38.81833F, 0.5F));
+
+        modelPartData.addChild("fin4",
+                ModelPartBuilder.create().uv(36, 9)
+                        .cuboid(-4F, -2.5F, 0F, 4, 5, 0),
+                ModelTransform.pivot(1.000001F, -36F, -2F));
+
+        modelPartData.addChild("fin3",
+                ModelPartBuilder.create().uv(45, 9)
+                        .cuboid(-4F, -2.5F, 0F, 4, 5, 0),
+                ModelTransform.pivot(1.000001F, -36F, 3F));
+
+        modelPartData.addChild("neck1",
+                ModelPartBuilder.create().uv(0, 10)
+                        .cuboid(-2F, -2F, -2F, 4, 4, 4),
+                ModelTransform.pivot(3.5F, -33.5F, 0.5F));
+
+        modelPartData.addChild("neck2",
+                ModelPartBuilder.create().uv(0, 18)
+                        .cuboid(-2.5F, -2F, -2.5F, 5, 4, 5),
+                ModelTransform.pivot(4.999997F, -31F, 0.5F));
+
+        modelPartData.addChild("belly",
+                ModelPartBuilder.create().uv(0, 27)
+                        .cuboid(-3.5F, 0F, -3F, 7, 8, 6),
+                ModelTransform.pivot(5F, -30F, 0.5F));
+
+        modelPartData.addChild("tail1",
+                ModelPartBuilder.create().uv(0, 18)
+                        .cuboid(-2.5F, 0F, -2.5F, 5, 4, 5),
+                ModelTransform.pivot(5.5F, -22.5F, 0.5F));
+
+        modelPartData.addChild("tail2",
+                ModelPartBuilder.create().uv(0, 41)
+                        .cuboid(-2F, 0F, -2F, 4, 4, 4),
+                ModelTransform.pivot(5F, -19F, 0.5F));
+
+        modelPartData.addChild("tail3",
+                ModelPartBuilder.create().uv(0, 49)
+                        .cuboid(-2F, 0F, -1.5F, 3, 4, 3),
+                ModelTransform.pivot(4.5F, -15.5F, 0.5F));
+
+        modelPartData.addChild("tail4",
+                ModelPartBuilder.create().uv(0, 56)
+                        .cuboid(-1F, 0F, -1F, 2, 4, 2),
+                ModelTransform.pivot(2.652397F, -12.89918F, 0.5F));
+
+        modelPartData.addChild("tail5",
+                ModelPartBuilder.create().uv(8, 56)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
+                ModelTransform.pivot(-0.8942064F, -12.51931F, 0.5F));
+
+        modelPartData.addChild("tail6",
+                ModelPartBuilder.create().uv(12, 56)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
+                ModelTransform.pivot(-2.551666F, -13.06961F, 0.5F));
+
+        modelPartData.addChild("tail7",
+                ModelPartBuilder.create().uv(12, 56)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
+                ModelTransform.pivot(-3.685031F, -14.47157F, 0.5F));
+
+        modelPartData.addChild("tail8",
+                ModelPartBuilder.create().uv(12, 56)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
+                ModelTransform.pivot(-3.770199F, -16.05041F, 0.5F));
+
+        modelPartData.addChild("tail9",
+                ModelPartBuilder.create().uv(12, 56)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
+                ModelTransform.pivot(-2.846481F, -17.36065F, 0.5F));
+
+        modelPartData.addChild("tail10",
+                ModelPartBuilder.create().uv(12, 56)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
+                ModelTransform.pivot(-0.2576861F, -15.77428F, 0.5F));
+
+        modelPartData.addChild("tail11",
+                ModelPartBuilder.create().uv(12, 56)
+                        .cuboid(-0.5F, -1F, -0.5F, 1, 2, 1),
+                ModelTransform.pivot(-0.856306F, -15.47153F, 0.5F));
+
+        modelPartData.addChild("fin1",
+                ModelPartBuilder.create().uv(40, 22)
+                        .cuboid(-2.5F, -4F, 0F, 5, 8, 0),
+                ModelTransform.pivot(8.5F, -20F, 0.5F));
+
+        return TexturedModelData.of(modelData,64,64);
     }
 
     @Override
@@ -259,4 +423,3 @@ public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
 }
 
 
- */

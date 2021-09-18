@@ -6,6 +6,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -44,7 +45,9 @@ public class SeahorseEntity extends AbstractTexturedFishEntity {
 
 	@Override
 	protected SoundEvent getFlopSound() {
-		return null;
+		//Seems to crash if it is null unless it has always done such
+		return SoundEvents.ENTITY_SALMON_FLOP;
+		//return null;
 	}
 
 	/*

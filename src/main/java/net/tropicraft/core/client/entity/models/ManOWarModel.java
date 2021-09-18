@@ -16,6 +16,7 @@ public class ManOWarModel extends CompositeEntityModel<ManOWarEntity> {
     ModelPart Tent2;
     ModelPart Tent3;
     ModelPart Tent4;
+    ModelPart face;
     public boolean isOnGround = false;
 
     //32, 20, true
@@ -27,8 +28,8 @@ public class ManOWarModel extends CompositeEntityModel<ManOWarEntity> {
 
     public ManOWarModel(ModelPart root){
         Body = root.getChild("Body");
-        Body2 = root.getChild("Body2");
-        Body3 = root.getChild("Body3");
+        //Body2 = Body.getChild("Body2");
+        //Body3 = Body2.getChild("Body3");
         CenterTent = Body.getChild("CenterTent");
         CenterTent2 = CenterTent.getChild("CenterTent2");
         CenterTent3 = CenterTent2.getChild("CenterTent3");

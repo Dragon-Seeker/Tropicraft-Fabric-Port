@@ -1,6 +1,8 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.MarlinModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.MarlinEntity;
 import net.fabricmc.api.EnvType;
@@ -14,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class MarlinRenderer extends MobEntityRenderer<MarlinEntity, MarlinModel> {
-    public MarlinRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager, new MarlinModel(), 0.5F);
+    public MarlinRenderer(EntityRendererFactory.Context context) {
+        super(context, new MarlinModel(context.getPart(TropicraftEntityRendering.MARLIN_LAYER)), 0.5F);
         shadowOpacity = 0.5f;
     }
 
@@ -33,4 +35,3 @@ public class MarlinRenderer extends MobEntityRenderer<MarlinEntity, MarlinModel>
 }
 
 
- */

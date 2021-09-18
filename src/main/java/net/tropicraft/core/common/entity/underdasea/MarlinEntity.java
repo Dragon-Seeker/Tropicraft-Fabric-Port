@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.LocalDifficulty;
@@ -72,7 +73,9 @@ public class MarlinEntity extends FishEntity {
 
     @Override
     protected SoundEvent getFlopSound() {
-        return null;
+        //TODO: Replace with more appropriate sound in the future
+        return SoundEvents.ENTITY_GUARDIAN_FLOP;
+        //return null;
     }
 
     public void setTexture(final String textureName) {
