@@ -1,6 +1,8 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.SeaTurtleModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.SeaTurtleEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,8 +13,8 @@ import net.minecraft.util.Identifier;
 
 public class SeaTurtleRenderer extends MobEntityRenderer<SeaTurtleEntity, SeaTurtleModel> {
 
-    public SeaTurtleRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager, new SeaTurtleModel(), 0.7F);
+    public SeaTurtleRenderer(EntityRendererFactory.Context context) {
+        super(context, new SeaTurtleModel(context.getPart(TropicraftEntityRendering.SEA_TURTLE_LAYER)), 0.7F);
         shadowRadius = 0.5f;
         shadowOpacity = 0.5f;
     }
@@ -49,4 +51,4 @@ public class SeaTurtleRenderer extends MobEntityRenderer<SeaTurtleEntity, SeaTur
     }
 }
 
- */
+

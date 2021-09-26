@@ -104,14 +104,14 @@ public class TropicraftEntityRendering {
         //WALL_ITEM_LAYER = registerMain("wall_item", () -> KoaModel.getTexturedModelData());
         //TODO: Currently Rendering, something (It seems to render the eneity as the item idk why tho) >:
         //BAMBOO_ITEM_FRAME_LAYER = registerMain("eih", () -> EntityModelLayers.getTexturedModelData());
-        //SEA_TURTLE_LAYER = registerMain("sea_turtle", () -> SeaTurtleModel.getTexturedModelData());
+        SEA_TURTLE_LAYER = registerMain("sea_turtle", () -> SeaTurtleModel.getTexturedModelData());
         MARLIN_LAYER = registerMain("marlin", () -> MarlinModel.getTexturedModelData());
         FAILGULL_LAYER = registerMain("failgull", () -> FailgullModel.getTexturedModelData());
         //DOLPHIN_LAYER = registerMain("dolphin", () -> TropicraftDolphinModel.getTexturedModelData());
         SEAHORSE_LAYER = registerMain("seahorse", () -> SeahorseModel.getTexturedModelData());
         //TREE_FROG_LAYER = registerMain("tree_frog", () -> TreeFrogModel.getTexturedModelData());
         //POISON_BLOT_LAYER = registerMain("eih", () -> EIHModel.getTexturedModelData());
-        //SEA_URCHIN_LAYER = registerMain("sea_urchin", () -> SeaUrchinModel.getTexturedModelData());
+        SEA_URCHIN_LAYER = registerMain("sea_urchin", () -> SeaUrchinModel.getTexturedModelData());
         SEA_URCHIN_EGG_ENTITY_LAYER = registerMain("sea_urchin_egg", () -> EggModel.getTexturedModelData());
         //STARFISH_LAYER = registerMain("starfish", () -> StarfishRenderer.getTexturedModelData());
         STARFISH_EGG_LAYER = registerMain("starfish_egg", () -> EggModel.getTexturedModelData());
@@ -149,14 +149,14 @@ public class TropicraftEntityRendering {
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.WALL_ITEM, WallItemRenderer::new);
         //TODO: Currently Rendering, something (It seems to render the eneity as the item idk why tho) >:
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.BAMBOO_ITEM_FRAME, BambooItemFrameEntityRenderer::new);
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE, (dispatcher, context) -> new SeaTurtleRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE, SeaTurtleRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.MARLIN, MarlinRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.FAILGULL, FailgullRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.DOLPHIN, (dispatcher, context) -> new TropicraftDolphinRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEAHORSE, SeahorseRenderer::new);
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TREE_FROG, (dispatcher, context) -> new TreeFrogRenderer(dispatcher));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.POISON_BLOT, (dispatcher, context) -> new PoisonBlotRenderer(dispatcher));
-        //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN, (dispatcher, context) -> new SeaUrchinRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN, SeaUrchinRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_URCHIN_EGG_ENTITY, (context) -> new EggRenderer(context, SEA_URCHIN_EGG_ENTITY_LAYER));
         //EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH, (dispatcher, context) -> new StarfishRenderer(dispatcher));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.STARFISH_EGG, (context) -> new EggRenderer(context, STARFISH_EGG_LAYER));

@@ -5,6 +5,8 @@ import net.tropicraft.core.common.entity.underdasea.ManOWarEntity;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 
+//TODO: Fixed by using fixed values instead of using the values based off of DERP
+//It also seems to be just very broken
 public class ManOWarModel extends CompositeEntityModel<ManOWarEntity> {
     ModelPart Body;
     ModelPart Body2;
@@ -28,8 +30,6 @@ public class ManOWarModel extends CompositeEntityModel<ManOWarEntity> {
 
     public ManOWarModel(ModelPart root){
         Body = root.getChild("Body");
-        //Body2 = Body.getChild("Body2");
-        //Body3 = Body2.getChild("Body3");
         CenterTent = Body.getChild("CenterTent");
         CenterTent2 = CenterTent.getChild("CenterTent2");
         CenterTent3 = CenterTent2.getChild("CenterTent3");
@@ -117,8 +117,8 @@ public class ManOWarModel extends CompositeEntityModel<ManOWarEntity> {
         ModelPartData ModelPartBody = modelPartData.addChild("Body",
                 ModelPartBuilder.create()
                         .mirrored()
-                        .cuboid("float", -2F, -4F, -2F, 4, 4, 8, delta, i, j)
-                        .cuboid("Shape1", 0F, -6F, -2F, 0, 6, 10, delta, derp ? 32 : 15, derp ? 20 : -10)
+                        .cuboid("float", -2F, -4F, -2F, 4, 4, 8, delta, 0, 20)
+                        .cuboid("Shape1", 0F, -6F, -2F, 0, 6, 10, delta, 15, -10)//derp ? 32 : 15, derp ? 20 : -10)
                         .cuboid("tentbase", -2F, 0F, -2F, 4, 2, 4, delta, tbOX, tbOY),
                 ModelTransform.pivot(0F, 18F, 0F));
 
