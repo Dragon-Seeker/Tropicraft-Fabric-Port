@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.projectile.PoisonBlotEntity;
 import net.fabricmc.api.EnvType;
@@ -16,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public class PoisonBlotRenderer extends EntityRenderer<PoisonBlotEntity> {
 
-    public PoisonBlotRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager);
+    public PoisonBlotRenderer(EntityRendererFactory.Context context) {
+        super(context);
     }
 
     public void render(final PoisonBlotEntity entity, float entityYaw, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
@@ -40,4 +41,4 @@ public class PoisonBlotRenderer extends EntityRenderer<PoisonBlotEntity> {
     }
 }
 
- */
+

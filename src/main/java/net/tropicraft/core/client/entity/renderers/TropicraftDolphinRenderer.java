@@ -1,6 +1,8 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.TropicraftDolphinModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.TropicraftDolphinEntity;
 import net.fabricmc.api.EnvType;
@@ -13,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public class TropicraftDolphinRenderer extends MobEntityRenderer<TropicraftDolphinEntity, TropicraftDolphinModel> {
 
-    public TropicraftDolphinRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager, new TropicraftDolphinModel(), 0.5F);
+    public TropicraftDolphinRenderer(EntityRendererFactory.Context context) {
+        super(context, new TropicraftDolphinModel(context.getPart(TropicraftEntityRendering.DOLPHIN_LAYER)), 0.5F);
         shadowOpacity = 0.5f;
     }
 
@@ -25,4 +27,4 @@ public class TropicraftDolphinRenderer extends MobEntityRenderer<TropicraftDolph
     }
 }
 
- */
+

@@ -1,8 +1,8 @@
 package net.tropicraft.core.client.entity.models;
 
+import net.minecraft.client.model.*;
 import net.tropicraft.core.common.entity.neutral.VMonkeyEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
 import net.minecraft.client.render.entity.model.ModelWithArms;
 import net.minecraft.client.util.math.MatrixStack;
@@ -10,7 +10,8 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
-/*
+
+//TODO: TAIL SEEMS TO BE JUST A BIT CURSED
 public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements ModelWithArms {
     public ModelPart body;
     public ModelPart lLegUpper;
@@ -29,7 +30,25 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
     protected Random rand;
     public float herps;
 
-    public VMonkeyModel() {
+    public VMonkeyModel(ModelPart root) {
+
+
+        body = root.getChild("body");
+        lLegUpper = root.getChild("lLegUpper");
+        rLegUpper = root.getChild("rLegUpper");
+        rArmUpper = root.getChild("rArmUpper");
+        lArmUpper = root.getChild("lArmUpper");
+        tailBase = root.getChild("tailBase");
+        tailMid = root.getChild("tailMid");
+        tailTop = root.getChild("tailTop");
+        rArmLower = root.getChild("rArmLower");
+        lArmLower = root.getChild("lArmLower");
+        lLegLower = root.getChild("lLegLower");
+        rLegLower = root.getChild("rLegLower");
+        face = root.getChild("face");
+        head = root.getChild("head");
+
+        /*
         body = new ModelPart(this, 0, 8);
         body.addCuboid(-1F, -2F, -4F, 2, 4, 9, 0F);
         body.setPivot(0F, 16F, 0F);
@@ -37,6 +56,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         body.yaw = 3.141593F;
         body.roll = 0F;
         body.mirror = false;
+
         lLegUpper = new ModelPart(this, 7, 0);
         lLegUpper.addCuboid(-1F, 0F, -0.5F, 1, 5, 1, 0F);
         lLegUpper.setPivot(-1F, 14F, -3.5F);
@@ -44,6 +64,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         lLegUpper.yaw = 0F;
         lLegUpper.roll = 0F;
         lLegUpper.mirror = false;
+
         rLegUpper = new ModelPart(this, 0, 0);
         rLegUpper.addCuboid(0F, 0F, -0.5F, 1, 5, 1, 0F);
         rLegUpper.setPivot(1F, 14F, -3.5F);
@@ -51,6 +72,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         rLegUpper.yaw = 0F;
         rLegUpper.roll = 0F;
         rLegUpper.mirror = false;
+
         rArmUpper = new ModelPart(this, 0, 0);
         rArmUpper.addCuboid(0F, 0F, -0.5F, 1, 5, 1, 0F);
         rArmUpper.setPivot(1F, 14F, 3.5F);
@@ -58,6 +80,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         rArmUpper.yaw = 0F;
         rArmUpper.roll = 0F;
         rArmUpper.mirror = false;
+
         lArmUpper = new ModelPart(this, 7, 0);
         lArmUpper.addCuboid(-1F, 0F, -0.5F, 1, 5, 1, 0F);
         lArmUpper.setPivot(-1F, 14F, 3.5F);
@@ -65,6 +88,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         lArmUpper.yaw = 0F;
         lArmUpper.roll = 0F;
         lArmUpper.mirror = false;
+
         tailBase = new ModelPart(this, 20, 27);
         tailBase.addCuboid(-0.5F, -4F, -0.5F, 1, 3, 1, 0F);
         tailBase.setPivot(0F, 15F, 3.5F);
@@ -72,6 +96,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         tailBase.yaw = 3.141593F;
         tailBase.roll = 0F;
         tailBase.mirror = false;
+
         tailMid = new ModelPart(this, 20, 24);
         tailMid.addCuboid(-0.5F, -2F, -0.5F, 1, 2, 1, 0F);
         tailMid.setPivot(0F, 11F, 3.5F);
@@ -79,6 +104,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         tailMid.yaw = 3.141593F;
         tailMid.roll = 0F;
         tailMid.mirror = false;
+
         tailTop = new ModelPart(this, 20, 21);
         tailTop.addCuboid(-0.5F, -2F, -0.5F, 1, 2, 1, 0F);
         tailTop.setPivot(0F, 9F, 3.5F);
@@ -86,6 +112,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         tailTop.yaw = 3.141593F;
         tailTop.roll = 0F;
         tailTop.mirror = false;
+
         rArmLower = new ModelPart(this, 0, 7);
         rArmLower.addCuboid(0F, 0F, -0.5F, 1, 5, 1, 0F);
         rArmLower.setPivot(1F, 19F, 3.5F);
@@ -93,6 +120,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         rArmLower.yaw = 0F;
         rArmLower.roll = 0F;
         rArmLower.mirror = false;
+
         lArmLower = new ModelPart(this, 12, 0);
         lArmLower.addCuboid(-1F, 0F, -0.5F, 1, 5, 1, 0F);
         lArmLower.setPivot(-1F, 19F, 3.5F);
@@ -100,6 +128,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         lArmLower.yaw = 0F;
         lArmLower.roll = 0F;
         lArmLower.mirror = false;
+
         lLegLower = new ModelPart(this, 12, 0);
         lLegLower.addCuboid(-1F, 0F, -0.5F, 1, 5, 1, 0F);
         lLegLower.setPivot(-1F, 19F, -3.5F);
@@ -107,6 +136,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         lLegLower.yaw = 0F;
         lLegLower.roll = 0F;
         lLegLower.mirror = false;
+
         rLegLower = new ModelPart(this, 0, 7);
         rLegLower.addCuboid(0F, 0F, -0.5F, 1, 5, 1, 0F);
         rLegLower.setPivot(1F, 19F, -3.5F);
@@ -114,6 +144,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         rLegLower.yaw = 0F;
         rLegLower.roll = 0F;
         rLegLower.mirror = false;
+
         face = new ModelPart(this, 0, 25);
         face.addCuboid(-2F, -1F, 0F, 4, 4, 3, 0F);
         face.setPivot(0F, 15F, -5F);
@@ -121,6 +152,7 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         face.yaw = 3.141593F;
         face.roll = 0F;
         face.mirror = false;
+
         head = new ModelPart(this, 25, 25);
         head.addCuboid(-3F, -2F, 0F, 6, 5, 2, 0F);
         head.setPivot(0F, 15F, -5F);
@@ -128,6 +160,85 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         head.yaw = 3.141593F;
         head.roll = 0F;
         head.mirror = false;
+
+         */
+    }
+
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+
+        modelPartData.addChild("body",
+                ModelPartBuilder.create().uv(0, 8)
+                        .cuboid(-1F, -2F, -4F, 2, 4, 9),
+                ModelTransform.of(0F, 16F, 0F, 0F, 3.141593F, 0F));
+
+        modelPartData.addChild("lLegUpper",
+                ModelPartBuilder.create().uv(7, 0)
+                        .cuboid(-1F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(-1F, 14F, -3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("rLegUpper",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(0F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(1F, 14F, -3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("rArmUpper",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(0F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(1F, 14F, 3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("lArmUpper",
+                ModelPartBuilder.create().uv(7, 0)
+                        .cuboid(-1F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(-1F, 14F, 3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("tailBase",
+                ModelPartBuilder.create().uv(20, 27)
+                        .cuboid(-0.5F, -4F, -0.5F, 1, 3, 1),
+                ModelTransform.of(0F, 15F, 3.5F, 0F, 3.141593F, 0F));
+
+        modelPartData.addChild("tailMid",
+                ModelPartBuilder.create().uv(20, 24)
+                        .cuboid(-0.5F, -2F, -0.5F, 1, 2, 1),
+                ModelTransform.of(0F, 11F, 3.5F, 0F, 3.141593F, 0F));
+
+        modelPartData.addChild("tailTop",
+                ModelPartBuilder.create().uv(20, 21)
+                        .cuboid(-0.5F, -2F, -0.5F, 1, 2, 1),
+                ModelTransform.of(0F, 9F, 3.5F, 0F, 3.141593F, 0F));
+
+        modelPartData.addChild("rArmLower",
+                ModelPartBuilder.create().uv(0, 7)
+                        .cuboid(0F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(1F, 19F, 3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("lArmLower",
+                ModelPartBuilder.create().uv(12, 0)
+                        .cuboid(-1F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(-1F, 19F, 3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("lLegLower",
+                ModelPartBuilder.create().uv(12, 0)
+                        .cuboid(-1F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(-1F, 19F, -3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("rLegLower",
+                ModelPartBuilder.create().uv(0, 7)
+                        .cuboid(0F, 0F, -0.5F, 1, 5, 1),
+                ModelTransform.of(1F, 19F, -3.5F, 0F, 0F, 0F));
+
+        modelPartData.addChild("face",
+                ModelPartBuilder.create().uv(0, 25)
+                        .cuboid(-2F, -1F, 0F, 4, 4, 3),
+                ModelTransform.of(0F, 15F, -5F, 0F, 3.141593F, 0F));
+
+        modelPartData.addChild("head",
+                ModelPartBuilder.create().uv(25, 25)
+                        .cuboid(-3F, -2F, 0F, 6, 5, 2),
+                ModelTransform.of(0F, 15F, -5F, 0F, 3.141593F, 0F));
+
+        return TexturedModelData.of(modelData, 64, 32);
     }
 
     @Override
@@ -282,4 +393,4 @@ public class VMonkeyModel extends CompositeEntityModel<VMonkeyEntity> implements
         stack.translate(0.09375F, 0.1875F, 0.0F);
     }
 }
- */
+

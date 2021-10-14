@@ -1,5 +1,5 @@
 package net.tropicraft.core.client.entity.renderlayer;
-/*
+
 import net.tropicraft.core.common.entity.neutral.VMonkeyEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,10 +27,10 @@ public class VMonkeyHeldItemLayer<T extends VMonkeyEntity, M extends EntityModel
             stack.translate(0.0F, 1.30F, -0.425F);
             stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
             stack.scale(0.5F, 0.5F, 0.5F);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(monkey.getMainHandStack(), ModelTransformation.Mode.NONE, packedLightIn, LivingEntityRenderer.getOverlay(monkey, 0.0F), stack, buffer);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(monkey.getMainHandStack(), ModelTransformation.Mode.NONE, packedLightIn, LivingEntityRenderer.getOverlay(monkey, 0.0F), stack, buffer, monkey.getId());
             stack.pop();
         }
     }
 }
 
- */
+

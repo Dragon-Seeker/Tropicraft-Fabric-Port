@@ -1,10 +1,10 @@
 package net.tropicraft.core.client.entity.models;
 
+import net.minecraft.client.model.*;
 import net.tropicraft.core.common.entity.placeable.UmbrellaEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-/*
+
 public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
 
     public ModelPart base;
@@ -19,7 +19,23 @@ public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
     public ModelPart shape111;
     public ModelPart shape112;
 
-    public UmbrellaModel() {
+    public UmbrellaModel(ModelPart root) {
+
+        base = root.getChild("base");
+        shape2 = root.getChild("shape2");
+        shape4 = root.getChild("shape4");
+        shape3 = root.getChild("shape3");
+        shape31 = root.getChild("shape31");
+        shape32 = root.getChild("shape32");
+        shape33 = root.getChild("shape33");
+        shape11 = root.getChild("shape11");
+        shape12 = root.getChild("shape12");
+        shape111 = root.getChild("shape111");
+        shape112 = root.getChild("shape112");
+
+
+
+        /*
         base = new ModelPart(this, 0, 0);
         base.addCuboid(-0.5F, 0F, -0.5F, 1, 14, 1, 0F);
         base.setPivot(0F, -13F, 0F);
@@ -104,6 +120,71 @@ public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
         shape112.roll = 0F;
         shape112.mirror = false;
 
+        */
+    }
+
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+
+        modelPartData.addChild("base",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 14, 1),
+                ModelTransform.pivot(0F, -13F, 0F));
+
+        modelPartData.addChild("shape2",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(-7.5F, -2F, -7.5F, 15, 1, 15),
+                ModelTransform.pivot(0F, -12F, 0F));
+
+        modelPartData.addChild("shape4",
+                ModelPartBuilder.create().uv(25, 25)
+                        .cuboid(-1F, -1F, -1F, 2, 1, 2),
+                ModelTransform.pivot(0F, -14F, 0F));
+
+        modelPartData.addChild("shape3",
+                ModelPartBuilder.create().uv(0, 20)
+                        .cuboid(-4F, -1F, 0F, 9, 1, 3),
+                ModelTransform.of(-0.5F, -13F, 7.5F, -0.2443461F, 0F, 0F));
+
+        modelPartData.addChild("shape31",
+                ModelPartBuilder.create().uv(0, 24)
+                        .cuboid(-4.5F, -1F, 0F, 9, 1, 3),
+                ModelTransform.of(7.5F, -13F, 0F, -0.2443461F, 1.570796F, 0F));
+
+        modelPartData.addChild("shape32",
+                ModelPartBuilder.create().uv(0, 28)
+                        .cuboid(-4.5F, -1F, -1F, 9, 1, 3),
+                ModelTransform.of(0F, -12.75F, -8.45F, -0.2443461F, 3.141593F, 0F));
+
+        modelPartData.addChild("shape33",
+                ModelPartBuilder.create().uv(24, 28)
+                        .cuboid(-4.5F, -1F, 1F, 9, 1, 3),
+                ModelTransform.of(-6.5F, -13.25F, 0F, -0.2443461F, -1.570796F, 0F));
+
+        modelPartData.addChild("shape11",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
+                ModelTransform.of(0F, -10F, 0F, 1.902409F, 0F, 0F));
+
+        modelPartData.addChild("shape12",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
+                ModelTransform.of(0F, -10F, 0F, -1.902409F, 0F, 0F));
+
+        modelPartData.addChild("shape111",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
+                ModelTransform.of(0F, -10F, 0F, 1.902409F, 1.570796F, 0F));
+
+        modelPartData.addChild("shape112",
+                ModelPartBuilder.create().uv(0, 0)
+                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
+                ModelTransform.of(0F, -10F, 0F, 1.902409F, -1.570796F, 0F));
+
+
+
+        return TexturedModelData.of(modelData, 64, 32);
     }
 
     @Override
@@ -120,4 +201,4 @@ public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
     }
 }
 
- */
+

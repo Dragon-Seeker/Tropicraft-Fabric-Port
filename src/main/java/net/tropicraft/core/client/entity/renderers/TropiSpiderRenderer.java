@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.hostile.TropiSpiderEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -9,8 +10,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class TropiSpiderRenderer extends SpiderEntityRenderer<TropiSpiderEntity> {
-	public TropiSpiderRenderer(final EntityRenderDispatcher manager) {
-		super(manager);
+	public TropiSpiderRenderer(EntityRendererFactory.Context context) {
+		super(context);
 		shadowOpacity = 0.5f;
 	}
 
@@ -47,4 +48,3 @@ public class TropiSpiderRenderer extends SpiderEntityRenderer<TropiSpiderEntity>
 	}
 }
 
- */

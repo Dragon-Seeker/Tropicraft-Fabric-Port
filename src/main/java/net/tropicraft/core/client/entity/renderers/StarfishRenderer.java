@@ -1,5 +1,6 @@
 package net.tropicraft.core.client.entity.renderers;
 
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
 import net.tropicraft.core.common.entity.underdasea.StarfishEntity;
@@ -15,21 +16,21 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
 
-//public class StarfishRenderer extends EntityRenderer<StarfishEntity> {
+public class StarfishRenderer extends EntityRenderer<StarfishEntity> {
 
 	/**
 	 * Amount freshly hatched starfish are scaled down while rendering.
 	 */
-	//public static final float BABY_RENDER_SCALE = 0.25f;
+	public static final float BABY_RENDER_SCALE = 0.25f;
 
 	/**
 	 * Amount mature starfish are scaled down while rendering.
 	 */
-	/*
+
 	public static final float ADULT_RENDER_SCALE = 1f;
 
-	public StarfishRenderer(EntityRenderDispatcher renderManager) {
-		super(renderManager);
+	public StarfishRenderer(EntityRendererFactory.Context context) {
+		super(context);
 	}
 
 	@Override
@@ -71,4 +72,4 @@ import org.jetbrains.annotations.Nullable;
 	}
 }
 
-	 */
+

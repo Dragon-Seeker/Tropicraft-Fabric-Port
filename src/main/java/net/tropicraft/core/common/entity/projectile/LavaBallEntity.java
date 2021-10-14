@@ -9,7 +9,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.FlyingItemEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -23,7 +25,7 @@ import net.tropicraft.core.common.registry.TropicraftEntities;
 
 import java.util.UUID;
 
-public class LavaBallEntity extends Entity {
+public class LavaBallEntity extends Entity implements FlyingItemEntity {
 
     public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "lava_ball");
 
@@ -225,4 +227,8 @@ public class LavaBallEntity extends Entity {
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
     }
 
+    @Override
+    public ItemStack getStack() {
+        return null;
+    }
 }

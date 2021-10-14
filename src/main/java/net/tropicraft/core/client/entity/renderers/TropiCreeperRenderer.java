@@ -1,7 +1,9 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.TropiCreeperModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.common.entity.passive.TropiCreeperEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,8 +18,8 @@ public class TropiCreeperRenderer extends MobEntityRenderer<TropiCreeperEntity, 
 
     private static final Identifier CREEPER_TEXTURE = new Identifier(Constants.MODID, "textures/entity/tropicreeper.png");
 
-    public TropiCreeperRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, new TropiCreeperModel(), 0.5F);
+    public TropiCreeperRenderer(EntityRendererFactory.Context context) {
+        super(context, new TropiCreeperModel(context.getPart(TropicraftEntityRendering.TROPI_CREEPER_LAYER)), 0.5F);
     }
 
     // From CreperRenderer
@@ -45,4 +47,4 @@ public class TropiCreeperRenderer extends MobEntityRenderer<TropiCreeperEntity, 
     }
 }
 
- */
+

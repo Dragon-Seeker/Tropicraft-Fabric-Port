@@ -1,5 +1,7 @@
 package net.tropicraft.core.client.entity.renderlayer;
-/*
+
+import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.tropicraft.core.client.entity.models.AshenModel;
 import net.tropicraft.core.client.entity.models.TropiBeeModel;
 import net.tropicraft.core.client.entity.renderers.TropiBeeRenderer;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
@@ -12,16 +14,16 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3f;
-
+import net.tropicraft.core.common.entity.hostile.AshenEntity;
 
 public class SunglassesLayer extends FeatureRenderer<TropiBeeEntity, TropiBeeModel> {
 
     private TropicraftSpecialRenderHelper mask;
     private TropiBeeModel beeModel;
 
-    public SunglassesLayer(TropiBeeRenderer renderer) {
-        super(renderer);
-        beeModel = new TropiBeeModel();
+    public SunglassesLayer(FeatureRendererContext<TropiBeeEntity, TropiBeeModel> featureRendererContext) {
+        super(featureRendererContext);
+        beeModel = featureRendererContext.getModel();
         mask = new TropicraftSpecialRenderHelper();
     }
 
@@ -43,4 +45,4 @@ public class SunglassesLayer extends FeatureRenderer<TropiBeeEntity, TropiBeeMod
     }
 }
 
- */
+

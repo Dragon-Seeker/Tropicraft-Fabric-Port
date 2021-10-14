@@ -1,6 +1,8 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.UmbrellaModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.common.entity.placeable.UmbrellaEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.util.Identifier;
@@ -8,8 +10,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class UmbrellaRenderer extends FurnitureRenderer<UmbrellaEntity> {
 
-    public UmbrellaRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, "umbrella", new UmbrellaModel(), 4);
+    public UmbrellaRenderer(EntityRendererFactory.Context context) {
+        super(context, "umbrella", new UmbrellaModel(context.getPart(TropicraftEntityRendering.UMBRELLA_LAYER)), 4);
         this.shadowRadius = 2.5f;
     }
 
@@ -56,4 +58,3 @@ public class UmbrellaRenderer extends FurnitureRenderer<UmbrellaEntity> {
 }
 
 
- */

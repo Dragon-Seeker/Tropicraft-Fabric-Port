@@ -1,6 +1,8 @@
 package net.tropicraft.core.client.entity.renderers;
-/*
+
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.tropicraft.core.client.entity.models.SharkModel;
+import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.SharkEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -14,8 +16,8 @@ public class SharkRenderer extends MobEntityRenderer<SharkEntity, SharkModel> {
     public static final Identifier BASIC_SHARK_TEXTURE = TropicraftRenderUtils.getTextureEntity("shark/hammerhead1");
     public static final Identifier BOSS_SHARK_TEXTURE = TropicraftRenderUtils.getTextureEntity("shark/hammerhead4");
 
-    public SharkRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager, new SharkModel(), 1);
+    public SharkRenderer(EntityRendererFactory.Context context) {
+        super(context, new SharkModel(context.getPart(TropicraftEntityRendering.HAMMERHEAD_LAYER)), 1);
     }
 
     @Override
@@ -47,4 +49,4 @@ public class SharkRenderer extends MobEntityRenderer<SharkEntity, SharkModel> {
     }
 }
 
- */
+
