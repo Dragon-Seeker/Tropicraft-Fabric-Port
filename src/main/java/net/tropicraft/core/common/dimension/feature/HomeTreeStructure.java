@@ -66,7 +66,9 @@ public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConf
         @Override
         public void init(DynamicRegistryManager registryManager, ChunkGenerator chunkGenerator, StructureManager templates, ChunkPos pos, Biome biome, StructurePoolFeatureConfig config, HeightLimitView world) {
             BlockPos blockPos = new BlockPos(pos.x << 4, 0, pos.z << 4);
-            StructurePoolBasedGenerator.generate(registryManager, config, Piece::new, chunkGenerator, templates, blockPos, (StructurePiecesHolder) this.children, this.random, true, true, world);
+            StructurePoolBasedGenerator.generate(registryManager, config, Piece::new, chunkGenerator, templates, blockPos, this, this.random, true, true, world);
+
+            this.setBoundingBoxFromChildren();
             this.setBoundingBoxFromChildrenCustom();
         }
 
