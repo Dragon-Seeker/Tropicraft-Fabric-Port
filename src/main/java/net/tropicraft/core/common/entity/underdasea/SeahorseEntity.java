@@ -18,7 +18,7 @@ public class SeahorseEntity extends AbstractTexturedFishEntity {
 		super(type, world);
 	}
 
-	public static AttributeSupplier.Builder createAttributes() {
+	public static AttributeSupplier.Builder createSeahorseAttributes() {
 		return createAttributes()
 				.add(Attributes.MAX_HEALTH, 4.0);
 	}
