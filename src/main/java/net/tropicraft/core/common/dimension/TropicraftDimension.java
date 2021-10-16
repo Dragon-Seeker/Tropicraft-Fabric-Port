@@ -1,19 +1,19 @@
 package net.tropicraft.core.common.dimension;
 
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.dimension.biome.TropicraftBiomeProvider;
 import net.tropicraft.core.common.dimension.chunk.TropicraftChunkGenerator;
@@ -21,7 +21,6 @@ import net.tropicraft.core.mixins.DimensionsOptionsAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -29,12 +28,12 @@ import java.util.function.Supplier;
 public class TropicraftDimension {
     private static final Logger LOGGER = LogManager.getLogger(TropicraftDimension.class);
 
-    public static final Identifier ID = new Identifier(Constants.MODID, "tropics");
+    public static final ResourceLocation ID = new ResourceLocation(Constants.MODID, "tropics");
 
-    public static final RegistryKey<World> WORLD = RegistryKey.of(Registry.WORLD_KEY, ID);
-    public static final RegistryKey<DimensionOptions> DIMENSION = RegistryKey.of(Registry.DIMENSION_KEY, ID);
-    public static final RegistryKey<DimensionType> DIMENSION_TYPE = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, ID);
-    public static final RegistryKey<ChunkGeneratorSettings> DIMENSION_SETTINGS = RegistryKey.of(Registry.CHUNK_GENERATOR_SETTINGS_KEY, ID);
+    public static final ResourceKey<Level> WORLD = ResourceKey.create(Registry.DIMENSION_REGISTRY, ID);
+    public static final ResourceKey<LevelStem> DIMENSION = ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, ID);
+    public static final ResourceKey<DimensionType> DIMENSION_TYPE = ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, ID);
+    public static final ResourceKey<NoiseGeneratorSettings> DIMENSION_SETTINGS = ResourceKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, ID);
 
     //public static DimensionType DIMENSION_TYPE_TEST = Registry.register(DIMENSION)
 
@@ -74,9 +73,9 @@ public class TropicraftDimension {
     public static void addDefaultDimensionKey() {
         //Field dimensionKeysField = ObfuscationReflectionHelper.findField(DimensionOptions.class, "field_236056_e_");
 
-        Set<RegistryKey<DimensionOptions>> keys = DimensionsOptionsAccessor.getBaseDimensions();
+        Set<ResourceKey<LevelStem>> keys = DimensionsOptionsAccessor.getBuiltInOrder();
         keys.add(DIMENSION);
-        DimensionsOptionsAccessor.setBaseDimensions(keys);
+        DimensionsOptionsAccessor.setBuiltInOrder(keys);
 
 
 
@@ -109,31 +108,31 @@ public class TropicraftDimension {
     }
 
 
-    public static DimensionOptions createDimension(
+    public static LevelStem createDimension(
             Registry<DimensionType> dimensionTypeRegistry,
             Registry<Biome> biomeRegistry,
-            Registry<ChunkGeneratorSettings> dimensionSettingsRegistry,
+            Registry<NoiseGeneratorSettings> dimensionSettingsRegistry,
             long seed
     ) {
         Supplier<DimensionType> dimensionType = () -> dimensionTypeRegistry.getOrThrow(TropicraftDimension.DIMENSION_TYPE);
         ChunkGenerator generator = TropicraftDimension.createGenerator(biomeRegistry, dimensionSettingsRegistry, seed);
 
-        return new DimensionOptions(dimensionType, generator);
+        return new LevelStem(dimensionType, generator);
     }
 
-    public static ChunkGenerator createGenerator(Registry<Biome> biomeRegistry, Registry<ChunkGeneratorSettings> dimensionSettingsRegistry, long seed) {
-        Supplier<ChunkGeneratorSettings> dimensionSettings = () -> {
+    public static ChunkGenerator createGenerator(Registry<Biome> biomeRegistry, Registry<NoiseGeneratorSettings> dimensionSettingsRegistry, long seed) {
+        Supplier<NoiseGeneratorSettings> dimensionSettings = () -> {
             // fallback to overworld so that we don't crash before our datapack is loaded (horrible workaround)
-            ChunkGeneratorSettings settings = dimensionSettingsRegistry.get(DIMENSION_SETTINGS);
-            return settings != null ? settings : dimensionSettingsRegistry.getOrThrow(ChunkGeneratorSettings.OVERWORLD);
+            NoiseGeneratorSettings settings = dimensionSettingsRegistry.get(DIMENSION_SETTINGS);
+            return settings != null ? settings : dimensionSettingsRegistry.getOrThrow(NoiseGeneratorSettings.OVERWORLD);
         };
         TropicraftBiomeProvider biomeSource = new TropicraftBiomeProvider(seed, biomeRegistry);
         return new TropicraftChunkGenerator(biomeSource, seed, dimensionSettings);
     }
 
-    public static void teleportPlayer(ServerPlayerEntity player, RegistryKey<World> dimensionType) {
-        if (player.world.getRegistryKey() == dimensionType) {
-            teleportPlayerNoPortal(player, World.OVERWORLD);
+    public static void teleportPlayer(ServerPlayer player, ResourceKey<Level> dimensionType) {
+        if (player.level.dimension() == dimensionType) {
+            teleportPlayerNoPortal(player, Level.OVERWORLD);
         } else {
             teleportPlayerNoPortal(player, dimensionType);
         }
@@ -147,21 +146,21 @@ public class TropicraftDimension {
      * @param player The player that will be teleported
      * @param destination The target dimension to teleport to
      */
-    public static void teleportPlayerNoPortal(ServerPlayerEntity player, RegistryKey<World> destination) {
-        ServerWorld world = player.server.getWorld(destination);
+    public static void teleportPlayerNoPortal(ServerPlayer player, ResourceKey<Level> destination) {
+        ServerLevel world = player.server.getLevel(destination);
         if (world == null) {
-            LOGGER.error("Cannot teleport player to dimension {} as it does not exist!", destination.getValue());
+            LOGGER.error("Cannot teleport player to dimension {} as it does not exist!", destination.location());
             return;
         }
 
         //if (!ForgeHooks.onTravelToDimension(player, destination)) return;
 
-        int x = MathHelper.floor(player.getX());
-        int z = MathHelper.floor(player.getZ());
+        int x = Mth.floor(player.getX());
+        int z = Mth.floor(player.getZ());
 
-        WorldChunk chunk = world.getChunk(x >> 4, z >> 4);
-        int topY = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE, x & 15, z & 15);
-        player.teleport(world, x + 0.5, topY + 1.0, z + 0.5, player.getYaw(), player.getPitch());
+        LevelChunk chunk = world.getChunk(x >> 4, z >> 4);
+        int topY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x & 15, z & 15);
+        player.teleportTo(world, x + 0.5, topY + 1.0, z + 0.5, player.getYRot(), player.getXRot());
 
 
         //BasicEventHooks.firePlayerChangedDimensionEvent(player, destination, destination);

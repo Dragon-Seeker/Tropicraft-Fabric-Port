@@ -1,12 +1,17 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 import net.tropicraft.core.common.entity.neutral.TreeFrogEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.util.math.MathHelper;
 
-public class TreeFrogModel extends CompositeEntityModel<TreeFrogEntity> {
+public class TreeFrogModel extends ListModel<TreeFrogEntity> {
     public ModelPart frontLeftLeg;
     public ModelPart frontRightLeg;
     public ModelPart body;
@@ -65,58 +70,58 @@ public class TreeFrogModel extends CompositeEntityModel<TreeFrogEntity> {
         */
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("frontLeftLeg",
-                ModelPartBuilder.create().uv(12, 19)
-                        .cuboid(-2F, 0.0F, -2F, 4, 1, 4),
-                ModelTransform.pivot(2.0F, 23F, -3F));
+        modelPartData.addOrReplaceChild("frontLeftLeg",
+                CubeListBuilder.create().texOffs(12, 19)
+                        .addBox(-2F, 0.0F, -2F, 4, 1, 4),
+                PartPose.offset(2.0F, 23F, -3F));
 
-        modelPartData.addChild("frontRightLeg",
-                ModelPartBuilder.create().uv(12, 14)
-                        .cuboid(-2F, 0.0F, -2F, 4, 1, 4),
-                ModelTransform.pivot(-2F, 23F, -3F));
+        modelPartData.addOrReplaceChild("frontRightLeg",
+                CubeListBuilder.create().texOffs(12, 14)
+                        .addBox(-2F, 0.0F, -2F, 4, 1, 4),
+                PartPose.offset(-2F, 23F, -3F));
 
-        modelPartData.addChild("body",
-                ModelPartBuilder.create().uv(28, 8)
-                        .cuboid(-2F, -5F, -2F, 4, 9, 4),
-                ModelTransform.of(0.0F, 21F, 1.0F, 1.570796F, 0F ,0F));
+        modelPartData.addOrReplaceChild("body",
+                CubeListBuilder.create().texOffs(28, 8)
+                        .addBox(-2F, -5F, -2F, 4, 9, 4),
+                PartPose.offsetAndRotation(0.0F, 21F, 1.0F, 1.570796F, 0F ,0F));
 
-        modelPartData.addChild("rearRightLeg",
-                ModelPartBuilder.create().uv(0, 16)
-                        .cuboid(-3F, 0.0F, -2F, 3, 5, 3),
-                ModelTransform.pivot(-2F, 19F, 4F));
+        modelPartData.addOrReplaceChild("rearRightLeg",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-3F, 0.0F, -2F, 3, 5, 3),
+                PartPose.offset(-2F, 19F, 4F));
 
-        modelPartData.addChild("rearLeftLeg",
-                ModelPartBuilder.create().uv(0, 8)
-                        .cuboid(0.0F, 0.0F, -2F, 3, 5, 3),
-                ModelTransform.pivot(2.0F, 19F, 4F));
+        modelPartData.addOrReplaceChild("rearLeftLeg",
+                CubeListBuilder.create().texOffs(0, 8)
+                        .addBox(0.0F, 0.0F, -2F, 3, 5, 3),
+                PartPose.offset(2.0F, 19F, 4F));
 
-        modelPartData.addChild("rightEye",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-2F, -1F, -1F, 2, 2, 2),
-                ModelTransform.pivot(-1F, 19F, -1F));
+        modelPartData.addOrReplaceChild("rightEye",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-2F, -1F, -1F, 2, 2, 2),
+                PartPose.offset(-1F, 19F, -1F));
 
-        modelPartData.addChild("leftEye",
-                ModelPartBuilder.create().uv(0, 4)
-                        .cuboid(0.0F, -1F, -1F, 2, 2, 2),
-                ModelTransform.pivot(1.0F, 19F, -1F));
+        modelPartData.addOrReplaceChild("leftEye",
+                CubeListBuilder.create().texOffs(0, 4)
+                        .addBox(0.0F, -1F, -1F, 2, 2, 2),
+                PartPose.offset(1.0F, 19F, -1F));
 
-        return TexturedModelData.of(modelData, 64, 32);
+        return LayerDefinition.create(modelData, 64, 32);
     }
 
     @Override
-    public void setAngles(TreeFrogEntity froog, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        frontLeftLeg.pitch = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        rearLeftLeg.pitch = MathHelper.cos(limbSwing * 0.6662F + 3.141593F) * 1.4F * limbSwingAmount;
-        rearRightLeg.pitch = MathHelper.cos(limbSwing * 0.6662F + 3.141593F) * 1.4F * limbSwingAmount;
-        frontRightLeg.pitch = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+    public void setupAnim(TreeFrogEntity froog, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        frontLeftLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        rearLeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + 3.141593F) * 1.4F * limbSwingAmount;
+        rearRightLeg.xRot = Mth.cos(limbSwing * 0.6662F + 3.141593F) * 1.4F * limbSwingAmount;
+        frontRightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(
             frontLeftLeg, frontRightLeg, body, rearRightLeg, rearLeftLeg, rightEye, leftEye
         );

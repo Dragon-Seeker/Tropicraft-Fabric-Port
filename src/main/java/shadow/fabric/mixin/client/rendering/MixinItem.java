@@ -21,7 +21,7 @@
 package shadow.fabric.mixin.client.rendering;
 
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import shadow.fabric.api.client.rendering.v1.ArmorRenderingRegistry;

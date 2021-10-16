@@ -4,27 +4,26 @@ import net.tropicraft.core.common.item.ArmorMaterials;
 import net.tropicraft.core.common.registry.TropicraftItems;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.ParticlesMode;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.ParticleStatus;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
 import java.util.Random;
 
 import static net.fabricmc.api.EnvType.CLIENT;
 
 public class FireArmorItem extends TropicraftArmorItem {
-    public FireArmorItem(EquipmentSlot slotType, FabricItemSettings properties) {
+    public FireArmorItem(EquipmentSlot slotType, Properties properties) {
         super(ArmorMaterials.FIRE_ARMOR, slotType, properties);
     }
 
@@ -37,22 +36,22 @@ public class FireArmorItem extends TropicraftArmorItem {
      */
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity user, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level world, Entity user, int slot, boolean selected) {
         Random random = world.random;
-        Iterable<ItemStack> armorItems = user.getArmorItems();
+        Iterable<ItemStack> armorItems = user.getArmorSlots();
         for (ItemStack armorItem : armorItems) {
             if(armorItem == stack){
-                if (world.isClient()) {
-                    clientTick((PlayerEntity) user);
+                if (world.isClientSide()) {
+                    clientTick((Player) user);
                 } else {
-                    if (user.isOnFire()) user.extinguish();
+                    if (user.isOnFire()) user.clearFire();
 
                     // Repair in the sun?
-                    int factor = (int) (40D / (0.001D + world.getBrightness(user.getBlockPos())));
-                    if (world.getTime() % (factor) == 0 && world.isSkyVisible(new BlockPos(MathHelper.floor(user.getX()), MathHelper.floor(user.getY() + 1), MathHelper.floor(user.getZ())))) {
+                    int factor = (int) (40D / (0.001D + world.getBrightness(user.blockPosition())));
+                    if (world.getGameTime() % (factor) == 0 && world.canSeeSky(new BlockPos(Mth.floor(user.getX()), Mth.floor(user.getY() + 1), Mth.floor(user.getZ())))) {
                         //repair!
-                        stack.damage(-1,(PlayerEntity) user, (e) -> {
-                            e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+                        stack.hurtAndBreak(-1,(Player) user, (e) -> {
+                            e.broadcastBreakEvent(EquipmentSlot.MAINHAND);
                         });
                     }
 
@@ -99,7 +98,7 @@ public class FireArmorItem extends TropicraftArmorItem {
 //
     //@OnlyIn(Dist.CLIENT)
     @Environment(CLIENT)
-    public void clientTick(PlayerEntity player) {
+    public void clientTick(Player player) {
         /*
         Iterable<ItemStack> armorItems = player.getArmorItems();
         for (ItemStack armorItem : armorItems) {}
@@ -107,17 +106,17 @@ public class FireArmorItem extends TropicraftArmorItem {
 
 
         // Don't show fire particles underwater
-        if (player.isSubmergedInWater()) return;
+        if (player.isUnderWater()) return;
 
         float range = 0.2F;
         float speed = 0.08F;
 
         Random rand = new Random();
-        World worldRef = player.world;
+        Level worldRef = player.level;
 
         int extraRand = 0;
 
-        final Vec3d motion = player.getVelocity();//getMotion
+        final Vec3 motion = player.getDeltaMovement();//getMotion
         double plSpeed = Math.sqrt(motion.x * motion.x + motion.z * motion.z);
 
         if (plSpeed < 0.1F) {
@@ -125,8 +124,8 @@ public class FireArmorItem extends TropicraftArmorItem {
         }
 
         /** 0 for all, 1 for minimal, 2 for off */
-        ParticlesMode particles = MinecraftClient.getInstance().options.particles;//Minecraft.getInstance().gameSettings.particles; //ParticleStatus
-        if (particles == ParticlesMode.MINIMAL) return;
+        ParticleStatus particles = Minecraft.getInstance().options.particles;//Minecraft.getInstance().gameSettings.particles; //ParticleStatus
+        if (particles == ParticleStatus.MINIMAL) return;
 
         if (this == TropicraftItems.FIRE_BOOTS) {
             boolean onLava = false;
@@ -136,30 +135,30 @@ public class FireArmorItem extends TropicraftArmorItem {
             int x = 0;
             int z = 0;
             if (motion.y < 0) {
-                BlockState state = player.world.getBlockState(new BlockPos(MathHelper.floor(player.getX() + x), MathHelper.floor(player.getY() - 2), MathHelper.floor(player.getZ() + z)));
+                BlockState state = player.level.getBlockState(new BlockPos(Mth.floor(player.getX() + x), Mth.floor(player.getY() - 2), Mth.floor(player.getZ() + z)));
                 if (state.getMaterial() == Material.LAVA) {
                     onLava = true;
                 }
             }
-            BlockState block2 = player.world.getBlockState(new BlockPos(MathHelper.floor(player.getX() + x), MathHelper.floor(player.getY() - 1), MathHelper.floor(player.getZ() + z)));
+            BlockState block2 = player.level.getBlockState(new BlockPos(Mth.floor(player.getX() + x), Mth.floor(player.getY() - 1), Mth.floor(player.getZ() + z)));
             if (block2.getMaterial() == Material.LAVA) {
                 inLava = true;
             }
 
             // why do we do this on the client?
             if (onLava && !inLava) {
-                player.setVelocity(motion.multiply(1, 0, 1));
+                player.setDeltaMovement(motion.multiply(1, 0, 1));
                 player.setOnGround(true);
             }
 
             // why do we do this on the client???????
             if (inLava) {
                 if (plSpeed < 0.4D) {
-                    player.setVelocity(motion.multiply(1.5D, 1.5D, 1.5D));
+                    player.setDeltaMovement(motion.multiply(1.5D, 1.5D, 1.5D));
                 }
             }
 
-            float look = player.world.getTimeOfDay() * (10 + (onLava ? 10 : 0));
+            float look = player.level.getDayTime() * (10 + (onLava ? 10 : 0));
             double dist = 1F;
 
             double gatherX = player.getX();
@@ -169,18 +168,18 @@ public class FireArmorItem extends TropicraftArmorItem {
             double motionX = ((rand.nextFloat() * speed) - (speed / 2));
             double motionZ = ((rand.nextFloat() * speed) - (speed / 2));
 
-            final int numFeetParticles = particles == ParticlesMode.DECREASED ? 2 : 11;
+            final int numFeetParticles = particles == ParticleStatus.DECREASED ? 2 : 11;
 
             for (int i = 0; i < numFeetParticles + (onLava ? 5 : 0); i++) {
                 motionX = (-Math.sin((look) / 180.0F * 3.1415927F) * Math.cos(0 / 180.0F * 3.1415927F) * (speed + (0.1 * rand.nextDouble())));
                 motionZ = (Math.cos((look) / 180.0F * 3.1415927F) * Math.cos(0 / 180.0F * 3.1415927F) * (speed + (0.1 * rand.nextDouble())));
 
-                ParticleEffect particle = ParticleTypes.FLAME;
+                ParticleOptions particle = ParticleTypes.FLAME;
                 if (rand.nextInt(22) == 0) particle = ParticleTypes.LARGE_SMOKE;
 
                 if (onLava || rand.nextInt(1 + extraRand) == 0) {
-                    Vec3d motion1 = player.getVelocity();
-                    player.world.addParticle(particle,
+                    Vec3 motion1 = player.getDeltaMovement();
+                    player.level.addParticle(particle,
                             gatherX + ((rand.nextFloat() * range) - (range / 2)),
                             gatherY + ((rand.nextFloat() * range) - (range / 2)),
                             gatherZ + ((rand.nextFloat() * range) - (range / 2)),
@@ -188,7 +187,7 @@ public class FireArmorItem extends TropicraftArmorItem {
                             0.01F,
                             motion1.z + motionZ);
 
-                    player.world.addParticle(particle,
+                    player.level.addParticle(particle,
                             (double) gatherX + ((rand.nextFloat() * range) - (range / 2)),
                             (double) gatherY + ((rand.nextFloat() * range) - (range / 2)),
                             (double) gatherZ + ((rand.nextFloat() * range) - (range / 2)),
@@ -202,11 +201,11 @@ public class FireArmorItem extends TropicraftArmorItem {
 
 
         else if (this == TropicraftItems.FIRE_LEGGINGS) {
-            ParticleEffect particle = ParticleTypes.FLAME;
+            ParticleOptions particle = ParticleTypes.FLAME;
             if (rand.nextInt(2) == 0) particle = ParticleTypes.LARGE_SMOKE;
 
             if (rand.nextInt(3 + extraRand) == 0) {
-                player.world.addParticle(particle,
+                player.level.addParticle(particle,
                         player.getX() + ((rand.nextFloat() * range) - (range/2)),
                         player.getY() - 0.8F + ((rand.nextFloat() * range) - (range/2)),
                         player.getZ() + ((rand.nextFloat() * range) - (range/2)),
@@ -218,14 +217,14 @@ public class FireArmorItem extends TropicraftArmorItem {
             float look = -180F;
             double dist = 0.5F;
 
-            double gatherX = player.getX() + (-Math.sin((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
-            double gatherZ = player.getZ() + (Math.cos((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
+            double gatherX = player.getX() + (-Math.sin((player.getYRot()+look) / 180.0F * 3.1415927F) * Math.cos(player.getXRot() / 180.0F * 3.1415927F) * dist);
+            double gatherZ = player.getZ() + (Math.cos((player.getYRot()+look) / 180.0F * 3.1415927F) * Math.cos(player.getXRot() / 180.0F * 3.1415927F) * dist);
 
-            ParticleEffect particle = ParticleTypes.FLAME;
+            ParticleOptions particle = ParticleTypes.FLAME;
             if (rand.nextInt(2) == 0) particle = ParticleTypes.LARGE_SMOKE;
 
             if (rand.nextInt(1 + extraRand) == 0) {
-                player.world.addParticle(particle,
+                player.level.addParticle(particle,
                         gatherX + ((rand.nextFloat() * range) - (range/2)),
                         player.getY() - 0.4F + ((rand.nextFloat() * range) - (range/2)),
                         gatherZ + ((rand.nextFloat() * range) - (range/2)),
@@ -240,14 +239,14 @@ public class FireArmorItem extends TropicraftArmorItem {
 
             range = 2F;
 
-            double gatherX = player.getX() + (-Math.sin((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
-            double gatherZ = player.getZ() + (Math.cos((player.getYaw()+look) / 180.0F * 3.1415927F) * Math.cos(player.getPitch() / 180.0F * 3.1415927F) * dist);
+            double gatherX = player.getX() + (-Math.sin((player.getYRot()+look) / 180.0F * 3.1415927F) * Math.cos(player.getXRot() / 180.0F * 3.1415927F) * dist);
+            double gatherZ = player.getZ() + (Math.cos((player.getYRot()+look) / 180.0F * 3.1415927F) * Math.cos(player.getXRot() / 180.0F * 3.1415927F) * dist);
 
-            ParticleEffect particle = ParticleTypes.FLAME;
+            ParticleOptions particle = ParticleTypes.FLAME;
             if (rand.nextInt(2) == 0) particle = ParticleTypes.LARGE_SMOKE;
 
             if (rand.nextInt(2) == 0) {
-                player.world.addParticle(particle,
+                player.level.addParticle(particle,
                         gatherX + ((rand.nextFloat() * range) - (range/2)),
                         player.getY() + 0.7F,
                         gatherZ + ((rand.nextFloat() * range) - (range/2)),

@@ -2,9 +2,9 @@ package net.tropicraft;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.tropicraft.core.client.data.TropicraftTags;
 import net.tropicraft.core.client.registry.TropicScreenHandler;
 import net.tropicraft.core.common.TropicraftCommands;
@@ -29,19 +29,21 @@ import org.apache.logging.log4j.Logger;
 
 public class Tropicraft implements ModInitializer {
 
+
+
     public static final Logger LOG = LogManager.getLogger(Constants.MODID);
 
-    public static Identifier locate(String location) {
-        return new Identifier(Constants.MODID, location);
+    public static ResourceLocation locate(String location) {
+        return new ResourceLocation(Constants.MODID, location);
     }
 
-    public static final ItemGroup ITEM_GROUP_BLOCKS = FabricItemGroupBuilder.build(
-            new Identifier(Constants.MODID, "blocks"),
+    public static final CreativeModeTab ITEM_GROUP_BLOCKS = FabricItemGroupBuilder.build(
+            new ResourceLocation(Constants.MODID, "blocks"),
             () -> new ItemStack(TropicraftBlocks.CHUNK)
             );
 
-    public static ItemGroup ITEM_GROUP_ITEMS = FabricItemGroupBuilder.build(
-            new Identifier(Constants.MODID, "items"),
+    public static CreativeModeTab ITEM_GROUP_ITEMS = FabricItemGroupBuilder.build(
+            new ResourceLocation(Constants.MODID, "items"),
             () -> new ItemStack(TropicraftBlocks.RED_ANTHURIUM)); //RED_ANTHURIUM
 
     /*

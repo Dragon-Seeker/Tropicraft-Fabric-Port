@@ -1,15 +1,13 @@
 package net.tropicraft.core.common.dimension.feature.tree;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.util.FeatureContext;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import static net.tropicraft.core.common.dimension.feature.TropicraftFeatureUtil.goesBeyondWorldSize;
 import static net.tropicraft.core.common.dimension.feature.TropicraftFeatureUtil.isBBAvailable;
@@ -20,21 +18,21 @@ public class TallRainforestTreeFeature extends RainforestTreeFeature {
     private static final int SMALL_LEAF_CHANCE = 3;
     private static final int SECOND_CANOPY_CHANCE = 3;
 
-    public TallRainforestTreeFeature(Codec<DefaultFeatureConfig> codec) {
+    public TallRainforestTreeFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
-    private boolean isSoil(WorldAccess world, BlockPos pos) {
-        return getSapling().canPlaceAt(getSapling().getDefaultState(), world, pos);
+    private boolean isSoil(LevelAccessor world, BlockPos pos) {
+        return getSapling().canSurvive(getSapling().defaultBlockState(), world, pos);
     }
 
     @Override
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        Random rand = context.getRandom();
-        BlockPos pos = context.getOrigin();
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        WorldGenLevel world = context.level();
+        Random rand = context.random();
+        BlockPos pos = context.origin();
 
-        pos = pos.toImmutable();
+        pos = pos.immutable();
         int i = pos.getX(); int j = pos.getY(); int k = pos.getZ();
         final int height = rand.nextInt(15) + 15;
 
@@ -46,31 +44,31 @@ public class TallRainforestTreeFeature extends RainforestTreeFeature {
             return false;
         }
 
-        if (!isSoil(world, pos.down())) {
+        if (!isSoil(world, pos.below())) {
             return false;
         }
 
-        if (!isSoil(world, pos.east().down())) {
+        if (!isSoil(world, pos.east().below())) {
             return false;
         }
 
-        if (!isSoil(world, pos.west().down())) {
+        if (!isSoil(world, pos.west().below())) {
             return false;
         }
 
-        if (!isSoil(world, pos.north().down())) {
+        if (!isSoil(world, pos.north().below())) {
             return false;
         }
 
-        if (!isSoil(world, pos.south().down())) {
+        if (!isSoil(world, pos.south().below())) {
             return false;
         }
 
-        setState(world, new BlockPos(i, j - 1, k), Blocks.DIRT.getDefaultState());
-        setState(world, new BlockPos(i - 1, j - 1, k), Blocks.DIRT.getDefaultState());
-        setState(world, new BlockPos(i + 1, j - 1, k), Blocks.DIRT.getDefaultState());
-        setState(world, new BlockPos(i, j - 1, k - 1), Blocks.DIRT.getDefaultState());
-        setState(world, new BlockPos(i, j - 1, k + 1), Blocks.DIRT.getDefaultState());
+        setState(world, new BlockPos(i, j - 1, k), Blocks.DIRT.defaultBlockState());
+        setState(world, new BlockPos(i - 1, j - 1, k), Blocks.DIRT.defaultBlockState());
+        setState(world, new BlockPos(i + 1, j - 1, k), Blocks.DIRT.defaultBlockState());
+        setState(world, new BlockPos(i, j - 1, k - 1), Blocks.DIRT.defaultBlockState());
+        setState(world, new BlockPos(i, j - 1, k + 1), Blocks.DIRT.defaultBlockState());
 
         for (int y = j; y < j + height; y++) {
             placeLog(world, i, y, k);

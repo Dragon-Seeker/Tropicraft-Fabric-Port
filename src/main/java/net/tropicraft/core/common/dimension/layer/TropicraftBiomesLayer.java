@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.C0Transformer;
 
-public final class TropicraftBiomesLayer implements IdentitySamplingLayer {
+public final class TropicraftBiomesLayer implements C0Transformer {
     private final TropicraftBiomeIds biomeIds;
     private final int[] landIds;
 
@@ -13,9 +13,9 @@ public final class TropicraftBiomesLayer implements IdentitySamplingLayer {
     }
 
     @Override
-    public int sample(LayerRandomnessSource iNoiseRandom, int center) {
+    public int apply(Context iNoiseRandom, int center) {
         if (biomeIds.isLand(center)) {
-            return landIds[iNoiseRandom.nextInt(landIds.length)];
+            return landIds[iNoiseRandom.nextRandom(landIds.length)];
         }
 
         return center;

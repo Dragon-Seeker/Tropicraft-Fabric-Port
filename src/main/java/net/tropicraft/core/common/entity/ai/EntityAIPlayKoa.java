@@ -1,12 +1,10 @@
 package net.tropicraft.core.common.entity.ai;
 
-import net.minecraft.entity.ai.FuzzyTargeting;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
-import net.minecraft.entity.LivingEntity;
-//import net.minecraft.entity.ai.TargetFinder;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.Vec3d;
-
 import java.util.EnumSet;
 import java.util.List;
 
@@ -21,16 +19,16 @@ public class EntityAIPlayKoa extends Goal
     {
         this.villagerObj = villagerObjIn;
         this.speed = speedIn;
-        this.setControls(EnumSet.of(Control.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean canStart()
+    public boolean canUse()
     {
-        if (this.villagerObj.getBreedingAge() >= 0)
+        if (this.villagerObj.getAge() >= 0)
         {
             return false;
         }
@@ -40,14 +38,14 @@ public class EntityAIPlayKoa extends Goal
         }
         else
         {
-            List<EntityKoaBase> list = this.villagerObj.world.getNonSpectatingEntities(EntityKoaBase.class, this.villagerObj.getBoundingBox().expand(6.0D, 3.0D, 6.0D));
+            List<EntityKoaBase> list = this.villagerObj.level.getEntitiesOfClass(EntityKoaBase.class, this.villagerObj.getBoundingBox().inflate(6.0D, 3.0D, 6.0D));
             double d0 = Double.MAX_VALUE;
 
             for (EntityKoaBase entityvillager : list)
             {
-                if (entityvillager != this.villagerObj && !entityvillager.isPlaying() && entityvillager.getBreedingAge() < 0)
+                if (entityvillager != this.villagerObj && !entityvillager.isPlaying() && entityvillager.getAge() < 0)
                 {
-                    double d1 = entityvillager.squaredDistanceTo(this.villagerObj);
+                    double d1 = entityvillager.distanceToSqr(this.villagerObj);
 
                     if (d1 <= d0)
                     {
@@ -59,7 +57,7 @@ public class EntityAIPlayKoa extends Goal
 
             if (this.targetVillager == null)
             {
-                Vec3d vec = FuzzyTargeting.find(this.villagerObj, 16, 3);
+                Vec3 vec = LandRandomPos.getPos(this.villagerObj, 16, 3);
                 return vec != null;
             }
 
@@ -71,7 +69,7 @@ public class EntityAIPlayKoa extends Goal
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean shouldContinue()
+    public boolean canContinueToUse()
     {
         return this.playTime > 0;
     }
@@ -108,26 +106,26 @@ public class EntityAIPlayKoa extends Goal
     {
         --this.playTime;
 
-        if (villagerObj.isOnGround() && villagerObj.world.random.nextInt(30) == 0) {
-            this.villagerObj.getJumpControl().setActive();
+        if (villagerObj.isOnGround() && villagerObj.level.random.nextInt(30) == 0) {
+            this.villagerObj.getJumpControl().jump();
         }
 
         if (this.targetVillager != null)
         {
-            if (this.villagerObj.squaredDistanceTo(this.targetVillager) > 4.0D)
+            if (this.villagerObj.distanceToSqr(this.targetVillager) > 4.0D)
             {
-                this.villagerObj.getNavigation().startMovingTo(this.targetVillager, this.speed);
+                this.villagerObj.getNavigation().moveTo(this.targetVillager, this.speed);
             }
         }
-        else if (this.villagerObj.getNavigation().isIdle())
+        else if (this.villagerObj.getNavigation().isDone())
         {
-            Vec3d vec = FuzzyTargeting.find(this.villagerObj, 16, 3);
+            Vec3 vec = LandRandomPos.getPos(this.villagerObj, 16, 3);
             if (vec == null)
             {
                 return;
             }
 
-            this.villagerObj.getNavigation().startMovingTo(vec.x, vec.y, vec.z, this.speed);
+            this.villagerObj.getNavigation().moveTo(vec.x, vec.y, vec.z, this.speed);
         }
     }
 }

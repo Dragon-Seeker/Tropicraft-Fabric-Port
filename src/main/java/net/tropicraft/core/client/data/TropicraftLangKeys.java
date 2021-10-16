@@ -1,9 +1,9 @@
 package net.tropicraft.core.client.data;
 
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.Util;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 
 public enum TropicraftLangKeys {
     
@@ -17,28 +17,28 @@ public enum TropicraftLangKeys {
     ;
 
     protected final String key, value;
-    private final TranslatableText component;
+    private final TranslatableComponent component;
 
     private TropicraftLangKeys(String type, String key) {
         this(type, key, Util.toEnglishName(key));
     }
 
     private TropicraftLangKeys(String type, String key, String value) {
-        this.key = net.minecraft.util.Util.createTranslationKey(type, new Identifier(Constants.MODID, key));
+        this.key = net.minecraft.Util.makeDescriptionId(type, new ResourceLocation(Constants.MODID, key));
         this.value = value;
-        this.component = new TranslatableText(this.key);
+        this.component = new TranslatableComponent(this.key);
     }
     
     public String getKey() {
         return key;
     }
 
-    public TranslatableText getComponent() {
+    public TranslatableComponent getComponent() {
         return component;
     }
 
-    public TranslatableText format(Object... args) {
-        return new TranslatableText(getComponent().getKey(), args);
+    public TranslatableComponent format(Object... args) {
+        return new TranslatableComponent(getComponent().getKey(), args);
     }
 
     public String getLocalizedText() {

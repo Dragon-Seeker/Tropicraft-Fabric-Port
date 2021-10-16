@@ -1,16 +1,20 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.tropicraft.core.common.entity.hostile.AshenEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.client.render.entity.model.ModelWithArms;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Arm;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEntity> implements ModelWithArms {
+public class AshenModel<T extends Entity> extends ListModel<AshenEntity> implements ArmedModel {
     //public static ModelPart root;
 
     public ModelPart rightLeg;
@@ -117,31 +121,31 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
          */
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
         //boolean swinging = false;
         //AshenEntity.AshenState actionState = AshenEntity.AshenState.PEACEFUL;
         //float headAngle = 0;
 
-        modelPartData.addChild("right_leg", ModelPartBuilder.create().uv(25, 0).mirrored().cuboid(0F, 0F, 0F, 1, 7, 1), ModelTransform.of(1F, 17F, 0F, 0F, 0F, 0F));
-        modelPartData.addChild("left_leg", ModelPartBuilder.create().uv(25, 0).mirrored().cuboid(-1F, 0F, 0F, 1, 7, 1), ModelTransform.of(-1F, 17F, 0F, 0F, 0F, 0F));
-        modelPartData.addChild("body", ModelPartBuilder.create().uv(24, 8).mirrored().cuboid(-2F, -3F, 0F, 4, 7, 3), ModelTransform.of(0F, 13F, 2F, 0F, 3.141593F, 0F));
-        modelPartData.addChild("head", ModelPartBuilder.create().uv(24, 18).mirrored().cuboid(-2F, -3F, -1F, 4, 3, 4), ModelTransform.of(0F, 10F, 1F,0F, 3.141593F, 0F));
+        modelPartData.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(25, 0).mirror().addBox(0F, 0F, 0F, 1, 7, 1), PartPose.offsetAndRotation(1F, 17F, 0F, 0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(25, 0).mirror().addBox(-1F, 0F, 0F, 1, 7, 1), PartPose.offsetAndRotation(-1F, 17F, 0F, 0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("body", CubeListBuilder.create().texOffs(24, 8).mirror().addBox(-2F, -3F, 0F, 4, 7, 3), PartPose.offsetAndRotation(0F, 13F, 2F, 0F, 3.141593F, 0F));
+        modelPartData.addOrReplaceChild("head", CubeListBuilder.create().texOffs(24, 18).mirror().addBox(-2F, -3F, -1F, 4, 3, 4), PartPose.offsetAndRotation(0F, 10F, 1F,0F, 3.141593F, 0F));
 
-        ModelPartData modelPartDataRightArm = modelPartData.addChild("right_arm", ModelPartBuilder.create().uv(0, 24).mirrored().cuboid(-6F, -0.5F, -0.5F, 6, 1, 1), ModelTransform.of(-2F, 10.5F, 0.5F, 0F, 0F, 0F));
-        modelPartDataRightArm.addChild("right_arm_sub", ModelPartBuilder.create().uv(31, 0).mirrored().cuboid(-0.5F, -6F, -0.5F, 1, 6, 1), ModelTransform.of(-5.5F, 0F, 0F, 0F, 0F, 0F));
+        PartDefinition modelPartDataRightArm = modelPartData.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(0, 24).mirror().addBox(-6F, -0.5F, -0.5F, 6, 1, 1), PartPose.offsetAndRotation(-2F, 10.5F, 0.5F, 0F, 0F, 0F));
+        modelPartDataRightArm.addOrReplaceChild("right_arm_sub", CubeListBuilder.create().texOffs(31, 0).mirror().addBox(-0.5F, -6F, -0.5F, 1, 6, 1), PartPose.offsetAndRotation(-5.5F, 0F, 0F, 0F, 0F, 0F));
 
-        ModelPartData modelPartDataLeftArm = modelPartData.addChild("left_arm", ModelPartBuilder.create().uv(0, 24).mirrored().cuboid(0F, -0.5F, -0.5F, 6, 1, 1), ModelTransform.of(2F, 10.46667F, 0.5F, 0F, 0F, 0F));
-        modelPartDataLeftArm.addChild("left_arm_sub", ModelPartBuilder.create().mirrored(true).uv(31, 0).cuboid(-0.5F, -6F, -0.5F, 1, 6, 1), ModelTransform.of(5.5F, 0F, 0F, 0F, 0F, 0F));
-        return TexturedModelData.of(modelData,64,32);
+        PartDefinition modelPartDataLeftArm = modelPartData.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(0, 24).mirror().addBox(0F, -0.5F, -0.5F, 6, 1, 1), PartPose.offsetAndRotation(2F, 10.46667F, 0.5F, 0F, 0F, 0F));
+        modelPartDataLeftArm.addOrReplaceChild("left_arm_sub", CubeListBuilder.create().mirror(true).texOffs(31, 0).addBox(-0.5F, -6F, -0.5F, 1, 6, 1), PartPose.offsetAndRotation(5.5F, 0F, 0F, 0F, 0F, 0F));
+        return LayerDefinition.create(modelData,64,32);
     }
 
     @Override
-    public void setAngles(AshenEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        head.pitch = headPitch / 125F + headAngle;
-        head.yaw = netHeadYaw / 125F + 3.14159F;
+    public void setupAnim(AshenEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        head.xRot = headPitch / 125F + headAngle;
+        head.yRot = netHeadYaw / 125F + 3.14159F;
 
         final float armRotater = 1.247196F;
         final float subStraight = 1.570795F;
@@ -149,66 +153,66 @@ public class AshenModel<T extends Entity> extends CompositeEntityModel<AshenEnti
         switch (actionState) {
             case LOST_MASK:                                             //Mask off
                 headAngle = -0.4F;
-                rightArm.roll = -armRotater;
-                rightArmSub.roll = -5.1F;
-                leftArm.roll = armRotater;
-                leftArmSub.roll = 5.1F;
-                leftArm.pitch = subStraight;
-                rightArm.pitch = subStraight;
-                rightArm.yaw = -.5F;
-                leftArm.yaw = .5F;
+                rightArm.zRot = -armRotater;
+                rightArmSub.zRot = -5.1F;
+                leftArm.zRot = armRotater;
+                leftArmSub.zRot = 5.1F;
+                leftArm.xRot = subStraight;
+                rightArm.xRot = subStraight;
+                rightArm.yRot = -.5F;
+                leftArm.yRot = .5F;
                 break;
             case HOSTILE:
                 headAngle = 0.0F;
-                leftArm.pitch = 1.65F + limbSwing / 125F;
-                leftArm.yaw = .9F + limbSwingAmount / 125F;
-                leftArm.roll = armRotater;
-                leftArmSub.roll = 6.2F;
-                rightArm.roll = 0.0F - MathHelper.sin(limbSwingAmount * 0.75F) * 0.0220F;
-                rightArm.yaw = 0.0F;
-                rightArmSub.roll = 0.0F;
+                leftArm.xRot = 1.65F + limbSwing / 125F;
+                leftArm.yRot = .9F + limbSwingAmount / 125F;
+                leftArm.zRot = armRotater;
+                leftArmSub.zRot = 6.2F;
+                rightArm.zRot = 0.0F - Mth.sin(limbSwingAmount * 0.75F) * 0.0220F;
+                rightArm.yRot = 0.0F;
+                rightArmSub.zRot = 0.0F;
 
                 if (swinging) {
-                    rightArm.pitch += MathHelper.sin(limbSwingAmount * 0.75F) * 0.0520F;
+                    rightArm.xRot += Mth.sin(limbSwingAmount * 0.75F) * 0.0520F;
                 } else {
-                    rightArm.pitch = 0.0F;
+                    rightArm.xRot = 0.0F;
                 }
                 break;
             default:
                 headAngle = 0;
-                rightArm.roll = -armRotater;
-                rightArmSub.roll = -subStraight;
-                leftArm.roll = armRotater;
-                leftArmSub.roll = subStraight;
-                rightArm.yaw = 0F;
-                leftArm.yaw = 0F;
+                rightArm.zRot = -armRotater;
+                rightArmSub.zRot = -subStraight;
+                leftArm.zRot = armRotater;
+                leftArmSub.zRot = subStraight;
+                rightArm.yRot = 0F;
+                leftArm.yRot = 0F;
                 break;
         }
 
-        leftArm.roll += MathHelper.sin(ageInTicks * 0.25F) * 0.020F;
-        rightArm.roll -= MathHelper.sin(ageInTicks * 0.25F) * 0.020F;
+        leftArm.zRot += Mth.sin(ageInTicks * 0.25F) * 0.020F;
+        rightArm.zRot -= Mth.sin(ageInTicks * 0.25F) * 0.020F;
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(body, head, rightArm, leftArm, leftLeg, rightLeg);
         //return ImmutableList.of(body, head, rightArm, leftArm, rightArmSub, leftArmSub, leftLeg, rightLeg);
     }
 
     private void setRotation(ModelPart model, float x, float y, float z) {
-        model.pitch = x;
-        model.yaw = y;
-        model.roll = z;
+        model.xRot = x;
+        model.yRot = y;
+        model.zRot = z;
     }
 
     @Override
-    public void animateModel(final AshenEntity entity, float f, float f1, float f2) {
-        rightLeg.pitch = MathHelper.cos(f * 0.6662F) * 1.25F * f1;
-        leftLeg.pitch = MathHelper.cos(f * 0.6662F + 3.141593F) * 1.25F * f1;
+    public void prepareMobModel(final AshenEntity entity, float f, float f1, float f2) {
+        rightLeg.xRot = Mth.cos(f * 0.6662F) * 1.25F * f1;
+        leftLeg.xRot = Mth.cos(f * 0.6662F + 3.141593F) * 1.25F * f1;
     }
 
     @Override
-    public void setArmAngle(Arm arm, MatrixStack stack) {
+    public void translateToHand(HumanoidArm arm, PoseStack stack) {
         stack.translate(0.09375F, 0.1875F, 0.0F);
     }
 }

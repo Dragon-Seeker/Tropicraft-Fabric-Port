@@ -1,12 +1,12 @@
 package net.tropicraft.core.common.entity.ai.ashen;
 
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
 import net.tropicraft.core.common.entity.hostile.AshenEntity;
 import net.tropicraft.core.common.item.AshenMaskItem;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 
 public class AIAshenShootDart extends Goal {
 
@@ -35,9 +35,9 @@ public class AIAshenShootDart extends Goal {
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         if (entity.getTarget() != null) {
-            ItemStack headGear = entity.getTarget().getEquippedStack(EquipmentSlot.HEAD);
+            ItemStack headGear = entity.getTarget().getItemBySlot(EquipmentSlot.HEAD);
             if (headGear.getItem() instanceof AshenMaskItem) {
                 return false;
             }
@@ -49,8 +49,8 @@ public class AIAshenShootDart extends Goal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean shouldContinue() {
-        return canStart() || !entity.getNavigation().isIdle();
+    public boolean canContinueToUse() {
+        return canUse() || !entity.getNavigation().isDone();
     }
 
     /**
@@ -61,7 +61,7 @@ public class AIAshenShootDart extends Goal {
         super.stop();
         seeTime = 0;
         attackTime = -1;
-        entity.clearActiveItem();
+        entity.stopUsingItem();
     }
     
     @Override
@@ -69,13 +69,13 @@ public class AIAshenShootDart extends Goal {
         LivingEntity target = entity.getTarget();
 
         if (target != null) {
-            ItemStack headGear = target.getEquippedStack(EquipmentSlot.HEAD);
+            ItemStack headGear = target.getItemBySlot(EquipmentSlot.HEAD);
             if (headGear.getItem() instanceof AshenMaskItem) {
                 return;
             }
 
-            double d0 = entity.squaredDistanceTo(target.getX(), target.getBoundingBox().minY, target.getZ());
-            boolean canSeeEnemy = entity.getVisibilityCache().canSee(target);
+            double d0 = entity.distanceToSqr(target.getX(), target.getBoundingBox().minY, target.getZ());
+            boolean canSeeEnemy = entity.getSensing().hasLineOfSight(target);
             boolean hasSeenEnemy = seeTime > 0;
 
             if (canSeeEnemy != hasSeenEnemy) {
@@ -92,7 +92,7 @@ public class AIAshenShootDart extends Goal {
                 entity.getNavigation().stop();
                 ++strafingTime;
             } else {
-                entity.getNavigation().startMovingTo(target, moveSpeedAmplifier);
+                entity.getNavigation().moveTo(target, moveSpeedAmplifier);
                 strafingTime = -1;
             }
 
@@ -115,26 +115,26 @@ public class AIAshenShootDart extends Goal {
                     strafingBackwards = true;
                 }
 
-                entity.getMoveControl().strafeTo(strafingBackwards ? -0.5F : 0.5F, strafingClockwise ? 0.5F : -0.5F);
-                entity.lookAtEntity(target, 30.0F, 30.0F);
+                entity.getMoveControl().strafe(strafingBackwards ? -0.5F : 0.5F, strafingClockwise ? 0.5F : -0.5F);
+                entity.lookAt(target, 30.0F, 30.0F);
             } else {
-                entity.getLookControl().lookAt(target, 30.0F, 30.0F);
+                entity.getLookControl().setLookAt(target, 30.0F, 30.0F);
             }
 
             if (entity.isUsingItem()) {
                 if (!canSeeEnemy && seeTime < -60) {
-                    entity.clearActiveItem();
+                    entity.stopUsingItem();
                 } else if (canSeeEnemy) {
-                    int i = entity.getItemUseTime();
+                    int i = entity.getTicksUsingItem();
 
                     if (i >= 20) {
-                        entity.clearActiveItem();
-                        entity.attack(target, (float) (14 - entity.world.getDifficulty().getId() * 4));
+                        entity.stopUsingItem();
+                        entity.performRangedAttack(target, (float) (14 - entity.level.getDifficulty().getId() * 4));
                         attackTime = attackCooldown;
                     }
                 }
             } else if (--attackTime <= 0 && seeTime >= -60) {
-                entity.setCurrentHand(Hand.MAIN_HAND);
+                entity.startUsingItem(InteractionHand.MAIN_HAND);
             }
         }
     }

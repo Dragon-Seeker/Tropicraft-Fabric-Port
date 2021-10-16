@@ -2,14 +2,14 @@ package net.tropicraft.core.common.dimension.feature.jigsaw;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.Structure.StructureBlockInfo;
-import net.minecraft.structure.Structure.StructureEntityInfo;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureEntityInfo;
 import net.tropicraft.Constants;
 
 public class AdjustBuildingHeightProcessor extends StructurePassProcessor  {
@@ -28,17 +28,17 @@ public class AdjustBuildingHeightProcessor extends StructurePassProcessor  {
     }
 
     @Override
-    public StructureBlockInfo process(WorldView worldReaderIn, BlockPos seedPos, BlockPos p, StructureBlockInfo p_215194_3_, StructureBlockInfo blockInfo, StructurePlacementData placementSettingsIn, Structure template) {
+    public StructureBlockInfo process(LevelReader worldReaderIn, BlockPos seedPos, BlockPos p, StructureBlockInfo p_215194_3_, StructureBlockInfo blockInfo, StructurePlaceSettings placementSettingsIn, StructureTemplate template) {
         if (seedPos.getY() < base) {
-            return new StructureBlockInfo(blockInfo.pos.up(), blockInfo.state, blockInfo.nbt);
+            return new StructureBlockInfo(blockInfo.pos.above(), blockInfo.state, blockInfo.nbt);
         }
         return blockInfo;
     }
 
     @Override
-    public StructureEntityInfo processEntity(WorldView world, BlockPos seedPos, StructureEntityInfo rawEntityInfo, StructureEntityInfo entityInfo, StructurePlacementData placementSettings, Structure template) {
+    public StructureEntityInfo processEntity(LevelReader world, BlockPos seedPos, StructureEntityInfo rawEntityInfo, StructureEntityInfo entityInfo, StructurePlaceSettings placementSettings, StructureTemplate template) {
         if (seedPos.getY() < base) {
-            return new StructureEntityInfo(entityInfo.pos.add(0, 1, 0), entityInfo.blockPos.up(), entityInfo.nbt);
+            return new StructureEntityInfo(entityInfo.pos.add(0, 1, 0), entityInfo.blockPos.above(), entityInfo.nbt);
         }
         return entityInfo;
     }

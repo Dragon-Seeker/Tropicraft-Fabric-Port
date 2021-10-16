@@ -1,16 +1,15 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.tropicraft.core.client.entity.models.SeaUrchinModel;
 import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.SeaUrchinEntity;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 
-public class SeaUrchinRenderer extends MobEntityRenderer<SeaUrchinEntity, SeaUrchinModel> {
+public class SeaUrchinRenderer extends MobRenderer<SeaUrchinEntity, SeaUrchinModel> {
 	/**
 	 * Amount freshly hatched sea urchins are scaled down while rendering.
 	 */
@@ -21,16 +20,16 @@ public class SeaUrchinRenderer extends MobEntityRenderer<SeaUrchinEntity, SeaUrc
 	 */
 
 	public static final float ADULT_RENDER_SCALE = 1f;
-	public static final Identifier SEA_URCHIN_TEXTURE = TropicraftRenderUtils.bindTextureEntity("seaurchin");
+	public static final ResourceLocation SEA_URCHIN_TEXTURE = TropicraftRenderUtils.bindTextureEntity("seaurchin");
 
-	public SeaUrchinRenderer(EntityRendererFactory.Context context) {
-		super(context, new SeaUrchinModel(context.getPart(TropicraftEntityRendering.SEA_URCHIN_LAYER)), 0.5f);
+	public SeaUrchinRenderer(EntityRendererProvider.Context context) {
+		super(context, new SeaUrchinModel(context.bakeLayer(TropicraftEntityRendering.SEA_URCHIN_LAYER)), 0.5f);
 	}
 
 	@Override
-	protected void scale(final SeaUrchinEntity urchin, final MatrixStack stack, final float partialTickTime) {
+	protected void scale(final SeaUrchinEntity urchin, final PoseStack stack, final float partialTickTime) {
 		shadowRadius = 0.15f;
-		shadowOpacity = 0.5f;
+		shadowStrength = 0.5f;
 		float growthProgress = urchin.getGrowthProgress();
 		final float scale = BABY_RENDER_SCALE + growthProgress * (ADULT_RENDER_SCALE - BABY_RENDER_SCALE);
 		final float scaleAmt = 0.5f * scale;
@@ -39,7 +38,7 @@ public class SeaUrchinRenderer extends MobEntityRenderer<SeaUrchinEntity, SeaUrc
 	}
 
 	@Override
-	public Identifier getTexture(final SeaUrchinEntity entity) {
+	public ResourceLocation getTextureLocation(final SeaUrchinEntity entity) {
 		return SEA_URCHIN_TEXTURE;
 	}
 }

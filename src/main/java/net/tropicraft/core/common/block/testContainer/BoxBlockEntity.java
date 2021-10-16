@@ -1,23 +1,23 @@
 package net.tropicraft.core.common.block.testContainer;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.tropicraft.core.common.interfaces.ImplementedInventory;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.collection.DefaultedList;
 
-public class BoxBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
+public class BoxBlockEntity extends BlockEntity implements MenuProvider, ImplementedInventory {
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(9, ItemStack.EMPTY);
 
     public BoxBlockEntity(BlockPos pos, BlockState state) {
         super(TropicBlockEntities.BOX_BLOCK_ENTITY, pos, state);
@@ -27,7 +27,7 @@ public class BoxBlockEntity extends BlockEntity implements NamedScreenHandlerFac
     //From the ImplementedInventory Interface
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return inventory;
 
     }
@@ -37,27 +37,27 @@ public class BoxBlockEntity extends BlockEntity implements NamedScreenHandlerFac
     //getDisplayName will Provide its name which is normally shown at the top
 
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
         //We provide *this* to the screenHandler as our class Implements Inventory
         //Only the Server has the Inventory at the start, this will be synced to the client in the ScreenHandler
         return new BoxScreenHandler(syncId, playerInventory, this);
     }
 
     @Override
-    public Text getDisplayName() {
-        return new TranslatableText(getCachedState().getBlock().getTranslationKey());
+    public Component getDisplayName() {
+        return new TranslatableComponent(getBlockState().getBlock().getDescriptionId());
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        Inventories.readNbt(tag, this.inventory);
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        ContainerHelper.loadAllItems(tag, this.inventory);
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-        Inventories.writeNbt(tag, this.inventory);
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);
+        ContainerHelper.saveAllItems(tag, this.inventory);
         return tag;
     }
 }

@@ -1,15 +1,14 @@
 package net.tropicraft.core.common.dimension.feature.tree;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ModifiableTestableWorld;
-import net.minecraft.world.ModifiableWorld;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelSimulatedRW;
+import net.minecraft.world.level.LevelWriter;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.tropicraft.core.common.dimension.feature.config.RainforestVinesConfig;
 
 import java.util.Random;
@@ -28,19 +27,19 @@ public class CurvedPalmTreeFeature extends PalmTreeFeature {
     private int originX, originZ;
     private int dir;
 
-    public CurvedPalmTreeFeature(Codec<DefaultFeatureConfig> codec) {
+    public CurvedPalmTreeFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        Random rand = context.getRandom();
-        BlockPos pos = context.getOrigin();
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        WorldGenLevel world = context.level();
+        Random rand = context.random();
+        BlockPos pos = context.origin();
 
 
 
-        pos = pos.toImmutable();
+        pos = pos.immutable();
 
         final int height = 9 + rand.nextInt(3);
 
@@ -52,12 +51,12 @@ public class CurvedPalmTreeFeature extends PalmTreeFeature {
             return false;
         }
 
-        if (!getSapling().canPlaceAt(getSapling().getDefaultState(), world, pos)) {
+        if (!getSapling().canSurvive(getSapling().defaultBlockState(), world, pos)) {
             return false;
         }
 
-        if (world.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK) {
-            world.setBlockState(pos.down(), Blocks.DIRT.getDefaultState(), 3);
+        if (world.getBlockState(pos.below()).getBlock() == Blocks.GRASS_BLOCK) {
+            world.setBlock(pos.below(), Blocks.DIRT.defaultBlockState(), 3);
         }
 
         final int x = pos.getX(), y = pos.getY(), z = pos.getZ();
@@ -137,7 +136,7 @@ public class CurvedPalmTreeFeature extends PalmTreeFeature {
         return true;
     }
 
-    private int findWater(final ModifiableTestableWorld world, final Random rand, int x, int z) {
+    private int findWater(final LevelSimulatedRW world, final Random rand, int x, int z) {
         int iPos = 0;
         int iNeg = 0;
         int kPos = 0;
@@ -205,11 +204,11 @@ public class CurvedPalmTreeFeature extends PalmTreeFeature {
         }
     }
 
-    private static boolean isWater(ModifiableTestableWorld world, BlockPos pos) {
-        return world.testBlockState(pos, state -> state.isOf(Blocks.WATER));
+    private static boolean isWater(LevelSimulatedRW world, BlockPos pos) {
+        return world.isStateAtPosition(pos, state -> state.is(Blocks.WATER));
     }
 
-    private int pickDirection(final ModifiableTestableWorld world, final Random rand, int x, int z) {
+    private int pickDirection(final LevelSimulatedRW world, final Random rand, int x, int z) {
         int direction = findWater(world, rand, x, z);
         if (direction != -1) {
             return direction;
@@ -243,22 +242,22 @@ public class CurvedPalmTreeFeature extends PalmTreeFeature {
             case 1:
                 return pos(this.originX - k, j, this.originZ + i);
         }
-        return BlockPos.ORIGIN;
+        return BlockPos.ZERO;
     }
 
-    private void placeBlockWithDir(final ModifiableWorld world, int x, int y, int z, BlockState state) {
+    private void placeBlockWithDir(final LevelWriter world, int x, int y, int z, BlockState state) {
         switch (dir) {
             case 2:
-                setBlockState(world, pos(this.originX + x, y, this.originZ + z), state);
+                setBlock(world, pos(this.originX + x, y, this.originZ + z), state);
                 return;
             case 0:
-                setBlockState(world, pos(this.originX + z, y, this.originZ - x), state);
+                setBlock(world, pos(this.originX + z, y, this.originZ - x), state);
                 return;
             case 3:
-                setBlockState(world, pos(this.originX - x, y, this.originZ - z), state);
+                setBlock(world, pos(this.originX - x, y, this.originZ - z), state);
                 return;
             case 1:
-                setBlockState(world, pos(this.originX - z, y, this.originZ + x), state);
+                setBlock(world, pos(this.originX - z, y, this.originZ + x), state);
         }
     }
 

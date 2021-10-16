@@ -2,20 +2,18 @@ package net.tropicraft.core.common.dimension.carver;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.carver.CaveCarverConfig;
-import net.minecraft.world.gen.carver.UnderwaterCaveCarver;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.UnderwaterCaveWorldCarver;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.Random;
 
-public class TropicsUnderwaterCaveCarver extends UnderwaterCaveCarver {
+public class TropicsUnderwaterCaveCarver extends UnderwaterCaveWorldCarver {
 
-    public TropicsUnderwaterCaveCarver(Codec<CaveCarverConfig> codec) {
+    public TropicsUnderwaterCaveCarver(Codec<CaveCarverConfiguration> codec) {
         super(codec);
-        this.alwaysCarvableBlocks = ImmutableSet.<Block> builder().addAll(this.alwaysCarvableBlocks)
+        this.replaceableBlocks = ImmutableSet.<Block> builder().addAll(this.replaceableBlocks)
                 .add(TropicraftBlocks.CORAL_SAND)
                 .add(TropicraftBlocks.FOAMY_SAND)
                 .add(TropicraftBlocks.MINERAL_SAND)
@@ -25,7 +23,7 @@ public class TropicsUnderwaterCaveCarver extends UnderwaterCaveCarver {
     }
 
     @Override
-    protected float getTunnelSystemWidth(Random rand) {
+    protected float getThickness(Random rand) {
         float f = rand.nextFloat() * 3.0F + rand.nextFloat();
         if (rand.nextInt(10) == 0) {
            f *= rand.nextFloat() * rand.nextFloat() * 5.0F + 1.0F;

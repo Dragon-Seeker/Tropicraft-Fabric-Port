@@ -1,10 +1,10 @@
 package net.tropicraft.core.common.item;
 
 import com.google.common.collect.Maps;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 import net.tropicraft.Constants;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -26,13 +26,13 @@ public class LoveTropicsShellItem extends ShellItem implements IColoredItem {
         }
     }
 
-    public LoveTropicsShellItem(final Settings properties) {
+    public LoveTropicsShellItem(final Properties properties) {
         super(properties);
     }
 
     @Override
     public int getColor(ItemStack itemstack, int pass) {
-        final NbtCompound tag = itemstack.getNbt();
+        final CompoundTag tag = itemstack.getTag();
         if (tag != null && !tag.isEmpty() && tag.contains("Name")) {
             return pass == 0 ? 0xFFFFFFFF : LTUtil.colors.get(tag.getString("Name"));
         }
@@ -40,12 +40,12 @@ public class LoveTropicsShellItem extends ShellItem implements IColoredItem {
     }
 
     @Override
-    public Text getName(final ItemStack stack) {
-        if (!stack.hasNbt() || !stack.getNbt().contains("Name")) {
+    public Component getName(final ItemStack stack) {
+        if (!stack.hasTag() || !stack.getTag().contains("Name")) {
             return super.getName(stack);
         }
-        final String name = stack.getNbt().getString("Name");
+        final String name = stack.getTag().getString("Name");
         final String type = name.endsWith("s") ? "with_s" : "normal";
-        return new TranslatableText("item.tropicraft.shell.owned." + type, name);
+        return new TranslatableComponent("item.tropicraft.shell.owned." + type, name);
     }
 }

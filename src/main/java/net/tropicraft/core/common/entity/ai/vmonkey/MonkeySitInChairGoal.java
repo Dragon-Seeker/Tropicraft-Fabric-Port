@@ -1,10 +1,9 @@
 package net.tropicraft.core.common.entity.ai.vmonkey;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.tropicraft.core.common.entity.neutral.VMonkeyEntity;
 import net.tropicraft.core.common.entity.placeable.ChairEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.goal.Goal;
-
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -14,16 +13,16 @@ public class MonkeySitInChairGoal extends Goal {
 
     public MonkeySitInChairGoal(VMonkeyEntity monkey) {
         this.entity = monkey;
-        setControls(EnumSet.of(Control.MOVE, Control.LOOK, Control.JUMP));
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
     }
 
     private Optional<ChairEntity> getNearestEmptyChair() {
-        List<ChairEntity> list = entity.world.getNonSpectatingEntities(ChairEntity.class, entity.getBoundingBox().expand(32D));
-        return list.stream().filter(chair -> !chair.isInvisible() && !chair.hasPassengers()).findFirst();
+        List<ChairEntity> list = entity.level.getEntitiesOfClass(ChairEntity.class, entity.getBoundingBox().inflate(32D));
+        return list.stream().filter(chair -> !chair.isInvisible() && !chair.isVehicle()).findFirst();
     }
 
     private boolean isOwnerNear() {
-        return entity != null && entity.getOwner() != null && entity.getOwner().squaredDistanceTo(entity) < 32D;
+        return entity != null && entity.getOwner() != null && entity.getOwner().distanceToSqr(entity) < 32D;
     }
 
     private boolean isOwnerNearAndSitting() {
@@ -34,14 +33,14 @@ public class MonkeySitInChairGoal extends Goal {
     @Override
     public void stop() {
         entity.stopRiding();
-        entity.setSitting(false);
+        entity.setOrderedToSit(false);
         // TODO - no longer needed?
         // entity.resetRideCooldown();
     }
 
     @Override
-    public boolean canStart() {
-        if (entity == null || !entity.isTamed() || entity.getOwner() == null) {
+    public boolean canUse() {
+        if (entity == null || !entity.isTame() || entity.getOwner() == null) {
             return false;
         }
         return hasNearbyEmptyChair() && isOwnerNearAndSitting();
@@ -55,7 +54,7 @@ public class MonkeySitInChairGoal extends Goal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         return isOwnerNearAndSitting();
     }
 
@@ -66,7 +65,7 @@ public class MonkeySitInChairGoal extends Goal {
     public void start() {
         final Optional<ChairEntity> nearbyChair = getNearestEmptyChair();
         if (nearbyChair.isPresent()) {
-            entity.setSitting(true);
+            entity.setOrderedToSit(true);
             entity.startRiding(nearbyChair.get());
         }
     }

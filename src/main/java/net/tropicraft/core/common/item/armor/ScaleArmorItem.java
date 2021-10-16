@@ -2,11 +2,11 @@ package net.tropicraft.core.common.item.armor;
 
 import net.tropicraft.core.common.item.ArmorMaterials;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlot;
 
 
 public class ScaleArmorItem extends TropicraftArmorItem {
-    public ScaleArmorItem(EquipmentSlot slotType, FabricItemSettings properties) {
+    public ScaleArmorItem(EquipmentSlot slotType, Properties properties) {
         super(ArmorMaterials.SCALE_ARMOR, slotType, properties);
     }
 

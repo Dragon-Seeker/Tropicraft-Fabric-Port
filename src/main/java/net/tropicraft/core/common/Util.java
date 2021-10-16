@@ -1,16 +1,5 @@
 package net.tropicraft.core.common;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -19,6 +8,17 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.Material;
 
 public class Util {
 
@@ -33,11 +33,11 @@ public class Util {
         return false;
     }*/
 
-    public static boolean tryMoveToEntityLivingLongDist(MobEntity entSource, Entity entityTo, double moveSpeedAmp) {
-        return tryMoveToXYZLongDist(entSource, entityTo.getBlockPos(), moveSpeedAmp);
+    public static boolean tryMoveToEntityLivingLongDist(Mob entSource, Entity entityTo, double moveSpeedAmp) {
+        return tryMoveToXYZLongDist(entSource, entityTo.blockPosition(), moveSpeedAmp);
     }
 
-    public static boolean tryMoveToXYZLongDist(MobEntity ent, BlockPos pos, double moveSpeedAmp) {
+    public static boolean tryMoveToXYZLongDist(Mob ent, BlockPos pos, double moveSpeedAmp) {
         return tryMoveToXYZLongDist(ent, pos.getX(), pos.getY(), pos.getZ(), moveSpeedAmp);
     }
 
@@ -52,21 +52,21 @@ public class Util {
      * @param moveSpeedAmp
      * @return
      */
-    public static boolean tryMoveToXYZLongDist(MobEntity ent, int x, int y, int z, double moveSpeedAmp) {
+    public static boolean tryMoveToXYZLongDist(Mob ent, int x, int y, int z, double moveSpeedAmp) {
 
-        World world = ent.world;
+        Level world = ent.level;
 
         boolean success = false;
 
-        if (ent.getNavigation().isIdle()) {
+        if (ent.getNavigation().isDone()) {
 
             double distToPlayer = getDistance(ent, x, y, z);//ent.getDistanceToEntity(player);
 
-            double followDist = ent.getAttributeInstance(EntityAttributes.GENERIC_FOLLOW_RANGE).getValue();
+            double followDist = ent.getAttribute(Attributes.FOLLOW_RANGE).getValue();
 
             if (distToPlayer <= followDist) {
                 //boolean success = ent.getNavigator().tryMoveToEntityLiving(player, moveSpeedAmp);
-                success = ent.getNavigation().startMovingTo(x, y, z, moveSpeedAmp);
+                success = ent.getNavigation().moveTo(x, y, z, moveSpeedAmp);
                 //System.out.println("success? " + success + "- move to player: " + ent + " -> " + player);
             } else {
                 /*int x = MathHelper.floor(player.posX);
@@ -76,7 +76,7 @@ public class Util {
                 double d = x+0.5F - ent.getX();
                 double d2 = z+0.5F - ent.getZ();
                 double d1;
-                d1 = y+0.5F - (ent.getY() + (double)ent.getStandingEyeHeight());
+                d1 = y+0.5F - (ent.getY() + (double)ent.getEyeHeight());
 
                 double d3 = Math.sqrt(d * d + d2 * d2);
                 float f2 = (float)((Math.atan2(d2, d) * 180D) / 3.1415927410125732D) - 90F;
@@ -97,16 +97,16 @@ public class Util {
 
                 BlockPos pos = new BlockPos(gatherX, gatherY, gatherZ);
 
-                if (!world.isChunkLoaded(pos)) return false;
+                if (!world.hasChunkAt(pos)) return false;
 
                 BlockState state = world.getBlockState(pos);
                 Block block = state.getBlock();
                 int tries = 0;
-                if (!world.isAir(pos)) {
+                if (!world.isEmptyBlock(pos)) {
                     //int offset = -5;
 
                     while (tries < 30) {
-                        if (world.isAir(pos) && world.isAir(pos.up())/* || !block.isSideSolid(block.defaultBlockState(), world, new BlockPos(gatherX, gatherY, gatherZ), EnumFacing.UP)*/) {
+                        if (world.isEmptyBlock(pos) && world.isEmptyBlock(pos.above())/* || !block.isSideSolid(block.defaultBlockState(), world, new BlockPos(gatherX, gatherY, gatherZ), EnumFacing.UP)*/) {
                             break;
                         }
                         gatherY += 1;//offset++;
@@ -118,7 +118,7 @@ public class Util {
                 } else {
                     //int offset = 0;
                     while (tries < 30) {
-                        if (!world.isAir(pos) && (state.getMaterial().isSolid() || world.getBlockState(pos).getMaterial() == Material.WATER)) {
+                        if (!world.isEmptyBlock(pos) && (state.getMaterial().isSolid() || world.getBlockState(pos).getMaterial() == Material.WATER)) {
                             break;
                         }
                         gatherY -= 1;//offset++;
@@ -133,7 +133,7 @@ public class Util {
                     /*if (world.getBlockState(pos).getMaterial() == Material.WATER) {
                         gatherY--;
                     }*/
-                    success = ent.getNavigation().startMovingTo(gatherX, gatherY, gatherZ, moveSpeedAmp);
+                    success = ent.getNavigation().moveTo(gatherX, gatherY, gatherZ, moveSpeedAmp);
                     //System.out.println("pp success? " + success + "- move to player: " + ent + " -> " + player);
                 }
             }
@@ -142,14 +142,14 @@ public class Util {
         return success;
     }
 
-    public static BlockPos findBlock(MobEntity entity, int scanRange, BiPredicate<World, BlockPos> predicate) {
+    public static BlockPos findBlock(Mob entity, int scanRange, BiPredicate<Level, BlockPos> predicate) {
 
         int scanSize = scanRange;
         int scanSizeY = scanRange / 2;
         int adjustRangeY = 10;
 
         int tryX;
-        int tryY = MathHelper.floor(entity.getY()) - 1;
+        int tryY = Mth.floor(entity.getY()) - 1;
         int tryZ;
 
         for (int ii = 0; ii <= 10; ii++) {
@@ -161,18 +161,18 @@ public class Util {
                 scanSize = scanRange;
                 scanSizeY = scanRange / 2;
             }
-            tryX = MathHelper.floor(entity.getX()) + (entity.world.random.nextInt(scanSize)-scanSize/2);
-            int i = tryY + entity.world.random.nextInt(scanSizeY)-(scanSizeY/2);
-            tryZ = MathHelper.floor(entity.getZ()) + entity.world.random.nextInt(scanSize)-scanSize/2;
+            tryX = Mth.floor(entity.getX()) + (entity.level.random.nextInt(scanSize)-scanSize/2);
+            int i = tryY + entity.level.random.nextInt(scanSizeY)-(scanSizeY/2);
+            tryZ = Mth.floor(entity.getZ()) + entity.level.random.nextInt(scanSize)-scanSize/2;
             BlockPos posTry = new BlockPos(tryX, tryY, tryZ);
 
             boolean foundBlock = false;
             int newY = i;
 
-            if (!entity.world.isAir(posTry)) {
+            if (!entity.level.isEmptyBlock(posTry)) {
                 //scan up
                 int tryMax = adjustRangeY;
-                while (!entity.world.isAir(posTry) && tryMax-- > 0) {
+                while (!entity.level.isEmptyBlock(posTry) && tryMax-- > 0) {
                     newY++;
                     posTry = new BlockPos(tryX, newY, tryZ);
                 }
@@ -182,20 +182,20 @@ public class Util {
                     foundWater = true;
                 }*/
 
-                if (entity.world.isAir(posTry) && predicate.test(entity.world, posTry.add(0, -1, 0))) {
+                if (entity.level.isEmptyBlock(posTry) && predicate.test(entity.level, posTry.offset(0, -1, 0))) {
                     foundBlock = true;
                 }
             } else {
                 //scan down
                 int tryMax = adjustRangeY;
-                while (entity.world.isAir(posTry) && tryMax-- > 0) {
+                while (entity.level.isEmptyBlock(posTry) && tryMax-- > 0) {
                     newY--;
                     posTry = new BlockPos(tryX, newY, tryZ);
                 }
                 /*if (!entity.world.isAirBlock(posTry) && entity.world.getBlockState(posTry.add(0, 1, 0)).getMaterial().isLiquid()) {
                     foundWater = true;
                 }*/
-                if (entity.world.isAir(posTry.add(0, 1, 0)) && predicate.test(entity.world, posTry)) {
+                if (entity.level.isEmptyBlock(posTry.offset(0, 1, 0)) && predicate.test(entity.level, posTry)) {
                     foundBlock = true;
                 }
             }
@@ -208,27 +208,27 @@ public class Util {
         return null;
     }
 
-    public static boolean isWater(World world, BlockPos pos) {
+    public static boolean isWater(Level world, BlockPos pos) {
         return world.getBlockState(pos).getMaterial() == Material.WATER;
     }
 
-    public static boolean isDeepWater(World world, BlockPos pos) {
-        boolean clearAbove = world.isAir(pos.up(1)) && world.isAir(pos.up(2)) && world.isAir(pos.up(3));
-        boolean deep = world.getBlockState(pos).getMaterial() == Material.WATER && world.getBlockState(pos.down()).getMaterial() == Material.WATER;
+    public static boolean isDeepWater(Level world, BlockPos pos) {
+        boolean clearAbove = world.isEmptyBlock(pos.above(1)) && world.isEmptyBlock(pos.above(2)) && world.isEmptyBlock(pos.above(3));
+        boolean deep = world.getBlockState(pos).getMaterial() == Material.WATER && world.getBlockState(pos.below()).getMaterial() == Material.WATER;
         boolean notUnderground = false;
         if (deep) {
-            int height = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, pos).getY() - 1;
+            int height = world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).getY() - 1;
             notUnderground = height == pos.getY();
         }
 
         return deep && notUnderground && clearAbove;
     }
 
-    public static boolean isLand(World world, BlockPos pos) {
+    public static boolean isLand(Level world, BlockPos pos) {
         return world.getBlockState(pos).getMaterial().isSolid();
     }
 
-    public static boolean isFire(World world, BlockPos pos) {
+    public static boolean isFire(Level world, BlockPos pos) {
         return world.getBlockState(pos).getMaterial() == Material.FIRE;
     }
 

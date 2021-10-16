@@ -1,16 +1,10 @@
 package net.tropicraft.core.client.blockEntity;
 
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.util.Mth;
 //import net.tropicraft.core.client.TropicraftRenderUtils;
 //import net.tropicraft.core.client.entity.model.EIHMachineModel;
 import net.tropicraft.core.client.entity.models.EIHMachineModel;
@@ -27,18 +21,18 @@ public class AirCompressorRenderer extends MachineRenderer<AirCompressorTileEnti
     
     //private final ModelScubaGear tankModel = new ModelScubaGear(0, EquipmentSlot.CHEST); // Can't reuse the main one with a different scale
 
-    public AirCompressorRenderer(final BlockEntityRendererFactory.Context ctx) {
-        super(ctx, TropicraftBlocks.AIR_COMPRESSOR, new EIHMachineModel(ctx.getLayerModelPart(TropicraftEntityRendering.AIRCOMPRESSOR_LAYER)));
+    public AirCompressorRenderer(final BlockEntityRendererProvider.Context ctx) {
+        super(ctx, TropicraftBlocks.AIR_COMPRESSOR, new EIHMachineModel(ctx.bakeLayer(TropicraftEntityRendering.AIRCOMPRESSOR_LAYER)));
     }
 
     @Override
-    protected SpriteIdentifier getMaterial() {
+    protected Material getMaterial() {
         return TropicraftRenderUtils.getTEMaterial("drink_mixer");
     }
     @Override
-    protected void animationTransform(AirCompressorTileEntity te, final MatrixStack stack, float partialTicks) {
+    protected void animationTransform(AirCompressorTileEntity te, final PoseStack stack, float partialTicks) {
         float progress = 0F;//te.getBreatheProgress(partialTicks);
-        float sin = 1 + MathHelper.cos(progress);
+        float sin = 1 + Mth.cos(progress);
         float sc = 1 + 0.05f * sin;
         stack.translate(0, 1.5f, 0);
         stack.scale(sc, sc, sc);
@@ -50,7 +44,7 @@ public class AirCompressorRenderer extends MachineRenderer<AirCompressorTileEnti
     }
 
     @Override
-    protected void renderIngredients(AirCompressorTileEntity te, MatrixStack stack, VertexConsumerProvider buffer, int combinedLightIn, int combinedOverlayIn) {
+    protected void renderIngredients(AirCompressorTileEntity te, PoseStack stack, MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
         /*
         if (te.isActive()) {
             stack.push();

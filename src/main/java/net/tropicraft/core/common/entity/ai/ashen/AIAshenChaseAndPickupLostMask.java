@@ -1,12 +1,10 @@
 package net.tropicraft.core.common.entity.ai.ashen;
 
-import net.minecraft.entity.ai.FuzzyTargeting;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.core.common.entity.hostile.AshenEntity;
-import net.minecraft.entity.LivingEntity;
-//import net.minecraft.entity.ai.TargetFinder;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.Vec3d;
-
 import java.util.EnumSet;
 
 public class AIAshenChaseAndPickupLostMask extends Goal {
@@ -19,16 +17,16 @@ public class AIAshenChaseAndPickupLostMask extends Goal {
 	public AIAshenChaseAndPickupLostMask(AshenEntity ashen, double speed) {
 		this.ashen = ashen;
 		this.speed = speed;
-		this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+		this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 	}
 
 	@Override
-	public boolean canStart() {
+	public boolean canUse() {
 		return !ashen.hasMask() && ashen.maskToTrack != null;
 	}
 
 	@Override
-	public boolean shouldContinue() {
+	public boolean canContinueToUse() {
 		return !ashen.hasMask() && ashen.maskToTrack != null && ashen.maskToTrack.isAlive();
 	}
 
@@ -37,23 +35,23 @@ public class AIAshenChaseAndPickupLostMask extends Goal {
 		if (panicTime > 0) {
 			panicTime--;
 
-			if (ashen.world.getTime() % 10 == 0) {
-				Vec3d vec3 = FuzzyTargeting.find(ashen, 10, 7);
+			if (ashen.level.getGameTime() % 10 == 0) {
+				Vec3 vec3 = LandRandomPos.getPos(ashen, 10, 7);
 
 				if (vec3 != null) {
-					ashen.getNavigation().startMovingTo(vec3.x, vec3.y, vec3.z, speed);
+					ashen.getNavigation().moveTo(vec3.x, vec3.y, vec3.z, speed);
 				}
 			}
 		} else {
-			if (ashen.squaredDistanceTo(ashen.maskToTrack) <= maskGrabDistance) {
+			if (ashen.distanceToSqr(ashen.maskToTrack) <= maskGrabDistance) {
 				if (ashen.maskToTrack.isAlive()/* && ashen.world.loadedEntityList.contains(ashen.maskToTrack)*/) {
 					ashen.pickupMask(ashen.maskToTrack);
 				} else {
 					ashen.maskToTrack = null;
 				}
 			} else {
-				if (ashen.world.getTime() % 40 == 0) {
-					ashen.getNavigation().startMovingTo(ashen.maskToTrack.getX(), ashen.maskToTrack.getY(), ashen.maskToTrack.getZ(), speed);
+				if (ashen.level.getGameTime() % 40 == 0) {
+					ashen.getNavigation().moveTo(ashen.maskToTrack.getX(), ashen.maskToTrack.getY(), ashen.maskToTrack.getZ(), speed);
 				}
 			}
 		}

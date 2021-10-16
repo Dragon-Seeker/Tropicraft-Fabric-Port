@@ -3,70 +3,78 @@ package net.tropicraft.core.common.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
-import net.minecraft.block.*;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TropicraftCoconutBlock extends FacingBlock {
-    private static final VoxelShape COCONUT_AABB = Block.createCuboidShape(4, 0.0D, 4, 12, 10, 12);
+public class TropicraftCoconutBlock extends DirectionalBlock {
+    private static final VoxelShape COCONUT_AABB = Block.box(4, 0.0D, 4, 12, 10, 12);
 
     public TropicraftCoconutBlock() {
-        super(FabricBlockSettings.of(Material.GOURD).hardness(2.0f).breakByTool(FabricToolTags.AXES).sounds(BlockSoundGroup.STONE));
+        super(FabricBlockSettings.of(Material.VEGETABLE)
+                .breakByTool(FabricToolTags.AXES)
+                .destroyTime(2.0f)
+                .sound(SoundType.STONE));
 
     }
 
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return COCONUT_AABB;
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, final BlockPos pos, ShapeContext context) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter world, final BlockPos pos, CollisionContext context) {
         return COCONUT_AABB;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACING);
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView worldIn, BlockPos pos) {
-        Direction dir = state.get(FACING);
-        BlockPos checkPos = pos.offset(dir);
+    public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
+        Direction dir = state.getValue(FACING);
+        BlockPos checkPos = pos.relative(dir);
         return worldIn.getBlockState(checkPos).getBlock() == Blocks.GRINDSTONE // coconut yeeters allowed
-                || Block.sideCoversSmallSquare(worldIn, checkPos, dir.getOpposite());
+                || Block.canSupportCenter(worldIn, checkPos, dir.getOpposite());
     }
 
     @Override
     @Deprecated
-    public BlockState getStateForNeighborUpdate(BlockState stateIn, Direction facing, BlockState facingState, WorldAccess worldIn, BlockPos currentPos, BlockPos facingPos) {
-        return stateIn.get(FACING) == facing && !stateIn.canPlaceAt(worldIn, currentPos)
-                ? Blocks.AIR.getDefaultState()
-                : super.getStateForNeighborUpdate(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        return stateIn.getValue(FACING) == facing && !stateIn.canSurvive(worldIn, currentPos)
+                ? Blocks.AIR.defaultBlockState()
+                : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
-    public BlockState rotate(BlockState state, BlockRotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState state, net.minecraft.util.BlockMirror mirrorIn) {
-        return state.with(FACING, mirrorIn.apply(state.get(FACING)));
+    public BlockState mirror(BlockState state, net.minecraft.world.level.block.Mirror mirrorIn) {
+        return state.setValue(FACING, mirrorIn.mirror(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getSide().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
     }
 
 }

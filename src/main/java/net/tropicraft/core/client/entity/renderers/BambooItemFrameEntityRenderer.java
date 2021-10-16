@@ -1,43 +1,41 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.ItemFrameEntityRenderer;
-import net.minecraft.util.registry.Registry;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.map.MapState;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.core.common.registry.TropicraftItems;
 
 public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFrameEntity> {
     private static final String ItemIdName = "bamboo_item_frame";
-    public static final ModelIdentifier LOCATION_MODEL = new ModelIdentifier(Constants.MODID + Registry.ITEM.getId(TropicraftItems.BAMBOO_ITEM_FRAME), "map=false");
-    private static final ModelIdentifier LOCATION_MODEL_MAP = new ModelIdentifier(Constants.MODID + Registry.ITEM.getId(TropicraftItems.BAMBOO_ITEM_FRAME), "map=true");
+    public static final ModelResourceLocation LOCATION_MODEL = new ModelResourceLocation(Constants.MODID + Registry.ITEM.getKey(TropicraftItems.BAMBOO_ITEM_FRAME), "map=false");
+    private static final ModelResourceLocation LOCATION_MODEL_MAP = new ModelResourceLocation(Constants.MODID + Registry.ITEM.getKey(TropicraftItems.BAMBOO_ITEM_FRAME), "map=true");
 
-    private final MinecraftClient mc = MinecraftClient.getInstance();
+    private final Minecraft mc = Minecraft.getInstance();
     private final ItemRenderer itemRenderer;
 
-    public BambooItemFrameEntityRenderer(EntityRendererFactory.Context context) {
+    public BambooItemFrameEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
         itemRenderer = context.getItemRenderer();
         //ItemFrameEntityRenderer
@@ -45,34 +43,34 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
 
 
     @Override
-    public void render(BambooItemFrameEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn) {
+    public void render(BambooItemFrameEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        matrixStackIn.push();
-        Direction direction = entityIn.getHorizontalFacing();
-        Vec3d vec3d = this.getPositionOffset(entityIn, partialTicks);
-        matrixStackIn.translate(-vec3d.getX(), -vec3d.getY(), -vec3d.getZ());
+        matrixStackIn.pushPose();
+        Direction direction = entityIn.getDirection();
+        Vec3 vec3d = this.getPositionOffset(entityIn, partialTicks);
+        matrixStackIn.translate(-vec3d.x(), -vec3d.y(), -vec3d.z());
         double d0 = 0.46875D;
 
-        matrixStackIn.translate((double) direction.getOffsetX() * 0.46875D, (double) direction.getOffsetY() * 0.46875D, (double) direction.getOffsetZ() * 0.46875D);
-        matrixStackIn.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entityIn.getPitch())); //matrixStackIn.rotate(Vector3f.XP.rotationDegrees(entityIn.rotationPitch));
-        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - entityIn.getYaw()));
+        matrixStackIn.translate((double) direction.getStepX() * 0.46875D, (double) direction.getStepY() * 0.46875D, (double) direction.getStepZ() * 0.46875D);
+        matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(entityIn.getXRot())); //matrixStackIn.rotate(Vector3f.XP.rotationDegrees(entityIn.rotationPitch));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F - entityIn.getYRot()));
 
         boolean isFrameInvis = entityIn.isInvisible();
 
         if (isFrameInvis == false) {
-            BlockRenderManager blockrendererdispatcher = this.mc.getBlockRenderManager();
-            BakedModelManager bakedmodelmanager = blockrendererdispatcher.getModels().getModelManager();
-            ModelIdentifier modelresourcelocation = entityIn.getHeldItemStack().getItem() instanceof FilledMapItem ? LOCATION_MODEL_MAP : LOCATION_MODEL;
-            matrixStackIn.push();
+            BlockRenderDispatcher blockrendererdispatcher = this.mc.getBlockRenderer();
+            ModelManager bakedmodelmanager = blockrendererdispatcher.getBlockModelShaper().getModelManager();
+            ModelResourceLocation modelresourcelocation = entityIn.getItem().getItem() instanceof MapItem ? LOCATION_MODEL_MAP : LOCATION_MODEL;
+            matrixStackIn.pushPose();
             matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-            blockrendererdispatcher.getModelRenderer().render(matrixStackIn.peek(), bufferIn.getBuffer(TexturedRenderLayers.getEntitySolid()), null, bakedmodelmanager.getModel(modelresourcelocation), 1.0F, 1.0F, 1.0F, packedLightIn, OverlayTexture.DEFAULT_UV);
-            matrixStackIn.pop();
+            blockrendererdispatcher.getModelRenderer().renderModel(matrixStackIn.last(), bufferIn.getBuffer(Sheets.solidBlockSheet()), null, bakedmodelmanager.getModel(modelresourcelocation), 1.0F, 1.0F, 1.0F, packedLightIn, OverlayTexture.NO_OVERLAY);
+            matrixStackIn.popPose();
         }
 
-        ItemStack itemstack = entityIn.getHeldItemStack();
-        Integer idFromItemstack = FilledMapItem.getMapId(itemstack);
+        ItemStack itemstack = entityIn.getItem();
+        Integer idFromItemstack = MapItem.getMapId(itemstack);
         if (!itemstack.isEmpty()) {
-            MapState mapstate = FilledMapItem.getMapState(idFromItemstack, entityIn.world);
+            MapItemSavedData mapstate = MapItem.getSavedData(idFromItemstack, entityIn.level);
             matrixStackIn.translate(0.0D, 0.0D, 0.4375D);
 
             if (isFrameInvis == true) {
@@ -84,50 +82,50 @@ public class BambooItemFrameEntityRenderer extends EntityRenderer<BambooItemFram
             }
 
             int i = mapstate != null ? entityIn.getRotation() % 4 * 2 : entityIn.getRotation();
-            matrixStackIn.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) i * 360.0F / 8.0F));
+            matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees((float) i * 360.0F / 8.0F));
             if (mapstate != null) {
-                matrixStackIn.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
                 float f = 0.0078125F;
                 matrixStackIn.scale(0.0078125F, 0.0078125F, 0.0078125F);
                 matrixStackIn.translate(-64.0D, -64.0D, 0.0D);
                 matrixStackIn.translate(0.0D, 0.0D, -1.0D);
                 if (mapstate != null) {
-                    this.mc.gameRenderer.getMapRenderer().draw(matrixStackIn, bufferIn, idFromItemstack, mapstate, true, packedLightIn);
+                    this.mc.gameRenderer.getMapRenderer().render(matrixStackIn, bufferIn, idFromItemstack, mapstate, true, packedLightIn);
                 }
             } else {
                 matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-                this.itemRenderer.renderItem(itemstack, ModelTransformation.Mode.FIXED, packedLightIn, OverlayTexture.DEFAULT_UV, matrixStackIn, bufferIn, entityIn.getId());
+                this.itemRenderer.renderStatic(itemstack, ItemTransforms.TransformType.FIXED, packedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, entityIn.getId());
             }
         }
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 
-    public Vec3d getPositionOffset(BambooItemFrameEntity entityIn, float partialTicks) {
-        return new Vec3d((float) entityIn.getHorizontalFacing().getOffsetX() * 0.3F, -0.25D, (float) entityIn.getHorizontalFacing().getOffsetZ() * 0.3F);
+    public Vec3 getPositionOffset(BambooItemFrameEntity entityIn, float partialTicks) {
+        return new Vec3((float) entityIn.getDirection().getStepX() * 0.3F, -0.25D, (float) entityIn.getDirection().getStepZ() * 0.3F);
     }
 
     /**
      * Returns the location of an entity's texture.
      */
     @Override
-    public Identifier getTexture(BambooItemFrameEntity entity) {
-        return SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE;
+    public ResourceLocation getTextureLocation(BambooItemFrameEntity entity) {
+        return TextureAtlas.LOCATION_BLOCKS;
         //return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
     }
 
     protected boolean hasLabel(BambooItemFrameEntity entity) {
-        if (MinecraftClient.isHudEnabled() && !entity.getHeldItemStack().isEmpty() && entity.getHeldItemStack().hasCustomName() && this.dispatcher.targetedEntity == entity) {
-            double dist = this.dispatcher.getSquaredDistanceToCamera(entity);
-            float f = entity.isSneaky() ? 32.0F : 64.0F;
+        if (Minecraft.renderNames() && !entity.getItem().isEmpty() && entity.getItem().hasCustomHoverName() && this.entityRenderDispatcher.crosshairPickEntity == entity) {
+            double dist = this.entityRenderDispatcher.distanceToSqr(entity);
+            float f = entity.isDiscrete() ? 32.0F : 64.0F;
             return dist < (double) (f * f);
         } else {
             return false;
         }
     }
 
-    protected void renderLabelIfPresent(BambooItemFrameEntity entityIn, Text displayNameIn, MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn) {
-        super.renderLabelIfPresent(entityIn, entityIn.getHeldItemStack().getName(), matrixStackIn, bufferIn, packedLightIn);
+    protected void renderLabelIfPresent(BambooItemFrameEntity entityIn, Component displayNameIn, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+        super.renderNameTag(entityIn, entityIn.getItem().getHoverName(), matrixStackIn, bufferIn, packedLightIn);
 
     }
 }

@@ -1,13 +1,12 @@
 package net.tropicraft.core.common.entity.underdasea;
 
-import net.minecraft.util.StringIdentifiable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import net.minecraft.util.StringRepresentable;
 
-public enum StarfishType implements StringIdentifiable {
+public enum StarfishType implements StringRepresentable {
 	/** The red knobbed starfish. */
 	RED("starfishRed", "Red Starfish", new String[] {
 		"starfish_red_0",
@@ -84,7 +83,7 @@ public enum StarfishType implements StringIdentifiable {
 	}
 
 	@Override
-	public String asString() {
+	public String getSerializedName() {
 		return unlocalizedName;
 	}
 }

@@ -3,27 +3,24 @@ package net.tropicraft.core.common.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.tropicraft.core.common.block.blockentity.AirCompressorTileEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,14 +29,14 @@ import org.jetbrains.annotations.Nullable;
 //import javax.annotation.Nullable;
 import java.util.List;
 
-public class AirCompressorBlock extends Block implements BlockEntityProvider {
+public class AirCompressorBlock extends Block implements EntityBlock {
 
     @NotNull
-    public static final EnumProperty<Direction> FACING = HorizontalFacingBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
-    public AirCompressorBlock(FabricBlockSettings properties) {
+    public AirCompressorBlock(Properties properties) {
         super(properties);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
     /**
@@ -47,16 +44,16 @@ public class AirCompressorBlock extends Block implements BlockEntityProvider {
      */
     @Environment(EnvType.CLIENT)
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView worldIn, List<Text> tooltip, TooltipContext flagIn) {
-        super.appendTooltip(stack, worldIn, tooltip, flagIn);
-        tooltip.add(new TranslatableText("!! Work In Progress !!").formatted(Formatting.RED, Formatting.BOLD));
-        tooltip.add(new TranslatableText(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        tooltip.add(new TranslatableComponent("!! Work In Progress !!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+        tooltip.add(new TranslatableComponent(getDescriptionId() + ".desc").withStyle(ChatFormatting.GRAY));
 
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACING);
     }
 
@@ -93,25 +90,25 @@ public class AirCompressorBlock extends Block implements BlockEntityProvider {
      */
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!world.isClient) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!world.isClientSide) {
             AirCompressorTileEntity te = (AirCompressorTileEntity) world.getBlockEntity(pos);
             //te.ejectTank();
         }
 
-        super.onStateReplaced(state, world, pos, newState, isMoving);
+        super.onRemove(state, world, pos, newState, isMoving);
     }
 
     @Override
     @Nullable
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        BlockState ret = super.getPlacementState(context);
-        return ret.with(FACING, context.getPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState ret = super.getStateForPlacement(context);
+        return ret.setValue(FACING, context.getHorizontalDirection());
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AirCompressorTileEntity(pos, state);
     }
 }

@@ -1,12 +1,17 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 import net.tropicraft.core.common.entity.underdasea.SeahorseEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.util.math.MathHelper;
 
-public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
+public class SeahorseModel extends ListModel<SeahorseEntity> {
     ModelPart head1;
     ModelPart snout1;
     ModelPart snout2;
@@ -182,239 +187,239 @@ public class SeahorseModel extends CompositeEntityModel<SeahorseEntity> {
          */
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("head1",
-                ModelPartBuilder.create().uv(0,0)
-                        .cuboid(-2.5F, -2.5F, -2.5F, 5, 5, 5),
-                ModelTransform.pivot(1F, -36F, 0.5F));
+        modelPartData.addOrReplaceChild("head1",
+                CubeListBuilder.create().texOffs(0,0)
+                        .addBox(-2.5F, -2.5F, -2.5F, 5, 5, 5),
+                PartPose.offset(1F, -36F, 0.5F));
 
-        modelPartData.addChild("snout1",
-                ModelPartBuilder.create().uv(20,0)
-                        .cuboid(-1.5F, -1F, -1.5F, 3, 3, 4),
-                ModelTransform.pivot(-2.448189F, -33.97269F, 2.980232E-08F));
+        modelPartData.addOrReplaceChild("snout1",
+                CubeListBuilder.create().texOffs(20,0)
+                        .addBox(-1.5F, -1F, -1.5F, 3, 3, 4),
+                PartPose.offset(-2.448189F, -33.97269F, 2.980232E-08F));
 
-        modelPartData.addChild("snout2",
-                ModelPartBuilder.create().uv(34, 0)
-                        .cuboid(-2.5F, -0.5F, -0.5F, 5, 2, 2),
-                ModelTransform.pivot(-5.491952F, -31.3774F, 2.980232E-08F));
+        modelPartData.addOrReplaceChild("snout2",
+                CubeListBuilder.create().texOffs(34, 0)
+                        .addBox(-2.5F, -0.5F, -0.5F, 5, 2, 2),
+                PartPose.offset(-5.491952F, -31.3774F, 2.980232E-08F));
 
-        modelPartData.addChild("snout3",
-                ModelPartBuilder.create().uv(23, 7)
-                        .cuboid(-0.5F, -1F, -1F, 1, 3, 3),
-                ModelTransform.pivot(-7.54649F, -29.62558F, 0F));
+        modelPartData.addOrReplaceChild("snout3",
+                CubeListBuilder.create().texOffs(23, 7)
+                        .addBox(-0.5F, -1F, -1F, 1, 3, 3),
+                PartPose.offset(-7.54649F, -29.62558F, 0F));
 
-        modelPartData.addChild("eye1",
-                ModelPartBuilder.create().uv(40, 4)
-                        .cuboid(-1F, -1F, -0.5F, 2, 2, 1),
-                ModelTransform.pivot(-2.955017F, -34.83473F, -2F));
+        modelPartData.addOrReplaceChild("eye1",
+                CubeListBuilder.create().texOffs(40, 4)
+                        .addBox(-1F, -1F, -0.5F, 2, 2, 1),
+                PartPose.offset(-2.955017F, -34.83473F, -2F));
 
-        modelPartData.addChild("eye2",
-                ModelPartBuilder.create().uv(40, 4)
-                        .cuboid(-1F, -1F, -0.5F, 2, 2, 1),
-                ModelTransform.pivot(-2.958766F, -34.83232F, 3F));
+        modelPartData.addOrReplaceChild("eye2",
+                CubeListBuilder.create().texOffs(40, 4)
+                        .addBox(-1F, -1F, -0.5F, 2, 2, 1),
+                PartPose.offset(-2.958766F, -34.83232F, 3F));
 
-        modelPartData.addChild("fin2",
-                ModelPartBuilder.create().uv(39, 15)
-                        .cuboid(-3F, -2.5F, 0F, 6, 5, 0),
-                ModelTransform.pivot(1.222835F, -38.81833F, 0.5F));
+        modelPartData.addOrReplaceChild("fin2",
+                CubeListBuilder.create().texOffs(39, 15)
+                        .addBox(-3F, -2.5F, 0F, 6, 5, 0),
+                PartPose.offset(1.222835F, -38.81833F, 0.5F));
 
-        modelPartData.addChild("fin4",
-                ModelPartBuilder.create().uv(36, 9)
-                        .cuboid(-4F, -2.5F, 0F, 4, 5, 0),
-                ModelTransform.pivot(1.000001F, -36F, -2F));
+        modelPartData.addOrReplaceChild("fin4",
+                CubeListBuilder.create().texOffs(36, 9)
+                        .addBox(-4F, -2.5F, 0F, 4, 5, 0),
+                PartPose.offset(1.000001F, -36F, -2F));
 
-        modelPartData.addChild("fin3",
-                ModelPartBuilder.create().uv(45, 9)
-                        .cuboid(-4F, -2.5F, 0F, 4, 5, 0),
-                ModelTransform.pivot(1.000001F, -36F, 3F));
+        modelPartData.addOrReplaceChild("fin3",
+                CubeListBuilder.create().texOffs(45, 9)
+                        .addBox(-4F, -2.5F, 0F, 4, 5, 0),
+                PartPose.offset(1.000001F, -36F, 3F));
 
-        modelPartData.addChild("neck1",
-                ModelPartBuilder.create().uv(0, 10)
-                        .cuboid(-2F, -2F, -2F, 4, 4, 4),
-                ModelTransform.pivot(3.5F, -33.5F, 0.5F));
+        modelPartData.addOrReplaceChild("neck1",
+                CubeListBuilder.create().texOffs(0, 10)
+                        .addBox(-2F, -2F, -2F, 4, 4, 4),
+                PartPose.offset(3.5F, -33.5F, 0.5F));
 
-        modelPartData.addChild("neck2",
-                ModelPartBuilder.create().uv(0, 18)
-                        .cuboid(-2.5F, -2F, -2.5F, 5, 4, 5),
-                ModelTransform.pivot(4.999997F, -31F, 0.5F));
+        modelPartData.addOrReplaceChild("neck2",
+                CubeListBuilder.create().texOffs(0, 18)
+                        .addBox(-2.5F, -2F, -2.5F, 5, 4, 5),
+                PartPose.offset(4.999997F, -31F, 0.5F));
 
-        modelPartData.addChild("belly",
-                ModelPartBuilder.create().uv(0, 27)
-                        .cuboid(-3.5F, 0F, -3F, 7, 8, 6),
-                ModelTransform.pivot(5F, -30F, 0.5F));
+        modelPartData.addOrReplaceChild("belly",
+                CubeListBuilder.create().texOffs(0, 27)
+                        .addBox(-3.5F, 0F, -3F, 7, 8, 6),
+                PartPose.offset(5F, -30F, 0.5F));
 
-        modelPartData.addChild("tail1",
-                ModelPartBuilder.create().uv(0, 18)
-                        .cuboid(-2.5F, 0F, -2.5F, 5, 4, 5),
-                ModelTransform.pivot(5.5F, -22.5F, 0.5F));
+        modelPartData.addOrReplaceChild("tail1",
+                CubeListBuilder.create().texOffs(0, 18)
+                        .addBox(-2.5F, 0F, -2.5F, 5, 4, 5),
+                PartPose.offset(5.5F, -22.5F, 0.5F));
 
-        modelPartData.addChild("tail2",
-                ModelPartBuilder.create().uv(0, 41)
-                        .cuboid(-2F, 0F, -2F, 4, 4, 4),
-                ModelTransform.pivot(5F, -19F, 0.5F));
+        modelPartData.addOrReplaceChild("tail2",
+                CubeListBuilder.create().texOffs(0, 41)
+                        .addBox(-2F, 0F, -2F, 4, 4, 4),
+                PartPose.offset(5F, -19F, 0.5F));
 
-        modelPartData.addChild("tail3",
-                ModelPartBuilder.create().uv(0, 49)
-                        .cuboid(-2F, 0F, -1.5F, 3, 4, 3),
-                ModelTransform.pivot(4.5F, -15.5F, 0.5F));
+        modelPartData.addOrReplaceChild("tail3",
+                CubeListBuilder.create().texOffs(0, 49)
+                        .addBox(-2F, 0F, -1.5F, 3, 4, 3),
+                PartPose.offset(4.5F, -15.5F, 0.5F));
 
-        modelPartData.addChild("tail4",
-                ModelPartBuilder.create().uv(0, 56)
-                        .cuboid(-1F, 0F, -1F, 2, 4, 2),
-                ModelTransform.pivot(2.652397F, -12.89918F, 0.5F));
+        modelPartData.addOrReplaceChild("tail4",
+                CubeListBuilder.create().texOffs(0, 56)
+                        .addBox(-1F, 0F, -1F, 2, 4, 2),
+                PartPose.offset(2.652397F, -12.89918F, 0.5F));
 
-        modelPartData.addChild("tail5",
-                ModelPartBuilder.create().uv(8, 56)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
-                ModelTransform.pivot(-0.8942064F, -12.51931F, 0.5F));
+        modelPartData.addOrReplaceChild("tail5",
+                CubeListBuilder.create().texOffs(8, 56)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 2, 1),
+                PartPose.offset(-0.8942064F, -12.51931F, 0.5F));
 
-        modelPartData.addChild("tail6",
-                ModelPartBuilder.create().uv(12, 56)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
-                ModelTransform.pivot(-2.551666F, -13.06961F, 0.5F));
+        modelPartData.addOrReplaceChild("tail6",
+                CubeListBuilder.create().texOffs(12, 56)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 2, 1),
+                PartPose.offset(-2.551666F, -13.06961F, 0.5F));
 
-        modelPartData.addChild("tail7",
-                ModelPartBuilder.create().uv(12, 56)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
-                ModelTransform.pivot(-3.685031F, -14.47157F, 0.5F));
+        modelPartData.addOrReplaceChild("tail7",
+                CubeListBuilder.create().texOffs(12, 56)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 2, 1),
+                PartPose.offset(-3.685031F, -14.47157F, 0.5F));
 
-        modelPartData.addChild("tail8",
-                ModelPartBuilder.create().uv(12, 56)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
-                ModelTransform.pivot(-3.770199F, -16.05041F, 0.5F));
+        modelPartData.addOrReplaceChild("tail8",
+                CubeListBuilder.create().texOffs(12, 56)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 2, 1),
+                PartPose.offset(-3.770199F, -16.05041F, 0.5F));
 
-        modelPartData.addChild("tail9",
-                ModelPartBuilder.create().uv(12, 56)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
-                ModelTransform.pivot(-2.846481F, -17.36065F, 0.5F));
+        modelPartData.addOrReplaceChild("tail9",
+                CubeListBuilder.create().texOffs(12, 56)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 2, 1),
+                PartPose.offset(-2.846481F, -17.36065F, 0.5F));
 
-        modelPartData.addChild("tail10",
-                ModelPartBuilder.create().uv(12, 56)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 2, 1),
-                ModelTransform.pivot(-0.2576861F, -15.77428F, 0.5F));
+        modelPartData.addOrReplaceChild("tail10",
+                CubeListBuilder.create().texOffs(12, 56)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 2, 1),
+                PartPose.offset(-0.2576861F, -15.77428F, 0.5F));
 
-        modelPartData.addChild("tail11",
-                ModelPartBuilder.create().uv(12, 56)
-                        .cuboid(-0.5F, -1F, -0.5F, 1, 2, 1),
-                ModelTransform.pivot(-0.856306F, -15.47153F, 0.5F));
+        modelPartData.addOrReplaceChild("tail11",
+                CubeListBuilder.create().texOffs(12, 56)
+                        .addBox(-0.5F, -1F, -0.5F, 1, 2, 1),
+                PartPose.offset(-0.856306F, -15.47153F, 0.5F));
 
-        modelPartData.addChild("fin1",
-                ModelPartBuilder.create().uv(40, 22)
-                        .cuboid(-2.5F, -4F, 0F, 5, 8, 0),
-                ModelTransform.pivot(8.5F, -20F, 0.5F));
+        modelPartData.addOrReplaceChild("fin1",
+                CubeListBuilder.create().texOffs(40, 22)
+                        .addBox(-2.5F, -4F, 0F, 5, 8, 0),
+                PartPose.offset(8.5F, -20F, 0.5F));
 
-        return TexturedModelData.of(modelData,64,64);
+        return LayerDefinition.create(modelData,64,64);
     }
 
     @Override
-    public void animateModel(SeahorseEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-        head1.pitch = 0F;
-        head1.yaw = 0F;
-        head1.roll = -0.7060349F;
+    public void prepareMobModel(SeahorseEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+        head1.xRot = 0F;
+        head1.yRot = 0F;
+        head1.zRot = -0.7060349F;
 
-        snout1.pitch = 0F;
-        snout1.yaw = 0F;
-        snout1.roll = -0.7060349F;
+        snout1.xRot = 0F;
+        snout1.yRot = 0F;
+        snout1.zRot = -0.7060349F;
 
-        snout2.pitch = 0F;
-        snout2.yaw = 0F;
-        snout2.roll = -0.7060349F;
+        snout2.xRot = 0F;
+        snout2.yRot = 0F;
+        snout2.zRot = -0.7060349F;
 
-        snout3.pitch = 0F;
-        snout3.yaw = 0F;
-        snout3.roll = -1.055101F;
+        snout3.xRot = 0F;
+        snout3.yRot = 0F;
+        snout3.zRot = -1.055101F;
 
-        eye1.pitch = -0.1802033F;
-        eye1.yaw = 0.1073159F;
-        eye1.roll = -0.7155942F;
+        eye1.xRot = -0.1802033F;
+        eye1.yRot = 0.1073159F;
+        eye1.zRot = -0.7155942F;
 
-        eye2.pitch = -0.1327665F;
-        eye2.yaw = 2.978997F;
-        eye2.roll = -2.432569F;
+        eye2.xRot = -0.1327665F;
+        eye2.yRot = 2.978997F;
+        eye2.zRot = -2.432569F;
 
-        fin2.pitch = 0F;
-        fin2.yaw = 0F;
-        fin2.roll = -0.1043443F;
+        fin2.xRot = 0F;
+        fin2.yRot = 0F;
+        fin2.zRot = -0.1043443F;
 
-        fin4.pitch = -0.2562083F;
-        fin4.yaw = -2.679784F;
-        fin4.roll = 0.4709548F;
+        fin4.xRot = -0.2562083F;
+        fin4.yRot = -2.679784F;
+        fin4.zRot = 0.4709548F;
 
-        fin3.pitch = 0.2562083F;
-        fin3.yaw = 2.679784F;
-        fin3.roll = 0.4709548F;
+        fin3.xRot = 0.2562083F;
+        fin3.yRot = 2.679784F;
+        fin3.zRot = 0.4709548F;
 
-        neck1.pitch = 0F;
-        neck1.yaw = 0F;
-        neck1.roll = -0.7853982F;
+        neck1.xRot = 0F;
+        neck1.yRot = 0F;
+        neck1.zRot = -0.7853982F;
 
-        neck2.pitch = 0F;
-        neck2.yaw = 0F;
-        neck2.roll = -0.349066F;
+        neck2.xRot = 0F;
+        neck2.yRot = 0F;
+        neck2.zRot = -0.349066F;
 
-        belly.pitch = 0F;
-        belly.yaw = 0F;
-        belly.roll = 0F;
+        belly.xRot = 0F;
+        belly.yRot = 0F;
+        belly.zRot = 0F;
 
-        tail1.pitch = 0F;
-        tail1.yaw = 0F;
-        tail1.roll = 0.08726645F;
+        tail1.xRot = 0F;
+        tail1.yRot = 0F;
+        tail1.zRot = 0.08726645F;
 
-        tail2.pitch = 0F;
-        tail2.yaw = 0F;
-        tail2.roll = 0.3490658F;
+        tail2.xRot = 0F;
+        tail2.yRot = 0F;
+        tail2.zRot = 0.3490658F;
 
-        tail3.pitch = 0F;
-        tail3.yaw = 0F;
-        tail3.roll = 0.6981316F;
+        tail3.xRot = 0F;
+        tail3.yRot = 0F;
+        tail3.zRot = 0.6981316F;
 
-        tail4.pitch = 0F;
-        tail4.yaw = 0F;
-        tail4.roll = 1.466756F;
+        tail4.xRot = 0F;
+        tail4.yRot = 0F;
+        tail4.zRot = 1.466756F;
 
-        tail5.pitch = 0F;
-        tail5.yaw = 0F;
-        tail5.roll = 1.947916F;
+        tail5.xRot = 0F;
+        tail5.yRot = 0F;
+        tail5.zRot = 1.947916F;
 
-        tail6.pitch = 0F;
-        tail6.yaw = 0F;
-        tail6.roll = 2.471515F;
+        tail6.xRot = 0F;
+        tail6.yRot = 0F;
+        tail6.zRot = 2.471515F;
 
-        tail7.pitch = 0F;
-        tail7.yaw = 0F;
-        tail7.roll = -3.113539F;
+        tail7.xRot = 0F;
+        tail7.yRot = 0F;
+        tail7.zRot = -3.113539F;
 
-        tail8.pitch = 0F;
-        tail8.yaw = 0F;
-        tail8.roll = -2.415407F;
+        tail8.xRot = 0F;
+        tail8.yRot = 0F;
+        tail8.zRot = -2.415407F;
 
-        tail9.pitch = 0F;
-        tail9.yaw = 0F;
-        tail9.roll = -1.542743F;
+        tail9.xRot = 0F;
+        tail9.yRot = 0F;
+        tail9.zRot = -1.542743F;
 
-        tail10.pitch = 0F;
-        tail10.yaw = 0F;
-        tail10.roll = 2.659437F;
+        tail10.xRot = 0F;
+        tail10.yRot = 0F;
+        tail10.zRot = 2.659437F;
 
-        tail11.pitch = 0F;
-        tail11.yaw = 0F;
-        tail11.roll = -2.415407F;
+        tail11.xRot = 0F;
+        tail11.yRot = 0F;
+        tail11.zRot = -2.415407F;
 
-        fin1.pitch = 0F;
-        fin1.yaw = 0F;
-        fin1.roll = 0.2188137F;
+        fin1.xRot = 0F;
+        fin1.yRot = 0F;
+        fin1.zRot = 0.2188137F;
     }
 
     @Override
-    public void setAngles(SeahorseEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        fin2.roll = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+    public void setupAnim(SeahorseEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        fin2.zRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(
             head1, snout1, snout2, snout3, eye1, eye2, fin1, fin2, fin4, fin3, neck1, neck2, belly,
                 tail1, tail2, tail3, tail4, tail5, tail6, tail7, tail8, tail9, tail10, tail11

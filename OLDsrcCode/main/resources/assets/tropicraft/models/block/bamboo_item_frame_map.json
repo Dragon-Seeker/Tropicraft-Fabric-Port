@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/template_item_frame_map",
+  "textures": {
+    "particle": "tropicraft:block/bamboo_side",
+    "wood": "tropicraft:block/bamboo_side",
+    "back": "minecraft:block/item_frame"
+  }
+}

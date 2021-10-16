@@ -1,21 +1,20 @@
 package net.tropicraft.core.common.entity.ai;
 
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
 import com.google.common.collect.Sets;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.pathing.MobNavigation;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-
 import java.util.EnumSet;
 import java.util.Set;
 
 public class EntityAITemptHelmet extends Goal
 {
     /** The entity using this AI that is tempted by the player. */
-    private final PathAwareEntity temptedEntity;
+    private final PathfinderMob temptedEntity;
     private final double speed;
     /** X position of player tempting this mob */
     private double targetX;
@@ -28,7 +27,7 @@ public class EntityAITemptHelmet extends Goal
     /** Tempting player's yaw */
     private double yaw;
     /** The player that is tempting the entity that is using this AI. */
-    private PlayerEntity temptingPlayer;
+    private Player temptingPlayer;
     /**
      * A counter that is decremented each time the shouldExecute method is called. The shouldExecute method will always
      * return false if delayTemptCounter is greater than 0.
@@ -40,18 +39,18 @@ public class EntityAITemptHelmet extends Goal
     /** Whether the entity using this AI will be scared by the tempter's sudden movement. */
     private final boolean scaredByPlayerMovement;
 
-    public EntityAITemptHelmet(PathAwareEntity temptedEntityIn, double speedIn, Item temptItemIn, boolean scaredByPlayerMovementIn) {
+    public EntityAITemptHelmet(PathfinderMob temptedEntityIn, double speedIn, Item temptItemIn, boolean scaredByPlayerMovementIn) {
         this(temptedEntityIn, speedIn, scaredByPlayerMovementIn, Sets.newHashSet(temptItemIn));
     }
 
-    public EntityAITemptHelmet(PathAwareEntity temptedEntityIn, double speedIn, boolean scaredByPlayerMovementIn, Set<Item> temptItemIn) {
+    public EntityAITemptHelmet(PathfinderMob temptedEntityIn, double speedIn, boolean scaredByPlayerMovementIn, Set<Item> temptItemIn) {
         this.temptedEntity = temptedEntityIn;
         this.speed = speedIn;
         this.temptItem = temptItemIn;
         this.scaredByPlayerMovement = scaredByPlayerMovementIn;
-        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 
-        if (!(temptedEntityIn.getNavigation() instanceof MobNavigation))
+        if (!(temptedEntityIn.getNavigation() instanceof GroundPathNavigation))
         {
             throw new IllegalArgumentException("Unsupported mob type for TemptGoal");
         }
@@ -60,7 +59,7 @@ public class EntityAITemptHelmet extends Goal
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
-    public boolean canStart()
+    public boolean canUse()
     {
 
         if (temptedEntity instanceof EntityKoaBase && ((EntityKoaBase) temptedEntity).druggedTime <= 0) {
@@ -74,7 +73,7 @@ public class EntityAITemptHelmet extends Goal
         }
         else
         {
-            this.temptingPlayer = this.temptedEntity.world.getClosestPlayer(this.temptedEntity, 10.0D);
+            this.temptingPlayer = this.temptedEntity.level.getNearestPlayer(this.temptedEntity, 10.0D);
 
             if (this.temptingPlayer == null)
             {
@@ -90,7 +89,7 @@ public class EntityAITemptHelmet extends Goal
 
     protected boolean isTempting(ItemStack stack) {
         for (Item items : temptItem) {
-            if (items.getDefaultStack().isInFrame() && items == stack.getItem()) {
+            if (items.getDefaultInstance().isFramed() && items == stack.getItem()) {
                 return true;
             }
         }
@@ -100,14 +99,14 @@ public class EntityAITemptHelmet extends Goal
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         if (this.scaredByPlayerMovement) {
-            if (this.temptedEntity.squaredDistanceTo(this.temptingPlayer) < 36.0D) {
-                if (this.temptingPlayer.squaredDistanceTo(this.targetX, this.targetY, this.targetZ) > 0.010000000000000002D) {
+            if (this.temptedEntity.distanceToSqr(this.temptingPlayer) < 36.0D) {
+                if (this.temptingPlayer.distanceToSqr(this.targetX, this.targetY, this.targetZ) > 0.010000000000000002D) {
                     return false;
                 }
 
-                if (Math.abs((double)this.temptingPlayer.getPitch() - this.pitch) > 5.0D || Math.abs((double)this.temptingPlayer.getYaw() - this.yaw) > 5.0D) {
+                if (Math.abs((double)this.temptingPlayer.getXRot() - this.pitch) > 5.0D || Math.abs((double)this.temptingPlayer.getYRot() - this.yaw) > 5.0D) {
                     return false;
                 }
             } else {
@@ -116,11 +115,11 @@ public class EntityAITemptHelmet extends Goal
                 this.targetZ = this.temptingPlayer.getZ();
             }
 
-            pitch = temptingPlayer.getPitch();
-            yaw = temptingPlayer.getYaw();
+            pitch = temptingPlayer.getXRot();
+            yaw = temptingPlayer.getYRot();
         }
 
-        return this.canStart();
+        return this.canUse();
     }
 
     /**
@@ -147,12 +146,12 @@ public class EntityAITemptHelmet extends Goal
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        this.temptedEntity.getLookControl().lookAt(this.temptingPlayer, (float)(this.temptedEntity.getBodyYawSpeed() + 20), (float)this.temptedEntity.getLookPitchSpeed());
+        this.temptedEntity.getLookControl().setLookAt(this.temptingPlayer, (float)(this.temptedEntity.getMaxHeadYRot() + 20), (float)this.temptedEntity.getMaxHeadXRot());
 
-        if (this.temptedEntity.squaredDistanceTo(this.temptingPlayer) < 6.25D) {
+        if (this.temptedEntity.distanceToSqr(this.temptingPlayer) < 6.25D) {
             this.temptedEntity.getNavigation().stop();
         } else {
-            this.temptedEntity.getNavigation().startMovingTo(this.temptingPlayer, this.speed);
+            this.temptedEntity.getNavigation().moveTo(this.temptingPlayer, this.speed);
         }
     }
 

@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.DiagonalCrossSamplingLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.BishopTransformer;
 
-public final class TropicraftExpandIslandLayer implements DiagonalCrossSamplingLayer {
+public final class TropicraftExpandIslandLayer implements BishopTransformer {
     private final TropicraftBiomeIds biomeIds;
 
     public TropicraftExpandIslandLayer(TropicraftBiomeIds biomeIds) {
@@ -11,7 +11,7 @@ public final class TropicraftExpandIslandLayer implements DiagonalCrossSamplingL
     }
 
     @Override
-    public int sample(LayerRandomnessSource random, int ne, int se, int sw, int nw, int center) {
+    public int apply(Context random, int ne, int se, int sw, int nw, int center) {
         if (biomeIds.isOcean(center)) {
             final boolean isNorthEastOcean = biomeIds.isOcean(ne);
             final boolean isSouthEastOcean = biomeIds.isOcean(se);
@@ -21,23 +21,23 @@ public final class TropicraftExpandIslandLayer implements DiagonalCrossSamplingL
                 int chance = 1;
                 int result = biomeIds.land;
 
-                if (!isNorthWestOcean && random.nextInt(chance++) == 0) {
+                if (!isNorthWestOcean && random.nextRandom(chance++) == 0) {
                     result = nw;
                 }
 
-                if (!isSouthWestOcean && random.nextInt(chance++) == 0) {
+                if (!isSouthWestOcean && random.nextRandom(chance++) == 0) {
                     result = sw;
                 }
 
-                if (!isNorthEastOcean && random.nextInt(chance++) == 0) {
+                if (!isNorthEastOcean && random.nextRandom(chance++) == 0) {
                     result = ne;
                 }
 
-                if (!isSouthEastOcean && random.nextInt(chance++) == 0) {
+                if (!isSouthEastOcean && random.nextRandom(chance++) == 0) {
                     result = se;
                 }
 
-                if (random.nextInt(3) == 0) {
+                if (random.nextRandom(3) == 0) {
                     return result;
                 }
 

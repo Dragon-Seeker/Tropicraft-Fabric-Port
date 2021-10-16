@@ -2,59 +2,59 @@ package net.tropicraft.core.common.item;
 
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DecorationItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.HangingEntityItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 
 
-public class BambooItemFrameItem extends DecorationItem {
-    public BambooItemFrameItem(FabricItemSettings settings) {
+public class BambooItemFrameItem extends HangingEntityItem {
+    public BambooItemFrameItem(Properties settings) {
         // Game crashes if we pass to super, we don't need it anyway
         super(TropicraftEntities.BAMBOO_ITEM_FRAME, settings);
     }
     
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        final Direction direction = context.getSide();
-        final BlockPos blockpos = context.getBlockPos().offset(direction);
-        final PlayerEntity playerentity = context.getPlayer();
-        final ItemStack itemstack = context.getStack();
+    public InteractionResult useOn(UseOnContext context) {
+        final Direction direction = context.getClickedFace();
+        final BlockPos blockpos = context.getClickedPos().relative(direction);
+        final Player playerentity = context.getPlayer();
+        final ItemStack itemstack = context.getItemInHand();
 
-        if (playerentity != null && !this.canPlaceOn(playerentity, direction, itemstack, blockpos)) {
-           return ActionResult.FAIL;
+        if (playerentity != null && !this.mayPlace(playerentity, direction, itemstack, blockpos)) {
+           return InteractionResult.FAIL;
         } else {
-           World world = context.getWorld();
+           Level world = context.getLevel();
            BambooItemFrameEntity hangingentity = new BambooItemFrameEntity(world, blockpos, direction);
 
-            NbtCompound compoundtag = itemstack.getNbt();
+            CompoundTag compoundtag = itemstack.getTag();
            if (compoundtag != null) {
-              EntityType.loadFromEntityNbt(world, playerentity, hangingentity, compoundtag);
+              EntityType.updateCustomEntityTag(world, playerentity, hangingentity, compoundtag);
            }
 
-           if (hangingentity.canStayAttached()) {
-              if (!world.isClient()) {
-                 hangingentity.onPlace();//playPlaceSound
-                 world.spawnEntity(hangingentity);
+           if (hangingentity.survives()) {
+              if (!world.isClientSide()) {
+                 hangingentity.playPlacementSound();//playPlaceSound
+                 world.addFreshEntity(hangingentity);
               }
 
-              itemstack.decrement(1);
+              itemstack.shrink(1);
            }
 
-           return ActionResult.SUCCESS;
+           return InteractionResult.SUCCESS;
         }
     }
 
     @Override
-    protected boolean canPlaceOn(PlayerEntity player, Direction side, ItemStack stack, BlockPos pos) {
-        return player.canPlaceOn(pos, side, stack) && !player.world.isOutOfHeightLimit(pos);
+    protected boolean mayPlace(Player player, Direction side, ItemStack stack, BlockPos pos) {
+        return player.mayUseItemAt(pos, side, stack) && !player.level.isOutsideBuildHeight(pos);
     }
 
 }

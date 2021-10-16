@@ -1,13 +1,12 @@
 package net.tropicraft.core.common.entity.ai.fishies;
 
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.phys.AABB;
 import net.tropicraft.core.common.entity.underdasea.TropicraftFishEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.util.math.Box;
-
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
@@ -16,15 +15,15 @@ public class TargetPreyGoal extends Goal {
     public TropicraftFishEntity entity;
     public Random rand;
 
-    public TargetPreyGoal(EnumSet<Control> flags, TropicraftFishEntity entityObjIn) {
+    public TargetPreyGoal(EnumSet<Flag> flags, TropicraftFishEntity entityObjIn) {
         entity = entityObjIn;
         rand = entity.getRandom();
-        setControls(flags);
+        setFlags(flags);
     }
 
     @Override
-    public boolean canStart() {
-        return entity.isTouchingWater() && entity.canAggress && entity.eatenFishAmount < entity.maximumEatAmount;
+    public boolean canUse() {
+        return entity.isInWater() && entity.canAggress && entity.eatenFishAmount < entity.maximumEatAmount;
     }
 
     @Override
@@ -32,9 +31,9 @@ public class TargetPreyGoal extends Goal {
         super.tick();
         
         // Target selection
-        Box entityBB = entity.getBoundingBox();
-        if (entity.age % 80 == 0 && entity.aggressTarget == null || entity.getEntityWorld().getEntityById(entity.aggressTarget.getId()) == null) {
-                List<Entity> list = entity.world.getOtherEntities(entity, entityBB.expand(20D, 20D, 20D).offset(0.0D, -8.0D, 0.0D), e -> e.isAlive());
+        AABB entityBB = entity.getBoundingBox();
+        if (entity.tickCount % 80 == 0 && entity.aggressTarget == null || entity.getCommandSenderWorld().getEntity(entity.aggressTarget.getId()) == null) {
+                List<Entity> list = entity.level.getEntities(entity, entityBB.inflate(20D, 20D, 20D).move(0.0D, -8.0D, 0.0D), e -> e.isAlive());
                 if(list.size() > 0) {
                     Entity ent = list.get(rand.nextInt(list.size()));
                     boolean skip = false;
@@ -52,12 +51,12 @@ public class TargetPreyGoal extends Goal {
 //                            skip = true;
 //                        }
 //                    }
-                    if(!ent.isTouchingWater()) skip = true;                
-                    if(!entity.canSee(ent)) skip = true;
+                    if(!ent.isInWater()) skip = true;                
+                    if(!entity.hasLineOfSight(ent)) skip = true;
                     
                     if(!skip) {
                         if (ent instanceof LivingEntity){
-                            if (ent.isTouchingWater()) {
+                            if (ent.isInWater()) {
                                 entity.aggressTarget = ent;
                             }
                         }
@@ -71,13 +70,13 @@ public class TargetPreyGoal extends Goal {
 
         // Hunt Target and/or Do damage
         if(entity.aggressTarget != null) {
-            if(entity.squaredDistanceTo(entity.aggressTarget) <= entity.getWidth()) {
+            if(entity.distanceToSqr(entity.aggressTarget) <= entity.getBbWidth()) {
                 if(entity.aggressTarget instanceof LivingEntity) {
-                    entity.aggressTarget.damage(DamageSource.mob(entity), (float) entity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue());
+                    entity.aggressTarget.hurt(DamageSource.mobAttack(entity), (float) entity.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
                 }
                 if(entity.aggressTarget instanceof TropicraftFishEntity) {
                     // Was eaten, cancel smoke
-                    Box aggressBB = entity.aggressTarget.getBoundingBox();
+                    AABB aggressBB = entity.aggressTarget.getBoundingBox();
                     if(entityBB.maxY - entityBB.minY > aggressBB.maxY - aggressBB.minY) {
                         entity.aggressTarget.remove(Entity.RemovalReason.KILLED);
                         entity.heal(1);
@@ -86,26 +85,26 @@ public class TargetPreyGoal extends Goal {
                 }
                 entity.setRandomTargetHeading();
             }else {
-                if(entity.canSee(entity.aggressTarget) && entity.age % 20 == 0) {
+                if(entity.hasLineOfSight(entity.aggressTarget) && entity.tickCount % 20 == 0) {
                     entity.setTargetHeading(entity.aggressTarget.getX(), entity.aggressTarget.getY(), entity.aggressTarget.getZ(), true);
                 }
             }
             if(entity.aggressTarget != null) {
-                if(!entity.canSee(entity.aggressTarget) || !entity.aggressTarget.isTouchingWater()) {
+                if(!entity.hasLineOfSight(entity.aggressTarget) || !entity.aggressTarget.isInWater()) {
                     entity.aggressTarget = null;
                     entity.setRandomTargetHeading();
                 }
             }
         }
 
-        if(entity.aggressTarget == null || entity.world.getEntityById(entity.aggressTarget.getId()) == null || !entity.aggressTarget.isAlive()) {
+        if(entity.aggressTarget == null || entity.level.getEntity(entity.aggressTarget.getId()) == null || !entity.aggressTarget.isAlive()) {
             entity.aggressTarget = null;
             entity.setRandomTargetHeading();
         }
     }
 
     @Override
-    public boolean shouldContinue() {
-        return this.canStart();
+    public boolean canContinueToUse() {
+        return this.canUse();
     }
 }

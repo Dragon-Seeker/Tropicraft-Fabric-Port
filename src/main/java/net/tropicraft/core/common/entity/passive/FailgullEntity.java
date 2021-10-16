@@ -1,127 +1,130 @@
 package net.tropicraft.core.common.entity.passive;
 
-import net.minecraft.entity.ai.AboveGroundTargeting;
-import net.minecraft.entity.ai.NoPenaltySolidTargeting;
 import net.tropicraft.core.common.registry.TropicraftEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-//import net.minecraft.entity.ai.TargetFinder;
-import net.minecraft.entity.ai.control.FlightMoveControl;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.pathing.BirdNavigation;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.PathNodeType;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.util.AirAndWaterRandomPos;
+import net.minecraft.world.entity.ai.util.HoverRandomPos;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.entity.projectile.Snowball;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class FailgullEntity extends AnimalEntity implements Flutterer {
+public class FailgullEntity extends Animal implements FlyingAnimal {
 
 	private boolean isFlockLeader;
-	private static final TrackedData<Optional<UUID>> FLOCK_LEADER_UUID = DataTracker.registerData(FailgullEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+	private static final EntityDataAccessor<Optional<UUID>> FLOCK_LEADER_UUID = SynchedEntityData.defineId(FailgullEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
-	public FailgullEntity(EntityType<? extends FailgullEntity> type, World world) {
+	public FailgullEntity(EntityType<? extends FailgullEntity> type, Level world) {
 		super(type, world);
-		experiencePoints = 1;
-		moveControl = new FlightMoveControl(this, 5, true);
-		this.setPathfindingPenalty(PathNodeType.WATER, -1.0F);
-		this.setPathfindingPenalty(PathNodeType.COCOA, -1.0F);
-		this.setPathfindingPenalty(PathNodeType.FENCE, -1.0F);
+		xpReward = 1;
+		moveControl = new FlyingMoveControl(this, 5, true);
+		this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+		this.setPathfindingMalus(BlockPathTypes.COCOA, -1.0F);
+		this.setPathfindingMalus(BlockPathTypes.FENCE, -1.0F);
 	}
 
-	public static DefaultAttributeContainer.Builder createAttributes() {
-		return AnimalEntity.createMobAttributes()
-				.add(EntityAttributes.GENERIC_MAX_HEALTH, 3.0)
-				.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6)
-				.add(EntityAttributes.GENERIC_FLYING_SPEED, 0.9)
-				.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 12.0);
-	}
-
-	@Override
-	protected void initDataTracker() {
-		super.initDataTracker();
-		dataTracker.startTracking(FLOCK_LEADER_UUID, Optional.empty());
+	public static AttributeSupplier.Builder createAttributes() {
+		return Animal.createMobAttributes()
+				.add(Attributes.MAX_HEALTH, 3.0)
+				.add(Attributes.MOVEMENT_SPEED, 0.6)
+				.add(Attributes.FLYING_SPEED, 0.9)
+				.add(Attributes.FOLLOW_RANGE, 12.0);
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound nbt) {
-		super.readCustomDataFromNbt(nbt);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(FLOCK_LEADER_UUID, Optional.empty());
+	}
+
+	@Override
+	public void readAdditionalSaveData(CompoundTag nbt) {
+		super.readAdditionalSaveData(nbt);
 		isFlockLeader = nbt.getBoolean("IsFlockLeader");
 		if (nbt.contains("FlockLeader")) {
-			setFlockLeader(Optional.of(nbt.getUuid("FlockLeader")));
+			setFlockLeader(Optional.of(nbt.getUUID("FlockLeader")));
 		} else {
 			setFlockLeader(Optional.empty());
 		}
 	}
 
 	@Override
-	public void writeCustomDataToNbt(final NbtCompound nbt) {
-		super.writeCustomDataToNbt(nbt);
+	public void addAdditionalSaveData(final CompoundTag nbt) {
+		super.addAdditionalSaveData(nbt);
 		nbt.putBoolean("IsFlockLeader", isFlockLeader);
-		dataTracker.get(FLOCK_LEADER_UUID).ifPresent(uuid -> nbt.putUuid("FlockLeader", uuid));
+		entityData.get(FLOCK_LEADER_UUID).ifPresent(uuid -> nbt.putUUID("FlockLeader", uuid));
 	}
 
 	@Override
-	public float getPathfindingFavor(final BlockPos pos, final WorldView worldIn) {
+	public float getWalkTargetValue(final BlockPos pos, final LevelReader worldIn) {
 		return worldIn.getBlockState(pos).isAir() ? 10.0F : 0.0F;
 	}
 
 	@Override
-	public void initGoals() {
-		goalSelector.add(0, new ValidateFlockLeader(this));
-		goalSelector.add(1, new SelectFlockLeader(this));
-		goalSelector.add(2, new SetTravelDestination());
-		goalSelector.add(2, new FollowLeaderGoal());
+	public void registerGoals() {
+		goalSelector.addGoal(0, new ValidateFlockLeader(this));
+		goalSelector.addGoal(1, new SelectFlockLeader(this));
+		goalSelector.addGoal(2, new SetTravelDestination());
+		goalSelector.addGoal(2, new FollowLeaderGoal());
 	}
 
 	@Override
-	protected float getActiveEyeHeight(EntityPose poseIn, EntityDimensions sizeIn) {
+	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
 		return sizeIn.height * 0.5F;
 	}
 
 	@Override
-	protected void fall(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+	protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
 	}
 
 	@Override
-	protected boolean hasWings() {
+	protected boolean isFlapping() {
 		return false;
 	}
 
 	@Override
-	protected EntityNavigation createNavigation(World worldIn) {
-		BirdNavigation flyingpathnavigator = new BirdNavigation(this, worldIn) {
-			public boolean isValidPosition(BlockPos pos) {
-				return !this.world.getBlockState(pos.down()).isAir();
+	protected PathNavigation createNavigation(Level worldIn) {
+		FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, worldIn) {
+			public boolean isStableDestination(BlockPos pos) {
+				return !this.level.getBlockState(pos.below()).isAir();
 			}
 		};
-		flyingpathnavigator.setCanPathThroughDoors(false);
-		flyingpathnavigator.setCanSwim(false);
-		flyingpathnavigator.setCanEnterOpenDoors(true);
+		flyingpathnavigator.setCanOpenDoors(false);
+		flyingpathnavigator.setCanFloat(false);
+		flyingpathnavigator.setCanPassDoors(true);
 		return flyingpathnavigator;
 	}
 
 	private void poop() {
-		if (!world.isClient && world.random.nextInt(20) == 0) {
-			SnowballEntity s = new SnowballEntity(world, getX(), getY(), getZ());
-			s.setVelocity(0, 0, 0, 0, 0);
-			world.spawnEntity(s);
+		if (!level.isClientSide && level.random.nextInt(20) == 0) {
+			Snowball s = new Snowball(level, getX(), getY(), getZ());
+			s.shoot(0, 0, 0, 0, 0);
+			level.addFreshEntity(s);
 		}
 	}
 
@@ -142,7 +145,7 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 
 	@Nullable
 	@Override
-	public PassiveEntity createChild(ServerWorld world, PassiveEntity partner) {
+	public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob partner) {
 		return null;
 	}
 
@@ -151,7 +154,7 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 	}
 
 	private void setFlockLeader(final Optional<UUID> flockLeaderUUID) {
-		dataTracker.set(FLOCK_LEADER_UUID, flockLeaderUUID);
+		entityData.set(FLOCK_LEADER_UUID, flockLeaderUUID);
 	}
 
 	private boolean getIsFlockLeader() {
@@ -159,18 +162,18 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 	}
 
 	private boolean hasFlockLeader() {
-		return dataTracker.get(FLOCK_LEADER_UUID).isPresent();
+		return entityData.get(FLOCK_LEADER_UUID).isPresent();
 	}
 
 	@Override
-	public boolean isInAir() {
+	public boolean isFlying() {
 		return !this.onGround;
 	}
 
 	@Nullable
 	private Entity getFlockLeader() {
-		if (world instanceof ServerWorld && hasFlockLeader()) {
-			return ((ServerWorld) world).getEntity(dataTracker.get(FLOCK_LEADER_UUID).get());
+		if (level instanceof ServerLevel && hasFlockLeader()) {
+			return ((ServerLevel) level).getEntity(entityData.get(FLOCK_LEADER_UUID).get());
 		}
 
 		return null;
@@ -184,15 +187,15 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 			double nextYPos = getY() + (double) ((random.nextFloat() * 2.0F - 1.0F) * 3);
 			double nextZPos = getZ() + (double) ((random.nextFloat() * 2.0F - 1.0F) * 48);
 			final BlockPos pos = new BlockPos(nextXPos, nextYPos, nextZPos);
-			if (world.isAir(pos)) {
+			if (level.isEmptyBlock(pos)) {
 				return pos;
 			}
 		}
 
-		Vec3d Vector3d = getRotationVec(0.0F);
+		Vec3 Vector3d = getViewVector(0.0F);
 
-		Vec3d Vector3d2 = AboveGroundTargeting.find(FailgullEntity.this, 40, 3, Vector3d.getX(), Vector3d.getZ(), ((float)Math.PI / 2F), 2, 1);
-		final Vec3d groundTarget = NoPenaltySolidTargeting.find(FailgullEntity.this, 40, 4, -2, Vector3d.getX(), Vector3d.getZ(), (double) ((float) Math.PI / 2F));
+		Vec3 Vector3d2 = HoverRandomPos.getPos(FailgullEntity.this, 40, 3, Vector3d.x(), Vector3d.z(), ((float)Math.PI / 2F), 2, 1);
+		final Vec3 groundTarget = AirAndWaterRandomPos.getPos(FailgullEntity.this, 40, 4, -2, Vector3d.x(), Vector3d.z(), (double) ((float) Math.PI / 2F));
 		return Vector3d2 != null ? new BlockPos(Vector3d2) : groundTarget != null ? new BlockPos(groundTarget) : null;
 	}
 	/*
@@ -204,7 +207,7 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 
 	class FollowLeaderGoal extends Goal {
 		FollowLeaderGoal() {
-			this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+			this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 		}
 
 		private boolean canFollow() {
@@ -212,26 +215,26 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 		}
 
 		@Override
-		public boolean canStart() {
-			return canFollow() && getNavigation().isIdle() && FailgullEntity.this.random.nextInt(10) == 0;
+		public boolean canUse() {
+			return canFollow() && getNavigation().isDone() && FailgullEntity.this.random.nextInt(10) == 0;
 		}
 
 		@Override
-		public boolean shouldContinue() {
-			return canFollow() && getNavigation().isFollowingPath();
+		public boolean canContinueToUse() {
+			return canFollow() && getNavigation().isInProgress();
 		}
 
 		@Override
 		public void start() {
 			final Entity flockLeader = getFlockLeader();
-			final EntityNavigation navigator = getNavigation();
+			final PathNavigation navigator = getNavigation();
 			if (flockLeader != null && flockLeader.getType() == TropicraftEntities.FAILGULL) {
-				navigator.startMovingAlong(navigator.findPathTo(flockLeader.getBlockPos(), 1), 1.0D);
+				navigator.moveTo(navigator.createPath(flockLeader.blockPosition(), 1), 1.0D);
 				return;
 			}
 			BlockPos Vector3d = getRandomLocation();
 			if (Vector3d != null) {
-				navigator.startMovingAlong(navigator.findPathTo(Vector3d, 1), 1.0D);
+				navigator.moveTo(navigator.createPath(Vector3d, 1), 1.0D);
 			}
 
 		}
@@ -239,7 +242,7 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 
 	class SetTravelDestination extends Goal {
 		SetTravelDestination() {
-			setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+			setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 		}
 
 		private boolean shouldLead() {
@@ -247,21 +250,21 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 		}
 
 		@Override
-		public boolean canStart() {
-			return shouldLead() && getNavigation().isIdle() && getRandom().nextInt(10) == 0;
+		public boolean canUse() {
+			return shouldLead() && getNavigation().isDone() && getRandom().nextInt(10) == 0;
 		}
 
 		@Override
-		public boolean shouldContinue() {
-			return shouldLead() && getNavigation().isFollowingPath();
+		public boolean canContinueToUse() {
+			return shouldLead() && getNavigation().isInProgress();
 		}
 
 		@Override
 		public void start() {
 			BlockPos Vector3d = getRandomLocation();
 			if (Vector3d != null) {
-				final EntityNavigation navigator = getNavigation();
-				navigator.startMovingAlong(navigator.findPathTo(Vector3d, 1), 1.0D);
+				final PathNavigation navigator = getNavigation();
+				navigator.moveTo(navigator.createPath(Vector3d, 1), 1.0D);
 			}
 		}
 	}
@@ -274,7 +277,7 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 		}
 
 		@Override
-		public boolean canStart() {
+		public boolean canUse() {
 			if (mob.getIsFlockLeader()) {
 				return false;
 			}
@@ -297,23 +300,23 @@ public class FailgullEntity extends AnimalEntity implements Flutterer {
 		}
 
 		@Override
-		public boolean canStart() {
+		public boolean canUse() {
 			return !mob.hasFlockLeader();
 		}
 
 		@Override
 		public void start() {
-			List<FailgullEntity> list = mob.world.getNonSpectatingEntities(FailgullEntity.class, mob.getBoundingBox().expand(10D, 10D, 10D));
+			List<FailgullEntity> list = mob.level.getEntitiesOfClass(FailgullEntity.class, mob.getBoundingBox().inflate(10D, 10D, 10D));
 			list.remove(mob);
 
 			final Optional<FailgullEntity> oldest = list.stream().min(Comparator.comparingInt(FailgullEntity::getId));
 			// Found an older one nearby, set it as the flock leader
-			if (oldest.isPresent() && !oldest.get().uuid.equals(mob.getUuid())) {
+			if (oldest.isPresent() && !oldest.get().uuid.equals(mob.getUUID())) {
 				final FailgullEntity oldestFailgull = oldest.get();
 				oldestFailgull.setIsFlockLeader(true);
 				oldestFailgull.setFlockLeader(Optional.empty());
 				mob.setIsFlockLeader(false);
-				mob.setFlockLeader(Optional.of(oldestFailgull.getUuid()));
+				mob.setFlockLeader(Optional.of(oldestFailgull.getUUID()));
 			}
 		}
 	}

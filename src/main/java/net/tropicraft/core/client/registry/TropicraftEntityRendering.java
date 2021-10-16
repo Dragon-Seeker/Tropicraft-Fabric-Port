@@ -7,14 +7,12 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistr
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.impl.client.rendering.BuiltinItemRendererRegistryImpl;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.client.render.entity.model.*;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.CowModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.blockEntity.AirCompressorRenderer;
 import net.tropicraft.core.client.blockEntity.BambooChestBlockEntityRenderer;
@@ -41,55 +39,55 @@ import java.util.Locale;
 
 @Environment(EnvType.CLIENT)
 public class TropicraftEntityRendering {
-    public static EntityModelLayer KOA_HUNTER_LAYER;
-    public static EntityModelLayer TROPI_CREEPER_LAYER;
-    public static EntityModelLayer IGUANA_LAYER;
-    public static EntityModelLayer UMBRELLA_LAYER;
-    public static EntityModelLayer BEACH_FLOAT_LAYER;
-    public static EntityModelLayer CHAIR_LAYER;
-    public static EntityModelLayer TROPI_SKELLY_LAYER;
-    public static EntityModelLayer EIH_LAYER;
+    public static ModelLayerLocation KOA_HUNTER_LAYER;
+    public static ModelLayerLocation TROPI_CREEPER_LAYER;
+    public static ModelLayerLocation IGUANA_LAYER;
+    public static ModelLayerLocation UMBRELLA_LAYER;
+    public static ModelLayerLocation BEACH_FLOAT_LAYER;
+    public static ModelLayerLocation CHAIR_LAYER;
+    public static ModelLayerLocation TROPI_SKELLY_LAYER;
+    public static ModelLayerLocation EIH_LAYER;
     //public static EntityModelLayer WALL_ITEM_LAYER;
     //public static EntityModelLayer BAMBOO_ITEM_FRAME_LAYER;
-    public static EntityModelLayer SEA_TURTLE_LAYER;
-    public static EntityModelLayer MARLIN_LAYER;
-    public static EntityModelLayer FAILGULL_LAYER;
-    public static EntityModelLayer DOLPHIN_LAYER;
-    public static EntityModelLayer SEAHORSE_LAYER;
-    public static EntityModelLayer TREE_FROG_LAYER;
+    public static ModelLayerLocation SEA_TURTLE_LAYER;
+    public static ModelLayerLocation MARLIN_LAYER;
+    public static ModelLayerLocation FAILGULL_LAYER;
+    public static ModelLayerLocation DOLPHIN_LAYER;
+    public static ModelLayerLocation SEAHORSE_LAYER;
+    public static ModelLayerLocation TREE_FROG_LAYER;
     //public static EntityModelLayer POISON_BLOT_LAYER;
-    public static EntityModelLayer SEA_URCHIN_LAYER;
-    public static EntityModelLayer SEA_URCHIN_EGG_ENTITY_LAYER;
+    public static ModelLayerLocation SEA_URCHIN_LAYER;
+    public static ModelLayerLocation SEA_URCHIN_EGG_ENTITY_LAYER;
     //public static EntityModelLayer STARFISH_LAYER;
-    public static EntityModelLayer STARFISH_EGG_LAYER;
-    public static EntityModelLayer V_MONKEY_LAYER;
-    public static EntityModelLayer PIRANHA_LAYER;
-    public static EntityModelLayer RIVER_SARDINE_LAYER;
-    public static EntityModelLayer TROPICAL_FISH_LAYER;
-    public static EntityModelLayer EAGLE_RAY_LAYER;
+    public static ModelLayerLocation STARFISH_EGG_LAYER;
+    public static ModelLayerLocation V_MONKEY_LAYER;
+    public static ModelLayerLocation PIRANHA_LAYER;
+    public static ModelLayerLocation RIVER_SARDINE_LAYER;
+    public static ModelLayerLocation TROPICAL_FISH_LAYER;
+    public static ModelLayerLocation EAGLE_RAY_LAYER;
     //public static EntityModelLayer TROPI_SPIDER_LAYER;
-    public static EntityModelLayer TROPI_SPIDER_EGG_LAYER;
-    public static EntityModelLayer ASHEN_LAYER;
+    public static ModelLayerLocation TROPI_SPIDER_EGG_LAYER;
+    public static ModelLayerLocation ASHEN_LAYER;
     //public static EntityModelLayer ASHEN_MASK_LAYER;
-    public static EntityModelLayer EXPLODING_COCONUT_LAYER;
-    public static EntityModelLayer LAVA_BALL_LAYER;
-    public static EntityModelLayer HAMMERHEAD_LAYER;
-    public static EntityModelLayer SEA_TURTLE_EGG_LAYER;
-    public static EntityModelLayer TROPI_BEE_LAYER;
-    public static EntityModelLayer COWKTAIL_LAYER;
-    public static EntityModelLayer MAN_O_WAR_LAYER;
+    public static ModelLayerLocation EXPLODING_COCONUT_LAYER;
+    public static ModelLayerLocation LAVA_BALL_LAYER;
+    public static ModelLayerLocation HAMMERHEAD_LAYER;
+    public static ModelLayerLocation SEA_TURTLE_EGG_LAYER;
+    public static ModelLayerLocation TROPI_BEE_LAYER;
+    public static ModelLayerLocation COWKTAIL_LAYER;
+    public static ModelLayerLocation MAN_O_WAR_LAYER;
 
-    public static EntityModelLayer BAMBOO_MUG;
+    public static ModelLayerLocation BAMBOO_MUG;
 
-    public static ArrayList<EntityModelLayer> ASHEN_MASK_LAYERS = new ArrayList<>();//= registerMain("mask", PlayerHeadpieceModel::getTexturedModelData);
+    public static ArrayList<ModelLayerLocation> ASHEN_MASK_LAYERS = new ArrayList<>();//= registerMain("mask", PlayerHeadpieceModel::getTexturedModelData);
 
-    public static EntityModelLayer STACHE_LAYER;
+    public static ModelLayerLocation STACHE_LAYER;
 
-    public static EntityModelLayer BAMBOO_CHEST;
-    public static EntityModelLayer BAMBOO_DOUBLE_CHEST_LEFT;
-    public static EntityModelLayer BAMBOO_DOUBLE_CHEST_RIGHT;
-    public static EntityModelLayer EIHMACHINE_LAYER;
-    public static EntityModelLayer AIRCOMPRESSOR_LAYER;
+    public static ModelLayerLocation BAMBOO_CHEST;
+    public static ModelLayerLocation BAMBOO_DOUBLE_CHEST_LEFT;
+    public static ModelLayerLocation BAMBOO_DOUBLE_CHEST_RIGHT;
+    public static ModelLayerLocation EIHMACHINE_LAYER;
+    public static ModelLayerLocation AIRCOMPRESSOR_LAYER;
 
     @Environment(EnvType.CLIENT)
     public static void setupEntityModelLayers() {
@@ -126,8 +124,8 @@ public class TropicraftEntityRendering {
         //ASHEN_MASK_LAYER = registerMain("ashen_mask", () -> AshenMaskLayer.getTexturedModelData());
         HAMMERHEAD_LAYER = registerMain("hammerhead", () -> SharkModel.getTexturedModelData());
         SEA_TURTLE_EGG_LAYER  = registerMain("turtle_egg", () -> EggModel.getTexturedModelData());
-        TROPI_BEE_LAYER = registerMain("tropi_bee", () -> TropiBeeModel.getTexturedModelData());
-        COWKTAIL_LAYER = registerMain("cowktail", () -> CowEntityModel.getTexturedModelData());
+        TROPI_BEE_LAYER = registerMain("tropi_bee", () -> TropiBeeModel.createBodyLayer());
+        COWKTAIL_LAYER = registerMain("cowktail", () -> CowModel.createBodyLayer());
         MAN_O_WAR_LAYER = registerMain("man_o_war", () -> ManOWarModel.getTexturedModelData());
 
         armorRenderingRegistryInitialization();
@@ -167,8 +165,8 @@ public class TropicraftEntityRendering {
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_SPIDER_EGG, (context) -> new EggRenderer(context, TROPI_SPIDER_EGG_LAYER));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN, AshenRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.ASHEN_MASK, AshenMaskRenderer::new);
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EXPLODING_COCONUT, FlyingItemEntityRenderer::new);
-        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.LAVA_BALL, FlyingItemEntityRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.EXPLODING_COCONUT, ThrownItemRenderer::new);
+        EntityRendererRegistry.INSTANCE.register(TropicraftEntities.LAVA_BALL, ThrownItemRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.HAMMERHEAD, SharkRenderer::new);
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.SEA_TURTLE_EGG, (context) -> new EggRenderer(context, SEA_TURTLE_EGG_LAYER));
         EntityRendererRegistry.INSTANCE.register(TropicraftEntities.TROPI_BEE, TropiBeeRenderer::new);
@@ -197,15 +195,15 @@ public class TropicraftEntityRendering {
 
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.BAMBOO_CHEST,
                 (itemStack, transform, stack, source, light, overlay) ->
-                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new TropicBambooChestBlockEntity(BlockPos.ORIGIN, TropicraftBlocks.BAMBOO_CHEST.getDefaultState()), stack, source, light, overlay));
+                        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(new TropicBambooChestBlockEntity(BlockPos.ZERO, TropicraftBlocks.BAMBOO_CHEST.defaultBlockState()), stack, source, light, overlay));
 
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.DRINK_MIXER,
                 (itemStack, transform, stack, source, light, overlay) ->
-                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new DrinkMixerTileEntity(BlockPos.ORIGIN, TropicraftBlocks.DRINK_MIXER.getDefaultState()), stack, source, light, overlay));
+                        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(new DrinkMixerTileEntity(BlockPos.ZERO, TropicraftBlocks.DRINK_MIXER.defaultBlockState()), stack, source, light, overlay));
 
         BuiltinItemRendererRegistry.INSTANCE.register(TropicraftBlocks.AIR_COMPRESSOR,
                 (itemStack, transform, stack, source, light, overlay) ->
-                        MinecraftClient.getInstance().getBlockEntityRenderDispatcher().renderEntity(new AirCompressorTileEntity(BlockPos.ORIGIN, TropicraftBlocks.AIR_COMPRESSOR.getDefaultState()), stack, source, light, overlay));
+                        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(new AirCompressorTileEntity(BlockPos.ZERO, TropicraftBlocks.AIR_COMPRESSOR.defaultBlockState()), stack, source, light, overlay));
 
 
         /*
@@ -224,7 +222,7 @@ public class TropicraftEntityRendering {
 
         for (int i = 0; i < size; i++) {
             AshenMaskItem maskItem = values.get(i);
-            EntityModelLayer ashen_mask_layer = registerMain("ashen_mask_" + maskItem.getMaskType().name().toLowerCase(Locale.ROOT), PlayerHeadpieceModel::getTexturedModelData);
+            ModelLayerLocation ashen_mask_layer = registerMain("ashen_mask_" + maskItem.getMaskType().name().toLowerCase(Locale.ROOT), PlayerHeadpieceModel::getTexturedModelData);
             ASHEN_MASK_LAYERS.add(ashen_mask_layer);
 
             MASK_PROVIDER.add(new MaskArmorProvider(maskItem.getMaskType()));
@@ -242,8 +240,8 @@ public class TropicraftEntityRendering {
     }
 
     @Environment(EnvType.CLIENT)
-    private static EntityModelLayer registerMain(String id, EntityModelLayerRegistry.TexturedModelDataProvider textureModelData) {
-        EntityModelLayer modelLayer = new EntityModelLayer(new Identifier(Constants.MODID, id), "main");
+    private static ModelLayerLocation registerMain(String id, EntityModelLayerRegistry.TexturedModelDataProvider textureModelData) {
+        ModelLayerLocation modelLayer = new ModelLayerLocation(new ResourceLocation(Constants.MODID, id), "main");
         EntityModelLayerRegistry.registerModelLayer(modelLayer, textureModelData);
         return modelLayer;
     }

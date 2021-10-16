@@ -2,19 +2,17 @@ package net.tropicraft.core.common.dimension.carver;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.carver.RavineCarverConfig;
-import net.minecraft.world.gen.carver.UnderwaterCanyonCarver;
-import net.minecraft.world.gen.carver.UnderwaterCaveCarver;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.carver.CanyonCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.UnderwaterCanyonWorldCarver;
 //import net.minecraft.world.gen.carver.UnderwaterRavineCarver;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
-public class TropicsUnderwaterCanyonCarver extends UnderwaterCanyonCarver {
+public class TropicsUnderwaterCanyonCarver extends UnderwaterCanyonWorldCarver {
 
-    public TropicsUnderwaterCanyonCarver(Codec<RavineCarverConfig> codec) {
+    public TropicsUnderwaterCanyonCarver(Codec<CanyonCarverConfiguration> codec) {
         super(codec);
-        this.alwaysCarvableBlocks = ImmutableSet.<Block>builder().addAll(this.alwaysCarvableBlocks)
+        this.replaceableBlocks = ImmutableSet.<Block>builder().addAll(this.replaceableBlocks)
                 .add(TropicraftBlocks.CORAL_SAND)
                 .add(TropicraftBlocks.FOAMY_SAND)
                 .add(TropicraftBlocks.MINERAL_SAND)

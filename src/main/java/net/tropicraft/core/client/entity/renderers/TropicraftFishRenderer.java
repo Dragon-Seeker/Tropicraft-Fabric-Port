@@ -1,28 +1,27 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.animal.AbstractFish;
 import net.tropicraft.core.client.entity.models.AbstractFishModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
 import net.tropicraft.core.common.entity.underdasea.IAtlasFish;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.passive.FishEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TropicraftFishRenderer<T extends FishEntity, M extends AbstractFishModel<T>> extends MobEntityRenderer<T, M> {
+public class TropicraftFishRenderer<T extends AbstractFish, M extends AbstractFishModel<T>> extends MobRenderer<T, M> {
     private TropicraftSpecialRenderHelper renderHelper;
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public TropicraftFishRenderer(final EntityRendererFactory.Context context, M modelbase, float f) {
+    public TropicraftFishRenderer(final EntityRendererProvider.Context context, M modelbase, float f) {
         super(context, modelbase, f);
         renderHelper = new TropicraftSpecialRenderHelper();
     }
@@ -31,22 +30,22 @@ public class TropicraftFishRenderer<T extends FishEntity, M extends AbstractFish
      * This override is a hack
      */
     @Override
-    public void render(T entity, float entityYaw, float partialTicks, MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn) {
-        boolean isVisible = this.isVisible(entity);
-        boolean shouldRender = !isVisible && !entity.isInvisibleTo(MinecraftClient.getInstance().player);
+    public void render(T entity, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+        boolean isVisible = this.isBodyVisible(entity);
+        boolean shouldRender = !isVisible && !entity.isInvisibleTo(Minecraft.getInstance().player);
         if (isVisible || shouldRender) {
-            boolean glowing = MinecraftClient.getInstance().hasOutline(entity);
-            renderFishy(entity, partialTicks, matrixStackIn, bufferIn.getBuffer(getRenderLayer(entity, isVisible, shouldRender, glowing)), packedLightIn, getOverlay(entity, getAnimationCounter(entity, partialTicks)));
+            boolean glowing = Minecraft.getInstance().shouldEntityAppearGlowing(entity);
+            renderFishy(entity, partialTicks, matrixStackIn, bufferIn.getBuffer(getRenderType(entity, isVisible, shouldRender, glowing)), packedLightIn, getOverlayCoords(entity, getWhiteOverlayProgress(entity, partialTicks)));
         }
         super.render(entity, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
-    protected void renderFishy(T entity, float partialTicks, MatrixStack stack, VertexConsumer buffer, int light, int overlay) {
-        stack.push();
+    protected void renderFishy(T entity, float partialTicks, PoseStack stack, VertexConsumer buffer, int light, int overlay) {
+        stack.pushPose();
 
-        stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90));
-        stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-(MathHelper.lerp(partialTicks, entity.prevHeadYaw, entity.headYaw))));
-        stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180));
+        stack.mulPose(Vector3f.YP.rotationDegrees(-90));
+        stack.mulPose(Vector3f.YP.rotationDegrees(-(Mth.lerp(partialTicks, entity.yHeadRotO, entity.yHeadRot))));
+        stack.mulPose(Vector3f.XP.rotationDegrees(180));
         stack.scale(0.3f, 0.3f, 0.5f);
         stack.translate(.85F, -0.3F, 0.0F);
 
@@ -59,20 +58,20 @@ public class TropicraftFishRenderer<T extends FishEntity, M extends AbstractFish
 
         stack.translate(-1.7f, 0, 0);
         stack.translate(.85f, 0, 0.025f);
-        stack.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(model.tail.yaw));
+        stack.mulPose(Vector3f.YP.rotation(model.tail.yRot));
         stack.translate(-.85f, 0, -0.025f);
         renderHelper.renderFish(stack, buffer, fishTex + 1, light, overlay);
 
-        stack.pop();
+        stack.popPose();
     }
 
     @Override
-    protected void scale(T entity, MatrixStack stack, float partialTickTime) {
+    protected void scale(T entity, PoseStack stack, float partialTickTime) {
         stack.scale(.75F, .20F, .20F);
     }
 
     @Override
-    public Identifier getTexture(T entity) {
+    public ResourceLocation getTextureLocation(T entity) {
         return TropicraftRenderUtils.getTextureEntity("tropical_fish");
     }
 }

@@ -1,11 +1,16 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.tropicraft.core.common.entity.neutral.EIHEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
 
-public class EIHModel extends CompositeEntityModel<EIHEntity> {
+public class EIHModel extends ListModel<EIHEntity> {
     private ModelPart body;
     private ModelPart base;
     private ModelPart nose;
@@ -50,28 +55,28 @@ public class EIHModel extends CompositeEntityModel<EIHEntity> {
          */
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("body", ModelPartBuilder.create().uv(34,8).cuboid(-4F, 1.0F, -1F, 8, 17, 7), ModelTransform.pivot(0.0F,-2F,0.0F));
-        modelPartData.addChild("base", ModelPartBuilder.create().uv(0,0).cuboid(-4F, 11F, -3F, 8, 8, 11), ModelTransform.pivot(0.0F, 5F, -2F));
-        modelPartData.addChild("nose", ModelPartBuilder.create().uv(27,2).cuboid(13.5F, -1F, -3F, 13, 2, 3), ModelTransform.of(0.0F, -14.8F, -1F,0,0, 1.570796F));
-        modelPartData.addChild("mouth", ModelPartBuilder.create().uv(56,11).cuboid(-1.5F, 4F, -1F, 3, 3, 1), ModelTransform.pivot(0.0F,7.5F,-0.5F));
-        modelPartData.addChild("top", ModelPartBuilder.create().uv(0,17).cuboid(-4F, -1F, -10F, 8, 5, 10), ModelTransform.pivot(0.0F, -5F, 6F));
-        modelPartData.addChild("leye", ModelPartBuilder.create().uv(56,7).mirrored().cuboid(0.0F, 0.0F, 0.0F, 3, 3, 1), ModelTransform.pivot(1.0F, -1F, -2F));
-        modelPartData.addChild("reye", ModelPartBuilder.create().uv(56,7).cuboid(-1.5F, -1F, -1F, 3, 3, 1), ModelTransform.pivot(-2.5F, 0.0F, -1F));
+        modelPartData.addOrReplaceChild("body", CubeListBuilder.create().texOffs(34,8).addBox(-4F, 1.0F, -1F, 8, 17, 7), PartPose.offset(0.0F,-2F,0.0F));
+        modelPartData.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0,0).addBox(-4F, 11F, -3F, 8, 8, 11), PartPose.offset(0.0F, 5F, -2F));
+        modelPartData.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(27,2).addBox(13.5F, -1F, -3F, 13, 2, 3), PartPose.offsetAndRotation(0.0F, -14.8F, -1F,0,0, 1.570796F));
+        modelPartData.addOrReplaceChild("mouth", CubeListBuilder.create().texOffs(56,11).addBox(-1.5F, 4F, -1F, 3, 3, 1), PartPose.offset(0.0F,7.5F,-0.5F));
+        modelPartData.addOrReplaceChild("top", CubeListBuilder.create().texOffs(0,17).addBox(-4F, -1F, -10F, 8, 5, 10), PartPose.offset(0.0F, -5F, 6F));
+        modelPartData.addOrReplaceChild("leye", CubeListBuilder.create().texOffs(56,7).mirror().addBox(0.0F, 0.0F, 0.0F, 3, 3, 1), PartPose.offset(1.0F, -1F, -2F));
+        modelPartData.addOrReplaceChild("reye", CubeListBuilder.create().texOffs(56,7).addBox(-1.5F, -1F, -1F, 3, 3, 1), PartPose.offset(-2.5F, 0.0F, -1F));
 
-        return TexturedModelData.of(modelData,64,32);
+        return LayerDefinition.create(modelData,64,32);
     }
 
     @Override
-    public void setAngles(EIHEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(EIHEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         // it's a statue, what do you want from me
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(body, base, nose, mouth, top, leye, reye);
     }
 

@@ -1,13 +1,19 @@
 package net.tropicraft.core.client.entity.models;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
 
-public class KoaModel extends BipedEntityModel<EntityKoaBase> {
+public class KoaModel extends HumanoidModel<EntityKoaBase> {
     //TODO: 1.17 has completly broken this so IDk if its needed as it had the renderSystem cull call commented
 //    private static class ModelRendererCull extends ModelPart {
 //
@@ -172,102 +178,102 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
          */
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = getModelData(Dilation.NONE, 0F);
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = createMesh(CubeDeformation.NONE, 0F);
+        PartDefinition modelPartData = modelData.getRoot();
 
-        ModelPartData modelPartHead = modelPartData.addChild("head",
-                ModelPartBuilder.create()
-                        .uv(0, 2)
-                        .mirrored()
-                        .cuboid(-4F, -8F, -4F, 8, 8, 8),
-                ModelTransform.pivot(0F, 0F, 0F));
+        PartDefinition modelPartHead = modelPartData.addOrReplaceChild("head",
+                CubeListBuilder.create()
+                        .texOffs(0, 2)
+                        .mirror()
+                        .addBox(-4F, -8F, -4F, 8, 8, 8),
+                PartPose.offset(0F, 0F, 0F));
 
-        ModelPartData modelPartHeadBand = modelPartHead.addChild("headband",
-                ModelPartBuilder.create()
-                        .uv(24, 1)
-                        .mirrored()
-                        .cuboid(-5F, 0F, -5F, 10, 2, 10),
-                ModelTransform.pivot(0F, -7F, 0F));
+        PartDefinition modelPartHeadBand = modelPartHead.addOrReplaceChild("headband",
+                CubeListBuilder.create()
+                        .texOffs(24, 1)
+                        .mirror()
+                        .addBox(-5F, 0F, -5F, 10, 2, 10),
+                PartPose.offset(0F, -7F, 0F));
 
-        ModelPartData modelPartRightArm = modelPartData.getChild("right_arm");
-        modelPartRightArm.addChild("armbandR",
-                ModelPartBuilder.create()
-                        .uv(35, 6)
-                        .mirrored()
-                        .cuboid(2.5F, -2F, -2.5F, 5, 1, 5),
-                ModelTransform.pivot(-6F, 3F, 0F));
+        PartDefinition modelPartRightArm = modelPartData.getChild("right_arm");
+        modelPartRightArm.addOrReplaceChild("armbandR",
+                CubeListBuilder.create()
+                        .texOffs(35, 6)
+                        .mirror()
+                        .addBox(2.5F, -2F, -2.5F, 5, 1, 5),
+                PartPose.offset(-6F, 3F, 0F));
 
-        ModelPartData modelPartLeftArm = modelPartData.getChild("left_arm");
-        modelPartLeftArm.addChild("armbandL",
-                ModelPartBuilder.create()
-                        .uv(34, 1)
-                        .mirrored()
-                        .cuboid(-7.5F, -2F, -2.5F, 5, 1, 5),
-                ModelTransform.pivot(6F, 3F, 0F));
+        PartDefinition modelPartLeftArm = modelPartData.getChild("left_arm");
+        modelPartLeftArm.addOrReplaceChild("armbandL",
+                CubeListBuilder.create()
+                        .texOffs(34, 1)
+                        .mirror()
+                        .addBox(-7.5F, -2F, -2.5F, 5, 1, 5),
+                PartPose.offset(6F, 3F, 0F));
 
 
-        modelPartHeadBand.addChild("leaf1",
+        modelPartHeadBand.addOrReplaceChild("leaf1",
                 leafModelBuilder(),
-                ModelTransform.pivot(2F, -6F, -6F));
-        modelPartHeadBand.addChild("leaf3",
+                PartPose.offset(2F, -6F, -6F));
+        modelPartHeadBand.addOrReplaceChild("leaf3",
                 leafModelBuilder(),
-                ModelTransform.pivot(-1F, -6F, -6F));
-        modelPartHeadBand.addChild("leaf2",
+                PartPose.offset(-1F, -6F, -6F));
+        modelPartHeadBand.addOrReplaceChild("leaf2",
                 leafModelBuilder(),
-                ModelTransform.pivot(-4F, -6F, -6F));
-        modelPartHeadBand.addChild("leaf4",
+                PartPose.offset(-4F, -6F, -6F));
+        modelPartHeadBand.addOrReplaceChild("leaf4",
                 leafModelBuilder(),
-                ModelTransform.pivot(0F, -7F, -6F));
-        modelPartHeadBand.addChild("leaf5",
+                PartPose.offset(0F, -7F, -6F));
+        modelPartHeadBand.addOrReplaceChild("leaf5",
                 leafModelBuilder(),
-                ModelTransform.pivot(5F, -6F, -1F));
-        modelPartHeadBand.addChild("leaf6",
+                PartPose.offset(5F, -6F, -1F));
+        modelPartHeadBand.addOrReplaceChild("leaf6",
                 leafModelBuilder(),
-                ModelTransform.pivot(5F, -6F, 3F));
-        modelPartHeadBand.addChild("leaf7",
+                PartPose.offset(5F, -6F, 3F));
+        modelPartHeadBand.addOrReplaceChild("leaf7",
                 leafModelBuilder(),
-                ModelTransform.pivot(-6F, -6F, 0F));
-        modelPartHeadBand.addChild("leaf8",
+                PartPose.offset(-6F, -6F, 0F));
+        modelPartHeadBand.addOrReplaceChild("leaf8",
                 leafModelBuilder(),
-                ModelTransform.pivot(-6F, -6F, -4F));
-        modelPartHeadBand.addChild("leaf9",
+                PartPose.offset(-6F, -6F, -4F));
+        modelPartHeadBand.addOrReplaceChild("leaf9",
                 leafModelBuilder(),
-                ModelTransform.pivot(-2F, -6F, 5F));
-        modelPartHeadBand.addChild("leaf10",
+                PartPose.offset(-2F, -6F, 5F));
+        modelPartHeadBand.addOrReplaceChild("leaf10",
                 leafModelBuilder(),
-                ModelTransform.pivot(2F, -6F, 5F));
+                PartPose.offset(2F, -6F, 5F));
 
-        return TexturedModelData.of(modelData, 64,32);
+        return LayerDefinition.create(modelData, 64,32);
     }
 
-    public static ModelPartBuilder leafModelBuilder(){
-        return ModelPartBuilder.create()
-                .uv(0, 0)
-                .mirrored()
-                .cuboid(0F, 7F, 0F, 1, 0, 1);
+    public static CubeListBuilder leafModelBuilder(){
+        return CubeListBuilder.create()
+                .texOffs(0, 0)
+                .mirror()
+                .addBox(0F, 7F, 0F, 1, 0, 1);
     }
 
     @Override
-    public void render(MatrixStack ms, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn,
+    public void renderToBuffer(PoseStack ms, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn,
             float red, float green, float blue, float alpha) {
 
-        ms.push();
+        ms.pushPose();
         if (riding) {
-            if (child) {
+            if (young) {
                 ms.translate(0, 0.3, 0);
             } else {
                 ms.translate(0, 0.6, 0);
             }
         }
         
-        if (this.child) {
-            ms.push();
+        if (this.young) {
+            ms.pushPose();
             ms.scale(0.75F, 0.75F, 0.75F);
             ms.translate(0.0F, 1.0F, 0.0F);
             this.head.render(ms, bufferIn, packedLightIn, packedOverlayIn);
-            ms.pop();
-            ms.push();
+            ms.popPose();
+            ms.pushPose();
             ms.scale(0.5F, 0.5F, 0.5F);
             ms.translate(0.0F, 1.5F, 0.0F);
             this.body.render(ms, bufferIn, packedLightIn, packedOverlayIn);
@@ -275,7 +281,7 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
             this.leftArm.render(ms, bufferIn, packedLightIn, packedOverlayIn);
             this.rightLeg.render(ms, bufferIn, packedLightIn, packedOverlayIn);
             this.leftLeg.render(ms, bufferIn, packedLightIn, packedOverlayIn);
-            ms.pop();
+            ms.popPose();
         } else {
             head.render(ms, bufferIn, packedLightIn, packedOverlayIn);
             body.render(ms, bufferIn, packedLightIn, packedOverlayIn);
@@ -284,18 +290,18 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
             rightLeg.render(ms, bufferIn, packedLightIn, packedOverlayIn);
             leftLeg.render(ms, bufferIn, packedLightIn, packedOverlayIn);
         }
-        ms.pop();
+        ms.popPose();
     }
 
     @Override
-    public void setAngles(EntityKoaBase entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(EntityKoaBase entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         hat.visible = false;
 
-        riding = entityIn.isSitting() || entityIn.hasVehicle();
+        riding = entityIn.isSitting() || entityIn.isPassenger();
         final boolean isDancing = entityIn.isDancing();
 
 
-        float ticks = (entityIn.age + MinecraftClient.getInstance().getTickDelta()) % 360;
+        float ticks = (entityIn.tickCount + Minecraft.getInstance().getFrameTime()) % 360;
 
         final double headRot = Math.cos(Math.toRadians(ticks * 35F));
         if (isDancing) {
@@ -305,19 +311,19 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
 //            bipedHead.offsetY = 0.01F + (float)Math.sin(Math.toRadians(ticks * 35F)) * 0.02F;
 //            bipedHead.offsetX = (float)Math.cos(Math.toRadians(ticks * 35F)) * 0.02F;
 //            bipedHead.offsetZ = 0;
-            head.roll = (float) headRot * 0.05F;
+            head.zRot = (float) headRot * 0.05F;
         } else {
            // RenderSystem.translated(0, 0, 0);
 //            bipedHead.offsetY = 0;
 //            bipedHead.offsetX = 0;
 //            bipedHead.offsetZ = 0;
-            head.roll = 0;
+            head.zRot = 0;
         }
 
-        super.setAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
         if (isDancing) {
-            this.head.pitch += (float) Math.sin(Math.toRadians((entityIn.world.getTime() % 360) * 35F)) * 0.05F;
+            this.head.xRot += (float) Math.sin(Math.toRadians((entityIn.level.getGameTime() % 360) * 35F)) * 0.05F;
 
             float amp = 0.5F;
 
@@ -326,13 +332,13 @@ public class KoaModel extends BipedEntityModel<EntityKoaBase> {
             double y = armRot * amp;
             double z = (float) headRot * amp;
 
-            rightArm.pitch += x;
-            rightArm.yaw += y;
-            rightArm.roll += z;
+            rightArm.xRot += x;
+            rightArm.yRot += y;
+            rightArm.zRot += z;
 
-            leftArm.pitch += x;
-            leftArm.yaw += y;
-            leftArm.roll += z;
+            leftArm.xRot += x;
+            leftArm.yRot += y;
+            leftArm.zRot += z;
         }
     }
 

@@ -1,8 +1,7 @@
 package net.tropicraft.core.common.entity.ai.fishies;
 
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.tropicraft.core.common.entity.underdasea.TropicraftFishEntity;
-import net.minecraft.entity.ai.goal.Goal;
-
 import java.util.EnumSet;
 import java.util.Random;
 
@@ -10,15 +9,15 @@ public class RandomSwimGoal extends Goal {
     public TropicraftFishEntity entity;
     public Random rand;
 
-    public RandomSwimGoal(EnumSet<Control> flags, TropicraftFishEntity entityObjIn) {
+    public RandomSwimGoal(EnumSet<Flag> flags, TropicraftFishEntity entityObjIn) {
         this.entity = entityObjIn;
         rand = this.entity.getRandom();
-        setControls(flags);
+        setFlags(flags);
     }
 
     @Override
-    public boolean canStart() {
-        return entity.isTouchingWater() && entity.age % 10+rand.nextInt(20) == 0;
+    public boolean canUse() {
+        return entity.isInWater() && entity.tickCount % 10+rand.nextInt(20) == 0;
     }
 
     @Override
@@ -32,7 +31,7 @@ public class RandomSwimGoal extends Goal {
     }
 
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         return entity.targetVector == null;
     }
 }

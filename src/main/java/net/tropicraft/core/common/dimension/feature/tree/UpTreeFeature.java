@@ -1,32 +1,30 @@
 package net.tropicraft.core.common.dimension.feature.tree;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.util.FeatureContext;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import static net.tropicraft.core.common.dimension.feature.TropicraftFeatureUtil.goesBeyondWorldSize;
 import static net.tropicraft.core.common.dimension.feature.TropicraftFeatureUtil.isBBAvailable;
 
 public class UpTreeFeature extends RainforestTreeFeature {
 
-    public UpTreeFeature(Codec<DefaultFeatureConfig> codec) {
+    public UpTreeFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        Random rand = context.getRandom();
-        BlockPos pos = context.getOrigin();
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        WorldGenLevel world = context.level();
+        Random rand = context.random();
+        BlockPos pos = context.origin();
 
 
-        pos = pos.toImmutable();
+        pos = pos.immutable();
         final int height = rand.nextInt(4) + 6;
         int i = pos.getX(); int j = pos.getY(); int k = pos.getZ();
 
@@ -38,11 +36,11 @@ public class UpTreeFeature extends RainforestTreeFeature {
             return false;
         }
 
-        if (!getSapling().canPlaceAt(getSapling().getDefaultState(), world, pos)) {
+        if (!getSapling().canSurvive(getSapling().defaultBlockState(), world, pos)) {
             return false;
         }
 
-        world.setBlockState(pos.down(), Blocks.DIRT.getDefaultState(), 3);
+        world.setBlock(pos.below(), Blocks.DIRT.defaultBlockState(), 3);
 
         for (int y = j; y < j + height; y++) {
             placeLog(world, i, y, k);

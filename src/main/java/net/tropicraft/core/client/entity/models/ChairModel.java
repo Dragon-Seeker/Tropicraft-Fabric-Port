@@ -1,11 +1,16 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.tropicraft.core.common.entity.placeable.ChairEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
 
-public class ChairModel extends CompositeEntityModel<ChairEntity> {
+public class ChairModel extends ListModel<ChairEntity> {
     public ModelPart seat;
     public ModelPart back;
     public ModelPart backRightLeg;
@@ -65,29 +70,29 @@ public class ChairModel extends CompositeEntityModel<ChairEntity> {
         //leftArm.yaw = 1.570796F;
     }
 
-    public static TexturedModelData getTexturedModelData(){
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData(){
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("seat", ModelPartBuilder.create().uv(0, 0).cuboid(-7F, 0F, -8F, 16, 1, 16), ModelTransform.pivot(-1F, 0F, 0F));
-        modelPartData.addChild("back", ModelPartBuilder.create().uv(0, 0).cuboid(-7F, 0F, 0F, 16, 1, 16), ModelTransform.of(-1F, 0F, 8F, 1.169371F, 0F, 0F));
-        modelPartData.addChild("backRightLeg", ModelPartBuilder.create().uv(0, 0).cuboid(-1F, -1F, 0F, 1, 10, 1), ModelTransform.of(-8F, -3F, 6F, 0.4537856F, 0F, 0F));
-        modelPartData.addChild("backLeftLeg", ModelPartBuilder.create().uv(0, 0).cuboid(0F, 0F, 0F, 1, 10, 1), ModelTransform.of(8F, -4F, 5F, 0.4537856F, 0F, 0F));
-        modelPartData.addChild("frontLeftLeg", ModelPartBuilder.create().uv(0, 0).cuboid(0F, 0F, -1F, 1, 10, 1), ModelTransform.of(8F, -4F, 0F, -0.4537856F, 0F, 0F));
-        modelPartData.addChild("frontRightLeg", ModelPartBuilder.create().uv(0, 0).cuboid(-1F, 0F, -1F, 1, 10, 1), ModelTransform.of(-8F, -4F, 0F, -0.4537856F, 0F, 0F));
-        modelPartData.addChild("rightArm", ModelPartBuilder.create().uv(0, 29).cuboid(0F, -1F, 0F, 14, 1, 2), ModelTransform.of(-10F, -4F, 11F, 0F, 1.570796F, 0F));
-        modelPartData.addChild("leftArm", ModelPartBuilder.create().uv(0, 29).cuboid(0F, 0F, 0F, 14, 1, 2), ModelTransform.of(8F, -5F, 11F, 0F, 1.570796F, 0F));
+        modelPartData.addOrReplaceChild("seat", CubeListBuilder.create().texOffs(0, 0).addBox(-7F, 0F, -8F, 16, 1, 16), PartPose.offset(-1F, 0F, 0F));
+        modelPartData.addOrReplaceChild("back", CubeListBuilder.create().texOffs(0, 0).addBox(-7F, 0F, 0F, 16, 1, 16), PartPose.offsetAndRotation(-1F, 0F, 8F, 1.169371F, 0F, 0F));
+        modelPartData.addOrReplaceChild("backRightLeg", CubeListBuilder.create().texOffs(0, 0).addBox(-1F, -1F, 0F, 1, 10, 1), PartPose.offsetAndRotation(-8F, -3F, 6F, 0.4537856F, 0F, 0F));
+        modelPartData.addOrReplaceChild("backLeftLeg", CubeListBuilder.create().texOffs(0, 0).addBox(0F, 0F, 0F, 1, 10, 1), PartPose.offsetAndRotation(8F, -4F, 5F, 0.4537856F, 0F, 0F));
+        modelPartData.addOrReplaceChild("frontLeftLeg", CubeListBuilder.create().texOffs(0, 0).addBox(0F, 0F, -1F, 1, 10, 1), PartPose.offsetAndRotation(8F, -4F, 0F, -0.4537856F, 0F, 0F));
+        modelPartData.addOrReplaceChild("frontRightLeg", CubeListBuilder.create().texOffs(0, 0).addBox(-1F, 0F, -1F, 1, 10, 1), PartPose.offsetAndRotation(-8F, -4F, 0F, -0.4537856F, 0F, 0F));
+        modelPartData.addOrReplaceChild("rightArm", CubeListBuilder.create().texOffs(0, 29).addBox(0F, -1F, 0F, 14, 1, 2), PartPose.offsetAndRotation(-10F, -4F, 11F, 0F, 1.570796F, 0F));
+        modelPartData.addOrReplaceChild("leftArm", CubeListBuilder.create().texOffs(0, 29).addBox(0F, 0F, 0F, 14, 1, 2), PartPose.offsetAndRotation(8F, -5F, 11F, 0F, 1.570796F, 0F));
 
-        return TexturedModelData.of(modelData, 64, 32);
+        return LayerDefinition.create(modelData, 64, 32);
     }
 
     @Override
-    public void setAngles(ChairEntity chair, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(ChairEntity chair, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(
             seat, back, backRightLeg, backLeftLeg, frontLeftLeg, frontRightLeg, rightArm, leftArm
         );

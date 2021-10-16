@@ -1,13 +1,13 @@
 package net.tropicraft.core.common.entity.egg;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.entity.underdasea.SeaUrchinEntity;
 import net.tropicraft.core.common.registry.TropicraftEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.World;
 
 public class SeaUrchinEggEntity extends EchinodermEggEntity {
-	public SeaUrchinEggEntity(final EntityType<? extends SeaUrchinEggEntity> type, World world) {
+	public SeaUrchinEggEntity(final EntityType<? extends SeaUrchinEggEntity> type, Level world) {
 		super(type, world);
 	}
 
@@ -18,7 +18,7 @@ public class SeaUrchinEggEntity extends EchinodermEggEntity {
 
 	@Override
 	public Entity onHatch() {
-		return new SeaUrchinEntity(TropicraftEntities.SEA_URCHIN, world);
+		return new SeaUrchinEntity(TropicraftEntities.SEA_URCHIN, level);
 	}
 	/*
 	@Override

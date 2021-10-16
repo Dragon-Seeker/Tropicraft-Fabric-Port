@@ -1,56 +1,56 @@
 package net.tropicraft.core.common.entity.egg;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Arm;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public abstract class EggEntity extends LivingEntity {
 
-    private static final TrackedData<Integer> HATCH_DELAY = DataTracker.registerData(EggEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final EntityDataAccessor<Integer> HATCH_DELAY = SynchedEntityData.defineId(EggEntity.class, EntityDataSerializers.INT);
 
     public double rotationRand;
    
-    public EggEntity(final EntityType<? extends EggEntity> type, World w) {
+    public EggEntity(final EntityType<? extends EggEntity> type, Level w) {
         super(type, w);
         rotationRand = 0;
-        ignoreCameraFrustum = true;
+        noCulling = true;
        
-        this.setYaw(random.nextInt(360));
+        this.setYRot(random.nextInt(360));
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return LivingEntity.createLivingAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 2.0);
+    public static AttributeSupplier.Builder createAttributes() {
+        return LivingEntity.createLivingAttributes().add(Attributes.MAX_HEALTH, 2.0);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound compound) {
-        age = compound.getInt("ticks");
+    public void readAdditionalSaveData(CompoundTag compound) {
+        tickCount = compound.getInt("ticks");
         setHatchDelay(compound.getInt("hatchDelay"));
-        super.readCustomDataFromNbt(compound);
+        super.readAdditionalSaveData(compound);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound compound) {
-        compound.putInt("ticks", age);
+    public void addAdditionalSaveData(CompoundTag compound) {
+        compound.putInt("ticks", tickCount);
         compound.putInt("hatchDelay", getHatchDelay());
-        super.writeCustomDataToNbt(compound);
+        super.addAdditionalSaveData(compound);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(HATCH_DELAY, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(HATCH_DELAY, 0);
         setHatchDelay(-60 + random.nextInt(120));
     }
 
@@ -78,30 +78,30 @@ public abstract class EggEntity extends LivingEntity {
     public abstract int getPreHatchMovement();
     
     public int getRandomHatchDelay() {
-        return this.getDataTracker().get(HATCH_DELAY);
+        return this.getEntityData().get(HATCH_DELAY);
     }
      
     public boolean isHatching() {
-        return this.age > (getHatchTime() + getRandomHatchDelay());
+        return this.tickCount > (getHatchTime() + getRandomHatchDelay());
     }
     
     public boolean isNearHatching() {
-        return this.age > (getHatchTime() + getRandomHatchDelay()) - getPreHatchMovement();
+        return this.tickCount > (getHatchTime() + getRandomHatchDelay()) - getPreHatchMovement();
     }
 
     @Override
-    public void tickMovement() {
-        super.tickMovement();
+    public void aiStep() {
+        super.aiStep();
         
         if (isNearHatching()) {
-            rotationRand += 0.1707F * world.random.nextFloat();
+            rotationRand += 0.1707F * level.random.nextFloat();
             
             // Hatch time!
-            if (age >= this.getHatchTime()) {
-                if (!world.isClient) {
+            if (tickCount >= this.getHatchTime()) {
+                if (!level.isClientSide) {
                     final Entity ent = onHatch();
-                    ent.refreshPositionAndAngles(getX(), getY(), getZ(), 0.0F, 0.0F);
-                    world.spawnEntity(ent);
+                    ent.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
+                    level.addFreshEntity(ent);
                     remove(RemovalReason.DISCARDED);
                 }
             }
@@ -109,29 +109,29 @@ public abstract class EggEntity extends LivingEntity {
     }
     
     public void setHatchDelay(int i) {
-        this.getDataTracker().set(HATCH_DELAY, -60 + random.nextInt(120));
+        this.getEntityData().set(HATCH_DELAY, -60 + random.nextInt(120));
     }
     
     public int getHatchDelay() {
-        return this.getDataTracker().get(HATCH_DELAY);
+        return this.getEntityData().get(HATCH_DELAY);
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
+    public Iterable<ItemStack> getArmorSlots() {
         return ImmutableList.of();
     }
 
     @Override
-    public ItemStack getEquippedStack(EquipmentSlot slotIn) {
+    public ItemStack getItemBySlot(EquipmentSlot slotIn) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void equipStack(EquipmentSlot slotIn, ItemStack stack) {
+    public void setItemSlot(EquipmentSlot slotIn, ItemStack stack) {
     }
 
     @Override
-    public Arm getMainArm() {
-        return Arm.LEFT;
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.LEFT;
     }
 }

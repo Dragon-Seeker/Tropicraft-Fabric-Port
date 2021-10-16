@@ -1,12 +1,12 @@
 package net.tropicraft.core.client.data;
 
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 public interface WorldgenDataConsumer<T> {
-    T register(Identifier id, T entry);
+    T register(ResourceLocation id, T entry);
 
-    default T register(RegistryKey<T> id, T entry) {
-        return this.register(id.getValue(), entry);
+    default T register(ResourceKey<T> id, T entry) {
+        return this.register(id.location(), entry);
     }
 }

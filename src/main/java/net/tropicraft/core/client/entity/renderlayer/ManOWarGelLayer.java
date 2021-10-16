@@ -1,38 +1,37 @@
 package net.tropicraft.core.client.entity.renderlayer;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.tropicraft.core.client.entity.models.AshenModel;
 import net.tropicraft.core.client.entity.models.ManOWarModel;
 import net.tropicraft.core.client.entity.renderers.ManOWarRenderer;
 import net.tropicraft.core.common.entity.hostile.AshenEntity;
 import net.tropicraft.core.common.entity.underdasea.ManOWarEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
 @Environment(EnvType.CLIENT)
-public class ManOWarGelLayer extends FeatureRenderer<ManOWarEntity, ManOWarModel> {
+public class ManOWarGelLayer extends RenderLayer<ManOWarEntity, ManOWarModel> {
     private final ManOWarModel mowModel;
 
-    public ManOWarGelLayer(FeatureRendererContext<ManOWarEntity, ManOWarModel> featureRendererContext) {
+    public ManOWarGelLayer(RenderLayerParent<ManOWarEntity, ManOWarModel> featureRendererContext) {
         super(featureRendererContext);
         mowModel = featureRendererContext.getModel();
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn, ManOWarEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, ManOWarEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if (!entity.isInvisible()) {
-            getContextModel().copyStateTo(mowModel);
-            mowModel.animateModel(entity, limbSwing, limbSwingAmount, partialTicks);
-            mowModel.setAngles(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderLayer.getEntityTranslucent(getTexture(entity)));
-            mowModel.render(matrixStackIn, ivertexbuilder, packedLightIn, LivingEntityRenderer.getOverlay(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+            getParentModel().copyPropertiesTo(mowModel);
+            mowModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
+            mowModel.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            VertexConsumer ivertexbuilder = bufferIn.getBuffer(RenderType.entityTranslucent(getTextureLocation(entity)));
+            mowModel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, LivingEntityRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 }

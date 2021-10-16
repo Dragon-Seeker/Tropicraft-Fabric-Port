@@ -1,13 +1,12 @@
 package net.tropicraft.core.common.entity.ai;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
-
 import java.util.EnumSet;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class EntityAIKoaMate extends Goal
 
     private final EntityKoaBase villagerObj;
     private EntityKoaBase mate;
-    private final World world;
+    private final Level world;
 
     //counts down from 300 when mating starts, on 0 mate completes
     private int matingTimeout;
@@ -35,18 +34,18 @@ public class EntityAIKoaMate extends Goal
     public EntityAIKoaMate(EntityKoaBase villagerIn)
     {
         this.villagerObj = villagerIn;
-        this.world = villagerIn.world;
-        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        this.world = villagerIn.level;
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean canStart()
+    public boolean canUse()
     {
         //adult cooldown
-        if (this.villagerObj.getBreedingAge() != 0)
+        if (this.villagerObj.getAge() != 0)
         {
             return false;
         }
@@ -57,7 +56,7 @@ public class EntityAIKoaMate extends Goal
         else
         {
             if (this.canTownHandleMoreVillagers() && this.villagerObj.getIsWillingToMate(true)) {
-                List<EntityKoaBase> listEntities = this.world.getNonSpectatingEntities(EntityKoaBase.class, this.villagerObj.getBoundingBox().expand(8.0D, 3.0D, 8.0D));
+                List<EntityKoaBase> listEntities = this.world.getEntitiesOfClass(EntityKoaBase.class, this.villagerObj.getBoundingBox().inflate(8.0D, 3.0D, 8.0D));
                 EntityKoaBase clEnt = null;
                 double clDist = 9999;
                 for (EntityKoaBase ent : listEntities) {
@@ -107,9 +106,9 @@ public class EntityAIKoaMate extends Goal
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean shouldContinue()
+    public boolean canContinueToUse()
     {
-        boolean result = this.matingTimeout >= 0 && this.canTownHandleMoreVillagers() && this.villagerObj.getBreedingAge() == 0 && this.villagerObj.getIsWillingToMate(false);
+        boolean result = this.matingTimeout >= 0 && this.canTownHandleMoreVillagers() && this.villagerObj.getAge() == 0 && this.villagerObj.getIsWillingToMate(false);
         if (!result) {
             //System.out.println("mating reset");
         }
@@ -123,11 +122,11 @@ public class EntityAIKoaMate extends Goal
     public void tick()
     {
         --this.matingTimeout;
-        this.villagerObj.getLookControl().lookAt(this.mate, 10.0F, 30.0F);
+        this.villagerObj.getLookControl().setLookAt(this.mate, 10.0F, 30.0F);
 
-        if (this.villagerObj.squaredDistanceTo(this.mate) > 2.25D)
+        if (this.villagerObj.distanceToSqr(this.mate) > 2.25D)
         {
-            this.villagerObj.getNavigation().startMovingTo(this.mate, 0.75D);
+            this.villagerObj.getNavigation().moveTo(this.mate, 0.75D);
         }
         else if (this.matingTimeout == 0 && this.mate.isMating())
         {
@@ -140,7 +139,7 @@ public class EntityAIKoaMate extends Goal
 
         if (this.villagerObj.getRandom().nextInt(35) == 0)
         {
-            this.world.sendEntityStatus(this.villagerObj, (byte)12);
+            this.world.broadcastEntityEvent(this.villagerObj, (byte)12);
         }
     }
 
@@ -153,9 +152,9 @@ public class EntityAIKoaMate extends Goal
      */
     private boolean canTownHandleMoreVillagers() {
         double range = 100;
-        if (lastTimeCheckedVillagePopulation + TIME_BETWEEN_POPULATION_CHECKS < world.getTime()) {
-            lastTimeCheckedVillagePopulation = world.getTime();
-            List<EntityKoaBase> listEntities = this.world.getNonSpectatingEntities(EntityKoaBase.class, this.villagerObj.getBoundingBox().expand(range, range, range));
+        if (lastTimeCheckedVillagePopulation + TIME_BETWEEN_POPULATION_CHECKS < world.getGameTime()) {
+            lastTimeCheckedVillagePopulation = world.getGameTime();
+            List<EntityKoaBase> listEntities = this.world.getEntitiesOfClass(EntityKoaBase.class, this.villagerObj.getBoundingBox().inflate(range, range, range));
             cachedVillagePopulation = listEntities.size();
             //System.out.println("update cached koa population to: " + cachedVillagePopulation);
             return listEntities.size() < MAX_TOWN_POPULATION;
@@ -188,20 +187,20 @@ public class EntityAIKoaMate extends Goal
     //TODO: 1.14 readd
     private void giveBirth()
     {
-        PassiveEntity entityvillager = this.villagerObj.createChild((ServerWorld) world, this.mate);
-        this.mate.setBreedingAge(6000);
-        this.villagerObj.setBreedingAge(6000);
+        AgeableMob entityvillager = this.villagerObj.getBreedOffspring((ServerLevel) world, this.mate);
+        this.mate.setAge(6000);
+        this.villagerObj.setAge(6000);
         this.mate.setIsWillingToMate(false);
         this.villagerObj.setIsWillingToMate(false);
 
         //final net.minecraftforge.event.entity.living.BabyEntitySpawnEvent event = new net.minecraftforge.event.entity.living.BabyEntitySpawnEvent(villagerObj, mate, entityvillager);
         //if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event) || event.getChild() == null) { return; }
         //entityvillager = event.getChild();
-        entityvillager.setBreedingAge(-24000);
-        entityvillager.refreshPositionAndAngles(villagerObj.getX(), villagerObj.getY(), villagerObj.getZ(), 0.0F, 0.0F);
+        entityvillager.setAge(-24000);
+        entityvillager.moveTo(villagerObj.getX(), villagerObj.getY(), villagerObj.getZ(), 0.0F, 0.0F);
         if (entityvillager instanceof EntityKoaBase) {
             ((EntityKoaBase) entityvillager).setVillageAndDimID(villagerObj.getVillageID(), villagerObj.getVillageDimension());
-            entityvillager.setPositionTarget(villagerObj.getPositionTarget(), EntityKoaBase.MAX_HOME_DISTANCE);
+            entityvillager.restrictTo(villagerObj.getRestrictCenter(), EntityKoaBase.MAX_HOME_DISTANCE);
 
             //TODO: 1.14 readd
             /*TownKoaVillage village = villagerObj.getVillage();
@@ -213,13 +212,13 @@ public class EntityAIKoaMate extends Goal
 
             ((EntityKoaBase) entityvillager).updateUniqueEntityAI();
 
-            entityvillager.world.playSound(null, entityvillager.getBlockPos(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.AMBIENT, 1, 1);
+            entityvillager.level.playSound(null, entityvillager.blockPosition(), SoundEvents.CHICKEN_EGG, SoundSource.AMBIENT, 1, 1);
         }
 
 
 
-        this.world.spawnEntity(entityvillager);
-        this.world.sendEntityStatus(entityvillager, (byte)12);
+        this.world.addFreshEntity(entityvillager);
+        this.world.broadcastEntityEvent(entityvillager, (byte)12);
     }
 }
 

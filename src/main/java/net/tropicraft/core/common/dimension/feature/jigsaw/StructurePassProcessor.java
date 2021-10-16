@@ -1,21 +1,21 @@
 package net.tropicraft.core.common.dimension.feature.jigsaw;
 
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public abstract class StructurePassProcessor extends CheatyStructureProcessor{
     @Deprecated
-    public Structure.StructureBlockInfo process(WorldView world, BlockPos seedPos, BlockPos pos2, Structure.StructureBlockInfo originalBlockInfo, Structure.StructureBlockInfo blockInfo, StructurePlacementData placementSettingsIn) {
+    public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos seedPos, BlockPos pos2, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings placementSettingsIn) {
         return blockInfo;
     }
 
-    public Structure.StructureEntityInfo processEntity(WorldView world, BlockPos seedPos, Structure.StructureEntityInfo rawEntityInfo, Structure.StructureEntityInfo entityInfo, StructurePlacementData placementSettings, Structure template) {
+    public StructureTemplate.StructureEntityInfo processEntity(LevelReader world, BlockPos seedPos, StructureTemplate.StructureEntityInfo rawEntityInfo, StructureTemplate.StructureEntityInfo entityInfo, StructurePlaceSettings placementSettings, StructureTemplate template) {
         return entityInfo;
     }
 
-    public Structure.StructureBlockInfo process(WorldView world, BlockPos seedPos, BlockPos pos2, Structure.StructureBlockInfo originalBlockInfo, Structure.StructureBlockInfo blockInfo, StructurePlacementData placementSettingsIn, Structure template) {
-        return process(world, seedPos, pos2, originalBlockInfo, blockInfo, placementSettingsIn);
+    public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos seedPos, BlockPos pos2, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings placementSettingsIn, StructureTemplate template) {
+        return processBlock(world, seedPos, pos2, originalBlockInfo, blockInfo, placementSettingsIn);
     }
 }

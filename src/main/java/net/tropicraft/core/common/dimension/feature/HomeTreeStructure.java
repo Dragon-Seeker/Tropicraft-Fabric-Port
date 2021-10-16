@@ -1,25 +1,28 @@
 package net.tropicraft.core.common.dimension.feature;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.*;
-import net.minecraft.structure.pool.FeaturePoolElement;
-import net.minecraft.structure.pool.StructurePoolBasedGenerator;
-import net.minecraft.structure.pool.StructurePoolElement;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.world.HeightLimitView;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructurePieceType;
+import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
+import net.minecraft.world.level.levelgen.feature.structures.FeaturePoolElement;
+import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.dimension.feature.jigsaw.piece.NoRotateSingleJigsawPiece;
 import net.tropicraft.core.mixins.StructureStartAccessor;
@@ -28,23 +31,23 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Stream;
 
-public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConfig> {
-    public HomeTreeStructure(Codec<StructurePoolFeatureConfig> codec) {
+public class HomeTreeStructure extends StructureFeature<JigsawConfiguration> {
+    public HomeTreeStructure(Codec<JigsawConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    protected boolean shouldStartAt(ChunkGenerator generator, BiomeSource biomes, long seed, ChunkRandom random, ChunkPos pos, Biome biome, ChunkPos startChunkPos, StructurePoolFeatureConfig config, HeightLimitView world) {
+    protected boolean isFeatureChunk(ChunkGenerator generator, BiomeSource biomes, long seed, WorldgenRandom random, ChunkPos pos, Biome biome, ChunkPos startChunkPos, JigsawConfiguration config, LevelHeightAccessor world) {
         BlockPos blockPos = new BlockPos((pos.x << 4) + 8, 0, (pos.z << 4) + 8);
-        int centerY = generator.getHeight(blockPos.getX(), blockPos.getZ(), Heightmap.Type.WORLD_SURFACE_WG, world);
-        return isValid(generator, blockPos.add(-4, 0, -4), centerY, world) &&
-                isValid(generator, blockPos.add(-4, 0, 4), centerY, world) &&
-                isValid(generator, blockPos.add(4, 0, 4), centerY, world) &&
-                isValid(generator, blockPos.add(4, 0, -4), centerY, world);
+        int centerY = generator.getBaseHeight(blockPos.getX(), blockPos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, world);
+        return isValid(generator, blockPos.offset(-4, 0, -4), centerY, world) &&
+                isValid(generator, blockPos.offset(-4, 0, 4), centerY, world) &&
+                isValid(generator, blockPos.offset(4, 0, 4), centerY, world) &&
+                isValid(generator, blockPos.offset(4, 0, -4), centerY, world);
     }
 
-    private boolean isValid(ChunkGenerator generator, BlockPos pos, int startY, HeightLimitView world) {
-        int y = generator.getHeight(pos.getX(), pos.getZ(), Heightmap.Type.WORLD_SURFACE_WG, world);
+    private boolean isValid(ChunkGenerator generator, BlockPos pos, int startY, LevelHeightAccessor world) {
+        int y = generator.getBaseHeight(pos.getX(), pos.getZ(), Heightmap.Types.WORLD_SURFACE_WG, world);
         return y >= generator.getSeaLevel()
                 && Math.abs(y - startY) < 10
                 && y < 150
@@ -52,49 +55,49 @@ public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConf
     }
 
     @Override
-    public StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
+    public StructureStartFactory<JigsawConfiguration> getStartFactory() {
         return Start::new;
     }
 
-    private static final StructurePieceType TYPE = StructurePieceType.register(Piece::new, Constants.MODID + ":home_tree");
+    private static final StructurePieceType TYPE = StructurePieceType.setPieceId(Piece::new, Constants.MODID + ":home_tree");
 
-    public static class Start extends StructureStart<StructurePoolFeatureConfig> {
-        public Start(StructureFeature<StructurePoolFeatureConfig> structure, ChunkPos chunkPos, int references, long seed) {
+    public static class Start extends StructureStart<JigsawConfiguration> {
+        public Start(StructureFeature<JigsawConfiguration> structure, ChunkPos chunkPos, int references, long seed) {
             super(structure, chunkPos, references, seed);
         }
 
         @Override
-        public void init(DynamicRegistryManager registryManager, ChunkGenerator chunkGenerator, StructureManager templates, ChunkPos pos, Biome biome, StructurePoolFeatureConfig config, HeightLimitView world) {
+        public void generatePieces(RegistryAccess registryManager, ChunkGenerator chunkGenerator, StructureManager templates, ChunkPos pos, Biome biome, JigsawConfiguration config, LevelHeightAccessor world) {
             BlockPos blockPos = new BlockPos(pos.x << 4, 0, pos.z << 4);
-            StructurePoolBasedGenerator.generate(registryManager, config, Piece::new, chunkGenerator, templates, blockPos, this, this.random, true, true, world);
+            JigsawPlacement.addPieces(registryManager, config, Piece::new, chunkGenerator, templates, blockPos, this, this.random, true, true, world);
 
-            this.setBoundingBoxFromChildren();
+            this.getBoundingBox();
             this.setBoundingBoxFromChildrenCustom();
         }
 
-        public BlockBox setBoundingBoxFromChildrenCustom() {
+        public BoundingBox setBoundingBoxFromChildrenCustom() {
             int margin = 24; // Double vanilla's margin
-            ((StructureStartAccessor)this).getBoundingBox().expand(margin);
-            return super.setBoundingBoxFromChildren();
+            ((StructureStartAccessor)this).getCachedBoundingBox().inflate(margin);
+            return super.getBoundingBox();
         }
 
         @Override
-        protected void randomUpwardTranslation(int seaLevel, int i, Random random, int j) {
+        protected void moveBelowSeaLevel(int seaLevel, int i, Random random, int j) {
             int k = seaLevel - j;
-            BlockBox blockBox = this.setBoundingBoxFromChildrenCustom();
-            int l = blockBox.getBlockCountY() + i + 1;
+            BoundingBox blockBox = this.setBoundingBoxFromChildrenCustom();
+            int l = blockBox.getYSpan() + i + 1;
             if (l < k) {
                 l += random.nextInt(k - l);
             }
 
-            int m = l - blockBox.getMaxY();
-            this.translateUpward(m);
+            int m = l - blockBox.maxY();
+            this.offsetPiecesVertically(m);
         }
 
         @Override
-        protected void randomUpwardTranslation(Random random, int minY, int maxY) {
-            BlockBox blockBox = this.setBoundingBoxFromChildrenCustom();
-            int i = maxY - minY + 1 - blockBox.getBlockCountY();
+        protected void moveInsideHeights(Random random, int minY, int maxY) {
+            BoundingBox blockBox = this.setBoundingBoxFromChildrenCustom();
+            int i = maxY - minY + 1 - blockBox.getYSpan();
             int k;
             if (i > 1) {
                 k = minY + random.nextInt(i);
@@ -102,16 +105,16 @@ public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConf
                 k = minY;
             }
 
-            int l = k - blockBox.getMinY();
-            this.translateUpward(l);
+            int l = k - blockBox.minY();
+            this.offsetPiecesVertically(l);
         }
 
 
 
     }
 
-    public static class Piece extends PoolStructurePiece {
-        public Piece(StructureManager templates, StructurePoolElement piece, BlockPos pos, int groundLevelDelta, BlockRotation rotation, BlockBox bounds) {
+    public static class Piece extends PoolElementStructurePiece {
+        public Piece(StructureManager templates, StructurePoolElement piece, BlockPos pos, int groundLevelDelta, Rotation rotation, BoundingBox bounds) {
             super(templates, piece, pos, groundLevelDelta, rotation, bounds);
         }
         /*
@@ -121,26 +124,26 @@ public class HomeTreeStructure extends StructureFeature<StructurePoolFeatureConf
 
          */
 
-        public Piece(ServerWorld serverWorld, NbtCompound nbtCompound) {
+        public Piece(ServerLevel serverWorld, CompoundTag nbtCompound) {
             super(serverWorld, nbtCompound);
         }
 
         @Override
-        public BlockBox getBoundingBox() {
-            if (this.poolElement instanceof FeaturePoolElement) {
-                BlockBox ret = super.getBoundingBox();
+        public BoundingBox getBoundingBox() {
+            if (this.element instanceof FeaturePoolElement) {
+                BoundingBox ret = super.getBoundingBox();
                 //TODO: May not work, Possible need to change back to: new BlockBox(ret);
-                ret = new BlockBox(ret.getCenter());
-                ret.expand(32);
+                ret = new BoundingBox(ret.getCenter());
+                ret.inflate(32);
 
             }
             return super.getBoundingBox();
         }
 
         @Override
-        public BlockRotation getRotation() {
-            if (this.poolElement instanceof NoRotateSingleJigsawPiece) {
-                return BlockRotation.NONE;
+        public Rotation getRotation() {
+            if (this.element instanceof NoRotateSingleJigsawPiece) {
+                return Rotation.NONE;
             }
             return super.getRotation();
         }

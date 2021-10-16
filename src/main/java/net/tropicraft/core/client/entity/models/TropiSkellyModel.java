@@ -1,13 +1,18 @@
 package net.tropicraft.core.client.entity.models;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.world.entity.HumanoidArm;
 import net.tropicraft.core.common.entity.hostile.TropiSkellyEntity;
-import net.minecraft.client.render.entity.model.AbstractZombieModel;
-import net.minecraft.client.render.entity.model.ModelWithArms;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Arm;
 
-public class TropiSkellyModel extends AbstractZombieModel<TropiSkellyEntity> implements ModelWithArms {
+public class TropiSkellyModel extends AbstractZombieModel<TropiSkellyEntity> implements ArmedModel {
     
     private final ModelPart skirt;
     
@@ -46,49 +51,49 @@ public class TropiSkellyModel extends AbstractZombieModel<TropiSkellyEntity> imp
          */
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = getModelData(Dilation.NONE, 0.0F);
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = createMesh(CubeDeformation.NONE, 0.0F);
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("right_arm",
-                ModelPartBuilder.create().uv(40, 16)
-                        .cuboid(-1.0F, -2.0F, -1.0F, 2, 12, 2),
-                ModelTransform.pivot(-5.0F, 2.0F, 0.0F));
+        modelPartData.addOrReplaceChild("right_arm",
+                CubeListBuilder.create().texOffs(40, 16)
+                        .addBox(-1.0F, -2.0F, -1.0F, 2, 12, 2),
+                PartPose.offset(-5.0F, 2.0F, 0.0F));
 
-        modelPartData.addChild("left_arm",
-                ModelPartBuilder.create().uv(40, 16).mirrored()
-                        .cuboid(-1.0F, -2.0F, -1.0F, 2, 12, 2),
-                ModelTransform.pivot(5.0F, 2.0F, 0.0F));
+        modelPartData.addOrReplaceChild("left_arm",
+                CubeListBuilder.create().texOffs(40, 16).mirror()
+                        .addBox(-1.0F, -2.0F, -1.0F, 2, 12, 2),
+                PartPose.offset(5.0F, 2.0F, 0.0F));
 
-        modelPartData.addChild("right_leg",
-                ModelPartBuilder.create().uv(0, 16)
-                        .cuboid(-1.0F, 0.0F, -1.0F, 2, 12, 2),
-                ModelTransform.pivot(-2.0F, 12.0F, 0.0F));
+        modelPartData.addOrReplaceChild("right_leg",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-1.0F, 0.0F, -1.0F, 2, 12, 2),
+                PartPose.offset(-2.0F, 12.0F, 0.0F));
 
-        modelPartData.addChild("left_leg",
-                ModelPartBuilder.create().uv(0, 16)
-                        .cuboid(-1.0F, 0.0F, -1.0F, 2, 12, 2),
-                ModelTransform.pivot(2.0F, 12.0F, 0.0F));
+        modelPartData.addOrReplaceChild("left_leg",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-1.0F, 0.0F, -1.0F, 2, 12, 2),
+                PartPose.offset(2.0F, 12.0F, 0.0F));
 
-        ModelPartData modelPartBody = modelPartData.getChild("body");
+        PartDefinition modelPartBody = modelPartData.getChild("body");
 
-        modelPartBody.addChild("skirt",
-                ModelPartBuilder.create().uv(40, 0)
-                        .cuboid(-4.0F, 12.0F, -2.0F, 8, 3, 4),
-                ModelTransform.NONE);
+        modelPartBody.addOrReplaceChild("skirt",
+                CubeListBuilder.create().texOffs(40, 0)
+                        .addBox(-4.0F, 12.0F, -2.0F, 8, 3, 4),
+                PartPose.ZERO);
 
-        return TexturedModelData.of(modelData, 64, 64);
+        return LayerDefinition.create(modelData, 64, 64);
     }
 
     @Override
-    public void setArmAngle(Arm side, final MatrixStack stack) {
-        super.setArmAngle(side, stack);
-        stack.translate((side == Arm.LEFT ? -1 : 1) * 0.1f, 0, 0.0F);
+    public void translateToHand(HumanoidArm side, final PoseStack stack) {
+        super.translateToHand(side, stack);
+        stack.translate((side == HumanoidArm.LEFT ? -1 : 1) * 0.1f, 0, 0.0F);
     }
 
     @Override
-    public boolean isAttacking(TropiSkellyEntity entityIn) {
-        return entityIn.isAttacking();
+    public boolean isAggressive(TropiSkellyEntity entityIn) {
+        return entityIn.isAggressive();
     }
 }
 

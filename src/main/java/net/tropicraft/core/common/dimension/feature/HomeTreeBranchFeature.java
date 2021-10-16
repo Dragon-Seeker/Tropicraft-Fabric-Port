@@ -1,17 +1,16 @@
 package net.tropicraft.core.common.dimension.feature;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.tropicraft.core.common.dimension.feature.config.HomeTreeBranchConfig;
 import net.tropicraft.core.common.dimension.feature.config.RainforestVinesConfig;
 import net.tropicraft.core.common.dimension.feature.tree.RainforestVinesFeature;
@@ -32,16 +31,16 @@ public class HomeTreeBranchFeature<T extends HomeTreeBranchConfig> extends Featu
     }
 
     @Override
-    public boolean generate(FeatureContext<T> context) {
-        StructureWorldAccess world = context.getWorld();
-        Random random = context.getRandom();
-        BlockPos pos = context.getOrigin();
-        T config = context.getConfig();
-        ChunkGenerator generator = context.getGenerator();
+    public boolean place(FeaturePlaceContext<T> context) {
+        WorldGenLevel world = context.level();
+        Random random = context.random();
+        BlockPos pos = context.origin();
+        T config = context.config();
+        ChunkGenerator generator = context.chunkGenerator();
 
 
-        ChunkRandom rand = new ChunkRandom();
-        rand.setPopulationSeed(world.getSeed(), pos.getX(), pos.getZ());
+        WorldgenRandom rand = new WorldgenRandom();
+        rand.setDecorationSeed(world.getSeed(), pos.getX(), pos.getZ());
         final int branchLength = rand.nextInt(10) + 15;
         // TODO make configurable
         int branchX1 = pos.getX();
@@ -53,8 +52,8 @@ public class HomeTreeBranchFeature<T extends HomeTreeBranchConfig> extends Featu
         int branchZ2 = (int)((branchLength * Math.cos(angle)) + branchZ1);
         int branchY2 = rand.nextInt(4) + 4;
 
-        BlockState wood = TropicraftBlocks.MAHOGANY_LOG.getDefaultState();
-        final BlockState leaf = TropicraftBlocks.MAHOGANY_LEAVES.getDefaultState();
+        BlockState wood = TropicraftBlocks.MAHOGANY_LOG.defaultBlockState();
+        final BlockState leaf = TropicraftBlocks.MAHOGANY_LEAVES.defaultBlockState();
         final int leafCircleSizeConstant = 3;
         final int y2 = pos.getY() + branchY2;
 
@@ -69,31 +68,31 @@ public class HomeTreeBranchFeature<T extends HomeTreeBranchConfig> extends Featu
         genLeafCircle(world, branchX2, y2, branchZ2, leafCircleSizeConstant + 6, 0, leaf, true);
         genLeafCircle(world, branchX2, y2 + 1, branchZ2, leafCircleSizeConstant + 10, 0, leaf, true);
         genLeafCircle(world, branchX2, y2 + 2, branchZ2, leafCircleSizeConstant + 9, 0, leaf, true);
-        this.vinesFeature.generate(world, generator, rand, new BlockPos(branchX2, y2 - 1, branchZ2));
+        this.vinesFeature.place(world, generator, rand, new BlockPos(branchX2, y2 - 1, branchZ2));
 
         return false;
     }
 
-    public void genLeafCircle(final WorldAccess world, final int x, final int y, final int z, int outerRadius, int innerRadius, BlockState state, boolean vines) {
+    public void genLeafCircle(final LevelAccessor world, final int x, final int y, final int z, int outerRadius, int innerRadius, BlockState state, boolean vines) {
         int outerRadiusSquared = outerRadius * outerRadius;
         int innerRadiusSquared = innerRadius * innerRadius;
 
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         for (int i = -outerRadius + x; i <= outerRadius + x; i++) {
             for (int k = -outerRadius + z; k <= outerRadius + z; k++) {
                 double d = (x - i) * (x - i) + (z - k) * (z - k);
                 if (d <= outerRadiusSquared && d >= innerRadiusSquared) {
                     pos.set(i, y, k);
-                    if (world.isAir(pos) || world.getBlockState(pos).getBlock() == state.getBlock()) {
-                        world.setBlockState(pos, state, 3);
+                    if (world.isEmptyBlock(pos) || world.getBlockState(pos).getBlock() == state.getBlock()) {
+                        world.setBlock(pos, state, 3);
                     }
                 }
             }
         }
     }
 
-    private void placeBlockLine(final WorldAccess world, int[] ai, int[] ai1, BlockState state) {
+    private void placeBlockLine(final LevelAccessor world, int[] ai, int[] ai1, BlockState state) {
         int[] ai2 = {
             0, 0, 0
         };
@@ -124,10 +123,10 @@ public class HomeTreeBranchFeature<T extends HomeTreeBranchConfig> extends Featu
         };
         int k = 0;
         for (int l = ai2[j] + byte3; k != l; k += byte3) {
-            ai3[j] = MathHelper.floor(ai[j] + k + 0.5D);
-            ai3[byte1] = MathHelper.floor(ai[byte1] + k * d + 0.5D);
-            ai3[byte2] = MathHelper.floor(ai[byte2] + k * d1 + 0.5D);
-            world.setBlockState(new BlockPos(ai3[0], ai3[1], ai3[2]), state, 3);
+            ai3[j] = Mth.floor(ai[j] + k + 0.5D);
+            ai3[byte1] = Mth.floor(ai[byte1] + k * d + 0.5D);
+            ai3[byte2] = Mth.floor(ai[byte2] + k * d1 + 0.5D);
+            world.setBlock(new BlockPos(ai3[0], ai3[1], ai3[2]), state, 3);
         }
     }
 }

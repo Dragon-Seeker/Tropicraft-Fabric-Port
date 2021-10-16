@@ -1,34 +1,34 @@
 package net.tropicraft.core.common.entity.underdasea;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.AbstractSchoolingFish;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.tropicraft.core.common.registry.TropicraftItems;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.SchoolingFishEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements IAtlasFish {
+public class TropicraftTropicalFishEntity extends AbstractSchoolingFish implements IAtlasFish {
 
     enum FishType {
         CLOWNFISH(0),
@@ -61,27 +61,27 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
         }
     }
 
-    private static final TrackedData<Byte> DATA_FISH_TYPE = DataTracker.registerData(TropicraftTropicalFishEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final EntityDataAccessor<Byte> DATA_FISH_TYPE = SynchedEntityData.defineId(TropicraftTropicalFishEntity.class, EntityDataSerializers.BYTE);
 
-    public TropicraftTropicalFishEntity(EntityType<? extends SchoolingFishEntity> type, World world) {
+    public TropicraftTropicalFishEntity(EntityType<? extends AbstractSchoolingFish> type, Level world) {
         super(type, world);
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return SchoolingFishEntity.createFishAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 5.0);
+    public static AttributeSupplier.Builder createAttributes() {
+        return AbstractSchoolingFish.createAttributes()
+                .add(Attributes.MAX_HEALTH, 5.0);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(DATA_FISH_TYPE, (byte) 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(DATA_FISH_TYPE, (byte) 0);
     }
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficultyInstance, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound nbt) {
-        entityData = super.initialize(world, difficultyInstance, spawnReason, entityData, nbt);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag nbt) {
+        entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
         if (nbt != null && nbt.contains("BucketVariantTag", 3)) {
             setFishType(FishType.getById(nbt.getInt("BucketVariantTag")));
         } else {
@@ -91,41 +91,41 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
     }
 
     public FishType getFishType() {
-        return FishType.VALUES[dataTracker.get(DATA_FISH_TYPE)];
+        return FishType.VALUES[entityData.get(DATA_FISH_TYPE)];
     }
 
     public void setFishType(final FishType type) {
-        dataTracker.set(DATA_FISH_TYPE, (byte) type.ordinal());
+        entityData.set(DATA_FISH_TYPE, (byte) type.ordinal());
     }
 
     @Override
-    public int getMaxGroupSize() {
+    public int getMaxSchoolSize() {
         return 24;
     }
 
     @Override
-    public ItemStack getBucketItem() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(TropicraftItems.TROPICAL_FISH_BUCKET);
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_SALMON_AMBIENT;
+        return SoundEvents.SALMON_AMBIENT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_SALMON_DEATH;
+        return SoundEvents.SALMON_DEATH;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource dmgSrc) {
-        return SoundEvents.ENTITY_SALMON_HURT;
+        return SoundEvents.SALMON_HURT;
     }
 
     @Override
     protected SoundEvent getFlopSound() {
-        return SoundEvents.ENTITY_SALMON_FLOP;
+        return SoundEvents.SALMON_FLOP;
     }
 
     @Override
@@ -140,49 +140,49 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
      */
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getStackInHand(hand);
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty() && stack.getItem() == TropicraftItems.FISHING_NET) {
             final int firstHotbarSlot = 0;
             int bucketSlot = -1;
-            for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-                ItemStack s = player.getInventory().getStack(firstHotbarSlot + i);
+            for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+                ItemStack s = player.getInventory().getItem(firstHotbarSlot + i);
                 if (isFishHolder(s)) {
                     bucketSlot = firstHotbarSlot + i;
                     break;
                 }
             }
 
-            if (bucketSlot == -1 && isFishHolder(player.getOffHandStack())) {
+            if (bucketSlot == -1 && isFishHolder(player.getOffhandItem())) {
                 bucketSlot = 36;
             }
 
             if (bucketSlot >= 0) {
-                ItemStack fishHolder = player.getInventory().getStack(bucketSlot);
+                ItemStack fishHolder = player.getInventory().getItem(bucketSlot);
                 if (fishHolder.getItem() == Items.WATER_BUCKET) {
                     fishHolder = new ItemStack(TropicraftItems.TROPICAL_FISH_BUCKET);
-                    player.getInventory().setStack(bucketSlot, fishHolder);
+                    player.getInventory().setItem(bucketSlot, fishHolder);
                 }
-                copyDataToStack(fishHolder);
-                player.swingHand(hand);
-                world.playSound(player, getBlockPos(), SoundEvents.ENTITY_GENERIC_SWIM, SoundCategory.PLAYERS, 0.25f, 1f + (random.nextFloat() * 0.4f));
+                saveToBucketTag(fishHolder);
+                player.swing(hand);
+                level.playSound(player, blockPosition(), SoundEvents.GENERIC_SWIM, SoundSource.PLAYERS, 0.25f, 1f + (random.nextFloat() * 0.4f));
                 remove(RemovalReason.DISCARDED);
-                return ActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
 
-        return super.interactMob(player, hand);
+        return super.mobInteract(player, hand);
     }
 
     @Override
-    public void writeCustomDataToNbt(final NbtCompound compound) {
-        super.writeCustomDataToNbt(compound);
+    public void addAdditionalSaveData(final CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("FishType", getFishType().id);
     }
 
     @Override
-    public void readCustomDataFromNbt(final NbtCompound compound) {
-        super.readCustomDataFromNbt(compound);
+    public void readAdditionalSaveData(final CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
         setFishType(FishType.getById(compound.getInt("FishType")));
     }
 
@@ -190,9 +190,9 @@ public class TropicraftTropicalFishEntity extends SchoolingFishEntity implements
      * Add extra data to the bucket that just picked this fish up
      */
     @Override
-    public void copyDataToStack(final ItemStack bucket) {
-        super.copyDataToStack(bucket);
-        NbtCompound compoundnbt = bucket.getOrCreateNbt();
+    public void saveToBucketTag(final ItemStack bucket) {
+        super.saveToBucketTag(bucket);
+        CompoundTag compoundnbt = bucket.getOrCreateTag();
         compoundnbt.putInt("BucketVariantTag", getFishType().id);
     }
 

@@ -1,10 +1,10 @@
 package net.tropicraft.core.common.entity.egg;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.client.packets.StarFishSpawnS2CPacket;
 import net.tropicraft.core.common.entity.underdasea.StarfishEntity;
 import net.tropicraft.core.common.entity.underdasea.StarfishType;
@@ -13,7 +13,7 @@ import net.tropicraft.core.common.registry.TropicraftEntities;
 public class StarfishEggEntity extends EchinodermEggEntity {
 	private StarfishType starfishType;
 
-	public StarfishEggEntity(final EntityType<? extends StarfishEggEntity> type, World world) {
+	public StarfishEggEntity(final EntityType<? extends StarfishEggEntity> type, Level world) {
 		super(type, world);
 		starfishType = StarfishType.values()[random.nextInt(StarfishType.values().length)];
 	}
@@ -39,19 +39,19 @@ public class StarfishEggEntity extends EchinodermEggEntity {
 
 	 */
 
-	public Packet<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return new StarFishSpawnS2CPacket(this);
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound nbt) {
-		super.writeCustomDataToNbt(nbt);
+	public void addAdditionalSaveData(CompoundTag nbt) {
+		super.addAdditionalSaveData(nbt);
 		nbt.putByte("StarfishType", (byte) getStarfishType().ordinal());
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound nbt) {
-		super.readCustomDataFromNbt(nbt);
+	public void readAdditionalSaveData(CompoundTag nbt) {
+		super.readAdditionalSaveData(nbt);
 		setStarfishType(StarfishType.values()[nbt.getByte("StarfishType")]);
 	}
 
@@ -62,7 +62,7 @@ public class StarfishEggEntity extends EchinodermEggEntity {
 
 	@Override
 	public Entity onHatch() {
-		StarfishEntity baby = new StarfishEntity(TropicraftEntities.STARFISH, world);
+		StarfishEntity baby = new StarfishEntity(TropicraftEntities.STARFISH, level);
 		baby.setBaby();
 		baby.setStarfishType(starfishType);
 		return baby;

@@ -1,8 +1,8 @@
 package net.tropicraft.core.common.dimension.surfacebuilders;
 
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
 import net.tropicraft.Constants;
 
 public class TropicraftSurfaceBuilders {
@@ -12,7 +12,7 @@ public class TropicraftSurfaceBuilders {
     public static final UnderwaterSurfaceBuilder UNDERWATER = register("underwater", new UnderwaterSurfaceBuilder(UnderwaterSurfaceBuilder.Config.CODEC));
 
     private static <T extends SurfaceBuilder<?>> T register(final String name, final T sup) {
-        return Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MODID, name), sup);
+        return Registry.register(Registry.SURFACE_BUILDER, new ResourceLocation(Constants.MODID, name), sup);
         //return Registry.register(Registry.SURFACE_BUILDER, )
         //return SURFACE_BUILDERS.register(name, sup);
     }

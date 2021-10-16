@@ -2,21 +2,28 @@ package net.tropicraft.core.common.entity.neutral;
 
 import net.tropicraft.core.common.entity.hostile.TropicraftCreatureEntity;
 import net.tropicraft.core.common.sound.Sounds;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -28,9 +35,9 @@ public class IguanaEntity extends TropicraftCreatureEntity {
     private UUID angerTargetUUID;
 
     private static final UUID ATTACK_SPEED_BOOST_MODIFIER_UUID = UUID.fromString("49455A49-7EC5-45BA-B886-3B90B23A1718");
-    private static final EntityAttributeModifier ATTACK_SPEED_BOOST_MODIFIER = new EntityAttributeModifier(ATTACK_SPEED_BOOST_MODIFIER_UUID, "Attacking speed boost", 0.05D, EntityAttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier ATTACK_SPEED_BOOST_MODIFIER = new AttributeModifier(ATTACK_SPEED_BOOST_MODIFIER_UUID, "Attacking speed boost", 0.05D, AttributeModifier.Operation.ADDITION);
 
-    public IguanaEntity(EntityType<? extends PathAwareEntity> type, World world) {
+    public IguanaEntity(EntityType<? extends PathfinderMob> type, Level world) {
         super(type, world);
     }
 
@@ -42,36 +49,36 @@ public class IguanaEntity extends TropicraftCreatureEntity {
      */
 
     @Override
-    public void setAttacker(@Nullable LivingEntity entity) {
-        super.setAttacker(entity);
+    public void setLastHurtByMob(@Nullable LivingEntity entity) {
+        super.setLastHurtByMob(entity);
         if (entity != null) {
-            angerTargetUUID = entity.getUuid();
+            angerTargetUUID = entity.getUUID();
         }
 
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return PathAwareEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 35.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 5.0);
+    public static AttributeSupplier.Builder createAttributes() {
+        return PathfinderMob.createMobAttributes()
+                .add(Attributes.FOLLOW_RANGE, 35.0)
+                .add(Attributes.MOVEMENT_SPEED, 0.25)
+                .add(Attributes.ATTACK_DAMAGE, 5.0);
     }
 
     @Override
-    protected void initGoals() {
-        goalSelector.add(0, new SwimGoal(this));
-        goalSelector.add(2, new MeleeAttackGoal(this, 1.0D, false));
-        goalSelector.add(5, new GoToWalkTargetGoal(this, 1.0D));
-        goalSelector.add(7, new WanderAroundFarGoal(this, 1.0D));
-        goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
-        goalSelector.add(8, new LookAroundGoal(this));
-        targetSelector.add(1, new HurtByAggressorGoal(this));
-        targetSelector.add(2, new TargetAggressorGoal(this));
+    protected void registerGoals() {
+        goalSelector.addGoal(0, new FloatGoal(this));
+        goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
+        goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 1.0D));
+        goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        targetSelector.addGoal(1, new HurtByAggressorGoal(this));
+        targetSelector.addGoal(2, new TargetAggressorGoal(this));
     }
 
     @Override
-    public void writeCustomDataToNbt(final NbtCompound compound) {
-        super.writeCustomDataToNbt(compound);
+    public void addAdditionalSaveData(final CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         compound.putShort("Anger", (short)angerLevel);
 
         if (angerTargetUUID != null) {
@@ -82,30 +89,30 @@ public class IguanaEntity extends TropicraftCreatureEntity {
     }
 
     @Override
-    public void readCustomDataFromNbt(final NbtCompound compound) {
-        super.readCustomDataFromNbt(compound);
+    public void readAdditionalSaveData(final CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
         angerLevel = compound.getShort("Anger");
         String hurtBy = compound.getString("HurtBy");
 
         if (!hurtBy.isEmpty()) {
             angerTargetUUID = UUID.fromString(hurtBy);
-            final PlayerEntity entityplayer = world.getPlayerByUuid(angerTargetUUID);
-            setAttacker(entityplayer);
+            final Player entityplayer = level.getPlayerByUUID(angerTargetUUID);
+            setLastHurtByMob(entityplayer);
 
             if (entityplayer != null) {
-                attackingPlayer = entityplayer;
-                playerHitTimer = getLastAttackedTime();
+                lastHurtByPlayer = entityplayer;
+                lastHurtByPlayerTime = getLastHurtByMobTimestamp();
             }
         }
     }
 
     @Override
-    protected void mobTick() {
-        EntityAttributeInstance attribute = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+    protected void customServerAiStep() {
+        AttributeInstance attribute = this.getAttribute(Attributes.MOVEMENT_SPEED);
 
         if (this.isAngry()) {
             if (!this.isBaby() && !attribute.hasModifier(ATTACK_SPEED_BOOST_MODIFIER)) {
-                attribute.addTemporaryModifier(ATTACK_SPEED_BOOST_MODIFIER);
+                attribute.addTransientModifier(ATTACK_SPEED_BOOST_MODIFIER);
             }
 
             --this.angerLevel;
@@ -113,33 +120,33 @@ public class IguanaEntity extends TropicraftCreatureEntity {
             attribute.removeModifier(ATTACK_SPEED_BOOST_MODIFIER);
         }
 
-        if (this.angerLevel > 0 && this.angerTargetUUID != null && this.getAttacker() == null) {
-            PlayerEntity entityplayer = this.world.getPlayerByUuid(this.angerTargetUUID);
-            this.setAttacker(entityplayer);
-            this.attackingPlayer = entityplayer;
-            this.playerHitTimer = this.getLastAttackedTime();
+        if (this.angerLevel > 0 && this.angerTargetUUID != null && this.getLastHurtByMob() == null) {
+            Player entityplayer = this.level.getPlayerByUUID(this.angerTargetUUID);
+            this.setLastHurtByMob(entityplayer);
+            this.lastHurtByPlayer = entityplayer;
+            this.lastHurtByPlayerTime = this.getLastHurtByMobTimestamp();
         }
 
-        super.mobTick();
+        super.customServerAiStep();
     }
 
-    public boolean damage(DamageSource damageSource, float amount) {
+    public boolean hurt(DamageSource damageSource, float amount) {
         if (isInvulnerableTo(damageSource)) {
             return false;
         } else {
-            Entity sourceEntity = damageSource.getAttacker();
-            if (sourceEntity instanceof PlayerEntity && !((PlayerEntity)sourceEntity).isCreative() && canSee(sourceEntity)) {
+            Entity sourceEntity = damageSource.getEntity();
+            if (sourceEntity instanceof Player && !((Player)sourceEntity).isCreative() && hasLineOfSight(sourceEntity)) {
                 becomeAngryAt(sourceEntity);
             }
 
-            return super.damage(damageSource, amount);
+            return super.hurt(damageSource, amount);
         }
     }
 
     private boolean becomeAngryAt(Entity target) {
         angerLevel = 400 + random.nextInt(400);
         if (target instanceof LivingEntity) {
-            setAttacker((LivingEntity)target);
+            setLastHurtByMob((LivingEntity)target);
         }
 
         return true;
@@ -164,24 +171,24 @@ public class IguanaEntity extends TropicraftCreatureEntity {
         return Sounds.IGGY_DEATH;
     }
 
-    static class TargetAggressorGoal extends FollowTargetGoal<PlayerEntity> {
+    static class TargetAggressorGoal extends NearestAttackableTargetGoal<Player> {
         public TargetAggressorGoal(IguanaEntity iggy) {
-            super(iggy, PlayerEntity.class, true);
+            super(iggy, Player.class, true);
         }
 
-        public boolean canStart() {
-            return ((IguanaEntity)this.mob).isAngry() && super.canStart();
+        public boolean canUse() {
+            return ((IguanaEntity)this.mob).isAngry() && super.canUse();
         }
     }
 
-    static class HurtByAggressorGoal extends RevengeGoal {
+    static class HurtByAggressorGoal extends HurtByTargetGoal {
         public HurtByAggressorGoal(IguanaEntity iguana) {
             super(iguana);
-            this.setGroupRevenge(IguanaEntity.class);
+            this.setAlertOthers(IguanaEntity.class);
         }
 
-        protected void setMobEntityTarget(MobEntity mob, LivingEntity target) {
-            if (mob instanceof IguanaEntity && this.mob.canSee(target) && ((IguanaEntity)mob).becomeAngryAt(target)) {
+        protected void alertOther(Mob mob, LivingEntity target) {
+            if (mob instanceof IguanaEntity && this.mob.hasLineOfSight(target) && ((IguanaEntity)mob).becomeAngryAt(target)) {
                 mob.setTarget(target);
             }
 

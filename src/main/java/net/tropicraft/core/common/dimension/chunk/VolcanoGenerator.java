@@ -1,18 +1,18 @@
 package net.tropicraft.core.common.dimension.chunk;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.core.BlockPos;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.tropicraft.core.common.dimension.biome.TropicraftBiomes;
 import net.tropicraft.core.common.dimension.noise.NoiseModule;
 import net.tropicraft.core.common.dimension.noise.generator.Billowed;
@@ -24,11 +24,11 @@ import java.util.Set;
 //@Mod.EventBusSubscriber(modid = Constants.MODID)
 public class VolcanoGenerator {
 
-    public static Set<Identifier> volcanoSpawnBiomesLand = ImmutableSet.of(
-            TropicraftBiomes.TROPICS.getValue(), TropicraftBiomes.RAINFOREST_PLAINS.getValue()
+    public static Set<ResourceLocation> volcanoSpawnBiomesLand = ImmutableSet.of(
+            TropicraftBiomes.TROPICS.location(), TropicraftBiomes.RAINFOREST_PLAINS.location()
     );
-    public static Set<Identifier> volcanoSpawnBiomesOcean = ImmutableSet.of(
-            TropicraftBiomes.TROPICS_OCEAN.getValue()
+    public static Set<ResourceLocation> volcanoSpawnBiomesOcean = ImmutableSet.of(
+            TropicraftBiomes.TROPICS_OCEAN.location()
     );
 
     private final long worldSeed;
@@ -51,9 +51,9 @@ public class VolcanoGenerator {
 
     private static final int CHUNK_RANGE = MAX_RADIUS >> 4;
 
-    private final static BlockState VOLCANO_BLOCK = TropicraftBlocks.CHUNK.getDefaultState();
-    private final static BlockState LAVA_BLOCK = Blocks.LAVA.getDefaultState();
-    private final static BlockState SAND_BLOCK = TropicraftBlocks.VOLCANIC_SAND.getDefaultState();
+    private final static BlockState VOLCANO_BLOCK = TropicraftBlocks.CHUNK.defaultBlockState();
+    private final static BlockState LAVA_BLOCK = Blocks.LAVA.defaultBlockState();
+    private final static BlockState SAND_BLOCK = TropicraftBlocks.VOLCANIC_SAND.defaultBlockState();
 
     private final BiomeSource biomeSource;
 
@@ -85,7 +85,7 @@ public class VolcanoGenerator {
     }
      */
 
-    public Chunk generate(int chunkX, int chunkZ, Chunk chunk, ChunkRandom random) {
+    public ChunkAccess generate(int chunkX, int chunkZ, ChunkAccess chunk, WorldgenRandom random) {
         BlockPos volcanoCoords = VolcanoGenerator.getVolcanoNear(this.biomeSource, this.worldSeed, chunkX, chunkZ, 0);
 
         if (volcanoCoords == null) {
@@ -112,12 +112,12 @@ public class VolcanoGenerator {
 
         NoiseModule volcNoise = getNoise(seed);
 
-        BlockPos.Mutable pos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         // if this chunk contains the volcano center
         if (volcanoCoords.getX() <= chunkX + 15 && volcanoCoords.getX() >= chunkX && volcanoCoords.getZ() <= chunkZ + 15 && volcanoCoords.getZ() >= chunkZ) {
             BlockPos volcanoBlockPos = new BlockPos(volcanoCoords.getX() & 15, 1, volcanoCoords.getZ() & 15);
-            chunk.setBlockState(volcanoBlockPos, TropicraftBlocks.VOLCANO.getDefaultState(), false);
+            chunk.setBlockState(volcanoBlockPos, TropicraftBlocks.VOLCANO.defaultBlockState(), false);
         }
 
         for (int x = 0; x < CHUNK_SIZE_X; x++) {
@@ -129,7 +129,7 @@ public class VolcanoGenerator {
                 double volcanoHeight = getVolcanoHeight(relativeX, relativeZ, radiusX, radiusZ, volcNoise);
                 float distanceSquared = getDistanceSq(relativeX, relativeZ, radiusX, radiusZ);
 
-                int groundHeight = chunk.sampleHeightmap(Heightmap.Type.OCEAN_FLOOR_WG, x, z);
+                int groundHeight = chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
                 groundHeight = Math.min(groundHeight, lavaLevel - 3);
 
                 if (distanceSquared < 1) {
@@ -159,7 +159,7 @@ public class VolcanoGenerator {
                             } else if (y <= lavaLevel) {
                                 placeBlock(pos, LAVA_BLOCK, chunk);
                             } else {
-                                placeBlock(pos, Blocks.AIR.getDefaultState(), chunk);
+                                placeBlock(pos, Blocks.AIR.defaultBlockState(), chunk);
                             }
                         }
                     }
@@ -195,7 +195,7 @@ public class VolcanoGenerator {
      * The latter is actually beneficial to the main use, village gen, because otherwise
      * village pieces may generate directly on top of a hole (and thus inside the volcano).
      * <p>
-     * It also duplicates a significant amount of logic from {@link #generate(int, int, Chunk, ChunkRandom)},
+     * It also duplicates a significant amount of logic from {@link #generate(int, int, ChunkAccess, WorldgenRandom)},
      * but I have yet to find a nice way to deduplicate that logic. This whole class could use
      * a rewrite at some point with these goals in mind.
      * <p>
@@ -228,7 +228,7 @@ public class VolcanoGenerator {
         int volcanoCrust = VOLCANO_CRUST + heightOffset;
         groundHeight = Math.min(groundHeight, lavaLevel - 3);
 
-        return Math.min(volcanoCrust + 1, MathHelper.ceil(ret + groundHeight));
+        return Math.min(volcanoCrust + 1, Mth.ceil(ret + groundHeight));
     }
 
     private float getDistanceSq(float relativeX, float relativeZ, float radiusX, float radiusZ) {
@@ -246,11 +246,11 @@ public class VolcanoGenerator {
         return steepness / distanceSquared * perlin - steepness - 2;
     }
 
-    public void placeBlock(BlockPos pos, BlockState blockState, Chunk chunk) {
+    public void placeBlock(BlockPos pos, BlockState blockState, ChunkAccess chunk) {
         chunk.setBlockState(pos, blockState, false);
     }
 
-    public BlockState getBlockState(BlockPos pos, Chunk chunk) {
+    public BlockState getBlockState(BlockPos pos, ChunkAccess chunk) {
         return chunk.getBlockState(pos);
     }
 
@@ -301,8 +301,8 @@ public class VolcanoGenerator {
      * this chunk, otherwise returns null.
      * The posY of the returned object should be used as the volcano radius
      */
-    public static BlockPos getVolcanoNear(ServerWorld world, int chunkX, int chunkZ, int maxRadius) {
-        return getVolcanoNear(world.getChunkManager().getChunkGenerator().getBiomeSource(), world.getSeed(), chunkX, chunkZ, maxRadius);
+    public static BlockPos getVolcanoNear(ServerLevel world, int chunkX, int chunkZ, int maxRadius) {
+        return getVolcanoNear(world.getChunkSource().getGenerator().getBiomeSource(), world.getSeed(), chunkX, chunkZ, maxRadius);
     }
 
     /**
@@ -338,9 +338,9 @@ public class VolcanoGenerator {
         return biome == SURFACE_BIOME ? 0 : OCEAN_HEIGHT_OFFSET;
     }
 
-    private static boolean hasAllBiomes(BiomeSource biomeSource, int centerX, int centerY, int centerZ, Set<Identifier> allowedBiomes) {
-        Biome biome = biomeSource.getBiomeForNoiseGen(centerX >> 2, centerY >> 2, centerZ >> 2);
+    private static boolean hasAllBiomes(BiomeSource biomeSource, int centerX, int centerY, int centerZ, Set<ResourceLocation> allowedBiomes) {
+        Biome biome = biomeSource.getNoiseBiome(centerX >> 2, centerY >> 2, centerZ >> 2);
         //return allowedBiomes.contains(biome.getRegistryName());
-        return allowedBiomes.contains(BuiltinRegistries.BIOME.getId(biome));
+        return allowedBiomes.contains(BuiltinRegistries.BIOME.getKey(biome));
     }
 }

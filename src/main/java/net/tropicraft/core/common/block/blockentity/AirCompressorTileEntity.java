@@ -1,21 +1,10 @@
 package net.tropicraft.core.common.block.blockentity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-//import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
-//import net.minecraft.nbt.NbtCompound;
-//import net.minecraft.network.ClientConnection;
-//import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-//import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-//import net.minecraft.util.math.Direction;
-//import net.minecraftforge.fml.network.PacketDistributor;
-//import net.tropicraft.core.common.block.AirCompressorBlock;
-//import net.tropicraft.core.common.item.scuba.ScubaArmorItem;
-//import net.tropicraft.core.common.network.TropicraftPackets;
-//import net.tropicraft.core.common.network.message.MessageAirCompressorInventory;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.tropicraft.core.common.block.AirCompressorBlock;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
 import org.jetbrains.annotations.NotNull;
@@ -181,7 +170,7 @@ public class AirCompressorTileEntity extends BlockEntity implements IMachineTile
     
     @Override
     public Direction getDirection(BlockState state) {
-        return state.get(AirCompressorBlock.FACING);
+        return state.getValue(AirCompressorBlock.FACING);
     }
 
     /**

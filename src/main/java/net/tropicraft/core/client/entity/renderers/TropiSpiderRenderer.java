@@ -1,32 +1,31 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.SpiderRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.hostile.TropiSpiderEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.SpiderEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 
-public class TropiSpiderRenderer extends SpiderEntityRenderer<TropiSpiderEntity> {
-	public TropiSpiderRenderer(EntityRendererFactory.Context context) {
+public class TropiSpiderRenderer extends SpiderRenderer<TropiSpiderEntity> {
+	public TropiSpiderRenderer(EntityRendererProvider.Context context) {
 		super(context);
-		shadowOpacity = 0.5f;
+		shadowStrength = 0.5f;
 	}
 
 	@Override
-	public void render(TropiSpiderEntity spider, float entityYaw, float partialTicks, MatrixStack stack, VertexConsumerProvider bufferIn, int packedLightIn) {
-		stack.push();
+	public void render(TropiSpiderEntity spider, float entityYaw, float partialTicks, PoseStack stack, MultiBufferSource bufferIn, int packedLightIn) {
+		stack.pushPose();
 		final float scale = getScale(spider);
 		shadowRadius = scale;
 		stack.scale(scale, scale, scale);
 		super.render(spider, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
-		stack.pop();
+		stack.popPose();
 	}
 
 	@Override
-	public Identifier getTexture(TropiSpiderEntity entity) {
+	public ResourceLocation getTextureLocation(TropiSpiderEntity entity) {
 		if (entity.getSpiderType() == TropiSpiderEntity.Type.CHILD) {
 			return TropicraftRenderUtils.bindTextureEntity("spiderchild");
 		}

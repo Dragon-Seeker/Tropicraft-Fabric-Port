@@ -1,18 +1,16 @@
 package net.tropicraft.core.common.entity.ai;
 
-import net.minecraft.entity.ai.NoPenaltyTargeting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.ChestBlockEntity;
-//import net.minecraft.entity.ai.TargetFinder;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-
 import java.util.EnumSet;
 
 public class EntityAIEatToHeal extends Goal
@@ -34,14 +32,14 @@ public class EntityAIEatToHeal extends Goal
     public EntityAIEatToHeal(EntityKoaBase entityObjIn)
     {
         this.entityObj = entityObjIn;
-        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean canStart()
+    public boolean canUse()
     {
         if (entityObj.getHealth() < entityObj.getMaxHealth() - missingHealthToHeal) {
             return hasFoodSource();
@@ -54,9 +52,9 @@ public class EntityAIEatToHeal extends Goal
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean shouldContinue()
+    public boolean canContinueToUse()
     {
-        return canStart();
+        return canUse();
     }
 
     @Override
@@ -66,13 +64,13 @@ public class EntityAIEatToHeal extends Goal
         if (hasFoodSource(entityObj.inventory)) {
             consumeOneStackSizeOfFood(entityObj.inventory);
             entityObj.heal(5);
-            entityObj.world.playSound(null, entityObj.getBlockPos(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.NEUTRAL, 1F, 1F);
+            entityObj.level.playSound(null, entityObj.blockPosition(), SoundEvents.PLAYER_BURP, SoundSource.NEUTRAL, 1F, 1F);
             return;
         }
 
         if (hasFoodAtHome()) {
             boolean isClose = false;
-            BlockPos blockposGoal = this.entityObj.getPositionTarget();
+            BlockPos blockposGoal = this.entityObj.getRestrictCenter();
 
             if (blockposGoal == null) {
                 stop();
@@ -80,16 +78,16 @@ public class EntityAIEatToHeal extends Goal
             }
 
             //prevent walking into the fire
-            double dist = entityObj.getPos().distanceTo(new Vec3d(blockposGoal.getX(), blockposGoal.getY(), blockposGoal.getZ()));
+            double dist = entityObj.position().distanceTo(new Vec3(blockposGoal.getX(), blockposGoal.getY(), blockposGoal.getZ()));
             if (dist < 5D) {
                 consumeOneStackSizeOfFoodAtHome();
                 entityObj.heal(5);
-                entityObj.world.playSound(null, entityObj.getBlockPos(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.NEUTRAL, 1F, 1F);
+                entityObj.level.playSound(null, entityObj.blockPosition(), SoundEvents.PLAYER_BURP, SoundSource.NEUTRAL, 1F, 1F);
                 return;
             }
 
             if (!isClose) {
-                if ((this.entityObj.getNavigation().isIdle() || walkingTimeout <= 0) && repathPentalty <= 0) {
+                if ((this.entityObj.getNavigation().isDone() || walkingTimeout <= 0) && repathPentalty <= 0) {
 
                     int i = blockposGoal.getX();
                     int j = blockposGoal.getY();
@@ -97,14 +95,14 @@ public class EntityAIEatToHeal extends Goal
 
                     boolean success = false;
 
-                    if (this.entityObj.squaredDistanceTo(Vec3d.ofCenter(blockposGoal)) > 256.0D) {
-                        Vec3d Vector3d = NoPenaltyTargeting.find(this.entityObj, 14, 3, new Vec3d((double) i + 0.5D, (double) j, (double) k + 0.5D));
+                    if (this.entityObj.distanceToSqr(Vec3.atCenterOf(blockposGoal)) > 256.0D) {
+                        Vec3 Vector3d = DefaultRandomPos.getPosAway(this.entityObj, 14, 3, new Vec3((double) i + 0.5D, (double) j, (double) k + 0.5D));
 
                         if (Vector3d != null) {
-                            success = this.entityObj.getNavigation().startMovingTo(Vector3d.x, Vector3d.y, Vector3d.z, 1.0D);
+                            success = this.entityObj.getNavigation().moveTo(Vector3d.x, Vector3d.y, Vector3d.z, 1.0D);
                         }
                     } else {
-                        success = this.entityObj.getNavigation().startMovingTo((double) i + 0.5D, (double) j, (double) k + 0.5D, 1.0D);
+                        success = this.entityObj.getNavigation().moveTo((double) i + 0.5D, (double) j, (double) k + 0.5D, 1.0D);
                     }
 
                     if (!success) {
@@ -163,9 +161,9 @@ public class EntityAIEatToHeal extends Goal
         BlockPos blockposGoal = null;
         if (this.entityObj.posLastFireplaceFound != null) {
             //path to base of fire
-            blockposGoal = this.entityObj.posLastFireplaceFound.add(0, -1, 0);
+            blockposGoal = this.entityObj.posLastFireplaceFound.offset(0, -1, 0);
         } else {
-            blockposGoal = this.entityObj.getPositionTarget();
+            blockposGoal = this.entityObj.getRestrictCenter();
         }
 
         if (blockposGoal == null) {
@@ -173,7 +171,7 @@ public class EntityAIEatToHeal extends Goal
         }
 
         //prevent walking into the fire
-        double dist = entityObj.getPos().distanceTo(new Vec3d(blockposGoal.getX(), blockposGoal.getY(), blockposGoal.getZ()));
+        double dist = entityObj.position().distanceTo(new Vec3(blockposGoal.getX(), blockposGoal.getY(), blockposGoal.getZ()));
         if (dist <= 3D) {
             return true;
         }
@@ -188,9 +186,9 @@ public class EntityAIEatToHeal extends Goal
     }
 
     public boolean hasFoodAtHome() {
-        BlockPos blockposGoal = this.entityObj.getPositionTarget();
+        BlockPos blockposGoal = this.entityObj.getRestrictCenter();
         if (blockposGoal != null) {
-            BlockEntity tile = entityObj.world.getBlockEntity(blockposGoal);
+            BlockEntity tile = entityObj.level.getBlockEntity(blockposGoal);
             if (tile instanceof ChestBlockEntity) {
                 ChestBlockEntity chest = (ChestBlockEntity) tile;
 
@@ -200,10 +198,10 @@ public class EntityAIEatToHeal extends Goal
         return false;
     }
 
-    public boolean hasFoodSource(Inventory inv) {
-        for (int i = 0; i < inv.size(); i++) {
-            ItemStack stack = inv.getStack(i);
-            if (!stack.isEmpty() && stack.getItem().isFood()) {
+    public boolean hasFoodSource(Container inv) {
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
+            if (!stack.isEmpty() && stack.getItem().isEdible()) {
                 return true;
             }
         }
@@ -211,9 +209,9 @@ public class EntityAIEatToHeal extends Goal
     }
 
     public ItemStack consumeOneStackSizeOfFoodAtHome() {
-        BlockPos blockposGoal = this.entityObj.getPositionTarget();
+        BlockPos blockposGoal = this.entityObj.getRestrictCenter();
         if (blockposGoal != null) {
-            BlockEntity tile = entityObj.world.getBlockEntity(blockposGoal);
+            BlockEntity tile = entityObj.level.getBlockEntity(blockposGoal);
             if (tile instanceof ChestBlockEntity) {
                 ChestBlockEntity chest = (ChestBlockEntity) tile;
 
@@ -229,14 +227,14 @@ public class EntityAIEatToHeal extends Goal
      * @param inv
      * @return
      */
-    public ItemStack consumeOneStackSizeOfFood(Inventory inv) {
-        for (int i = 0; i < inv.size(); i++) {
-            ItemStack stack = inv.getStack(i);
+    public ItemStack consumeOneStackSizeOfFood(Container inv) {
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
-                if (stack.getItem().isFood()) {
-                    stack.decrement(1);
+                if (stack.getItem().isEdible()) {
+                    stack.shrink(1);
                     if (stack.getCount() <= 0) {
-                        inv.setStack(i, ItemStack.EMPTY);
+                        inv.setItem(i, ItemStack.EMPTY);
                     }
 
                     //returning the state of the single ate item, though this return value doesnt seem to be used anywhere atm

@@ -1,11 +1,16 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.tropicraft.core.common.entity.placeable.UmbrellaEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
 
-public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
+public class UmbrellaModel extends ListModel<UmbrellaEntity> {
 
     public ModelPart base;
     public ModelPart shape2;
@@ -123,77 +128,77 @@ public class UmbrellaModel extends CompositeEntityModel<UmbrellaEntity> {
         */
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("base",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 14, 1),
-                ModelTransform.pivot(0F, -13F, 0F));
+        modelPartData.addOrReplaceChild("base",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 14, 1),
+                PartPose.offset(0F, -13F, 0F));
 
-        modelPartData.addChild("shape2",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-7.5F, -2F, -7.5F, 15, 1, 15),
-                ModelTransform.pivot(0F, -12F, 0F));
+        modelPartData.addOrReplaceChild("shape2",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-7.5F, -2F, -7.5F, 15, 1, 15),
+                PartPose.offset(0F, -12F, 0F));
 
-        modelPartData.addChild("shape4",
-                ModelPartBuilder.create().uv(25, 25)
-                        .cuboid(-1F, -1F, -1F, 2, 1, 2),
-                ModelTransform.pivot(0F, -14F, 0F));
+        modelPartData.addOrReplaceChild("shape4",
+                CubeListBuilder.create().texOffs(25, 25)
+                        .addBox(-1F, -1F, -1F, 2, 1, 2),
+                PartPose.offset(0F, -14F, 0F));
 
-        modelPartData.addChild("shape3",
-                ModelPartBuilder.create().uv(0, 20)
-                        .cuboid(-4F, -1F, 0F, 9, 1, 3),
-                ModelTransform.of(-0.5F, -13F, 7.5F, -0.2443461F, 0F, 0F));
+        modelPartData.addOrReplaceChild("shape3",
+                CubeListBuilder.create().texOffs(0, 20)
+                        .addBox(-4F, -1F, 0F, 9, 1, 3),
+                PartPose.offsetAndRotation(-0.5F, -13F, 7.5F, -0.2443461F, 0F, 0F));
 
-        modelPartData.addChild("shape31",
-                ModelPartBuilder.create().uv(0, 24)
-                        .cuboid(-4.5F, -1F, 0F, 9, 1, 3),
-                ModelTransform.of(7.5F, -13F, 0F, -0.2443461F, 1.570796F, 0F));
+        modelPartData.addOrReplaceChild("shape31",
+                CubeListBuilder.create().texOffs(0, 24)
+                        .addBox(-4.5F, -1F, 0F, 9, 1, 3),
+                PartPose.offsetAndRotation(7.5F, -13F, 0F, -0.2443461F, 1.570796F, 0F));
 
-        modelPartData.addChild("shape32",
-                ModelPartBuilder.create().uv(0, 28)
-                        .cuboid(-4.5F, -1F, -1F, 9, 1, 3),
-                ModelTransform.of(0F, -12.75F, -8.45F, -0.2443461F, 3.141593F, 0F));
+        modelPartData.addOrReplaceChild("shape32",
+                CubeListBuilder.create().texOffs(0, 28)
+                        .addBox(-4.5F, -1F, -1F, 9, 1, 3),
+                PartPose.offsetAndRotation(0F, -12.75F, -8.45F, -0.2443461F, 3.141593F, 0F));
 
-        modelPartData.addChild("shape33",
-                ModelPartBuilder.create().uv(24, 28)
-                        .cuboid(-4.5F, -1F, 1F, 9, 1, 3),
-                ModelTransform.of(-6.5F, -13.25F, 0F, -0.2443461F, -1.570796F, 0F));
+        modelPartData.addOrReplaceChild("shape33",
+                CubeListBuilder.create().texOffs(24, 28)
+                        .addBox(-4.5F, -1F, 1F, 9, 1, 3),
+                PartPose.offsetAndRotation(-6.5F, -13.25F, 0F, -0.2443461F, -1.570796F, 0F));
 
-        modelPartData.addChild("shape11",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
-                ModelTransform.of(0F, -10F, 0F, 1.902409F, 0F, 0F));
+        modelPartData.addOrReplaceChild("shape11",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 9, 1),
+                PartPose.offsetAndRotation(0F, -10F, 0F, 1.902409F, 0F, 0F));
 
-        modelPartData.addChild("shape12",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
-                ModelTransform.of(0F, -10F, 0F, -1.902409F, 0F, 0F));
+        modelPartData.addOrReplaceChild("shape12",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 9, 1),
+                PartPose.offsetAndRotation(0F, -10F, 0F, -1.902409F, 0F, 0F));
 
-        modelPartData.addChild("shape111",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
-                ModelTransform.of(0F, -10F, 0F, 1.902409F, 1.570796F, 0F));
+        modelPartData.addOrReplaceChild("shape111",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 9, 1),
+                PartPose.offsetAndRotation(0F, -10F, 0F, 1.902409F, 1.570796F, 0F));
 
-        modelPartData.addChild("shape112",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-0.5F, 0F, -0.5F, 1, 9, 1),
-                ModelTransform.of(0F, -10F, 0F, 1.902409F, -1.570796F, 0F));
+        modelPartData.addOrReplaceChild("shape112",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-0.5F, 0F, -0.5F, 1, 9, 1),
+                PartPose.offsetAndRotation(0F, -10F, 0F, 1.902409F, -1.570796F, 0F));
 
 
 
-        return TexturedModelData.of(modelData, 64, 32);
+        return LayerDefinition.create(modelData, 64, 32);
     }
 
     @Override
-    public void setAngles(UmbrellaEntity umbrella, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(UmbrellaEntity umbrella, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(
             base, shape2, shape3, shape31, shape32, shape33,
             shape4, shape11, shape12, shape111, shape112

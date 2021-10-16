@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.entity.ai.ashen;
 
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.core.common.entity.hostile.AshenEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.Vec3d;
 
 public class AIAshenHunt extends Goal {
 
@@ -17,7 +17,7 @@ public class AIAshenHunt extends Goal {
     public int useMeleeCountdown = 0;
     public int useMeleeCountdownMax = 80;
     
-    public Vec3d targetLastPos = null;
+    public Vec3 targetLastPos = null;
     public int targetNoMoveTicks = 0;
     public int targetNoMoveTicksMax = 4;
     public int panicTicks = 0;
@@ -29,7 +29,7 @@ public class AIAshenHunt extends Goal {
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         LivingEntity entitylivingbase = ashen.getTarget();
 
         if (entitylivingbase == null) {
@@ -41,8 +41,8 @@ public class AIAshenHunt extends Goal {
     }
     
     @Override
-    public boolean shouldContinue() {
-        return this.canStart() || !this.ashen.getNavigation().isIdle();
+    public boolean canContinueToUse() {
+        return this.canUse() || !this.ashen.getNavigation().isDone();
     }
 
     @Override

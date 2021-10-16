@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.C0Transformer;
 
-public final class TropicraftRiverInitLayer implements IdentitySamplingLayer {
+public final class TropicraftRiverInitLayer implements C0Transformer {
     public final TropicraftBiomeIds biomeIds;
 
     public TropicraftRiverInitLayer(TropicraftBiomeIds biomeIds) {
@@ -11,8 +11,8 @@ public final class TropicraftRiverInitLayer implements IdentitySamplingLayer {
     }
 
     @Override
-    public int sample(LayerRandomnessSource random, int center) {
-        return biomeIds.isOcean(center) ? center : random.nextInt(4) + 1;
+    public int apply(Context random, int center) {
+        return biomeIds.isOcean(center) ? center : random.nextRandom(4) + 1;
     }
 /*
     @Override

@@ -1,23 +1,23 @@
 package net.tropicraft.core.common.entity.underdasea;
 
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.FishEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 
-public abstract class AbstractTexturedFishEntity extends FishEntity {
-    private static final TrackedData<String> TEXTURE_NAME = DataTracker.registerData(AbstractTexturedFishEntity.class, TrackedDataHandlerRegistry.STRING);
+public abstract class AbstractTexturedFishEntity extends AbstractFish {
+    private static final EntityDataAccessor<String> TEXTURE_NAME = SynchedEntityData.defineId(AbstractTexturedFishEntity.class, EntityDataSerializers.STRING);
 
-    public AbstractTexturedFishEntity(EntityType<? extends FishEntity> type, World world) {
+    public AbstractTexturedFishEntity(EntityType<? extends AbstractFish> type, Level world) {
         super(type, world);
     }
 
@@ -25,35 +25,35 @@ public abstract class AbstractTexturedFishEntity extends FishEntity {
     abstract String getDefaultTexture();
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(TEXTURE_NAME, getDefaultTexture());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(TEXTURE_NAME, getDefaultTexture());
     }
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficultyInstance, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound nbt) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag nbt) {
         setTexture(getRandomTexture());
-        return super.initialize(world, difficultyInstance, spawnReason, entityData, nbt);
+        return super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putString("Texture", getTexture());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         setTexture(nbt.getString("Texture"));
     }
 
     public void setTexture(final String textureName) {
-        getDataTracker().set(TEXTURE_NAME, textureName);
+        getEntityData().set(TEXTURE_NAME, textureName);
     }
 
     public String getTexture() {
-        return getDataTracker().get(TEXTURE_NAME);
+        return getEntityData().get(TEXTURE_NAME);
     }
 }

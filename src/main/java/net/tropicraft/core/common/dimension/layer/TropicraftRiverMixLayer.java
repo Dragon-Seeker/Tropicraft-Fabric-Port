@@ -1,11 +1,11 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.MergingLayer;
-import net.minecraft.world.biome.layer.util.IdentityCoordinateTransformer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
-import net.minecraft.world.biome.layer.util.LayerSampler;
+import net.minecraft.world.level.newbiome.area.Area;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer2;
+import net.minecraft.world.level.newbiome.layer.traits.DimensionOffset0Transformer;
 
-public final class TropicraftRiverMixLayer implements MergingLayer, IdentityCoordinateTransformer {
+public final class TropicraftRiverMixLayer implements AreaTransformer2, DimensionOffset0Transformer {
     private final TropicraftBiomeIds biomeIds;
 
     public TropicraftRiverMixLayer(TropicraftBiomeIds biomeIds) {
@@ -13,9 +13,9 @@ public final class TropicraftRiverMixLayer implements MergingLayer, IdentityCoor
     }
 
     @Override
-    public int sample(LayerRandomnessSource random, LayerSampler parent1, LayerSampler parent2, int x, int y) {
-        final int biome = parent1.sample(transformX(x), transformZ(y));
-        final int river = parent2.sample(transformX(x), transformZ(y));
+    public int applyPixel(Context random, Area parent1, Area parent2, int x, int y) {
+        final int biome = parent1.get(getParentX(x), getParentY(y));
+        final int river = parent2.get(getParentX(x), getParentY(y));
 
         if (!biomeIds.isOcean(biome)) {
             if (biomeIds.isRiver(river)) {

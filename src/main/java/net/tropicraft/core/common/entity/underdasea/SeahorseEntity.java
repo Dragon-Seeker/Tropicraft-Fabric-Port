@@ -1,31 +1,31 @@
 package net.tropicraft.core.common.entity.underdasea;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class SeahorseEntity extends AbstractTexturedFishEntity {
 	private final static String[] SEAHORSE_TEXTURE_NAMES = new String[] {"razz", "blue", "cyan", "yellow", "green", "orange"};
 
-	public SeahorseEntity(EntityType<? extends SeahorseEntity> type, World world) {
+	public SeahorseEntity(EntityType<? extends SeahorseEntity> type, Level world) {
 		super(type, world);
 	}
 
-	public static DefaultAttributeContainer.Builder createAttributes() {
-		return createFishAttributes()
-				.add(EntityAttributes.GENERIC_MAX_HEALTH, 4.0);
+	public static AttributeSupplier.Builder createAttributes() {
+		return createAttributes()
+				.add(Attributes.MAX_HEALTH, 4.0);
 	}
 
 	@Override
-	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-		return ActionResult.PASS;
+	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+		return InteractionResult.PASS;
 	}
 
 	@Override
@@ -39,14 +39,14 @@ public class SeahorseEntity extends AbstractTexturedFishEntity {
 	}
 
 	@Override
-	public ItemStack getBucketItem() {
+	public ItemStack getBucketItemStack() {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
 	protected SoundEvent getFlopSound() {
 		//Seems to crash if it is null unless it has always done such
-		return SoundEvents.ENTITY_SALMON_FLOP;
+		return SoundEvents.SALMON_FLOP;
 		//return null;
 	}
 

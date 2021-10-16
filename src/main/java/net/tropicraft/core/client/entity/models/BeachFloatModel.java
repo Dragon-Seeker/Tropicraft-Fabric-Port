@@ -1,14 +1,19 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.tropicraft.core.common.entity.placeable.BeachFloatEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
-public class BeachFloatModel extends CompositeEntityModel<BeachFloatEntity> {
+public class BeachFloatModel extends ListModel<BeachFloatEntity> {
     public ModelPart floatCross4;
     public ModelPart floatCross3;
     public ModelPart floatCross2;
@@ -99,34 +104,34 @@ public class BeachFloatModel extends CompositeEntityModel<BeachFloatEntity> {
         //bottomBed.setPivot(8F, 22F, 0F);
     }
 
-    public static TexturedModelData getTexturedModelData(){
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData(){
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("floatCross4", ModelPartBuilder.create().uv(0, 0).cuboid(0F, -1F, -1F, 16, 2, 2), ModelTransform.pivot(0F, 23F, -6F));
-        modelPartData.addChild("floatCross3", ModelPartBuilder.create().uv(0, 0).cuboid(0F, -1F, -1F, 16, 2, 2), ModelTransform.pivot(0F, 23F, -2F));
-        modelPartData.addChild("floatCross2", ModelPartBuilder.create().uv(0, 0).cuboid(0F, -1F, -1F, 16, 2, 2), ModelTransform.pivot(0F, 23F, 2F));
-        modelPartData.addChild("floatCross1", ModelPartBuilder.create().uv(0, 0).cuboid(0F, -1F, -1F, 16, 2, 2), ModelTransform.pivot(0F, 23F, 6F));
-        modelPartData.addChild("topFloatCross4", ModelPartBuilder.create().uv(0, 0).cuboid(0F, -1F, -1F, 16, 2, 2), ModelTransform.of(0F, 23F, -6F, 0F,0F, 3.141593F));
-        modelPartData.addChild("topFloatCross3", ModelPartBuilder.create().uv(0, 0).cuboid(0F, -1F, -1F, 16, 2, 2), ModelTransform.of(0F, 23F, -2F, 0F,0F, 3.141593F));
-        modelPartData.addChild("topFloatCross2", ModelPartBuilder.create().uv(0, 0).cuboid(0F, 0F, 1F, 16, 2, 2), ModelTransform.of(0F, 24F, 0F, 0F,0F, 3.141593F));
-        modelPartData.addChild("topFloatCross1", ModelPartBuilder.create().uv(0, 0).cuboid(0F, -1F, -1F, 16, 2, 2), ModelTransform.of(0F, 23F, 6F, 0F,0F, 3.141593F));
-        modelPartData.addChild("floatFoot", ModelPartBuilder.create().uv(0, 4).cuboid(-7F, -1F, 0F, 14, 2, 2), ModelTransform.of(16F, 23F, 0F, 0F,1.570796F, 0F));
-        modelPartData.addChild("floatTop", ModelPartBuilder.create().uv(0, 4).cuboid(-7F, -1F, 0F, 14, 2, 2), ModelTransform.of(-17F, 24F, 0F, 1.570796F,-1.570796F, 0F));
-        modelPartData.addChild("headPillow", ModelPartBuilder.create().uv(0, 13).cuboid(-6F, -1.5F, -4F, 12, 2, 4), ModelTransform.of(-12F, 22F, 0F, 0F,1.570796F, 0F));
-        modelPartData.addChild("topBed", ModelPartBuilder.create().uv(0, 19).cuboid(-6F, -0.5F, -6F, 14, 1, 12), ModelTransform.pivot(-6F, 22F, 0F));
-        modelPartData.addChild("bottomBed", ModelPartBuilder.create().uv(0, 19).cuboid(-6F, -0.5F, -6F, 14, 1, 12), ModelTransform.pivot(8F, 22F, 0F));
+        modelPartData.addOrReplaceChild("floatCross4", CubeListBuilder.create().texOffs(0, 0).addBox(0F, -1F, -1F, 16, 2, 2), PartPose.offset(0F, 23F, -6F));
+        modelPartData.addOrReplaceChild("floatCross3", CubeListBuilder.create().texOffs(0, 0).addBox(0F, -1F, -1F, 16, 2, 2), PartPose.offset(0F, 23F, -2F));
+        modelPartData.addOrReplaceChild("floatCross2", CubeListBuilder.create().texOffs(0, 0).addBox(0F, -1F, -1F, 16, 2, 2), PartPose.offset(0F, 23F, 2F));
+        modelPartData.addOrReplaceChild("floatCross1", CubeListBuilder.create().texOffs(0, 0).addBox(0F, -1F, -1F, 16, 2, 2), PartPose.offset(0F, 23F, 6F));
+        modelPartData.addOrReplaceChild("topFloatCross4", CubeListBuilder.create().texOffs(0, 0).addBox(0F, -1F, -1F, 16, 2, 2), PartPose.offsetAndRotation(0F, 23F, -6F, 0F,0F, 3.141593F));
+        modelPartData.addOrReplaceChild("topFloatCross3", CubeListBuilder.create().texOffs(0, 0).addBox(0F, -1F, -1F, 16, 2, 2), PartPose.offsetAndRotation(0F, 23F, -2F, 0F,0F, 3.141593F));
+        modelPartData.addOrReplaceChild("topFloatCross2", CubeListBuilder.create().texOffs(0, 0).addBox(0F, 0F, 1F, 16, 2, 2), PartPose.offsetAndRotation(0F, 24F, 0F, 0F,0F, 3.141593F));
+        modelPartData.addOrReplaceChild("topFloatCross1", CubeListBuilder.create().texOffs(0, 0).addBox(0F, -1F, -1F, 16, 2, 2), PartPose.offsetAndRotation(0F, 23F, 6F, 0F,0F, 3.141593F));
+        modelPartData.addOrReplaceChild("floatFoot", CubeListBuilder.create().texOffs(0, 4).addBox(-7F, -1F, 0F, 14, 2, 2), PartPose.offsetAndRotation(16F, 23F, 0F, 0F,1.570796F, 0F));
+        modelPartData.addOrReplaceChild("floatTop", CubeListBuilder.create().texOffs(0, 4).addBox(-7F, -1F, 0F, 14, 2, 2), PartPose.offsetAndRotation(-17F, 24F, 0F, 1.570796F,-1.570796F, 0F));
+        modelPartData.addOrReplaceChild("headPillow", CubeListBuilder.create().texOffs(0, 13).addBox(-6F, -1.5F, -4F, 12, 2, 4), PartPose.offsetAndRotation(-12F, 22F, 0F, 0F,1.570796F, 0F));
+        modelPartData.addOrReplaceChild("topBed", CubeListBuilder.create().texOffs(0, 19).addBox(-6F, -0.5F, -6F, 14, 1, 12), PartPose.offset(-6F, 22F, 0F));
+        modelPartData.addOrReplaceChild("bottomBed", CubeListBuilder.create().texOffs(0, 19).addBox(-6F, -0.5F, -6F, 14, 1, 12), PartPose.offset(8F, 22F, 0F));
 
-        return TexturedModelData.of(modelData,64,32);
+        return LayerDefinition.create(modelData,64,32);
     }
 
     @Override
-    public void setAngles(BeachFloatEntity beachFloat, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(BeachFloatEntity beachFloat, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(
             floatCross4, floatCross3, floatCross2, floatCross1,
             topFloatCross4, topFloatCross3, topFloatCross2, topFloatCross1,
@@ -135,11 +140,11 @@ public class BeachFloatModel extends CompositeEntityModel<BeachFloatEntity> {
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        matrixStackIn.push();
-        matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90));
-        super.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        matrixStackIn.pop();
+    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+        matrixStackIn.pushPose();
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+        super.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        matrixStackIn.popPose();
     }
 }
 

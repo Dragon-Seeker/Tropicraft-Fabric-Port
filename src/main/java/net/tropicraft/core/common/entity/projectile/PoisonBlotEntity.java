@@ -4,70 +4,70 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 
 import java.util.UUID;
 
-public class PoisonBlotEntity extends ThrownEntity {
+public class PoisonBlotEntity extends ThrowableProjectile {
 
-    public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "poison_blot");
+    public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "poison_blot");
 
-    public PoisonBlotEntity(EntityType<? extends ThrownEntity> type, World world) {
+    public PoisonBlotEntity(EntityType<? extends ThrowableProjectile> type, Level world) {
         super(type, world);
     }
 
-    public PoisonBlotEntity(EntityType<? extends ThrownEntity> type, LivingEntity thrower, World world) {
+    public PoisonBlotEntity(EntityType<? extends ThrowableProjectile> type, LivingEntity thrower, Level world) {
         super(type, thrower, world);
     }
 
     @Environment(EnvType.CLIENT)
-    public PoisonBlotEntity(World world, double x, double y, double z, int id, UUID uuid) {
+    public PoisonBlotEntity(Level world, double x, double y, double z, int id, UUID uuid) {
         super(TropicraftEntities.POISON_BLOT, world);
-        updatePosition(x, y, z);
-        updateTrackedPosition(x, y, z);
+        absMoveTo(x, y, z);
+        setPacketCoordinates(x, y, z);
         setId(id);
-        setUuid(uuid);
+        setUUID(uuid);
     }
 
     @Override
-    protected void onCollision(HitResult result) {
+    protected void onHit(HitResult result) {
         if (result.getType() == HitResult.Type.ENTITY) {
             final Entity entity = ((EntityHitResult) result).getEntity();
 
-            if (entity instanceof PlayerEntity) {
-                PlayerEntity player = (PlayerEntity) entity;
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 12 * 20, 0));
+            if (entity instanceof Player) {
+                Player player = (Player) entity;
+                player.addEffect(new MobEffectInstance(MobEffects.POISON, 12 * 20, 0));
                 remove(RemovalReason.DISCARDED);
             }
         }
     }
 
     @Override
-    protected void initDataTracker() {
+    protected void defineSynchedData() {
 
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         //return new EntitySpawnS2CPacket(this);
 
         //NetworkHooks.getEntitySpawningPacket(this);
 
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
         // entity position
         packet.writeDouble(getX());
@@ -76,7 +76,7 @@ public class PoisonBlotEntity extends ThrownEntity {
 
         // entity id & uuid
         packet.writeInt(getId());
-        packet.writeUuid(getUuid());
+        packet.writeUUID(getUUID());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
     }

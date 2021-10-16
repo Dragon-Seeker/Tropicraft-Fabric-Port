@@ -4,11 +4,9 @@
   "package": "net.tropicraft.core.mixins",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ItemFrameEntityInvoker",
     "SeaTurtleInvoker",
     "SeaTurtleAccessor",
     "BlockStateProviderTypeInvoker",
-    "NoiseChuckGeneratorAccessor",
     "ProjectionFactory",
     "SeedAccessor",
     "StructureFeatureInvoker",
@@ -21,7 +19,7 @@
     "CactusBlockInjection",
     "SugarCaneBlockInjection",
     "DimensionsOptionsAccessor",
-    "CarveRavineInvoker",
+    "CanyonWorldCarverInvoker",
     "StructureStartAccessor"
   ],
   "client": [

@@ -1,36 +1,36 @@
 package net.tropicraft.core.common.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.tropicraft.core.common.dimension.TropicraftDimension;
 
 import java.util.Random;
 
-public class PortalWaterBlock extends FluidBlock {
+public class PortalWaterBlock extends LiquidBlock {
 
-    public PortalWaterBlock(Settings builder) {
+    public PortalWaterBlock(Properties builder) {
         super(Fluids.WATER, builder);
     }
 
 
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        super.onEntityCollision(state, worldIn, pos, entityIn);
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+        super.entityInside(state, worldIn, pos, entityIn);
 
-        if (!worldIn.isClient && entityIn instanceof ServerPlayerEntity && entityIn.getMaxNetherPortalTime() <= 0 && !entityIn.hasVehicle() && !entityIn.hasPassengers() && entityIn.canUsePortals()) {
-            TropicraftDimension.teleportPlayer((ServerPlayerEntity) entityIn, TropicraftDimension.WORLD);
+        if (!worldIn.isClientSide && entityIn instanceof ServerPlayer && entityIn.getPortalWaitTime() <= 0 && !entityIn.isPassenger() && !entityIn.isVehicle() && entityIn.canChangeDimensions()) {
+            TropicraftDimension.teleportPlayer((ServerPlayer) entityIn, TropicraftDimension.WORLD);
         }
     }
 
     @Override
-    public void randomDisplayTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(2) == 0) {
             double d0 = pos.getX();
             double d1 = pos.getY();

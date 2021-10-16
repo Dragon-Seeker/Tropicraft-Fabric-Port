@@ -1,8 +1,7 @@
 package net.tropicraft.core.common.item;
 
+import net.minecraft.sounds.SoundEvent;
 import net.tropicraft.core.common.sound.Sounds;
-import net.minecraft.sound.SoundEvent;
-
 import java.util.Arrays;
 import java.util.List;
 

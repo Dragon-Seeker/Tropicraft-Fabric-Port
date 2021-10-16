@@ -1,19 +1,19 @@
 package net.tropicraft.core.common.entity.underdasea;
 
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.entity.egg.EggEntity;
 import net.tropicraft.core.common.entity.egg.SeaUrchinEggEntity;
 import net.tropicraft.core.common.registry.TropicraftEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.WaterCreatureEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.MobSpawnS2CPacket;
-import net.minecraft.world.World;
 
 public class SeaUrchinEntity extends EchinodermEntity {
     /**
@@ -36,46 +36,46 @@ public class SeaUrchinEntity extends EchinodermEntity {
      */
     public static final float ADULT_YOFFSET = 0.25f;
 
-    public SeaUrchinEntity(EntityType<? extends EchinodermEntity> entityTypeIn, World worldIn) {
+    public SeaUrchinEntity(EntityType<? extends EchinodermEntity> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
-    public static DefaultAttributeContainer.Builder createAttributes() {
-        return WaterCreatureEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0);
+    public static AttributeSupplier.Builder createAttributes() {
+        return WaterAnimal.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 10.0);
     }
 
     @Override
-    public boolean damage(DamageSource source, float amt) {
-        if (source.getName().equals("player")) {
-            Entity ent = source.getAttacker();
+    public boolean hurt(DamageSource source, float amt) {
+        if (source.getMsgId().equals("player")) {
+            Entity ent = source.getEntity();
 
-            if (ent instanceof PlayerEntity) {
-                PlayerEntity player = (PlayerEntity) ent;
+            if (ent instanceof Player) {
+                Player player = (Player) ent;
 
-                if (player.getMainHandStack().isEmpty()) {
-                    player.damage(DamageSource.mob(this), 2);
+                if (player.getMainHandItem().isEmpty()) {
+                    player.hurt(DamageSource.mobAttack(this), 2);
                 }
             }
         }
 
-        return super.damage(source, amt);
+        return super.hurt(source, amt);
     }
 
     @Override
-    public void pushAwayFrom(Entity ent) {
-        super.pushAwayFrom(ent);
+    public void push(Entity ent) {
+        super.push(ent);
 
-        if (!world.isClient) {
+        if (!level.isClientSide) {
             if (ent instanceof LivingEntity && !(ent instanceof SeaUrchinEntity) && !(ent instanceof SeaUrchinEggEntity)) {
-                ent.damage(DamageSource.mob(this), 2);
+                ent.hurt(DamageSource.mobAttack(this), 2);
             }
         }
     }
 
     @Override
     public EggEntity createEgg() {
-        return new SeaUrchinEggEntity(TropicraftEntities.SEA_URCHIN_EGG_ENTITY, world);
+        return new SeaUrchinEggEntity(TropicraftEntities.SEA_URCHIN_EGG_ENTITY, level);
     }
 
     @Override
@@ -109,8 +109,8 @@ public class SeaUrchinEntity extends EchinodermEntity {
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
-        return new MobSpawnS2CPacket(this);
+    public Packet<?> getAddEntityPacket() {
+        return new ClientboundAddMobPacket(this);
     }
     /*
     @Override

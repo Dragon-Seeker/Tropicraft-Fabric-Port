@@ -1,20 +1,20 @@
 package net.tropicraft.core.common.entity.hostile;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
 
-public class TropicraftCreatureEntity extends PathAwareEntity {
+public class TropicraftCreatureEntity extends PathfinderMob {
 
-    public TropicraftCreatureEntity(EntityType<? extends PathAwareEntity> type, World worldIn) {
+    public TropicraftCreatureEntity(EntityType<? extends PathfinderMob> type, Level worldIn) {
         super(type, worldIn);
     }
 
     @Override
-    public float getPathfindingFavor(BlockPos pos, WorldView worldIn) {
-        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
+    public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
+        return worldIn.getBlockState(pos.below()).getBlock() == Blocks.GRASS_BLOCK ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
     }
 }

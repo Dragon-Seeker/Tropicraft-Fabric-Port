@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.drinks;
 
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.tropicraft.core.common.item.CocktailItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class Drinks {
         return isRegisteredIngredient(new ItemStack(item));
     }
 
-    public static @NotNull ItemStack getResult(final DefaultedList<ItemStack> ingredients) {
+    public static @NotNull ItemStack getResult(final NonNullList<ItemStack> ingredients) {
         for (final MixerRecipe recipe : recipes) {
             int validIngredientsFound = 0;
 

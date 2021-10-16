@@ -1,11 +1,11 @@
 package net.tropicraft.core.common.dimension.feature.jigsaw;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.structure.processor.StructureProcessor;
-import net.minecraft.structure.processor.StructureProcessorList;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
@@ -19,7 +19,7 @@ public final class TropicraftProcessorLists {
     public static StructureProcessorList homeTreeStart;
 
     public static void processorListsRegister() {
-        StructureSupportsProcessor fenceExtender = new StructureSupportsProcessor(false, ImmutableList.of(Registry.BLOCK.getId(TropicraftBlocks.BAMBOO_FENCE)));
+        StructureSupportsProcessor fenceExtender = new StructureSupportsProcessor(false, ImmutableList.of(Registry.BLOCK.getKey(TropicraftBlocks.BAMBOO_FENCE)));
 
         koaTownCenters = register(
                 "koa_village/town_centers",
@@ -39,14 +39,14 @@ public final class TropicraftProcessorLists {
         homeTreeStart = register(
                 "home_tree/start",
                 new AirToCaveAirProcessor(),
-                new StructureSupportsProcessor(true, ImmutableList.of(Registry.BLOCK.getId(TropicraftBlocks.MAHOGANY_LOG)))
+                new StructureSupportsProcessor(true, ImmutableList.of(Registry.BLOCK.getKey(TropicraftBlocks.MAHOGANY_LOG)))
         );
     }
 
 
     public static StructureProcessorList register(String id, StructureProcessor... processors) {
         //return this.worldgen.register(new Identifier(Constants.MODID, id), new StructureProcessorList(Arrays.asList(processors)));
-        return Registry.register(BuiltinRegistries.STRUCTURE_PROCESSOR_LIST, new Identifier(Constants.MODID, id), new StructureProcessorList(Arrays.asList(processors)));
+        return Registry.register(BuiltinRegistries.PROCESSOR_LIST, new ResourceLocation(Constants.MODID, id), new StructureProcessorList(Arrays.asList(processors)));
     }
 
 }

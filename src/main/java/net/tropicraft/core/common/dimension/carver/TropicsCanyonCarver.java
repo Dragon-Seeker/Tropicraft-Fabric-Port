@@ -2,30 +2,28 @@ package net.tropicraft.core.common.dimension.carver;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.carver.CarverContext;
-import net.minecraft.world.gen.carver.RavineCarver;
-import net.minecraft.world.gen.carver.RavineCarverConfig;
-import net.minecraft.world.gen.chunk.AquiferSampler;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.carver.CanyonCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CanyonWorldCarver;
+import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
-import net.tropicraft.core.mixins.CarveRavineInvoker;
+import net.tropicraft.core.mixins.CanyonWorldCarverInvoker;
 
 import java.util.BitSet;
 import java.util.Random;
 import java.util.function.Function;
 
-public class TropicsCanyonCarver extends RavineCarver {
+public class TropicsCanyonCarver extends CanyonWorldCarver {
     private final float[] rs = new float[1024];
 
-    public TropicsCanyonCarver(Codec<RavineCarverConfig> codec) {
+    public TropicsCanyonCarver(Codec<CanyonCarverConfiguration> codec) {
         super(codec);
-        this.alwaysCarvableBlocks = ImmutableSet.<Block> builder().addAll(this.alwaysCarvableBlocks)
+        this.replaceableBlocks = ImmutableSet.<Block> builder().addAll(this.replaceableBlocks)
                 .add(TropicraftBlocks.CORAL_SAND)
                 .add(TropicraftBlocks.FOAMY_SAND)
                 .add(TropicraftBlocks.MINERAL_SAND)
@@ -35,16 +33,16 @@ public class TropicsCanyonCarver extends RavineCarver {
     }
 
     @Override
-    public boolean carve(CarverContext carverContext, RavineCarverConfig ravineCarverConfig, Chunk chunk, Function<BlockPos, Biome> biomePos, Random rand, AquiferSampler aquiferSampler, ChunkPos chunkPos, BitSet carvingMask) {
-        int i = (this.getBranchFactor() * 2 - 1) * 16;
-        double d0 = chunkPos.getOffsetX(rand.nextInt(16));
+    public boolean carve(CarvingContext carverContext, CanyonCarverConfiguration ravineCarverConfig, ChunkAccess chunk, Function<BlockPos, Biome> biomePos, Random rand, Aquifer aquiferSampler, ChunkPos chunkPos, BitSet carvingMask) {
+        int i = (this.getRange() * 2 - 1) * 16;
+        double d0 = chunkPos.getBlockX(rand.nextInt(16));
         double d1 = rand.nextInt(rand.nextInt(80) + 8) + 20;
-        double d2 = chunkPos.getOffsetZ(rand.nextInt(16));
+        double d2 = chunkPos.getBlockZ(rand.nextInt(16));
         float f = rand.nextFloat() * ((float) Math.PI * 2F);
         float f1 = (rand.nextFloat() - 0.5F) * 2.0F / 8.0F;
         float f2 = (rand.nextFloat() * 2.0F + rand.nextFloat()) * 2.0F;
         int j = i - rand.nextInt(i / 4);
-        ((CarveRavineInvoker)this).invokeCarveRavine(carverContext, ravineCarverConfig, chunk, biomePos, rand.nextLong(), aquiferSampler, d0, d1, d2, f2, f, f1, 0, j, 3.0D, carvingMask);
+        ((CanyonWorldCarverInvoker)this).invokeDoCarve(carverContext, ravineCarverConfig, chunk, biomePos, rand.nextLong(), aquiferSampler, d0, d1, d2, f2, f, f1, 0, j, 3.0D, carvingMask);
         return true;
     }
 

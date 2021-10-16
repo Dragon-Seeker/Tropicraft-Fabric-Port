@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.C0Transformer;
 
-public final class TropicraftAddSubBiomesLayer implements IdentitySamplingLayer {
+public final class TropicraftAddSubBiomesLayer implements C0Transformer {
 	final int baseID;
 	final int[] subBiomeIDs;
 
@@ -17,9 +17,9 @@ public final class TropicraftAddSubBiomesLayer implements IdentitySamplingLayer 
 	}
 
 	@Override
-	public int sample(LayerRandomnessSource random, int center) {
+	public int apply(Context random, int center) {
 		if (center == baseID) {
-			return subBiomeIDs[random.nextInt(subBiomeIDs.length)];
+			return subBiomeIDs[random.nextRandom(subBiomeIDs.length)];
 		} else {
 			return center;
 		}

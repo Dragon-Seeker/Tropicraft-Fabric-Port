@@ -1,23 +1,23 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.tropicraft.core.client.entity.models.TreeFrogModel;
 import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.neutral.TreeFrogEntity;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
 
-public class TreeFrogRenderer extends MobEntityRenderer<TreeFrogEntity, TreeFrogModel> {
+public class TreeFrogRenderer extends MobRenderer<TreeFrogEntity, TreeFrogModel> {
 
-    public TreeFrogRenderer(EntityRendererFactory.Context context) {
-        super(context, new TreeFrogModel(context.getPart(TropicraftEntityRendering.TREE_FROG_LAYER)), 0.5F);
-        shadowOpacity = 0.5f;
+    public TreeFrogRenderer(EntityRendererProvider.Context context) {
+        super(context, new TreeFrogModel(context.bakeLayer(TropicraftEntityRendering.TREE_FROG_LAYER)), 0.5F);
+        shadowStrength = 0.5f;
         shadowRadius = 0.3f;
     }
     
     @Override
-    public Identifier getTexture(TreeFrogEntity entity) {
+    public ResourceLocation getTextureLocation(TreeFrogEntity entity) {
         return TropicraftRenderUtils.getTextureEntity("treefrog/treefrog" + entity.getColor());
     }
 }

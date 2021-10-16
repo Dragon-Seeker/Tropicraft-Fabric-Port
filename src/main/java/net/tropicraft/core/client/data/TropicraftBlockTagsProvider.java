@@ -1,10 +1,9 @@
 package net.tropicraft.core.client.data;
 
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.server.BlockTagsProvider;
-import net.minecraft.tag.Tag.Identified;
-
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.tags.Tag.Named;
+import net.minecraft.world.level.block.Block;
 import java.util.Arrays;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
@@ -20,7 +19,7 @@ public class TropicraftBlockTagsProvider extends BlockTagsProvider {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void configure() {
+    protected void addTags() {
         // Filling vanilla tags
         /*
         createAndAppend(TropicraftTags.Blocks.SAND, BlockTags.SAND,
@@ -103,30 +102,30 @@ public class TropicraftBlockTagsProvider extends BlockTagsProvider {
     }
 
     @SafeVarargs
-    private final void createTag(Identified<Block> tag, Block... blocks) {
+    private final void createTag(Named<Block> tag, Block... blocks) {
         //getOrCreateTagBuilder(tag).add(resolveAll(Block[]::new, blocks));
     }
     
     @SafeVarargs
-    private final void appendToTag(Identified<Block> tag, Identified<Block>... toAppend) {
-        for(Identified<Block> singleToAppend: toAppend){
-            getOrCreateTagBuilder(tag).addTag(singleToAppend);
+    private final void appendToTag(Named<Block> tag, Named<Block>... toAppend) {
+        for(Named<Block> singleToAppend: toAppend){
+            tag(tag).addTag(singleToAppend);
         }
     }
     
     @SafeVarargs
-    private final void extendTag(Identified<Block> tag, Identified<Block> toExtend, Block... blocks) {
+    private final void extendTag(Named<Block> tag, Named<Block> toExtend, Block... blocks) {
         //getOrCreateTagBuilder(tag).addTag(toExtend).add(resolveAll(Block[]::new, blocks));
     }
     
     @SafeVarargs
-    private final void createAndAppend(Identified<Block> tag, Identified<Block> to, Block... blocks) {
+    private final void createAndAppend(Named<Block> tag, Named<Block> to, Block... blocks) {
         createTag(tag, blocks);
         appendToTag(to, tag);
     }
 
     @SafeVarargs
-    private final void extendAndAppend(Identified<Block> tag, Identified<Block> toExtend, Identified<Block> to, Block... blocks) {
+    private final void extendAndAppend(Named<Block> tag, Named<Block> toExtend, Named<Block> to, Block... blocks) {
         extendTag(tag, toExtend, blocks);
         appendToTag(to, tag);
     }

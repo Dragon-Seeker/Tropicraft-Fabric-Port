@@ -1,14 +1,13 @@
 package net.tropicraft.core.common.entity.ai.vmonkey;
 
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
 import net.tropicraft.core.common.drinks.Drink;
 import net.tropicraft.core.common.entity.neutral.VMonkeyEntity;
 import net.tropicraft.core.common.registry.TropicraftItems;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-
 import java.util.EnumSet;
 
 public class MonkeySitAndDrinkGoal extends Goal {
@@ -20,7 +19,7 @@ public class MonkeySitAndDrinkGoal extends Goal {
     public MonkeySitAndDrinkGoal(VMonkeyEntity monkey) {
         this.entity = monkey;
         waitCounter = DEFAULT_WAIT;
-        setControls(EnumSet.of(Control.LOOK, Control.MOVE));
+        setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
 
     /**
@@ -29,25 +28,25 @@ public class MonkeySitAndDrinkGoal extends Goal {
     @Override
     public void stop() {
         entity.setInSittingPose(false);
-        entity.dropStack(new ItemStack(TropicraftItems.BAMBOO_MUG));
-        entity.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+        entity.spawnAtLocation(new ItemStack(TropicraftItems.BAMBOO_MUG));
+        entity.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         waitCounter = DEFAULT_WAIT;
     }
 
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         return entity.selfHoldingDrink(Drink.PINA_COLADA);
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         return entity.selfHoldingDrink(Drink.PINA_COLADA);
     }
 
     @Override
     public void start() {
         entity.setInSittingPose(true);
-        entity.setAttacking(false);
+        entity.setAggressive(false);
         entity.setTarget(null);
         entity.setFollowing(null);
     }
@@ -57,13 +56,13 @@ public class MonkeySitAndDrinkGoal extends Goal {
         waitCounter--;
 
         if (waitCounter <= 0) {
-            entity.setCurrentHand(Hand.MAIN_HAND);
+            entity.startUsingItem(InteractionHand.MAIN_HAND);
         }
 
         // If drinking complete
-        ItemStack heldStack = entity.getMainHandStack();
+        ItemStack heldStack = entity.getMainHandItem();
         if (heldStack.getItem() == TropicraftItems.BAMBOO_MUG) {
-            entity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 10 * 20, 2));
+            entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 10 * 20, 2));
         }
     }
 }

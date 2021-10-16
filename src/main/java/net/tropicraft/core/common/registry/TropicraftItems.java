@@ -2,12 +2,12 @@ package net.tropicraft.core.common.registry;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.drinks.Drink;
 import net.tropicraft.core.common.entity.placeable.BeachFloatEntity;
@@ -99,10 +99,10 @@ public class TropicraftItems {
     public static final Item EUDIALYTE_AXE = registerItem("eudialyte_axe", new TropicAxe(TropicTiers.ZIRCONIUM, 5.0F, -2.0f, getDefaultProperties()));
     public static final Item EUDIALYTE_HOE = registerItem("eudialyte_hoe", new TropicHoe(TropicTiers.ZIRCONIUM, 0, -2.0f, getDefaultProperties()));
 
-    public static final Item DAGGER = registerItem("dagger", new DaggerItem(TropicTiers.ZIRCON, getDefaultProperties().maxCount(1)));
-    public static final Item BAMBOO_SPEAR = registerItem("bamboo_spear", new SpearItem(TropicTiers.BAMBOO, 3, -2.4F, getDefaultProperties().maxCount(1)));
+    public static final Item DAGGER = registerItem("dagger", new DaggerItem(TropicTiers.ZIRCON, getDefaultProperties().stacksTo(1)));
+    public static final Item BAMBOO_SPEAR = registerItem("bamboo_spear", new SpearItem(TropicTiers.BAMBOO, 3, -2.4F, getDefaultProperties().stacksTo(1)));
 
-    public static final Item BLOW_GUN = registerItem("blow_gun", new BlowGunItem(getDefaultProperties().maxCount(1)));
+    public static final Item BLOW_GUN = registerItem("blow_gun", new BlowGunItem(getDefaultProperties().stacksTo(1)));
     public static final Item EXPLODING_COCONUT = registerItem("exploding_coconut", new ExplodingCoconutItem(getDefaultProperties()));
 
     //FIXME: Super Borked as it is invisible and directional placement seems to also be borked
@@ -117,23 +117,23 @@ public class TropicraftItems {
 
     //Armor - Masks - Stache
 
-    public static final Item FIRE_BOOTS = registerItem("fire_boots", new FireArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1).maxDamage(300)));
-    public static final Item FIRE_LEGGINGS = registerItem("fire_leggings", new FireArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1).maxDamage(300)));
-    public static final Item FIRE_CHESTPLATE = registerItem("fire_chestplate", new FireArmorItem(EquipmentSlot.CHEST, getDefaultProperties().maxCount(1).maxDamage(300)));
-    public static final Item FIRE_HELMET = registerItem("fire_helmet", new FireArmorItem(EquipmentSlot.HEAD, getDefaultProperties().maxCount(1).maxDamage(300)));
+    public static final Item FIRE_BOOTS = registerItem("fire_boots", new FireArmorItem(EquipmentSlot.FEET, getDefaultProperties().stacksTo(1).durability(300)));
+    public static final Item FIRE_LEGGINGS = registerItem("fire_leggings", new FireArmorItem(EquipmentSlot.LEGS, getDefaultProperties().stacksTo(1).durability(300)));
+    public static final Item FIRE_CHESTPLATE = registerItem("fire_chestplate", new FireArmorItem(EquipmentSlot.CHEST, getDefaultProperties().stacksTo(1).durability(300)));
+    public static final Item FIRE_HELMET = registerItem("fire_helmet", new FireArmorItem(EquipmentSlot.HEAD, getDefaultProperties().stacksTo(1).durability(300)));
 
-    public static final Item SCALE_BOOTS = registerItem("scale_boots", new ScaleArmorItem(EquipmentSlot.FEET, getDefaultProperties().maxCount(1)));
-    public static final Item SCALE_LEGGINGS = registerItem("scale_leggings", new ScaleArmorItem(EquipmentSlot.LEGS, getDefaultProperties().maxCount(1)));
-    public static final Item SCALE_CHESTPLATE = registerItem("scale_chestplate", new ScaleArmorItem(EquipmentSlot.CHEST, getDefaultProperties().maxCount(1)));
-    public static final Item SCALE_HELMET = registerItem("scale_helmet", new ScaleArmorItem(EquipmentSlot.HEAD, getDefaultProperties().maxCount(1)));
+    public static final Item SCALE_BOOTS = registerItem("scale_boots", new ScaleArmorItem(EquipmentSlot.FEET, getDefaultProperties().stacksTo(1)));
+    public static final Item SCALE_LEGGINGS = registerItem("scale_leggings", new ScaleArmorItem(EquipmentSlot.LEGS, getDefaultProperties().stacksTo(1)));
+    public static final Item SCALE_CHESTPLATE = registerItem("scale_chestplate", new ScaleArmorItem(EquipmentSlot.CHEST, getDefaultProperties().stacksTo(1)));
+    public static final Item SCALE_HELMET = registerItem("scale_helmet", new ScaleArmorItem(EquipmentSlot.HEAD, getDefaultProperties().stacksTo(1)));
 
-    public static final Item NIGEL_STACHE = registerItem("nigel_stache", new NigelStacheItem(getDefaultProperties().maxCount(1)));
+    public static final Item NIGEL_STACHE = registerItem("nigel_stache", new NigelStacheItem(getDefaultProperties().stacksTo(1)));
 
     public static final ImmutableMap<AshenMasks, AshenMaskItem> ASHEN_MASKS = Arrays.stream(AshenMasks.values())
             .collect(Maps.<AshenMasks, AshenMasks, AshenMaskItem>toImmutableEnumMap(Function.identity(), type -> registerItem("ashen_mask_" + type.name().toLowerCase(Locale.ROOT), Builder.mask(type))));
 
-    public static final Item WATER_WAND = registerItem("water_wand", new WaterWandItem(getDefaultProperties().maxCount(1).maxDamage(2000)));
-    public static final Item FISHING_NET = registerItem("fishing_net", new Item(getDefaultProperties().maxCount(1)));
+    public static final Item WATER_WAND = registerItem("water_wand", new WaterWandItem(getDefaultProperties().stacksTo(1).durability(2000)));
+    public static final Item FISHING_NET = registerItem("fishing_net", new Item(getDefaultProperties().stacksTo(1)));
     public static final Item TROPICAL_FERTILIZER = registerItem("tropical_fertilizer", new TropicalFertilizerItem(getDefaultProperties()));
 
     //Spawnables - Buckets of Fish
@@ -169,13 +169,13 @@ public class TropicraftItems {
     //Furniture Entity's
 
     public static final ImmutableMap<DyeColor, FurnitureItem<UmbrellaEntity>> UMBRELLAS = Arrays.stream(DyeColor.values())
-            .collect(Maps.<DyeColor, DyeColor, FurnitureItem<UmbrellaEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<UmbrellaEntity>) registerItem(c.asString() + "_umbrella", Builder.umbrella(c))));
+            .collect(Maps.<DyeColor, DyeColor, FurnitureItem<UmbrellaEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<UmbrellaEntity>) registerItem(c.getSerializedName() + "_umbrella", Builder.umbrella(c))));
 
     public static final ImmutableMap<DyeColor, FurnitureItem<ChairEntity>> CHAIRS = Arrays.stream(DyeColor.values())
-            .collect(Maps.<DyeColor, DyeColor, FurnitureItem<ChairEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<ChairEntity>) registerItem(c.asString() + "_chair", Builder.chair(c))));
+            .collect(Maps.<DyeColor, DyeColor, FurnitureItem<ChairEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<ChairEntity>) registerItem(c.getSerializedName() + "_chair", Builder.chair(c))));
 
     public static final ImmutableMap<DyeColor, FurnitureItem<BeachFloatEntity>> BEACH_FLOATS = Arrays.stream(DyeColor.values())
-            .collect(Maps.<DyeColor, DyeColor, FurnitureItem<BeachFloatEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<BeachFloatEntity>) registerItem(c.asString() + "_beach_float", Builder.beachFloat(c))));
+            .collect(Maps.<DyeColor, DyeColor, FurnitureItem<BeachFloatEntity>>toImmutableEnumMap(Function.identity(), c -> (FurnitureItem<BeachFloatEntity>) registerItem(c.getSerializedName() + "_beach_float", Builder.beachFloat(c))));
 
     //--------------------ITEMS HARDER TO PORT STILL--------------------
 
@@ -195,7 +195,7 @@ public class TropicraftItems {
     public static void init() {}
 
     public static <T extends Item> T registerItem(String id, T item) {
-        Registry.register(Registry.ITEM, new Identifier(Constants.MODID, id), item);
+        Registry.register(Registry.ITEM, new ResourceLocation(Constants.MODID, id), item);
 
         return item;
     }

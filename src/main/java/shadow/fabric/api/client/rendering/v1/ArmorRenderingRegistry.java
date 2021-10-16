@@ -23,12 +23,12 @@ package shadow.fabric.api.client.rendering.v1;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import shadow.fabric.impl.client.rendering.ArmorRenderingRegistryImpl;
@@ -98,9 +98,9 @@ public final class ArmorRenderingRegistry {
 	 * @param identifier The namespace + path to use for the armor texture location.
 	 * @param items      the items to be registered
 	 */
-	public static void registerSimpleTexture(Identifier identifier, Item... items) {
+	public static void registerSimpleTexture(ResourceLocation identifier, Item... items) {
 		registerTexture((entity, stack, slot, secondLayer, suffix, defaultTexture) -> {
-			return new Identifier(
+			return new ResourceLocation(
 				identifier.getNamespace(),
 				"textures/models/armor/" + identifier.getPath() + "_layer_" + (secondLayer ? 2 : 1) + (suffix == null ? "" : "_" + suffix) + ".png"
 			);
@@ -117,23 +117,23 @@ public final class ArmorRenderingRegistry {
 	 * @return The model of the armor piece.
 	 */
 	@NotNull
-	public static BipedEntityModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, BipedEntityModel<LivingEntity> defaultModel) {
+	public static HumanoidModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, HumanoidModel<LivingEntity> defaultModel) {
 		return ArmorRenderingRegistryImpl.getArmorModel(entity, stack, slot, defaultModel);
 	}
 	
 	/**
-	 * Gets the armor texture {@link net.minecraft.util.Identifier}.
+	 * Gets the armor texture {@link net.minecraft.resources.ResourceLocation}.
 	 *
 	 * @param entity         The entity equipping the armor
 	 * @param stack          The item stack of the armor
 	 * @param slot           The slot which the armor is in
 	 * @param secondLayer    True if using the second texture layer
-	 * @param suffix         The texture suffix, used in vanilla by {@link net.minecraft.item.DyeableArmorItem}
+	 * @param suffix         The texture suffix, used in vanilla by {@link net.minecraft.world.item.DyeableArmorItem}
 	 * @param defaultTexture The default vanilla texture identifier
 	 * @return the custom armor texture identifier, return null to use the vanilla ones. Defaulted to the item's registry id.
 	 */
 	@NotNull
-	public static Identifier getArmorTexture(LivingEntity entity, ItemStack stack, EquipmentSlot slot, boolean secondLayer, @Nullable String suffix, Identifier defaultTexture) {
+	public static ResourceLocation getArmorTexture(LivingEntity entity, ItemStack stack, EquipmentSlot slot, boolean secondLayer, @Nullable String suffix, ResourceLocation defaultTexture) {
 		return ArmorRenderingRegistryImpl.getArmorTexture(entity, stack, slot, secondLayer, suffix, defaultTexture);
 	}
 	
@@ -149,14 +149,14 @@ public final class ArmorRenderingRegistry {
 		 * @param defaultModel The default vanilla armor model
 		 * @return The model of the armor piece. Should never be null.
 		 */
-		@NotNull BipedEntityModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, BipedEntityModel<LivingEntity> defaultModel);
+		@NotNull HumanoidModel<LivingEntity> getArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, HumanoidModel<LivingEntity> defaultModel);
 	}
 	
 	@FunctionalInterface
 	@Environment(EnvType.CLIENT)
 	public interface TextureProvider {
 		/**
-		 * Gets the armor texture {@link net.minecraft.util.Identifier}.
+		 * Gets the armor texture {@link net.minecraft.resources.ResourceLocation}.
 		 *
 		 * @param entity         The entity equipping the armor
 		 * @param stack          The item stack of the armor
@@ -164,6 +164,6 @@ public final class ArmorRenderingRegistry {
 		 * @param defaultTexture The default vanilla texture identifier
 		 * @return the custom armor texture identifier. Should never be null.
 		 */
-		@NotNull Identifier getArmorTexture(LivingEntity entity, ItemStack stack, EquipmentSlot slot, boolean secondLayer, @Nullable String suffix, Identifier defaultTexture);
+		@NotNull ResourceLocation getArmorTexture(LivingEntity entity, ItemStack stack, EquipmentSlot slot, boolean secondLayer, @Nullable String suffix, ResourceLocation defaultTexture);
 	}
 }

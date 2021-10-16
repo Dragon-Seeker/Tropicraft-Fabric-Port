@@ -2,19 +2,18 @@ package net.tropicraft.core.common.dimension.carver;
 
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.carver.CaveCarver;
-import net.minecraft.world.gen.carver.CaveCarverConfig;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CaveWorldCarver;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.Random;
 
-public class TropicsCaveCarver extends CaveCarver {
+public class TropicsCaveCarver extends CaveWorldCarver {
 
-    public TropicsCaveCarver(Codec<CaveCarverConfig> codec) {
+    public TropicsCaveCarver(Codec<CaveCarverConfiguration> codec) {
         super(codec);//, 256);
-        this.alwaysCarvableBlocks = ImmutableSet.<Block> builder().addAll(this.alwaysCarvableBlocks)
+        this.replaceableBlocks = ImmutableSet.<Block> builder().addAll(this.replaceableBlocks)
                 .add(TropicraftBlocks.CORAL_SAND)
                 .add(TropicraftBlocks.FOAMY_SAND)
                 .add(TropicraftBlocks.MINERAL_SAND)

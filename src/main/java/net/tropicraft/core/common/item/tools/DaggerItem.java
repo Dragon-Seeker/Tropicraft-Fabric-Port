@@ -3,59 +3,59 @@ package net.tropicraft.core.common.item.tools;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.UseAction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 
 public class DaggerItem extends Item {
     private final TropicTiers tier;
 
-    public DaggerItem(TropicTiers tier, FabricItemSettings properties) {
-        super(properties.maxDamage(tier.getDefaultTier().getDurability()));
+    public DaggerItem(TropicTiers tier, Properties properties) {
+        super(properties.durability(tier.getDefaultTier().getUses()));
 
         this.tier = tier;
     }
 
     @Override
-    public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
+    public float getDestroySpeed(ItemStack stack, BlockState state) {
         Block block = state.getBlock();
 
         if (block == Blocks.COBWEB) {
             return 15.0F;
         } else {
             Material material = state.getMaterial();
-            return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.REPLACEABLE_UNDERWATER_PLANT && material != Material.LEAVES && material != Material.GOURD ? 1.0F : 1.5F;
+            return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.REPLACEABLE_WATER_PLANT && material != Material.LEAVES && material != Material.VEGETABLE ? 1.0F : 1.5F;
         }
     }
 
     @Override
-    public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity player) {
+    public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 
     @Override
-    public boolean postHit(ItemStack itemStack, LivingEntity attacker, LivingEntity target) {
-        itemStack.damage(1, target, (e) -> {
-            e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity attacker, LivingEntity target) {
+        itemStack.hurtAndBreak(1, target, (e) -> {
+            e.broadcastBreakEvent(EquipmentSlot.MAINHAND);
         });
         return true;
     }
 
     @Override
-    public UseAction getUseAction(ItemStack itemstack) {
-        return UseAction.BLOCK;
+    public UseAnim getUseAnimation(ItemStack itemstack) {
+        return UseAnim.BLOCK;
     }
 
     /*
@@ -66,7 +66,7 @@ public class DaggerItem extends Item {
      */
 
     @Override
-    public boolean isSuitableFor(BlockState state) {
+    public boolean isCorrectToolForDrops(BlockState state) {
         return state.getBlock() == Blocks.COBWEB;
     }
 
@@ -76,18 +76,18 @@ public class DaggerItem extends Item {
      */
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> multimap = ImmutableMultimap.builder();
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> multimap = ImmutableMultimap.builder();
 
-        multimap.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", (double) tier.getDefaultTier().getAttackDamage() + 2.5D, EntityAttributeModifier.Operation.ADDITION));
-        multimap.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", 0, EntityAttributeModifier.Operation.ADDITION));
+        multimap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", (double) tier.getDefaultTier().getAttackDamageBonus() + 2.5D, AttributeModifier.Operation.ADDITION));
+        multimap.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", 0, AttributeModifier.Operation.ADDITION));
 
         if (slot == EquipmentSlot.MAINHAND) {
             return multimap.build();
         }
 
         else{
-            return super.getAttributeModifiers(slot);
+            return super.getDefaultAttributeModifiers(slot);
         }
     }
 

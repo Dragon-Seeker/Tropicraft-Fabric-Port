@@ -1,35 +1,35 @@
 package net.tropicraft.core.common.dimension.feature.tree;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ModifiableTestableWorld;
-import net.minecraft.world.ModifiableWorld;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LevelSimulatedRW;
+import net.minecraft.world.level.LevelWriter;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig> {
+public abstract class RainforestTreeFeature extends Feature<NoneFeatureConfiguration> {
 
     /**Used in placeBlockLine*/
     protected static final byte otherCoordPairs[] = {2, 0, 0, 1, 2, 1};
 
-    public RainforestTreeFeature(Codec<DefaultFeatureConfig> codec) {
+    public RainforestTreeFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
-    protected void setState(ModifiableWorld world, BlockPos pos, BlockState state) {
+    protected void setState(LevelWriter world, BlockPos pos, BlockState state) {
         setBlockStateInternally(world, pos, state);
     }
 
-    private void setBlockStateInternally(ModifiableWorld world, BlockPos pos, BlockState state) {
-        world.setBlockState(pos, state, 19);
+    private void setBlockStateInternally(LevelWriter world, BlockPos pos, BlockState state) {
+        world.setBlock(pos, state, 19);
     }
 
     protected SaplingBlock getSapling() {
@@ -37,26 +37,26 @@ public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig
     }
 
     protected final BlockState getLeaf() {
-        return TropicraftBlocks.KAPOK_LEAVES.getDefaultState();
+        return TropicraftBlocks.KAPOK_LEAVES.defaultBlockState();
     }
     
     protected final BlockState getLog() {
-        return TropicraftBlocks.MAHOGANY_LOG.getDefaultState();
+        return TropicraftBlocks.MAHOGANY_LOG.defaultBlockState();
     }
 
-    protected void placeLeaf(final ModifiableTestableWorld world, int x, int y, int z) {
+    protected void placeLeaf(final LevelSimulatedRW world, int x, int y, int z) {
         setState(world, new BlockPos(x, y, z), getLeaf());
     }
 
-    protected void placeLog(final ModifiableTestableWorld world, int x, int y, int z) {
+    protected void placeLog(final LevelSimulatedRW world, int x, int y, int z) {
         setState(world, new BlockPos(x, y, z), getLog());
     }
 
-    protected boolean genCircle(ModifiableTestableWorld world, int x, int y, int z, double outerRadius, double innerRadius, BlockState state, boolean solid) {
+    protected boolean genCircle(LevelSimulatedRW world, int x, int y, int z, double outerRadius, double innerRadius, BlockState state, boolean solid) {
         return genCircle(world, new BlockPos(x, y, z), outerRadius, innerRadius, state, solid);
     }
 
-    protected boolean genVines(final ModifiableTestableWorld world, final Random rand, int i, int j, int k) {
+    protected boolean genVines(final LevelSimulatedRW world, final Random rand, int i, int j, int k) {
         int m = 2;
 
         do {
@@ -66,7 +66,7 @@ public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig
 
             final BlockPos pos = new BlockPos(i, j, k);
             if (isAir(world, pos)) {
-                setBlockStateInternally(world, pos, Blocks.VINE.getDefaultState());
+                setBlockStateInternally(world, pos, Blocks.VINE.defaultBlockState());
                 break;
             }
 
@@ -78,7 +78,7 @@ public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig
         for (int y = j - 1; y > j - length; y--) {
             final BlockPos vinePos = new BlockPos(i, y, k);
             if (isAir(world, vinePos)) {
-                setBlockStateInternally(world, vinePos, Blocks.VINE.getDefaultState());
+                setBlockStateInternally(world, vinePos, Blocks.VINE.defaultBlockState());
             } else {
                 return true;
             }
@@ -94,7 +94,7 @@ public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig
      * @param state IBlockState to place
      * @return The coords that blocks were placed on
      */
-    public ArrayList<int[]> placeBlockLine(ModifiableTestableWorld world, int ai[], int ai1[], BlockState state) {
+    public ArrayList<int[]> placeBlockLine(LevelSimulatedRW world, int ai[], int ai1[], BlockState state) {
         ArrayList<int[]> places = new ArrayList<>();
         int[] ai2 = {0, 0, 0};
         byte byte0 = 0;
@@ -125,9 +125,9 @@ public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig
         int[] ai3 = {0, 0, 0};
         int k = 0;
         for (int l = ai2[j] + byte3; k != l; k += byte3) {
-            ai3[j] = MathHelper.floor((double)(ai[j] + k) + 0.5D);
-            ai3[byte1] = MathHelper.floor((double)ai[byte1] + (double)k * d + 0.5D);
-            ai3[byte2] = MathHelper.floor((double)ai[byte2] + (double)k * d1 + 0.5D);
+            ai3[j] = Mth.floor((double)(ai[j] + k) + 0.5D);
+            ai3[byte1] = Mth.floor((double)ai[byte1] + (double)k * d + 0.5D);
+            ai3[byte2] = Mth.floor((double)ai[byte2] + (double)k * d1 + 0.5D);
             BlockPos pos = new BlockPos(ai3[0], ai3[1], ai3[2]);
             setState(world, pos, state);
             places.add(new int[] { ai3[0], ai3[1], ai3[2] });
@@ -144,7 +144,7 @@ public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig
      * @param state BlockState to generate
      * @param solid Whether it should place the block if another block is already occupying that space
      */
-    public boolean genCircle(ModifiableTestableWorld world, BlockPos pos, double outerRadius, double innerRadius, BlockState state, boolean solid) {
+    public boolean genCircle(LevelSimulatedRW world, BlockPos pos, double outerRadius, double innerRadius, BlockState state, boolean solid) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -156,7 +156,7 @@ public abstract class RainforestTreeFeature extends Feature<DefaultFeatureConfig
                 if (d <= outerRadius * outerRadius && d >= innerRadius * innerRadius) {
                     BlockPos pos2 = new BlockPos(i, y, k);
                     if (isAir(world, pos2) || solid) {
-                        if (world.setBlockState(pos2, state, 3)) {
+                        if (world.setBlock(pos2, state, 3)) {
                             hasGenned = true;
                         }
                     }

@@ -9,49 +9,48 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import java.util.UUID;
 
 public class AshenMaskEntity extends Entity {
 
-    public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "ashen_mask");
+    public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "ashen_mask");
 
-    private static final TrackedData<Byte> MASK_TYPE = DataTracker.registerData(AshenEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final EntityDataAccessor<Byte> MASK_TYPE = SynchedEntityData.defineId(AshenEntity.class, EntityDataSerializers.BYTE);
     public static final int MAX_TICKS_ALIVE = 24000;
 
-    public AshenMaskEntity(EntityType<?> type, World world) {
+    public AshenMaskEntity(EntityType<?> type, Level world) {
         super(type, world);
     }
 
     @Environment(EnvType.CLIENT)
-    public AshenMaskEntity(World world, double x, double y, double z, int id, UUID uuid) {
+    public AshenMaskEntity(Level world, double x, double y, double z, int id, UUID uuid) {
         super(TropicraftEntities.ASHEN_MASK, world);
-        updatePosition(x, y, z);
-        updateTrackedPosition(x, y, z);
+        absMoveTo(x, y, z);
+        setPacketCoordinates(x, y, z);
         setId(id);
-        setUuid(uuid);
+        setUUID(uuid);
     }
 
     public void dropItemStack() {
-        dropStack(new ItemStack(TropicraftItems.ASHEN_MASKS.get(AshenMasks.VALUES[getMaskType()])), 1.0F);
+        spawnAtLocation(new ItemStack(TropicraftItems.ASHEN_MASKS.get(AshenMasks.VALUES[getMaskType()])), 1.0F);
     }
 
     @Override
-    public boolean collides() {
+    public boolean isPickable() {
         return true;
     }
 
@@ -61,25 +60,25 @@ public class AshenMaskEntity extends Entity {
     }
 
     @Override
-    protected void initDataTracker() {
-        dataTracker.startTracking(MASK_TYPE, (byte) 0);
+    protected void defineSynchedData() {
+        entityData.define(MASK_TYPE, (byte) 0);
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
         setMaskType(nbt.getByte("MaskType"));
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putByte("MaskType", getMaskType());
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
 
         //return NetworkHooks.getEntitySpawningPacket(this);
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
         // entity position
         packet.writeDouble(getX());
@@ -88,52 +87,52 @@ public class AshenMaskEntity extends Entity {
 
         // entity id & uuid
         packet.writeInt(getId());
-        packet.writeUuid(getUuid());
+        packet.writeUUID(getUUID());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
 
     }
 
     public void setMaskType(byte type) {
-        dataTracker.set(MASK_TYPE, type);
+        entityData.set(MASK_TYPE, type);
     }
 
     public byte getMaskType() {
-        return dataTracker.get(MASK_TYPE);
+        return entityData.get(MASK_TYPE);
     }
 
     @Override
     public void tick() {
-        if (!world.isClient) {
+        if (!level.isClientSide) {
             // Remove masks that have been on the ground abandoned for over a day
-            if (age >= MAX_TICKS_ALIVE) {
+            if (tickCount >= MAX_TICKS_ALIVE) {
                 remove(RemovalReason.DISCARDED);
             }
         }
 
-        final Vec3d motion = getVelocity();
+        final Vec3 motion = getDeltaMovement();
 
         if (onGround) {
-            setVelocity(motion.multiply(0.5, 0, 0.5));
+            setDeltaMovement(motion.multiply(0.5, 0, 0.5));
         }
 
-        if (isTouchingWater()) {
-            setVelocity(motion.x * 0.95f, 0.02f, motion.z * 0.95f);
+        if (isInWater()) {
+            setDeltaMovement(motion.x * 0.95f, 0.02f, motion.z * 0.95f);
         } else {
-            setVelocity(motion.subtract(0, 0.05f, 0));
+            setDeltaMovement(motion.subtract(0, 0.05f, 0));
         }
 
-        move(MovementType.SELF, motion);
+        move(MoverType.SELF, motion);
     }
 
     @Override
-    public boolean damage(DamageSource damageSource, float par2) {
+    public boolean hurt(DamageSource damageSource, float par2) {
         if (isInvulnerableTo(damageSource)) {
             return false;
         } else {
-            if (isAlive() && !world.isClient) {
+            if (isAlive() && !level.isClientSide) {
                 remove(RemovalReason.KILLED);
-                scheduleVelocityUpdate();
+                markHurt();
                 dropItemStack();
             }
 

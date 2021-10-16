@@ -2,9 +2,14 @@ package net.tropicraft.core.client.entity.models;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.entity.passive.FishEntity;
-public abstract class AbstractFishModel<T extends FishEntity> extends CompositeEntityModel<T> {
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.world.entity.animal.AbstractFish;
+public abstract class AbstractFishModel<T extends AbstractFish> extends ListModel<T> {
     public static ModelPart root;
     public static ModelPart body;
     public static ModelPart tail;
@@ -14,7 +19,7 @@ public abstract class AbstractFishModel<T extends FishEntity> extends CompositeE
         this.tail = this.body.getChild("tail");
     }
 
-    public static TexturedModelData getTexturedModelData() {
+    public static LayerDefinition getTexturedModelData() {
         /*
         body = new ModelPart(this);
         body.setPivot(0F, 16F, 0F);
@@ -25,18 +30,18 @@ public abstract class AbstractFishModel<T extends FishEntity> extends CompositeE
         body.addChild(tail);
          */
 
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
         //body.addCuboid(0, 0, 0, 0, 1, 1);
         //tail.addCuboid(0, 0, 0, 0, 1, 1);
         //body.addChild(tail);
-        ModelPartData modelPartDataBody = modelPartData.addChild("body", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,16F,0F));
-        modelPartDataBody.addChild("tail", ModelPartBuilder.create().cuboid(0,0,0,0,1,1), ModelTransform.pivot(0F,0F,-1F));
-        return TexturedModelData.of(modelData,0,0);
+        PartDefinition modelPartDataBody = modelPartData.addOrReplaceChild("body", CubeListBuilder.create().addBox(0,0,0,0,1,1), PartPose.offset(0F,16F,0F));
+        modelPartDataBody.addOrReplaceChild("tail", CubeListBuilder.create().addBox(0,0,0,0,1,1), PartPose.offset(0F,0F,-1F));
+        return LayerDefinition.create(modelData,0,0);
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(body);
     }
 
@@ -45,7 +50,7 @@ public abstract class AbstractFishModel<T extends FishEntity> extends CompositeE
     }
 
     @Override
-    public void setAngles(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        tail.yaw = (float) (Math.sin(ageInTicks * .25F)) * .25F;
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        tail.yRot = (float) (Math.sin(ageInTicks * .25F)) * .25F;
     }
 }

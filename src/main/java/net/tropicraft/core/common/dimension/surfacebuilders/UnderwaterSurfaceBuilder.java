@@ -2,15 +2,14 @@ package net.tropicraft.core.common.dimension.surfacebuilders;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilder.SurfaceConfig;
-import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
-
 import java.util.Random;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilder;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderBaseConfiguration;
+import net.minecraft.world.level.levelgen.surfacebuilders.SurfaceBuilderConfiguration;
 
 public class UnderwaterSurfaceBuilder extends SurfaceBuilder<UnderwaterSurfaceBuilder.Config> {
     public UnderwaterSurfaceBuilder(Codec<Config> codec) {
@@ -18,32 +17,32 @@ public class UnderwaterSurfaceBuilder extends SurfaceBuilder<UnderwaterSurfaceBu
     }
 
     @Override
-    public void generate(Random random, Chunk chunk, Biome biome, int x, int z, int startHeight, double noise, BlockState defaultBlock, BlockState defaultFluid, int seaLevel, int i, long seed, Config config) {
-        TernarySurfaceConfig selectedConfig = config.beach;
+    public void apply(Random random, ChunkAccess chunk, Biome biome, int x, int z, int startHeight, double noise, BlockState defaultBlock, BlockState defaultFluid, int seaLevel, int i, long seed, Config config) {
+        SurfaceBuilderBaseConfiguration selectedConfig = config.beach;
         if (startHeight > seaLevel + 5) {
             selectedConfig = config.land;
         }
-        if (chunk.sampleHeightmap(Heightmap.Type.OCEAN_FLOOR_WG, x, z) + 1 < seaLevel) {
+        if (chunk.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z) + 1 < seaLevel) {
             selectedConfig = config.underwater;
         }
 
-        SurfaceBuilder.DEFAULT.generate(random, chunk, biome, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, i, seed, selectedConfig);
+        SurfaceBuilder.DEFAULT.apply(random, chunk, biome, x, z, startHeight, noise, defaultBlock, defaultFluid, seaLevel, i, seed, selectedConfig);
     }
 
-    public static final class Config implements SurfaceConfig {
+    public static final class Config implements SurfaceBuilderConfiguration {
         public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> {
             return instance.group(
-                    TernarySurfaceConfig.CODEC.fieldOf("beach").forGetter(c -> c.beach),
-                    TernarySurfaceConfig.CODEC.fieldOf("land").forGetter(c -> c.land),
-                    TernarySurfaceConfig.CODEC.fieldOf("underwater").forGetter(c -> c.underwater)
+                    SurfaceBuilderBaseConfiguration.CODEC.fieldOf("beach").forGetter(c -> c.beach),
+                    SurfaceBuilderBaseConfiguration.CODEC.fieldOf("land").forGetter(c -> c.land),
+                    SurfaceBuilderBaseConfiguration.CODEC.fieldOf("underwater").forGetter(c -> c.underwater)
             ).apply(instance, Config::new);
         });
 
-        public final TernarySurfaceConfig beach;
-        public final TernarySurfaceConfig land;
-        public final TernarySurfaceConfig underwater;
+        public final SurfaceBuilderBaseConfiguration beach;
+        public final SurfaceBuilderBaseConfiguration land;
+        public final SurfaceBuilderBaseConfiguration underwater;
 
-        public Config(TernarySurfaceConfig beach, TernarySurfaceConfig land, TernarySurfaceConfig underwater) {
+        public Config(SurfaceBuilderBaseConfiguration beach, SurfaceBuilderBaseConfiguration land, SurfaceBuilderBaseConfiguration underwater) {
             this.beach = beach;
             this.land = land;
             this.underwater = underwater;

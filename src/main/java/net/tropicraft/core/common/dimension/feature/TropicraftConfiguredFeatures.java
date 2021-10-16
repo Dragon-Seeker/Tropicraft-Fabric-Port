@@ -3,23 +3,29 @@ package net.tropicraft.core.common.dimension.feature;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.loom.configuration.FabricApiExtension;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.decorator.CarvingMaskDecoratorConfig;
-import net.minecraft.world.gen.decorator.CountExtraDecoratorConfig;
-import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.decorator.RangeDecoratorConfig;
-import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.placer.DoublePlantPlacer;
-import net.minecraft.world.gen.placer.SimpleBlockPlacer;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.Features;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.blockplacers.DoublePlantPlacer;
+import net.minecraft.world.level.levelgen.feature.blockplacers.SimpleBlockPlacer;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.SimpleStateProvider;
+import net.minecraft.world.level.levelgen.placement.CarvingMaskDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
+import net.minecraft.world.level.levelgen.placement.FrequencyWithExtraChanceDecoratorConfiguration;
 import net.tropicraft.Constants;
 //import net.tropicraftFabric.common.dimension.feature.block_state_provider.NoiseFromTagBlockStateProvider;
 import net.tropicraft.core.common.dimension.feature.block_state_provider.NoiseFromTagRainForestFlowerBlockStateProvider;
@@ -32,7 +38,7 @@ import net.tropicraft.core.common.registry.TropicraftBlocks;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-public final class TropicraftConfiguredFeatures extends ConfiguredFeatures{
+public final class TropicraftConfiguredFeatures extends Features{
     //private static ConfiguredFeature<?,?> grapefruitTree;
     public static ConfiguredFeature<?, ?> grapefruitTree;
     public static ConfiguredFeature<?, ?> orangeTree;
@@ -219,105 +225,105 @@ public final class TropicraftConfiguredFeatures extends ConfiguredFeatures{
         lemonTree = fruitTree("lemon_tree", TropicraftBlocks.LEMON_SAPLING, TropicraftBlocks.LEMON_LEAVES);
         limeTree = fruitTree("lime_tree", TropicraftBlocks.LIME_SAPLING, TropicraftBlocks.LIME_LEAVES);
 
-        normalPalmTree = sparseTree("normal_palm_tree", TropicraftFeatures.NORMAL_PALM_TREE, FeatureConfig.DEFAULT, 0.2F);
-        curvedPalmTree = sparseTree("curved_palm_tree", TropicraftFeatures.CURVED_PALM_TREE, FeatureConfig.DEFAULT, 0.2F);
-        largePalmTree = sparseTree("large_palm_tree", TropicraftFeatures.LARGE_PALM_TREE, FeatureConfig.DEFAULT, 0.2F);
+        normalPalmTree = sparseTree("normal_palm_tree", TropicraftFeatures.NORMAL_PALM_TREE, FeatureConfiguration.NONE, 0.2F);
+        curvedPalmTree = sparseTree("curved_palm_tree", TropicraftFeatures.CURVED_PALM_TREE, FeatureConfiguration.NONE, 0.2F);
+        largePalmTree = sparseTree("large_palm_tree", TropicraftFeatures.LARGE_PALM_TREE, FeatureConfiguration.NONE, 0.2F);
 
-        rainforestUpTree = sparseTree("rainforest_up_tree", TropicraftFeatures.UP_TREE, FeatureConfig.DEFAULT, 0.2F);
-        rainforestSmallTualung = sparseTree("rainforest_small_tualung", TropicraftFeatures.SMALL_TUALUNG, FeatureConfig.DEFAULT, 0.3F);
-        rainforestLargeTualung = sparseTree("rainforest_large_tualung", TropicraftFeatures.LARGE_TUALUNG, FeatureConfig.DEFAULT, 0.4F);
-        rainforestTallTree = sparseTree("rainforest_tall_tree", TropicraftFeatures.TALL_TREE, FeatureConfig.DEFAULT, 0.5F);
+        rainforestUpTree = sparseTree("rainforest_up_tree", TropicraftFeatures.UP_TREE, FeatureConfiguration.NONE, 0.2F);
+        rainforestSmallTualung = sparseTree("rainforest_small_tualung", TropicraftFeatures.SMALL_TUALUNG, FeatureConfiguration.NONE, 0.3F);
+        rainforestLargeTualung = sparseTree("rainforest_large_tualung", TropicraftFeatures.LARGE_TUALUNG, FeatureConfiguration.NONE, 0.4F);
+        rainforestTallTree = sparseTree("rainforest_tall_tree", TropicraftFeatures.TALL_TREE, FeatureConfiguration.NONE, 0.5F);
         rainforestVines = register("rainforest_vines", TropicraftFeatures.VINES,
-                f -> f.configure(new RainforestVinesConfig()).spreadHorizontally().repeat(50)
+                f -> f.configured(new RainforestVinesConfig()).squared().count(50)
         );
 
         eih = noConfig("eih", TropicraftFeatures.EIH,
-                f -> f.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP)
-                        .decorate(Decorator.COUNT_EXTRA.configure(new CountExtraDecoratorConfig(0, 0.01F, 1)))
+                f -> f.decorated(Features.Decorators.HEIGHTMAP_SQUARE)
+                        .decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.01F, 1)))
         );
 
         pineapplePatch = register("pineapple_patch", Feature.RANDOM_PATCH, feature -> {
-            SimpleBlockStateProvider stateProvider = new SimpleBlockStateProvider(TropicraftBlocks.PINEAPPLE.getDefaultState());
-            RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, DoublePlantPlacer.INSTANCE).tries(64).cannotProject().build();
-            return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP);
+            SimpleStateProvider stateProvider = new SimpleStateProvider(TropicraftBlocks.PINEAPPLE.defaultBlockState());
+            RandomPatchConfiguration config = new RandomPatchConfiguration.GrassConfigurationBuilder(stateProvider, DoublePlantPlacer.INSTANCE).tries(64).noProjection().build();
+            return feature.configured(config).decorated(Features.Decorators.ADD_32).decorated(Features.Decorators.HEIGHTMAP_SQUARE);
         });
         tropicsFlowers = register("tropics_flowers", Feature.FLOWER, feature -> {
             //BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.TROPICS_FLOWERS);
             BlockStateProvider stateProvider = new NoiseFromTagTropicFlowerBlockStateProvider();
-            RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, SimpleBlockPlacer.INSTANCE).tries(64).build();
-            return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(12));
+            RandomPatchConfiguration config = new RandomPatchConfiguration.GrassConfigurationBuilder(stateProvider, SimpleBlockPlacer.INSTANCE).tries(64).build();
+            return feature.configured(config).decorated(Features.Decorators.ADD_32.decorated(Features.Decorators.HEIGHTMAP_SQUARE).count(12));
         });
 
         rainforestFlowers = register("rainforest_flowers", Feature.FLOWER, feature -> {
             //BlockStateProvider stateProvider = new NoiseFromTagBlockStateProvider(TropicraftTags.Blocks.RAINFOREST_FLOWERS);
             BlockStateProvider stateProvider = new NoiseFromTagRainForestFlowerBlockStateProvider();
-            RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, SimpleBlockPlacer.INSTANCE).tries(64).cannotProject().build();
-            return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(4));
+            RandomPatchConfiguration config = new RandomPatchConfiguration.GrassConfigurationBuilder(stateProvider, SimpleBlockPlacer.INSTANCE).tries(64).noProjection().build();
+            return feature.configured(config).decorated(Features.Decorators.ADD_32.decorated(Features.Decorators.HEIGHTMAP_SQUARE).count(4));
         });
         irisFlowers = register("iris_flowers", Feature.RANDOM_PATCH, feature -> {
-            BlockStateProvider stateProvider = new SimpleBlockStateProvider(TropicraftBlocks.IRIS.getDefaultState());
-            RandomPatchFeatureConfig config = new RandomPatchFeatureConfig.Builder(stateProvider, DoublePlantPlacer.INSTANCE).tries(64).cannotProject().build();
-            return feature.configure(config).decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(10));
+            BlockStateProvider stateProvider = new SimpleStateProvider(TropicraftBlocks.IRIS.defaultBlockState());
+            RandomPatchConfiguration config = new RandomPatchConfiguration.GrassConfigurationBuilder(stateProvider, DoublePlantPlacer.INSTANCE).tries(64).noProjection().build();
+            return feature.configured(config).decorated(Features.Decorators.ADD_32.decorated(Features.Decorators.HEIGHTMAP_SQUARE).count(10));
         });
 
         coffeeBush = noConfig("coffee_bush", TropicraftFeatures.COFFEE_BUSH, feature -> {
-            return feature.decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(5));
+            return feature.decorated(Features.Decorators.ADD_32.decorated(Features.Decorators.HEIGHTMAP_SQUARE).count(5));
         });
         undergrowth = noConfig("undergrowth", TropicraftFeatures.UNDERGROWTH, feature -> {
-            return feature.decorate(ConfiguredFeatures.Decorators.SPREAD_32_ABOVE.decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP).repeat(100));
+            return feature.decorated(Features.Decorators.ADD_32.decorated(Features.Decorators.HEIGHTMAP_SQUARE).count(100));
         });
 
         undergroundSeagrassOnStone = register("underground_seagrass_on_stone", Feature.SIMPLE_BLOCK, feature -> {
-            SimpleBlockFeatureConfig config = new SimpleBlockFeatureConfig(
-                    new SimpleBlockStateProvider(Blocks.SEAGRASS.getDefaultState()),
-                    ImmutableList.of(Blocks.STONE.getDefaultState()),
-                    ImmutableList.of(Blocks.WATER.getDefaultState()),
-                    ImmutableList.of(Blocks.WATER.getDefaultState())
+            SimpleBlockConfiguration config = new SimpleBlockConfiguration(
+                    new SimpleStateProvider(Blocks.SEAGRASS.defaultBlockState()),
+                    ImmutableList.of(Blocks.STONE.defaultBlockState()),
+                    ImmutableList.of(Blocks.WATER.defaultBlockState()),
+                    ImmutableList.of(Blocks.WATER.defaultBlockState())
             );
-            return feature.configure(config).applyChance(10).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID)));
+            return feature.configured(config).rarity(10).decorated(FeatureDecorator.CARVING_MASK.configured(new CarvingMaskDecoratorConfiguration(GenerationStep.Carving.LIQUID)));
         });
         undergroundSeagrassOnDirt = register("underground_seagrass_on_dirt", Feature.SIMPLE_BLOCK, feature -> {
-            SimpleBlockFeatureConfig config = new SimpleBlockFeatureConfig(
-                    new SimpleBlockStateProvider(Blocks.SEAGRASS.getDefaultState()),
-                    ImmutableList.of(Blocks.DIRT.getDefaultState()),
-                    ImmutableList.of(Blocks.WATER.getDefaultState()),
-                    ImmutableList.of(Blocks.WATER.getDefaultState())
+            SimpleBlockConfiguration config = new SimpleBlockConfiguration(
+                    new SimpleStateProvider(Blocks.SEAGRASS.defaultBlockState()),
+                    ImmutableList.of(Blocks.DIRT.defaultBlockState()),
+                    ImmutableList.of(Blocks.WATER.defaultBlockState()),
+                    ImmutableList.of(Blocks.WATER.defaultBlockState())
             );
-            return feature.configure(config).applyChance(5).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID)));//.decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.5F)));
+            return feature.configured(config).rarity(5).decorated(FeatureDecorator.CARVING_MASK.configured(new CarvingMaskDecoratorConfiguration(GenerationStep.Carving.LIQUID)));//.decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.5F)));
         });
         undergroundSeaPickles = noConfig("underground_sea_pickles", TropicraftFeatures.UNDERGROUND_SEA_PICKLE, feature -> {
-            return feature.applyChance(5).decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID)));//.decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.05F)));
+            return feature.rarity(5).decorated(FeatureDecorator.CARVING_MASK.configured(new CarvingMaskDecoratorConfiguration(GenerationStep.Carving.LIQUID)));//.decorate(Decorator.CARVING_MASK.configure(new CarvingMaskDecoratorConfig(GenerationStep.Carver.LIQUID, 0.05F)));
         });
 
         azurite = register("azurite", Feature.ORE, f -> {
-            return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.AZURITE_ORE.getDefaultState(), 8))
-                    .uniformRange(YOffset.fixed(100), YOffset.fixed(128))
+            return f.configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE, TropicraftBlocks.AZURITE_ORE.defaultBlockState(), 8))
+                    .rangeUniform(VerticalAnchor.absolute(100), VerticalAnchor.absolute(128))
                     //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
-                    .spreadHorizontally().repeat(3);
+                    .squared().count(3);
         });
         eudialyte = register("eudialyte", Feature.ORE, f -> {
-            return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.EUDIALYTE_ORE.getDefaultState(), 12))
-                    .uniformRange(YOffset.fixed(100), YOffset.fixed(128))
+            return f.configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE, TropicraftBlocks.EUDIALYTE_ORE.defaultBlockState(), 12))
+                    .rangeUniform(VerticalAnchor.absolute(100), VerticalAnchor.absolute(128))
                     //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
-                    .spreadHorizontally().repeat(10);
+                    .squared().count(10);
         });
         zircon = register("zircon", Feature.ORE, f -> {
-            return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.ZIRCON_ORE.getDefaultState(), 14))
-                    .uniformRange(YOffset.fixed(100), YOffset.fixed(128))
+            return f.configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE, TropicraftBlocks.ZIRCON_ORE.defaultBlockState(), 14))
+                    .rangeUniform(VerticalAnchor.absolute(100), VerticalAnchor.absolute(128))
                     //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(100, 0, 128)))
-                    .spreadHorizontally().repeat(15);
+                    .squared().count(15);
         });
         manganese = register("manganese", Feature.ORE, f -> {
-            return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.MANGANESE_ORE.getDefaultState(), 10))
-                    .uniformRange(YOffset.fixed(32), YOffset.fixed(32))
+            return f.configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE, TropicraftBlocks.MANGANESE_ORE.defaultBlockState(), 10))
+                    .rangeUniform(VerticalAnchor.absolute(32), VerticalAnchor.absolute(32))
                     //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(32, 0, 32)))
-                    .spreadHorizontally().repeat(8);
+                    .squared().count(8);
         });
         shaka = register("shaka", Feature.ORE, f -> {
-            return f.configure(new OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, TropicraftBlocks.SHAKA_ORE.getDefaultState(), 8))
-                    .uniformRange(YOffset.fixed(0), YOffset.fixed(32))
+            return f.configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE, TropicraftBlocks.SHAKA_ORE.defaultBlockState(), 8))
+                    .rangeUniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(32))
                     //.decorate(Decorator.RANGE.configure(new RangeDecoratorConfig(0, 0, 32)))
-                    .spreadHorizontally().repeat(6);
+                    .squared().count(6);
         });
 
         // 0 = south
@@ -342,68 +348,68 @@ public final class TropicraftConfiguredFeatures extends ConfiguredFeatures{
         homeTreeBranchSouthWestExact = homeTreeBranch("home_tree/branch/southwest_exact", 315, 315);
     }
 
-    public static void addFruitTrees(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.grapefruitTree);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.orangeTree);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.lemonTree);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.limeTree);
+    public static void addFruitTrees(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.grapefruitTree);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.orangeTree);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.lemonTree);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.limeTree);
     }
 
-    public static void addPalmTrees(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.normalPalmTree);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.curvedPalmTree);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.largePalmTree);
+    public static void addPalmTrees(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.normalPalmTree);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.curvedPalmTree);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.largePalmTree);
     }
 
-    public static void addRainforestTrees(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestUpTree);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestSmallTualung);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestLargeTualung);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestTallTree);
+    public static void addRainforestTrees(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestUpTree);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestSmallTualung);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestLargeTualung);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestTallTree);
     }
 
-    public static void addRainforestPlants(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, ConfiguredFeatures.PATCH_MELON);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestVines);
+    public static void addRainforestPlants(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Features.PATCH_MELON);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.rainforestVines);
     }
 
-    public static void addPineapples(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.pineapplePatch);
+    public static void addPineapples(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.pineapplePatch);
     }
 
-    public static void addEih(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.eih);
+    public static void addEih(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.eih);
     }
 
-    public static void addTropicsFlowers(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.tropicsFlowers);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.irisFlowers);
+    public static void addTropicsFlowers(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.tropicsFlowers);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.irisFlowers);
     }
 
-    public static void addTropicsGems(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.UNDERGROUND_ORES, TropicraftConfiguredFeatures.azurite);
-        generation.feature(GenerationStep.Feature.UNDERGROUND_ORES, TropicraftConfiguredFeatures.eudialyte);
-        generation.feature(GenerationStep.Feature.UNDERGROUND_ORES, TropicraftConfiguredFeatures.zircon);
+    public static void addTropicsGems(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TropicraftConfiguredFeatures.azurite);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TropicraftConfiguredFeatures.eudialyte);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TropicraftConfiguredFeatures.zircon);
     }
 
-    public static void addTropicsMetals(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.UNDERGROUND_ORES, TropicraftConfiguredFeatures.manganese);
-        generation.feature(GenerationStep.Feature.UNDERGROUND_ORES, TropicraftConfiguredFeatures.shaka);
+    public static void addTropicsMetals(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TropicraftConfiguredFeatures.manganese);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TropicraftConfiguredFeatures.shaka);
     }
 
-    public static void addUndergroundSeagrass(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.undergroundSeagrassOnStone);
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.undergroundSeagrassOnDirt);
+    public static void addUndergroundSeagrass(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.undergroundSeagrassOnStone);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.undergroundSeagrassOnDirt);
     }
 
-    public static void addUndergroundPickles(GenerationSettings.Builder generation) {
-        generation.feature(GenerationStep.Feature.VEGETAL_DECORATION, TropicraftConfiguredFeatures.undergroundSeaPickles);
+    public static void addUndergroundPickles(BiomeGenerationSettings.Builder generation) {
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, TropicraftConfiguredFeatures.undergroundSeaPickles);
     }
 
 
-    public static <FC extends FeatureConfig, F extends Feature<FC>, CF extends ConfiguredFeature<FC, F>> CF registerConfiguredFeature(String id, CF configuredFeature) {
-        Identifier tropicID = new Identifier(Constants.MODID, id);
-        if (BuiltinRegistries.CONFIGURED_FEATURE.getIds().contains(tropicID))
+    public static <FC extends FeatureConfiguration, F extends Feature<FC>, CF extends ConfiguredFeature<FC, F>> CF registerConfiguredFeature(String id, CF configuredFeature) {
+        ResourceLocation tropicID = new ResourceLocation(Constants.MODID, id);
+        if (BuiltinRegistries.CONFIGURED_FEATURE.keySet().contains(tropicID))
             throw new IllegalStateException("Configured Feature ID: \"" + tropicID.toString() + "\" already exists in the Configured Features registry!");
 
 
@@ -412,11 +418,11 @@ public final class TropicraftConfiguredFeatures extends ConfiguredFeatures{
 
     public static <F extends Feature<?>> ConfiguredFeature<?, ?> register(String id, F feature, Function<F, ConfiguredFeature<?, ?>> configure) {
         //return this.worldgen.register(new Identifier(Constants.MODID, id), configure.apply(feature));
-        Identifier tropicID = new Identifier(Constants.MODID, id);
-        if (BuiltinRegistries.CONFIGURED_FEATURE.getIds().contains(tropicID))
+        ResourceLocation tropicID = new ResourceLocation(Constants.MODID, id);
+        if (BuiltinRegistries.CONFIGURED_FEATURE.keySet().contains(tropicID))
             throw new IllegalStateException("Configured Feature ID: \"" + tropicID.toString() + "\" already exists in the Configured Features registry!");
 
-        return Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MODID, id), configure.apply(feature));
+        return Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(Constants.MODID, id), configure.apply(feature));
     }
 
     /*
@@ -425,24 +431,24 @@ public final class TropicraftConfiguredFeatures extends ConfiguredFeatures{
     }
      */
 
-    public static <F extends Feature<DefaultFeatureConfig>> ConfiguredFeature<?, ?> noConfig(String id, F feature, UnaryOperator<ConfiguredFeature<?, ?>> configure) {
-        return register(id, feature, f -> configure.apply(f.configure(DefaultFeatureConfig.INSTANCE)));
+    public static <F extends Feature<NoneFeatureConfiguration>> ConfiguredFeature<?, ?> noConfig(String id, F feature, UnaryOperator<ConfiguredFeature<?, ?>> configure) {
+        return register(id, feature, f -> configure.apply(f.configured(NoneFeatureConfiguration.INSTANCE)));
     }
 
     public static ConfiguredFeature<?, ?> fruitTree(String id, Block sapling, Block fruitLeaves) {
         return sparseTree(id, TropicraftFeatures.FRUIT_TREE, new FruitTreeConfig(sapling, fruitLeaves), 0.2F);
     }
 
-    public static <C extends FeatureConfig, F extends Feature<C>> ConfiguredFeature<?, ?> sparseTree(String id, F feature, C config, float chance) {
+    public static <C extends FeatureConfiguration, F extends Feature<C>> ConfiguredFeature<?, ?> sparseTree(String id, F feature, C config, float chance) {
         return register(id, feature, f -> {
-            return f.configure(config).decorate(ConfiguredFeatures.Decorators.SQUARE_HEIGHTMAP)
-                    .decorate(Decorator.COUNT_EXTRA.configure(new CountExtraDecoratorConfig(0, chance, 1)));
+            return f.configured(config).decorated(Features.Decorators.HEIGHTMAP_SQUARE)
+                    .decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, chance, 1)));
         });
     }
 
-    public static <C extends FeatureConfig, F extends Feature<C>> ConfiguredFeature<?, ?> homeTreeBranch(String id, float minAngle, float maxAngle) {
+    public static <C extends FeatureConfiguration, F extends Feature<C>> ConfiguredFeature<?, ?> homeTreeBranch(String id, float minAngle, float maxAngle) {
         return register(id, TropicraftFeatures.HOME_TREE_BRANCH,
-                f -> f.configure(new HomeTreeBranchConfig(minAngle, maxAngle))
+                f -> f.configured(new HomeTreeBranchConfig(minAngle, maxAngle))
         );
     }
 

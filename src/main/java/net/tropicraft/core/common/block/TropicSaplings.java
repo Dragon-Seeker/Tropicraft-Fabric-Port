@@ -1,11 +1,11 @@
 package net.tropicraft.core.common.block;
 
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.sapling.SaplingGenerator;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 
 public class TropicSaplings extends SaplingBlock {
 
-    public TropicSaplings(SaplingGenerator generator, Settings settings) {
+    public TropicSaplings(AbstractTreeGrower generator, Properties settings) {
         super(generator, settings);
     }
 }

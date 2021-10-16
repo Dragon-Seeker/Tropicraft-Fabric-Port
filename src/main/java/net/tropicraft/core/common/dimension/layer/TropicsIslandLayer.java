@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.InitLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer0;
 
-public final class TropicsIslandLayer implements InitLayer {
+public final class TropicsIslandLayer implements AreaTransformer0 {
     private final TropicraftBiomeIds biomeIds;
 
     public TropicsIslandLayer(TropicraftBiomeIds biomeIds) {
@@ -11,12 +11,12 @@ public final class TropicsIslandLayer implements InitLayer {
     }
 
     @Override
-    public int sample(LayerRandomnessSource random, int x, int y) {
+    public int applyPixel(Context random, int x, int y) {
         // if (0, 0) is located here, place an island
         if (x == 0 && y == 0) {
             return this.biomeIds.land;
         }
 
-        return random.nextInt(3) == 0 ? this.biomeIds.land : this.biomeIds.ocean;
+        return random.nextRandom(3) == 0 ? this.biomeIds.land : this.biomeIds.ocean;
     }
 }

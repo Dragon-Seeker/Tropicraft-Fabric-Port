@@ -1,14 +1,19 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.tropicraft.core.common.entity.underdasea.SeaUrchinEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 
-public class SeaUrchinModel extends CompositeEntityModel<SeaUrchinEntity> {
+public class SeaUrchinModel extends ListModel<SeaUrchinEntity> {
 	private static final int VERTICAL_SPINES = 12;
 	private static final int HORIZONTAL_SPINES = 12;
 
@@ -148,119 +153,119 @@ public class SeaUrchinModel extends CompositeEntityModel<SeaUrchinEntity> {
 		 */
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
 
-		modelPartData.addChild("base",
-				ModelPartBuilder.create().mirrored()
-						.uv(0,0).cuboid(-3F, 16F, -3F, 6, 6, 6),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("base",
+				CubeListBuilder.create().mirror()
+						.texOffs(0,0).addBox(-3F, 16F, -3F, 6, 6, 6),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("top1",
-				ModelPartBuilder.create().mirrored()
-						.uv(0,38).cuboid(-2F, 15F, -2F, 4, 1, 4),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("top1",
+				CubeListBuilder.create().mirror()
+						.texOffs(0,38).addBox(-2F, 15F, -2F, 4, 1, 4),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("top2",
-				ModelPartBuilder.create().mirrored()
-						.uv(16,38).cuboid(-1F, 14F, -1F, 2, 1, 2),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("top2",
+				CubeListBuilder.create().mirror()
+						.texOffs(16,38).addBox(-1F, 14F, -1F, 2, 1, 2),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("front1",
-				ModelPartBuilder.create().mirrored()
-						.uv(0,12).cuboid(-2F, 17F, -4F, 4, 4, 1),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("front1",
+				CubeListBuilder.create().mirror()
+						.texOffs(0,12).addBox(-2F, 17F, -4F, 4, 4, 1),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("front2",
-				ModelPartBuilder.create().mirrored()
-						.uv(10, 12).cuboid(-1F, 18F, -5F, 2, 2, 1),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("front2",
+				CubeListBuilder.create().mirror()
+						.texOffs(10, 12).addBox(-1F, 18F, -5F, 2, 2, 1),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("left1",
-				ModelPartBuilder.create().mirrored()
-						.uv(0,17).cuboid(3F, 17F, -2F, 1, 4, 4),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("left1",
+				CubeListBuilder.create().mirror()
+						.texOffs(0,17).addBox(3F, 17F, -2F, 1, 4, 4),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("left2",
-				ModelPartBuilder.create().mirrored()
-						.uv(10,17).cuboid(4F, 18F, -1F, 1, 2, 2),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("left2",
+				CubeListBuilder.create().mirror()
+						.texOffs(10,17).addBox(4F, 18F, -1F, 1, 2, 2),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("back1",
-				ModelPartBuilder.create().mirrored()
-						.uv(0,25).cuboid(-2F, 17F, 3F, 4, 4, 1),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("back1",
+				CubeListBuilder.create().mirror()
+						.texOffs(0,25).addBox(-2F, 17F, 3F, 4, 4, 1),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("back2",
-				ModelPartBuilder.create().mirrored()
-						.uv(10,25).cuboid(-1F, 18F, 4F, 2, 2, 1),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("back2",
+				CubeListBuilder.create().mirror()
+						.texOffs(10,25).addBox(-1F, 18F, 4F, 2, 2, 1),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("right1",
-				ModelPartBuilder.create().mirrored()
-						.uv(0,30).cuboid(-4F, 17F, -2F, 1, 4, 4),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("right1",
+				CubeListBuilder.create().mirror()
+						.texOffs(0,30).addBox(-4F, 17F, -2F, 1, 4, 4),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("right2",
-				ModelPartBuilder.create().mirrored()
-						.uv(10,30).cuboid(-5F, 18F, -1F, 1, 2, 2),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("right2",
+				CubeListBuilder.create().mirror()
+						.texOffs(10,30).addBox(-5F, 18F, -1F, 1, 2, 2),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("bottom1",
-				ModelPartBuilder.create().mirrored()
-						.uv(0,38).cuboid(-2F, 22F, -2F, 4, 1, 4),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("bottom1",
+				CubeListBuilder.create().mirror()
+						.texOffs(0,38).addBox(-2F, 22F, -2F, 4, 1, 4),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("bottom2",
-				ModelPartBuilder.create().mirrored()
-						.uv(16,38).cuboid(-1F, 23F, -1F, 2, 1, 2),
-				ModelTransform.pivot(0F, 0F, 0F));
+		modelPartData.addOrReplaceChild("bottom2",
+				CubeListBuilder.create().mirror()
+						.texOffs(16,38).addBox(-1F, 23F, -1F, 2, 1, 2),
+				PartPose.offset(0F, 0F, 0F));
 
-		modelPartData.addChild("spine",
-				ModelPartBuilder.create().mirrored()
-						.uv(24, 0).cuboid(-0.5F, -9F, -0.5F, 1, 6, 1),
-				ModelTransform.pivot(0F, 19F, 0F));
+		modelPartData.addOrReplaceChild("spine",
+				CubeListBuilder.create().mirror()
+						.texOffs(24, 0).addBox(-0.5F, -9F, -0.5F, 1, 6, 1),
+				PartPose.offset(0F, 19F, 0F));
 
-		return TexturedModelData.of(modelData,64,64);
+		return LayerDefinition.create(modelData,64,64);
 	}
 
 	@Override
-	public void setAngles(SeaUrchinEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(SeaUrchinEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		// Yeah look it's a spiky ball okay
 	}
 
 	@Override
-	public void render(MatrixStack ms, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-		getParts().forEach((part) -> {
+	public void renderToBuffer(PoseStack ms, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+		parts().forEach((part) -> {
 			part.render(ms, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 		});
 
 		for (int v = 0; v < VERTICAL_SPINES; v++) {
 			for (int h = 0; h < HORIZONTAL_SPINES; h++) {
-				ms.push();
+				ms.pushPose();
 				ms.translate(0f, 1.25f, 0f);
-				ms.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(360 * ((float) v) / VERTICAL_SPINES));
-				ms.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(360 * ((float) h) / HORIZONTAL_SPINES));
+				ms.mulPose(Vector3f.ZP.rotationDegrees(360 * ((float) v) / VERTICAL_SPINES));
+				ms.mulPose(Vector3f.XP.rotationDegrees(360 * ((float) h) / HORIZONTAL_SPINES));
 				ms.translate(0f, -0.4f, 0f);
 				ms.scale(0.33f, 1f, 0.33f);
 				spine.render(ms, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-				ms.pop();
+				ms.popPose();
 			}
 		}
 	}
 
 	@Override
-	public Iterable<ModelPart> getParts() {
+	public Iterable<ModelPart> parts() {
 		return ImmutableList.of(
 			base, top1, top2, front1, front2, left1, left2, back1, back2, right1, right2, bottom1, bottom2
 		);
 	}
 
 	private void setRotation(ModelPart model, float x, float y, float z) {
-		model.pitch = x;
-		model.yaw = y;
-		model.roll = z;
+		model.xRot = x;
+		model.yRot = y;
+		model.zRot = z;
 	}
 }
 

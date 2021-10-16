@@ -1,21 +1,21 @@
 package net.tropicraft.core.common.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.tropicraft.core.common.block.blockentity.VolcanoBlockEntity;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 
-public class VolcanoBlock extends BlockWithEntity {
+public class VolcanoBlock extends BaseEntityBlock {
 
-    public VolcanoBlock(FabricBlockSettings settings) {
+    public VolcanoBlock(Properties settings) {
         super(settings);
     }
 
@@ -23,13 +23,13 @@ public class VolcanoBlock extends BlockWithEntity {
         return true;
     }
 
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new VolcanoBlockEntity(pos, state);
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, TropicBlockEntities.VOLCANO, (world1, pos, state1, be) -> VolcanoBlockEntity.tick(world1, pos, state1, be));
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, TropicBlockEntities.VOLCANO, (world1, pos, state1, be) -> VolcanoBlockEntity.tick(world1, pos, state1, be));
     }
 
 

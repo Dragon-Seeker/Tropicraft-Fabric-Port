@@ -1,38 +1,38 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.tropicraft.core.client.entity.models.EagleRayModel;
 import net.tropicraft.core.client.util.TropicraftRenderUtils;
 import net.tropicraft.core.common.entity.underdasea.EagleRayEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import org.jetbrains.annotations.Nullable;
 
 
 
-public class EagleRayRenderer extends MobEntityRenderer<EagleRayEntity, EagleRayModel> {
+public class EagleRayRenderer extends MobRenderer<EagleRayEntity, EagleRayModel> {
 
-    public static final Identifier RAY_TEXTURE_LOC = TropicraftRenderUtils.bindTextureEntity("ray/eagleray");
+    public static final ResourceLocation RAY_TEXTURE_LOC = TropicraftRenderUtils.bindTextureEntity("ray/eagleray");
 
-    public EagleRayRenderer(EntityRendererFactory.Context context) {
-        super(context, new EagleRayModel(context.getPart(TropicraftEntityRendering.EAGLE_RAY_LAYER)), 0.8f);
+    public EagleRayRenderer(EntityRendererProvider.Context context) {
+        super(context, new EagleRayModel(context.bakeLayer(TropicraftEntityRendering.EAGLE_RAY_LAYER)), 0.8f);
     }
 
     @Override
-    public void render(EagleRayEntity eagleRay, float entityYaw, float partialTicks, MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn) {
-        matrixStackIn.push();
+    public void render(EagleRayEntity eagleRay, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+        matrixStackIn.pushPose();
         // TODO still needed?
         matrixStackIn.translate(0, -1.25, 0);
         super.render(eagleRay, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 
     @Nullable
     @Override
-    public Identifier getTexture(EagleRayEntity eagleRayEntity) {
+    public ResourceLocation getTextureLocation(EagleRayEntity eagleRayEntity) {
         return RAY_TEXTURE_LOC;
     }
 }

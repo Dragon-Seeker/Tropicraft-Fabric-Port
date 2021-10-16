@@ -4,12 +4,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
-import net.minecraft.block.*;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.block.*;
 import net.tropicraft.core.common.block.plants.TropicPineapple;
@@ -23,50 +29,50 @@ import java.util.stream.Stream;
 
 public class TropicraftBlocks {
     public static final PortalWaterBlock PORTAL_WATER = registerNoItem(
-            "portal_water", new PortalWaterBlock(FabricBlockSettings.of(Material.WATER).dropsNothing()));
+            "portal_water", new PortalWaterBlock(FabricBlockSettings.of(Material.WATER).noDrops()));
 
-    public static final Block CHUNK = registerBlock("chunk", Builder.tropicBlock(Material.STONE, MapColor.BLACK,6.0F,30F));
+    public static final Block CHUNK = registerBlock("chunk", Builder.tropicBlock(Material.STONE, MaterialColor.COLOR_BLACK,6.0F,30F));
     public static final Block CHUNK_WALL = registerBlock("chunk_wall", Builder.Wall(CHUNK));
 
-    public static final VolcanoBlock VOLCANO = registerNoItem("volcano", new VolcanoBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).dropsNothing()));
+    public static final VolcanoBlock VOLCANO = registerNoItem("volcano", new VolcanoBlock(FabricBlockSettings.copyOf(Blocks.BEDROCK).noDrops()));
 
-    public static final SifterBlock SIFTER = registerBlock("sifter", new SifterBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque()));
+    public static final SifterBlock SIFTER = registerBlock("sifter", new SifterBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).noOcclusion()));
 
-    public static final DrinkMixerBlock DRINK_MIXER = registerBlock("drink_mixer", new DrinkMixerBlock(FabricBlockSettings.of(Material.STONE).strength(2, 30).nonOpaque()));
+    public static final DrinkMixerBlock DRINK_MIXER = registerBlock("drink_mixer", new DrinkMixerBlock(FabricBlockSettings.of(Material.STONE).strength(2, 30).noOcclusion()));
 
-    public static final AirCompressorBlock AIR_COMPRESSOR = registerBlock("air_compressor", new AirCompressorBlock(FabricBlockSettings.of(Material.STONE).strength(2, 30).nonOpaque()));
+    public static final AirCompressorBlock AIR_COMPRESSOR = registerBlock("air_compressor", new AirCompressorBlock(FabricBlockSettings.of(Material.STONE).strength(2, 30).noOcclusion()));
 
 
-    public static final TropicOreBlock MANGANESE_ORE = registerBlock("manganese_ore", Builder.OreBlock(MapColor.GRAY, UniformIntProvider.create(0, 0)));
-    public static final TropicOreBlock SHAKA_ORE = registerBlock("shaka_ore", Builder.OreBlock(MapColor.GRAY, UniformIntProvider.create(0, 0)));
-    public static final TropicOreBlock EUDIALYTE_ORE = registerBlock("eudialyte_ore", Builder.OreBlock(MapColor.GRAY, 2, UniformIntProvider.create(1, 4)));
-    public static final TropicOreBlock AZURITE_ORE = registerBlock("azurite_ore", Builder.OreBlock(MapColor.GRAY, 2, UniformIntProvider.create(2, 5)));
-    public static final TropicOreBlock ZIRCON_ORE = registerBlock("zircon_ore", Builder.OreBlock(MapColor.GRAY, 1, UniformIntProvider.create(0, 2)));
+    public static final TropicOreBlock MANGANESE_ORE = registerBlock("manganese_ore", Builder.OreBlock(MaterialColor.COLOR_GRAY, UniformInt.of(0, 0)));
+    public static final TropicOreBlock SHAKA_ORE = registerBlock("shaka_ore", Builder.OreBlock(MaterialColor.COLOR_GRAY, UniformInt.of(0, 0)));
+    public static final TropicOreBlock EUDIALYTE_ORE = registerBlock("eudialyte_ore", Builder.OreBlock(MaterialColor.COLOR_GRAY, 2, UniformInt.of(1, 4)));
+    public static final TropicOreBlock AZURITE_ORE = registerBlock("azurite_ore", Builder.OreBlock(MaterialColor.COLOR_GRAY, 2, UniformInt.of(2, 5)));
+    public static final TropicOreBlock ZIRCON_ORE = registerBlock("zircon_ore", Builder.OreBlock(MaterialColor.COLOR_GRAY, 1, UniformInt.of(0, 2)));
 
-    public static final Block AZURITE_BLOCK = registerBlock("azurite_block", Builder.MetalBlock(MapColor.LIGHT_BLUE));
-    public static final Block EUDIALYTE_BLOCK = registerBlock("eudialyte_block", Builder.MetalBlock(MapColor.PINK));
-    public static final Block MANGANESE_BLOCK = registerBlock("manganese_block", Builder.MetalBlock(MapColor.PURPLE));
-    public static final Block SHAKA_BLOCK = registerBlock("shaka_block", Builder.MetalBlock(MapColor.BLUE));
-    public static final Block ZIRCON_BLOCK = registerBlock("zircon_block", Builder.MetalBlock(MapColor.RED));
-    public static final Block ZIRCONIUM_BLOCK = registerBlock("zirconium_block", Builder.MetalBlock(MapColor.PINK));
+    public static final Block AZURITE_BLOCK = registerBlock("azurite_block", Builder.MetalBlock(MaterialColor.COLOR_LIGHT_BLUE));
+    public static final Block EUDIALYTE_BLOCK = registerBlock("eudialyte_block", Builder.MetalBlock(MaterialColor.COLOR_PINK));
+    public static final Block MANGANESE_BLOCK = registerBlock("manganese_block", Builder.MetalBlock(MaterialColor.COLOR_PURPLE));
+    public static final Block SHAKA_BLOCK = registerBlock("shaka_block", Builder.MetalBlock(MaterialColor.COLOR_BLUE));
+    public static final Block ZIRCON_BLOCK = registerBlock("zircon_block", Builder.MetalBlock(MaterialColor.COLOR_RED));
+    public static final Block ZIRCONIUM_BLOCK = registerBlock("zirconium_block", Builder.MetalBlock(MaterialColor.COLOR_PINK));
 
     public static final Block PURIFIED_SAND = registerBlock("purified_sand", Builder.Sand());
     public static final Block PACKED_PURIFIED_SAND = registerBlock("packed_purified_sand", Builder.Sand(2.0F, 30.0F));
-    public static final Block CORAL_SAND = registerBlock("coral_sand", Builder.Sand(MapColor.PINK));
-    public static final Block FOAMY_SAND = registerBlock("foamy_sand", Builder.Sand(MapColor.GREEN));
-    public static final Block VOLCANIC_SAND = registerBlock("volcanic_sand", Builder.Sand(MapColor.LIGHT_GRAY));
+    public static final Block CORAL_SAND = registerBlock("coral_sand", Builder.Sand(MaterialColor.COLOR_PINK));
+    public static final Block FOAMY_SAND = registerBlock("foamy_sand", Builder.Sand(MaterialColor.COLOR_GREEN));
+    public static final Block VOLCANIC_SAND = registerBlock("volcanic_sand", Builder.Sand(MaterialColor.COLOR_LIGHT_GRAY));
     public static final Block MINERAL_SAND = registerBlock("mineral_sand", Builder.Sand());
 
-    public static final Block MAHOGANY_LOG = registerBlock("mahogany_log", Builder.Log(Material.WOOD, MapColor.OAK_TAN, MapColor.BROWN, BlockSoundGroup.WOOD)); //Was MaterialColor.WOOD
-    public static final Block MAHOGANY_WOOD = registerBlock("mahogany_wood", Builder.Bark(Material.WOOD, BlockSoundGroup.WOOD));
-    public static final Block MAHOGANY_PLANKS = registerBlock("mahogany_planks", Builder.tropicBlock(Material.WOOD, MapColor.BROWN,2.0F,3.0F, BlockSoundGroup.WOOD));
+    public static final Block MAHOGANY_LOG = registerBlock("mahogany_log", Builder.Log(Material.WOOD, MaterialColor.WOOD, MaterialColor.COLOR_BROWN, SoundType.WOOD)); //Was MaterialColor.WOOD
+    public static final Block MAHOGANY_WOOD = registerBlock("mahogany_wood", Builder.Bark(Material.WOOD, SoundType.WOOD));
+    public static final Block MAHOGANY_PLANKS = registerBlock("mahogany_planks", Builder.tropicBlock(Material.WOOD, MaterialColor.COLOR_BROWN,2.0F,3.0F, SoundType.WOOD));
 
-    public static final Block PALM_LOG = registerBlock("palm_log", Builder.Log(Material.WOOD, MapColor.OAK_TAN, MapColor.BROWN, BlockSoundGroup.WOOD)); //Was MaterialColor.WOOD
-    public static final Block PALM_WOOD = registerBlock("palm_wood", Builder.Bark(Material.WOOD, BlockSoundGroup.WOOD));
-    public static final Block PALM_PLANKS = registerBlock("palm_planks", Builder.tropicBlock(Material.WOOD, MapColor.BROWN,2.0F,3.0F, BlockSoundGroup.WOOD));
+    public static final Block PALM_LOG = registerBlock("palm_log", Builder.Log(Material.WOOD, MaterialColor.WOOD, MaterialColor.COLOR_BROWN, SoundType.WOOD)); //Was MaterialColor.WOOD
+    public static final Block PALM_WOOD = registerBlock("palm_wood", Builder.Bark(Material.WOOD, SoundType.WOOD));
+    public static final Block PALM_PLANKS = registerBlock("palm_planks", Builder.tropicBlock(Material.WOOD, MaterialColor.COLOR_BROWN,2.0F,3.0F, SoundType.WOOD));
 
-    public static final Block BAMBOO_BUNDLE = registerBlock("bamboo_bundle", Builder.Bark(Material.WOOD, BlockSoundGroup.WOOD));
-    public static final Block THATCH_BUNDLE = registerBlock("thatch_bundle", Builder.Planks(Material.ORGANIC_PRODUCT, BlockSoundGroup.CROP, 0.2F, 5.0F));
+    public static final Block BAMBOO_BUNDLE = registerBlock("bamboo_bundle", Builder.Bark(Material.WOOD, SoundType.WOOD));
+    public static final Block THATCH_BUNDLE = registerBlock("thatch_bundle", Builder.Planks(Material.CLAY, SoundType.CROP, 0.2F, 5.0F));
 
     public static final Block PALM_STAIRS = registerBlock("palm_stairs", Builder.Stairs(PALM_PLANKS));
     public static final Block MAHOGANY_STAIRS = registerBlock("mahogany_stairs", Builder.Stairs(MAHOGANY_PLANKS));
@@ -76,7 +82,7 @@ public class TropicraftBlocks {
     public static final Block CHUNK_STAIRS = registerBlock("chunk_stairs", Builder.Stairs(CHUNK));
 
     public static final Block COCONUT = registerBlock("coconut", new TropicraftCoconutBlock());
-    public static final CoffeeBushBlock COFFEE_BUSH = registerNoItem("coffee_bush", new CoffeeBushBlock(FabricBlockSettings.of(Material.PLANT, MapColor.GREEN).strength(0.15f).sounds(BlockSoundGroup.GRASS).noCollision()));//Was MaterialColor.GRASS
+    public static final CoffeeBushBlock COFFEE_BUSH = registerNoItem("coffee_bush", new CoffeeBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.COLOR_GREEN).strength(0.15f).sound(SoundType.GRASS).noCollission()));//Was MaterialColor.GRASS
 
     public static final Block BAMBOO_SLAB = registerBlock("bamboo_slab", Builder.Slab(BAMBOO_BUNDLE));
     public static final Block THATCH_SLAB = registerBlock("thatch_slab", Builder.Slab(THATCH_BUNDLE));
@@ -113,31 +119,31 @@ public class TropicraftBlocks {
 
     //public static FabricBlockSettings FlowerPot = FabricBlockSettings.of(Material.REPLACEABLE_PLANT).breakInstantly().nonOpaque();
 
-    public static FabricBlockSettings FlowerPot = FabricBlockSettings.copyOf(BAMBOO_BUNDLE).breakInstantly().nonOpaque();
+    public static BlockBehaviour.Properties FlowerPot = FabricBlockSettings.copyOf(BAMBOO_BUNDLE).instabreak().noOcclusion();
 
     public static final Block BAMBOO_FLOWER_POT = registerBlock("bamboo_flower_pot", Builder.BambooPot(Blocks.AIR));
 
-    private static FabricBlockSettings FLOWERS_SETTINGS = FabricBlockSettings.of(Material.PLANT).sounds(BlockSoundGroup.GRASS).breakInstantly().noCollision();
+    private static BlockBehaviour.Properties FLOWERS_SETTINGS = FabricBlockSettings.of(Material.PLANT).sound(SoundType.GRASS).instabreak().noCollission();
 
-    public static final Block ACAI_VINE = registerBlock("acai_vine", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 7, 16, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block ANEMONE = registerBlock("anemone", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block BROMELIAD = registerBlock("bromeliad", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ACAI_VINE = registerBlock("acai_vine", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 7, 16, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ANEMONE = registerBlock("anemone", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block BROMELIAD = registerBlock("bromeliad", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 9, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block CANNA = registerBlock("canna", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block COMMELINA_DIFFUSA = registerBlock("commelina_diffusa", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block CROCOSMIA = registerBlock("crocosmia", new TropicFlowerBlock(StatusEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block CANNA = registerBlock("canna", new TropicFlowerBlock(MobEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block COMMELINA_DIFFUSA = registerBlock("commelina_diffusa", new TropicFlowerBlock(MobEffects.REGENERATION, 0, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block CROCOSMIA = registerBlock("crocosmia", new TropicFlowerBlock(MobEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block CROTON = registerBlock("croton", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block DRACAENA = registerBlock("dracaena", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block TROPICAL_FERN = registerBlock("tropical_fern", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block FOLIAGE = registerBlock("foliage", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block CROTON = registerBlock("croton", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block DRACAENA = registerBlock("dracaena", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block TROPICAL_FERN = registerBlock("tropical_fern", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block FOLIAGE = registerBlock("foliage", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 13, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block MAGIC_MUSHROOM = registerBlock("magic_mushroom", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 11, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block ORANGE_ANTHURIUM = registerBlock("orange_anthurium", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block MAGIC_MUSHROOM = registerBlock("magic_mushroom", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 11, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ORANGE_ANTHURIUM = registerBlock("orange_anthurium", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
-    public static final Block ORCHID = registerBlock("orchid", new TropicFlowerBlock(StatusEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block PATHOS = registerBlock("pathos", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 15, 12, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
-    public static final Block RED_ANTHURIUM = registerBlock("red_anthurium", new TropicFlowerBlock(StatusEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block ORCHID = registerBlock("orchid", new TropicFlowerBlock(MobEffects.REGENERATION, 0,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block PATHOS = registerBlock("pathos", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 15, 12, FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
+    public static final Block RED_ANTHURIUM = registerBlock("red_anthurium", new TropicFlowerBlock(MobEffects.REGENERATION, 0, 11,  FabricBlockSettings.copyOf(FLOWERS_SETTINGS)));
 
     /*
     public static final ImmutableMap<Flower, Block> FLOWERS = ImmutableMap.copyOf(
@@ -161,7 +167,7 @@ public class TropicraftBlocks {
     //            "tiki_torch", () -> new TikiTorchBlock(Block.Properties.from(Blocks.TORCH).sound(SoundType.WOOD).setLightLevel(state -> state.get(TikiTorchBlock.SECTION) == TorchSection.UPPER ? 15 : 0)));
 
 
-    private static AbstractBlock.Settings SAPLINGS = FabricBlockSettings.of(Material.PLANT).sounds(BlockSoundGroup.GRASS).breakInstantly().ticksRandomly().noCollision().nonOpaque();
+    private static BlockBehaviour.Properties SAPLINGS = FabricBlockSettings.of(Material.PLANT).sound(SoundType.GRASS).instabreak().randomTicks().noCollission().noOcclusion();
 
     public final static SaplingBlock GRAPEFRUIT_SAPLING = registerBlock("grapefruit_sapling", Builder.sapling(TropicraftTrees.GRAPEFRUIT, FabricBlockSettings.copyOf(SAPLINGS)));
     public final static SaplingBlock LEMON_SAPLING = registerBlock("lemon_sapling", Builder.sapling(TropicraftTrees.LEMON, FabricBlockSettings.copyOf(SAPLINGS)));
@@ -233,11 +239,11 @@ public class TropicraftBlocks {
             .build();
 
     public static final List<Block> BAMBOO_POTTED_TROPICS_PLANTS = ImmutableList.copyOf(POTTABLE_PLANTS.stream()
-            .map(b -> registerNoItem("bamboo_potted_" + Registry.BLOCK.getId(b).getPath(), Builder.tropicraftPot(b)))
+            .map(b -> registerNoItem("bamboo_potted_" + Registry.BLOCK.getKey(b).getPath(), Builder.tropicraftPot(b)))
             .collect(Collectors.toList()));
 
     public static final List<Block> VANILLA_POTTED_TROPICS_PLANTS = ImmutableList.copyOf(POTTABLE_PLANTS.stream()
-            .map(b -> registerNoItem("potted_" + Registry.BLOCK.getId(b).getPath(), Builder.vanillaPot(b)))
+            .map(b -> registerNoItem("potted_" + Registry.BLOCK.getKey(b).getPath(), Builder.vanillaPot(b)))
             .collect(Collectors.toList()));
 
     public static final List<Block> BAMBOO_POTTED_VANILLA_PLANTS = ImmutableList.copyOf(
@@ -246,7 +252,7 @@ public class TropicraftBlocks {
                     Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP,
                     Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY, Blocks.CORNFLOWER, Blocks.LILY_OF_THE_VALLEY,
                     Blocks.WITHER_ROSE, Blocks.RED_MUSHROOM, Blocks.BROWN_MUSHROOM, Blocks.DEAD_BUSH, Blocks.CACTUS)
-                    .map(b -> registerNoItem("bamboo_potted_" + Registry.BLOCK.getId(b).getPath(), Builder.tropicraftPot(b)))
+                    .map(b -> registerNoItem("bamboo_potted_" + Registry.BLOCK.getKey(b).getPath(), Builder.tropicraftPot(b)))
                     .collect(Collectors.toList()));
 
     public static final List<Block> ALL_POTTED_PLANTS = ImmutableList.<Block>builder()
@@ -257,12 +263,12 @@ public class TropicraftBlocks {
 
 
     private static <T extends Block> T registerNoItem(String id, T block) {
-        Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
+        Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, id), block);
         return block;
     }
 
     private static CoffeeBushBlock registerNoItemCoffee(String id, CoffeeBushBlock block) {
-        Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
+        Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, id), block);
         return block;
     }
 
@@ -283,11 +289,11 @@ public class TropicraftBlocks {
 
     public static <T extends Block> T registerBlock(String id, T block) {
         if(block == BAMBOO_CHEST || block == COCONUT){
-            Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
+            Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, id), block);
         }
 
         else {
-            Registry.register(Registry.BLOCK, new Identifier(Constants.MODID, id), block);
+            Registry.register(Registry.BLOCK, new ResourceLocation(Constants.MODID, id), block);
             TropicraftItems.registerItem(id, new TropicBlockItem(block));
         }
 
@@ -298,11 +304,11 @@ public class TropicraftBlocks {
         if(isDecay == true){
             return new LeavesBlock(FabricBlockSettings.of(Material.LEAVES)
                     .breakByTool(FabricToolTags.HOES)
-                    .strength(0.2f)
-                    .nonOpaque()
-                    .sounds(BlockSoundGroup.GRASS)
                     .breakByTool(FabricToolTags.SHEARS)
-                    .breakByHand(true));
+                    .breakByHand(true)
+                    .strength(0.2f)
+                    .noOcclusion()
+                    .sound(SoundType.GRASS));
         }
         else{
             return new TropicLeavesBlock();

@@ -2,15 +2,14 @@ package net.tropicraft.core.client.packets;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.MobSpawnS2CPacket;
+import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
+import net.minecraft.world.entity.LivingEntity;
 import net.tropicraft.core.common.entity.egg.StarfishEggEntity;
 import net.tropicraft.core.common.entity.underdasea.StarfishEntity;
 
 import java.io.IOException;
 
-public class StarFishSpawnS2CPacket extends MobSpawnS2CPacket {
+public class StarFishSpawnS2CPacket extends ClientboundAddMobPacket {
     private byte starFishType;
 
     public StarFishSpawnS2CPacket(LivingEntity entity){

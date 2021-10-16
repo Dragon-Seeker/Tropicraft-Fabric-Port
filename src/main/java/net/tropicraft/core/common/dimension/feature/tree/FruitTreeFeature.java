@@ -1,18 +1,16 @@
 package net.tropicraft.core.common.dimension.feature.tree;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ModifiableTestableWorld;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.TestableWorld;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.TreeFeature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelSimulatedRW;
+import net.minecraft.world.level.LevelSimulatedReader;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.tropicraft.core.common.dimension.feature.config.FruitTreeConfig;
 
 import java.util.Random;
@@ -26,13 +24,13 @@ public class FruitTreeFeature extends Feature<FruitTreeConfig> {
 	}
 
 	@Override
-	public boolean generate(FeatureContext<FruitTreeConfig> context) {
-		StructureWorldAccess world = context.getWorld();
-		Random rand = context.getRandom();
-		BlockPos pos = context.getOrigin();
-		FruitTreeConfig config = context.getConfig();
+	public boolean place(FeaturePlaceContext<FruitTreeConfig> context) {
+		WorldGenLevel world = context.level();
+		Random rand = context.random();
+		BlockPos pos = context.origin();
+		FruitTreeConfig config = context.config();
 
-		pos = pos.toImmutable();
+		pos = pos.immutable();
 		int height = rand.nextInt(3) + 4;
 
 		if (goesBeyondWorldSize(world, pos.getY(), height)) {
@@ -44,11 +42,11 @@ public class FruitTreeFeature extends Feature<FruitTreeConfig> {
 		}
 
 		BlockState sapling = config.sapling;
-		if (!sapling.canPlaceAt(world, pos)) {
+		if (!sapling.canSurvive(world, pos)) {
 			return false;
 		}
 
-		setDirtAt(world, pos.down());
+		setDirtAt(world, pos.below());
 
 		for (int y = (pos.getY() - 3) + height; y <= pos.getY() + height; y++) {
 			int presizeMod = y - (pos.getY() + height);
@@ -61,10 +59,10 @@ public class FruitTreeFeature extends Feature<FruitTreeConfig> {
 						BlockPos leafPos = new BlockPos(x, y, z);
 						if (rand.nextBoolean()) {
 							// Set fruit-bearing leaves here
-							setBlockState(world, leafPos, config.fruitLeaves);
+							setBlock(world, leafPos, config.fruitLeaves);
 						} else {
 							// Set plain fruit tree leaves here
-							setBlockState(world, leafPos, config.leaves);
+							setBlock(world, leafPos, config.leaves);
 						}
 					}
 				}
@@ -73,29 +71,29 @@ public class FruitTreeFeature extends Feature<FruitTreeConfig> {
 
 		// Tree stem
 		for (int y = 0; y < height; y++) {
-			BlockPos logPos = pos.up(y);
-			if (TreeFeature.canReplace(world, logPos)) {
-				setBlockState(world, logPos, config.wood);
+			BlockPos logPos = pos.above(y);
+			if (TreeFeature.validTreePos(world, logPos)) {
+				setBlock(world, logPos, config.wood);
 			}
 		}
 
 		return true;
 	}
 
-	protected static boolean isDirt(TestableWorld world, BlockPos pos) {
-		return world.testBlockState(pos, (state) -> {
+	protected static boolean isDirt(LevelSimulatedReader world, BlockPos pos) {
+		return world.isStateAtPosition(pos, (state) -> {
 			Block block = state.getBlock();
-			return isSoil(block.getDefaultState()) && block != Blocks.GRASS_BLOCK && block != Blocks.MYCELIUM;
+			return isDirt(block.defaultBlockState()) && block != Blocks.GRASS_BLOCK && block != Blocks.MYCELIUM;
 		});
 	}
 
-	protected void setDirt(ModifiableTestableWorld world, BlockPos pos) {
+	protected void setDirt(LevelSimulatedRW world, BlockPos pos) {
 		if (!isDirt(world, pos)) {
-			setBlockState(world, pos, Blocks.DIRT.getDefaultState());
+			setBlock(world, pos, Blocks.DIRT.defaultBlockState());
 		}
 	}
 
-	protected void setDirtAt(ModifiableTestableWorld reader, BlockPos pos) {
+	protected void setDirtAt(LevelSimulatedRW reader, BlockPos pos) {
 		setDirt(reader, pos);
 	}
 }

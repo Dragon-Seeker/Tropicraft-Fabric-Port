@@ -4,30 +4,30 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.FlyingItemEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.projectile.ItemSupplier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 
 import java.util.UUID;
 
-public class LavaBallEntity extends Entity implements FlyingItemEntity {
+public class LavaBallEntity extends Entity implements ItemSupplier {
 
-    public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "lava_ball");
+    public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "lava_ball");
 
     public boolean setFire;
     public float size;
@@ -38,7 +38,7 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
     public double accelerationY;
     public double accelerationZ;
 
-    public LavaBallEntity(EntityType<? extends LavaBallEntity> type, World world) {
+    public LavaBallEntity(EntityType<? extends LavaBallEntity> type, Level world) {
         super(type, world);
         setFire = false;
         held = false;
@@ -46,10 +46,10 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
         lifeTimer = 0;
     }
 
-    public LavaBallEntity(EntityType<? extends LavaBallEntity> type,World world, double i, double j, double k, double motX, double motY, double motZ) {
+    public LavaBallEntity(EntityType<? extends LavaBallEntity> type,Level world, double i, double j, double k, double motX, double motY, double motZ) {
         super(type, world);
         setFire = false;
-        refreshPositionAndAngles(i, j, k, 0, 0);
+        moveTo(i, j, k, 0, 0);
         accelerationX = motX;
         accelerationY = motY;
         accelerationZ = motZ;
@@ -58,7 +58,7 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
         lifeTimer = 0;
     }
 
-    public LavaBallEntity(EntityType<? extends LavaBallEntity> type, World world, float startSize) {
+    public LavaBallEntity(EntityType<? extends LavaBallEntity> type, Level world, float startSize) {
         super(type, world);
         size = startSize;
         setFire = false;
@@ -67,19 +67,19 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
     }
 
     @Environment(EnvType.CLIENT)
-    public LavaBallEntity(World world, double x, double y, double z, int id, UUID uuid) {
+    public LavaBallEntity(Level world, double x, double y, double z, int id, UUID uuid) {
         super(TropicraftEntities.LAVA_BALL, world);
-        updatePosition(x, y, z);
-        updateTrackedPosition(x, y, z);
+        absMoveTo(x, y, z);
+        setPacketCoordinates(x, y, z);
         setId(id);
-        setUuid(uuid);
+        setUUID(uuid);
     }
 
 
 
 
     @Override
-    public boolean collides() {
+    public boolean isPickable() {
         return true;
     }
 
@@ -94,13 +94,13 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
         float y = (float) getY();
         float z = (float) getZ();
 
-        if (world.isClient) {
-            world.addParticle(ParticleTypes.LAVA, x, y, z, this.getVelocity().x, -1.5F, this.getVelocity().z);
+        if (level.isClientSide) {
+            level.addParticle(ParticleTypes.LAVA, x, y, z, this.getDeltaMovement().x, -1.5F, this.getDeltaMovement().z);
         }
     }
 
     @Override
-    protected void initDataTracker()
+    protected void defineSynchedData()
     {
 
     }
@@ -119,9 +119,9 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
             this.remove(RemovalReason.KILLED);
         }
 
-        double motionX = this.getVelocity().x;
-        double motionY = this.getVelocity().y;
-        double motionZ = this.getVelocity().z;
+        double motionX = this.getDeltaMovement().x;
+        double motionY = this.getDeltaMovement().y;
+        double motionZ = this.getDeltaMovement().z;
 
         if (size < 1) {
             size += .025;
@@ -136,7 +136,7 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
 
         if (!onGround) {
             motionY -=.05F;
-            if (world.isClient) {
+            if (level.isClientSide) {
                 for (int i = 0; i < 5 + random.nextInt(3); i++){
                     supahDrip();
                 }
@@ -154,41 +154,41 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
         int thisZ = (int)Math.floor(getZ());
 
         BlockPos posCurrent = new BlockPos(thisX, thisY, thisZ);
-        BlockPos posBelow = posCurrent.down();
-        BlockState stateBelow = world.getBlockState(posBelow);
+        BlockPos posBelow = posCurrent.below();
+        BlockState stateBelow = level.getBlockState(posBelow);
 
-        if (!world.isAir(posBelow) && stateBelow.getMaterial() != Material.LAVA && !held) {
+        if (!level.isEmptyBlock(posBelow) && stateBelow.getMaterial() != Material.LAVA && !held) {
             if (setFire) {
-                world.setBlockState(posCurrent, Blocks.LAVA.getDefaultState(), 3);
+                level.setBlock(posCurrent, Blocks.LAVA.defaultBlockState(), 3);
                 this.remove(RemovalReason.DISCARDED);
             }
 
             if (!setFire) {
-                if (world.isAir(posCurrent.west())) {
-                    world.setBlockState(posCurrent.west(), Blocks.LAVA.getDefaultState(), 2);
+                if (level.isEmptyBlock(posCurrent.west())) {
+                    level.setBlock(posCurrent.west(), Blocks.LAVA.defaultBlockState(), 2);
                 }
 
-                if (world.isAir(posCurrent.east())) {
-                    world.setBlockState(posCurrent.east(), Blocks.LAVA.getDefaultState(), 2);
+                if (level.isEmptyBlock(posCurrent.east())) {
+                    level.setBlock(posCurrent.east(), Blocks.LAVA.defaultBlockState(), 2);
                 }
 
-                if (world.isAir(posCurrent.south())) {
-                    world.setBlockState(posCurrent.south(), Blocks.LAVA.getDefaultState(), 2);
+                if (level.isEmptyBlock(posCurrent.south())) {
+                    level.setBlock(posCurrent.south(), Blocks.LAVA.defaultBlockState(), 2);
                 }
 
-                if (world.isAir(posCurrent.north())) {
-                    world.setBlockState(posCurrent.north(), Blocks.LAVA.getDefaultState(), 2);
+                if (level.isEmptyBlock(posCurrent.north())) {
+                    level.setBlock(posCurrent.north(), Blocks.LAVA.defaultBlockState(), 2);
                 }
 
-                world.setBlockState(posCurrent, Blocks.LAVA.getDefaultState(), 3);
+                level.setBlock(posCurrent, Blocks.LAVA.defaultBlockState(), 3);
                 setFire = true;
             }
         }
 
-        Vec3d motion = new Vec3d(motionX + this.accelerationX, motionY + this.accelerationY, motionZ + this.accelerationZ);
-        this.setVelocity(motion);
+        Vec3 motion = new Vec3(motionX + this.accelerationX, motionY + this.accelerationY, motionZ + this.accelerationZ);
+        this.setDeltaMovement(motion);
 
-        this.move(MovementType.SELF, motion);
+        this.move(MoverType.SELF, motion);
     }
 
     // TODO: Need this again? 1.14
@@ -198,22 +198,22 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
     }*/
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
         this.lifeTimer = nbt.getInt("lifeTimer");
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putInt("lifeTimer", this.lifeTimer);
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         //return new EntitySpawnS2CPacket(this);
 
         //NetworkHooks.getEntitySpawningPacket(this);
 
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
         // entity position
         packet.writeDouble(getX());
@@ -222,13 +222,13 @@ public class LavaBallEntity extends Entity implements FlyingItemEntity {
 
         // entity id & uuid
         packet.writeInt(getId());
-        packet.writeUuid(getUuid());
+        packet.writeUUID(getUUID());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
     }
 
     @Override
-    public ItemStack getStack() {
+    public ItemStack getItem() {
         return null;
     }
 }

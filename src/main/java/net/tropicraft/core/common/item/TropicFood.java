@@ -1,24 +1,24 @@
 package net.tropicraft.core.common.item;
 
-import net.minecraft.item.FoodComponent;
+import net.minecraft.world.food.FoodProperties;
 
 public class TropicFood {
-    public static final FoodComponent LEMON = new FoodComponent.Builder().hunger(2).saturationModifier(0.2f).snack().build();
-    public static final FoodComponent LIME = new FoodComponent.Builder().hunger(2).saturationModifier(0.2f).snack().build();
-    public static final FoodComponent GRAPEFRUIT = new FoodComponent.Builder().hunger(2).saturationModifier(0.2f).snack().build();
-    public static final FoodComponent ORANGE = new FoodComponent.Builder().hunger(2).saturationModifier(0.2f).snack().build();
-    public static final FoodComponent PINEAPPLE_CUBES = new FoodComponent.Builder().hunger(1).saturationModifier(0.1f).snack().build();
-    public static final FoodComponent COCONUT_CHUNK = new FoodComponent.Builder().hunger(1).saturationModifier(0.1f).snack().build();
+    public static final FoodProperties LEMON = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f).fast().build();
+    public static final FoodProperties LIME = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f).fast().build();
+    public static final FoodProperties GRAPEFRUIT = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f).fast().build();
+    public static final FoodProperties ORANGE = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f).fast().build();
+    public static final FoodProperties PINEAPPLE_CUBES = new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).fast().build();
+    public static final FoodProperties COCONUT_CHUNK = new FoodProperties.Builder().nutrition(1).saturationMod(0.1f).fast().build();
 
-    public static final FoodComponent COOKED_RAY = new FoodComponent.Builder().hunger(5).saturationModifier(0.5f).build();
-    public static final FoodComponent FRESH_MARLIN = new FoodComponent.Builder().hunger(2).saturationModifier(0.3f).build();
-    public static final FoodComponent SEARED_MARLIN = new FoodComponent.Builder().hunger(5).saturationModifier(0.65f).build();
-    public static final FoodComponent COOKED_FROG_LEG = new FoodComponent.Builder().hunger(2).saturationModifier(0.15f).build();
-    public static final FoodComponent SEA_URCHIN_ROE = new FoodComponent.Builder().hunger(3).saturationModifier(0.3f).build();
-    public static final FoodComponent TOASTED_NORI = new FoodComponent.Builder().hunger(2).saturationModifier(0.2f).build();
-    public static final FoodComponent RAW_FISH = new FoodComponent.Builder().hunger(2).saturationModifier(0.2f).build();
-    public static final FoodComponent RAW_RAY = new FoodComponent.Builder().hunger(1).saturationModifier(0.2f).build();
-    public static final FoodComponent RAW_FROG_LEG = new FoodComponent.Builder().hunger(1).saturationModifier(0.2f).build();
-    public static final FoodComponent COOKED_FISH = new FoodComponent.Builder().hunger(4).saturationModifier(0.4f).build();
+    public static final FoodProperties COOKED_RAY = new FoodProperties.Builder().nutrition(5).saturationMod(0.5f).build();
+    public static final FoodProperties FRESH_MARLIN = new FoodProperties.Builder().nutrition(2).saturationMod(0.3f).build();
+    public static final FoodProperties SEARED_MARLIN = new FoodProperties.Builder().nutrition(5).saturationMod(0.65f).build();
+    public static final FoodProperties COOKED_FROG_LEG = new FoodProperties.Builder().nutrition(2).saturationMod(0.15f).build();
+    public static final FoodProperties SEA_URCHIN_ROE = new FoodProperties.Builder().nutrition(3).saturationMod(0.3f).build();
+    public static final FoodProperties TOASTED_NORI = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f).build();
+    public static final FoodProperties RAW_FISH = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f).build();
+    public static final FoodProperties RAW_RAY = new FoodProperties.Builder().nutrition(1).saturationMod(0.2f).build();
+    public static final FoodProperties RAW_FROG_LEG = new FoodProperties.Builder().nutrition(1).saturationMod(0.2f).build();
+    public static final FoodProperties COOKED_FISH = new FoodProperties.Builder().nutrition(4).saturationMod(0.4f).build();
 
 }

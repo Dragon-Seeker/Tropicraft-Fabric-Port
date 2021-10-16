@@ -23,17 +23,16 @@ package shadow.fabric.mixin.client.rendering;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,18 +43,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import shadow.fabric.api.client.rendering.v1.ArmorRenderingRegistry;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Map;
 import java.util.Objects;
 
-@Mixin(ArmorFeatureRenderer.class)
+@Mixin(HumanoidArmorLayer.class)
 @Environment(EnvType.CLIENT)
-public abstract class MixinArmorFeatureRenderer extends FeatureRenderer {
+public abstract class MixinArmorFeatureRenderer extends RenderLayer {
 	@Shadow
 	@Final
-	private static Map<String, Identifier> ARMOR_TEXTURE_CACHE;
+	private static Map<String, ResourceLocation> ARMOR_LOCATION_CACHE;
 	
-	public MixinArmorFeatureRenderer(FeatureRendererContext context) {
+	public MixinArmorFeatureRenderer(RenderLayerParent context) {
 		super(context);
 		
 	}
@@ -66,30 +65,30 @@ public abstract class MixinArmorFeatureRenderer extends FeatureRenderer {
 	private EquipmentSlot storedSlot;
 	
 	@Inject(method = "render", at = @At("HEAD"))
-	private void storeEntity(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, LivingEntity livingEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
+	private void storeEntity(PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, LivingEntity livingEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
 		// We store the living entity wearing the armor before we render
 		this.storedEntity = livingEntity;
 	}
 	
-	@Inject(method = "renderArmor", at = @At("HEAD"))
-	private void storeSlot(MatrixStack matrices, VertexConsumerProvider vertexConsumers, LivingEntity entity, EquipmentSlot armorSlot, int light, BipedEntityModel model, CallbackInfo ci) {
+	@Inject(method = "renderArmorPiece", at = @At("HEAD"))
+	private void storeSlot(PoseStack matrices, MultiBufferSource vertexConsumers, LivingEntity entity, EquipmentSlot armorSlot, int light, HumanoidModel model, CallbackInfo ci) {
 		// We store the current armor slot that is rendering before we render each armor piece
 		this.storedSlot = armorSlot;
 	}
 	
 	@Inject(method = "render", at = @At("RETURN"))
-	private void removeStored(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, LivingEntity livingEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
+	private void removeStored(PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, LivingEntity livingEntity, float f, float g, float h, float j, float k, float l, CallbackInfo ci) {
 		// We remove the stored data after we render
 		this.storedEntity = null;
 		this.storedSlot = null;
 	}
 	
-	@Inject(method = "getArmor", at = @At("RETURN"), cancellable = true)
-	private void selectArmorModel(EquipmentSlot slot, CallbackInfoReturnable<BipedEntityModel<LivingEntity>> cir) {
-		ItemStack stack = storedEntity.getEquippedStack(slot);
+	@Inject(method = "getArmorModel", at = @At("RETURN"), cancellable = true)
+	private void selectArmorModel(EquipmentSlot slot, CallbackInfoReturnable<HumanoidModel<LivingEntity>> cir) {
+		ItemStack stack = storedEntity.getItemBySlot(slot);
 
-		BipedEntityModel<LivingEntity> defaultModel = cir.getReturnValue();
-		BipedEntityModel<LivingEntity> model = ArmorRenderingRegistry.getArmorModel(
+		HumanoidModel<LivingEntity> defaultModel = cir.getReturnValue();
+		HumanoidModel<LivingEntity> model = ArmorRenderingRegistry.getArmorModel(
 			storedEntity,
 			stack,
 			slot,
@@ -101,19 +100,19 @@ public abstract class MixinArmorFeatureRenderer extends FeatureRenderer {
 		}
 	}
 	
-	@Inject(method = "getArmorTexture", at = @At(value = "INVOKE", target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
-	private void getArmorTexture(ArmorItem item, boolean secondLayer, String suffix, CallbackInfoReturnable<Identifier> cir, String vanillaIdentifier  /* @Nullable */) {
+	@Inject(method = "getArmorLocation", at = @At(value = "INVOKE", target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+	private void getArmorTexture(ArmorItem item, boolean secondLayer, String suffix, CallbackInfoReturnable<ResourceLocation> cir, String vanillaIdentifier  /* @Nullable */) {
 		String texture = ArmorRenderingRegistry.getArmorTexture(
 			storedEntity,
-			storedEntity.getEquippedStack(storedSlot),
+			storedEntity.getItemBySlot(storedSlot),
 			storedSlot,
 			secondLayer,
 			suffix,
-			new Identifier(vanillaIdentifier)
+			new ResourceLocation(vanillaIdentifier)
 		).toString();
 		
 		if (!Objects.equals(texture, vanillaIdentifier)) {
-			cir.setReturnValue(ARMOR_TEXTURE_CACHE.computeIfAbsent(texture, Identifier::new));
+			cir.setReturnValue(ARMOR_LOCATION_CACHE.computeIfAbsent(texture, ResourceLocation::new));
 		}
 	}
 }

@@ -1,11 +1,16 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.tropicraft.core.common.entity.underdasea.TropicraftDolphinEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
 
-public class TropicraftDolphinModel extends CompositeEntityModel<TropicraftDolphinEntity> {
+public class TropicraftDolphinModel extends ListModel<TropicraftDolphinEntity> {
 	ModelPart body1;
 	ModelPart body2;
 	ModelPart head1;
@@ -305,220 +310,220 @@ public class TropicraftDolphinModel extends CompositeEntityModel<TropicraftDolph
 		*/
 	}
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-		modelPartData.addChild("body1",
-				ModelPartBuilder.create().uv(0, 0)
-						.cuboid(-3F, -3F, -3F, 6, 6, 8),
-				ModelTransform.pivot(0F, 20F, 0F));
+		modelPartData.addOrReplaceChild("body1",
+				CubeListBuilder.create().texOffs(0, 0)
+						.addBox(-3F, -3F, -3F, 6, 6, 8),
+				PartPose.offset(0F, 20F, 0F));
 
-		modelPartData.addChild("body2",
-				ModelPartBuilder.create().uv(0, 14)
-						.cuboid(-3F, -2F, -5F, 6, 5, 4),
-				ModelTransform.pivot(0F, 19.8F, -2F));
+		modelPartData.addOrReplaceChild("body2",
+				CubeListBuilder.create().texOffs(0, 14)
+						.addBox(-3F, -2F, -5F, 6, 5, 4),
+				PartPose.offset(0F, 19.8F, -2F));
 
-		modelPartData.addChild("head1",
-				ModelPartBuilder.create().uv(0, 57)
-						.cuboid(-2.5F, -3F, -3F, 5, 4, 3),
-				ModelTransform.pivot(0F, 21.4F, -6.3F));
+		modelPartData.addOrReplaceChild("head1",
+				CubeListBuilder.create().texOffs(0, 57)
+						.addBox(-2.5F, -3F, -3F, 5, 4, 3),
+				PartPose.offset(0F, 21.4F, -6.3F));
 
-		modelPartData.addChild("lowerJaw1",
-				ModelPartBuilder.create().uv(16, 61)
-						.cuboid(-2.5F, 0F, -1F, 5, 2, 1),
-				ModelTransform.pivot(0F, 20.4F, -9.3F));
+		modelPartData.addOrReplaceChild("lowerJaw1",
+				CubeListBuilder.create().texOffs(16, 61)
+						.addBox(-2.5F, 0F, -1F, 5, 2, 1),
+				PartPose.offset(0F, 20.4F, -9.3F));
 
-		modelPartData.addChild("lowerJaw2",
-				ModelPartBuilder.create().uv(29, 60)
-						.cuboid(-2F, 0F, -3F, 4, 1, 3),
-				ModelTransform.pivot(0F, 21.4F, -10.3F));
+		modelPartData.addOrReplaceChild("lowerJaw2",
+				CubeListBuilder.create().texOffs(29, 60)
+						.addBox(-2F, 0F, -3F, 4, 1, 3),
+				PartPose.offset(0F, 21.4F, -10.3F));
 
-		modelPartData.addChild("lowerJaw3",
-				ModelPartBuilder.create().uv(29, 54)
-						.cuboid(-2F, 0F, -3F, 4, 1, 3),
-				ModelTransform.pivot(0F, 20.4F, -10.3F));
+		modelPartData.addOrReplaceChild("lowerJaw3",
+				CubeListBuilder.create().texOffs(29, 54)
+						.addBox(-2F, 0F, -3F, 4, 1, 3),
+				PartPose.offset(0F, 20.4F, -10.3F));
 
-		modelPartData.addChild("lowerJaw4",
-				ModelPartBuilder.create().uv(44, 61)
-						.cuboid(-1.5F, 0F, -2F, 3, 1, 2),
-				ModelTransform.pivot(0F, 21.4F, -13.3F));
+		modelPartData.addOrReplaceChild("lowerJaw4",
+				CubeListBuilder.create().texOffs(44, 61)
+						.addBox(-1.5F, 0F, -2F, 3, 1, 2),
+				PartPose.offset(0F, 21.4F, -13.3F));
 
-		modelPartData.addChild("lowerJaw5",
-				ModelPartBuilder.create().uv(45, 56)
-						.cuboid(-1.5F, -1F, -1F, 3, 1, 1),
-				ModelTransform.pivot(0F, 22.4F, -15.3F));
+		modelPartData.addOrReplaceChild("lowerJaw5",
+				CubeListBuilder.create().texOffs(45, 56)
+						.addBox(-1.5F, -1F, -1F, 3, 1, 1),
+				PartPose.offset(0F, 22.4F, -15.3F));
 
-		modelPartData.addChild("upperJaw1",
-				ModelPartBuilder.create().uv(52, 0)
-						.cuboid(-2.5F, 0F, -1F, 5, 1, 1),
-				ModelTransform.pivot(0F, 19.4F, -9.3F));
+		modelPartData.addOrReplaceChild("upperJaw1",
+				CubeListBuilder.create().texOffs(52, 0)
+						.addBox(-2.5F, 0F, -1F, 5, 1, 1),
+				PartPose.offset(0F, 19.4F, -9.3F));
 
-		modelPartData.addChild("upperJaw2",
-				ModelPartBuilder.create().uv(50, 3)
-						.cuboid(-2F, 0F, -3F, 4, 1, 3),
-				ModelTransform.pivot(0F, 19.4F, -10.3F));
+		modelPartData.addOrReplaceChild("upperJaw2",
+				CubeListBuilder.create().texOffs(50, 3)
+						.addBox(-2F, 0F, -3F, 4, 1, 3),
+				PartPose.offset(0F, 19.4F, -10.3F));
 
-		modelPartData.addChild("upperJaw3",
-				ModelPartBuilder.create().uv(54, 8)
-						.cuboid(-1.5F, -1F, -2F, 3, 1, 2),
-				ModelTransform.pivot(0F, 21.36575F, -12.77706F));
+		modelPartData.addOrReplaceChild("upperJaw3",
+				CubeListBuilder.create().texOffs(54, 8)
+						.addBox(-1.5F, -1F, -2F, 3, 1, 2),
+				PartPose.offset(0F, 21.36575F, -12.77706F));
 
-		modelPartData.addChild("upperJaw4",
-				ModelPartBuilder.create().uv(58, 12)
-						.cuboid(-1F, -1F, -1F, 2, 1, 1),
-				ModelTransform.pivot(0F, 21.36575F, -14.77706F));
+		modelPartData.addOrReplaceChild("upperJaw4",
+				CubeListBuilder.create().texOffs(58, 12)
+						.addBox(-1F, -1F, -1F, 2, 1, 1),
+				PartPose.offset(0F, 21.36575F, -14.77706F));
 
-		modelPartData.addChild("upperJaw5",
-				ModelPartBuilder.create().uv(52, 15)
-						.cuboid(-1F, 0F, -4F, 2, 1, 4),
-				ModelTransform.pivot(0F, 19.74202F, -11.23969F));
+		modelPartData.addOrReplaceChild("upperJaw5",
+				CubeListBuilder.create().texOffs(52, 15)
+						.addBox(-1F, 0F, -4F, 2, 1, 4),
+				PartPose.offset(0F, 19.74202F, -11.23969F));
 
-		modelPartData.addChild("head2",
-				ModelPartBuilder.create().uv(0, 49)
-						.cuboid(-2F, -1F, -4F, 4, 2, 4),
-				ModelTransform.pivot(0F, 18.4F, -6.3F));
+		modelPartData.addOrReplaceChild("head2",
+				CubeListBuilder.create().texOffs(0, 49)
+						.addBox(-2F, -1F, -4F, 4, 2, 4),
+				PartPose.offset(0F, 18.4F, -6.3F));
 
-		modelPartData.addChild("head3",
-				ModelPartBuilder.create().uv(14, 49)
-						.cuboid(-1.5F, 0F, -1F, 3, 2, 1),
-				ModelTransform.pivot(0F, 17.99005F, -10.40267F));
+		modelPartData.addOrReplaceChild("head3",
+				CubeListBuilder.create().texOffs(14, 49)
+						.addBox(-1.5F, 0F, -1F, 3, 2, 1),
+				PartPose.offset(0F, 17.99005F, -10.40267F));
 
-		modelPartData.addChild("head4",
-				ModelPartBuilder.create().uv(24, 49)
-						.cuboid(-1.5F, 0F, -1F, 3, 2, 1),
-				ModelTransform.pivot(0F, 18.43765F, -11.29691F));
+		modelPartData.addOrReplaceChild("head4",
+				CubeListBuilder.create().texOffs(24, 49)
+						.addBox(-1.5F, 0F, -1F, 3, 2, 1),
+				PartPose.offset(0F, 18.43765F, -11.29691F));
 
-		modelPartData.addChild("head5",
-				ModelPartBuilder.create().uv(34, 49)
-						.cuboid(-1.5F, 0F, -1F, 3, 1, 1),
-				ModelTransform.pivot(0F, 19.10989F, -12.03724F));
+		modelPartData.addOrReplaceChild("head5",
+				CubeListBuilder.create().texOffs(34, 49)
+						.addBox(-1.5F, 0F, -1F, 3, 1, 1),
+				PartPose.offset(0F, 19.10989F, -12.03724F));
 
-		modelPartData.addChild("body3",
-				ModelPartBuilder.create().uv(20, 14)
-						.cuboid(-2.5F, 0F, -4.3F, 5, 1, 5),
-				ModelTransform.pivot(0F, 17.1F, -2.5F));
+		modelPartData.addOrReplaceChild("body3",
+				CubeListBuilder.create().texOffs(20, 14)
+						.addBox(-2.5F, 0F, -4.3F, 5, 1, 5),
+				PartPose.offset(0F, 17.1F, -2.5F));
 
-		modelPartData.addChild("rightPectoralFin1",
-				ModelPartBuilder.create().uv(0, 37)
-						.cuboid(-3F, 0F, 0F, 3, 1, 3),
-				ModelTransform.pivot(-3F, 21.3F, -5F));
+		modelPartData.addOrReplaceChild("rightPectoralFin1",
+				CubeListBuilder.create().texOffs(0, 37)
+						.addBox(-3F, 0F, 0F, 3, 1, 3),
+				PartPose.offset(-3F, 21.3F, -5F));
 
-		modelPartData.addChild("rightPectoralFin2",
-				ModelPartBuilder.create().uv(0, 41)
-						.cuboid(-1F, 0F, 0F, 1, 1, 2),
-				ModelTransform.pivot(-5.104775F, 22.85859F, -3.227792F));
+		modelPartData.addOrReplaceChild("rightPectoralFin2",
+				CubeListBuilder.create().texOffs(0, 41)
+						.addBox(-1F, 0F, 0F, 1, 1, 2),
+				PartPose.offset(-5.104775F, 22.85859F, -3.227792F));
 
-		modelPartData.addChild("rightPectoralFin3",
-				ModelPartBuilder.create().uv(8, 42)
-						.cuboid(-1F, 0F, 0F, 1, 1, 1),
-				ModelTransform.pivot(-5.521684F, 23.16731F, -1.912163F));
+		modelPartData.addOrReplaceChild("rightPectoralFin3",
+				CubeListBuilder.create().texOffs(8, 42)
+						.addBox(-1F, 0F, 0F, 1, 1, 1),
+				PartPose.offset(-5.521684F, 23.16731F, -1.912163F));
 
-		modelPartData.addChild("leftPectoralFin1",
-				ModelPartBuilder.create().uv(0, 37)
-						.cuboid(0F, 0F, 0F, 3, 1, 3),
-				ModelTransform.pivot(3F, 21.3F, -5F));
+		modelPartData.addOrReplaceChild("leftPectoralFin1",
+				CubeListBuilder.create().texOffs(0, 37)
+						.addBox(0F, 0F, 0F, 3, 1, 3),
+				PartPose.offset(3F, 21.3F, -5F));
 
-		modelPartData.addChild("leftPectoralFin2",
-				ModelPartBuilder.create().uv(0, 41)
-						.cuboid(3, -0.1f, 0.5f, 1, 1, 2),
-				ModelTransform.pivot(3F, 21.3F, -5F));
+		modelPartData.addOrReplaceChild("leftPectoralFin2",
+				CubeListBuilder.create().texOffs(0, 41)
+						.addBox(3, -0.1f, 0.5f, 1, 1, 2),
+				PartPose.offset(3F, 21.3F, -5F));
 
-		modelPartData.addChild("leftPectoralFin3",
-				ModelPartBuilder.create().uv(8, 42)
-						.cuboid(4, -0.15F, 0.5f, 1, 1, 1),
-				ModelTransform.pivot(3F, 21.3F, -5F));
+		modelPartData.addOrReplaceChild("leftPectoralFin3",
+				CubeListBuilder.create().texOffs(8, 42)
+						.addBox(4, -0.15F, 0.5f, 1, 1, 1),
+				PartPose.offset(3F, 21.3F, -5F));
 
-		modelPartData.addChild("tail1",
-				ModelPartBuilder.create().uv(0, 24)
-						.cuboid(-2.5F, -2.5F, -1F, 5, 5, 7),
-				ModelTransform.pivot(0F, 19.8F, 5.1F));
+		modelPartData.addOrReplaceChild("tail1",
+				CubeListBuilder.create().texOffs(0, 24)
+						.addBox(-2.5F, -2.5F, -1F, 5, 5, 7),
+				PartPose.offset(0F, 19.8F, 5.1F));
 
-		modelPartData.addChild("tail2",
-				ModelPartBuilder.create().uv(24, 27)
-						.cuboid(-2F, -2F, -1F, 4, 4, 5),
-				ModelTransform.pivot(0F, 20.07322F, 11.09378F));
+		modelPartData.addOrReplaceChild("tail2",
+				CubeListBuilder.create().texOffs(24, 27)
+						.addBox(-2F, -2F, -1F, 4, 4, 5),
+				PartPose.offset(0F, 20.07322F, 11.09378F));
 
-		modelPartData.addChild("tail3",
-				ModelPartBuilder.create().uv(40, 24)
-						.cuboid(-1.5F, -1.5F, -1F, 3, 3, 4),
-				ModelTransform.pivot(0F, 20.8163F, 15.02924F));
+		modelPartData.addOrReplaceChild("tail3",
+				CubeListBuilder.create().texOffs(40, 24)
+						.addBox(-1.5F, -1.5F, -1F, 3, 3, 4),
+				PartPose.offset(0F, 20.8163F, 15.02924F));
 
-		modelPartData.addChild("tail4",
-				ModelPartBuilder.create().uv(27, 30)
-						.cuboid(-1F, -1F, 0F, 2, 2, 3),
-				ModelTransform.pivot(0F, 21.49112F, 17.43644F));
+		modelPartData.addOrReplaceChild("tail4",
+				CubeListBuilder.create().texOffs(27, 30)
+						.addBox(-1F, -1F, 0F, 2, 2, 3),
+				PartPose.offset(0F, 21.49112F, 17.43644F));
 
-		modelPartData.addChild("fluke1",
-				ModelPartBuilder.create().uv(44, 34)
-						.cuboid(-3F, 0F, 0F, 6, 1, 1),
-				ModelTransform.pivot(0F, 22.1683F, 19.21166F));
+		modelPartData.addOrReplaceChild("fluke1",
+				CubeListBuilder.create().texOffs(44, 34)
+						.addBox(-3F, 0F, 0F, 6, 1, 1),
+				PartPose.offset(0F, 22.1683F, 19.21166F));
 
-		modelPartData.addChild("fluke2",
-				ModelPartBuilder.create().uv(43, 38)
-						.cuboid(-4.5F, 0F, 0F, 9, 1, 1),
-				ModelTransform.pivot(0F, 22.25945F, 20.2075F));
+		modelPartData.addOrReplaceChild("fluke2",
+				CubeListBuilder.create().texOffs(43, 38)
+						.addBox(-4.5F, 0F, 0F, 9, 1, 1),
+				PartPose.offset(0F, 22.25945F, 20.2075F));
 
-		modelPartData.addChild("fluke3",
-				ModelPartBuilder.create().uv(30, 38)
-						.cuboid(-5F, 0F, -1F, 5, 1, 1),
-				ModelTransform.pivot(4.9F, 22.44176F, 22.19917F));
+		modelPartData.addOrReplaceChild("fluke3",
+				CubeListBuilder.create().texOffs(30, 38)
+						.addBox(-5F, 0F, -1F, 5, 1, 1),
+				PartPose.offset(4.9F, 22.44176F, 22.19917F));
 
-		modelPartData.addChild("fluke4",
-				ModelPartBuilder.create().uv(14, 38)
-						.cuboid(-5F, 0F, 0F, 6, 1, 1),
-				ModelTransform.pivot(4.9F, 22.44176F, 22.19917F));
+		modelPartData.addOrReplaceChild("fluke4",
+				CubeListBuilder.create().texOffs(14, 38)
+						.addBox(-5F, 0F, 0F, 6, 1, 1),
+				PartPose.offset(4.9F, 22.44176F, 22.19917F));
 
-		modelPartData.addChild("fluke5",
-				ModelPartBuilder.create().uv(30, 38)
-						.cuboid(0F, 0F, -1F, 5, 1, 1),
-				ModelTransform.pivot(-4.9F, 22.44176F, 22.19917F));
+		modelPartData.addOrReplaceChild("fluke5",
+				CubeListBuilder.create().texOffs(30, 38)
+						.addBox(0F, 0F, -1F, 5, 1, 1),
+				PartPose.offset(-4.9F, 22.44176F, 22.19917F));
 
-		modelPartData.addChild("fluke6",
-				ModelPartBuilder.create().uv(14, 38)
-						.cuboid(-1F, 0F, 0F, 6, 1, 1),
-				ModelTransform.pivot(-4.9F, 22.44176F, 22.19917F));
+		modelPartData.addOrReplaceChild("fluke6",
+				CubeListBuilder.create().texOffs(14, 38)
+						.addBox(-1F, 0F, 0F, 6, 1, 1),
+				PartPose.offset(-4.9F, 22.44176F, 22.19917F));
 
-		modelPartData.addChild("fluke7",
-				ModelPartBuilder.create().uv(55, 30)
-						.cuboid(-3F, 0F, 0F, 3, 1, 1),
-				ModelTransform.pivot(0F, 22.43265F, 22.09959F));
+		modelPartData.addOrReplaceChild("fluke7",
+				CubeListBuilder.create().texOffs(55, 30)
+						.addBox(-3F, 0F, 0F, 3, 1, 1),
+				PartPose.offset(0F, 22.43265F, 22.09959F));
 
-		modelPartData.addChild("fluke8",
-				ModelPartBuilder.create().uv(55, 30)
-						.cuboid(0F, 0F, 0F, 3, 1, 1),
-				ModelTransform.pivot(0F, 22.43265F, 22.09959F));
+		modelPartData.addOrReplaceChild("fluke8",
+				CubeListBuilder.create().texOffs(55, 30)
+						.addBox(0F, 0F, 0F, 3, 1, 1),
+				PartPose.offset(0F, 22.43265F, 22.09959F));
 
-		modelPartData.addChild("dorsalFin1",
-				ModelPartBuilder.create().uv(21, 0)
-						.cuboid(-0.5F, -1F, -0.7F, 1, 1, 5),
-				ModelTransform.pivot(0F, 17.1F, 0F));
+		modelPartData.addOrReplaceChild("dorsalFin1",
+				CubeListBuilder.create().texOffs(21, 0)
+						.addBox(-0.5F, -1F, -0.7F, 1, 1, 5),
+				PartPose.offset(0F, 17.1F, 0F));
 
-		modelPartData.addChild("dorsalFin2",
-				ModelPartBuilder.create().uv(35, 0)
-						.cuboid(-0.5F, -1F, 0F, 1, 1, 4),
-				ModelTransform.pivot(0F, 16.10415F, 0.09098025F));
+		modelPartData.addOrReplaceChild("dorsalFin2",
+				CubeListBuilder.create().texOffs(35, 0)
+						.addBox(-0.5F, -1F, 0F, 1, 1, 4),
+				PartPose.offset(0F, 16.10415F, 0.09098025F));
 
-		modelPartData.addChild("dorsalFin3",
-				ModelPartBuilder.create().uv(30, 7)
-						.cuboid(-0.5F, -1F, 0F, 1, 1, 3),
-				ModelTransform.pivot(0F, 15.30191F, 1.255631F));
+		modelPartData.addOrReplaceChild("dorsalFin3",
+				CubeListBuilder.create().texOffs(30, 7)
+						.addBox(-0.5F, -1F, 0F, 1, 1, 3),
+				PartPose.offset(0F, 15.30191F, 1.255631F));
 
-		modelPartData.addChild("dorsalFin4",
-				ModelPartBuilder.create().uv(39, 7)
-						.cuboid(-0.5F, -1F, 0F, 1, 1, 2),
-				ModelTransform.pivot(0F, 14.60895F, 2.48844F));
+		modelPartData.addOrReplaceChild("dorsalFin4",
+				CubeListBuilder.create().texOffs(39, 7)
+						.addBox(-0.5F, -1F, 0F, 1, 1, 2),
+				PartPose.offset(0F, 14.60895F, 2.48844F));
 
-		modelPartData.addChild("dorsalFin5",
-				ModelPartBuilder.create().uv(45, 0)
-						.cuboid(-0.5F, -1F, 0F, 1, 1, 1),
-				ModelTransform.pivot(0F, 14.15063F, 3.826327F));
+		modelPartData.addOrReplaceChild("dorsalFin5",
+				CubeListBuilder.create().texOffs(45, 0)
+						.addBox(-0.5F, -1F, 0F, 1, 1, 1),
+				PartPose.offset(0F, 14.15063F, 3.826327F));
 
-        return TexturedModelData.of(modelData, 64, 64);
+        return LayerDefinition.create(modelData, 64, 64);
     }
 
 	@Override
-	public Iterable<ModelPart> getParts() {
+	public Iterable<ModelPart> parts() {
 		return ImmutableList.of(
 			body1, body2, head1, lowerJaw1, lowerJaw2, lowerJaw3,
 			lowerJaw4, lowerJaw5, upperJaw1, upperJaw2, upperJaw3,
@@ -532,13 +537,13 @@ public class TropicraftDolphinModel extends CompositeEntityModel<TropicraftDolph
 	}
 
 	@Override
-	public void setAngles(TropicraftDolphinEntity dolphin, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(TropicraftDolphinEntity dolphin, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		final boolean mouthOpen = dolphin.getMouthOpen();
 
-		if (dolphin.isTouchingWater()) {
+		if (dolphin.isInWater()) {
 			tailVertSpeed = 0.5f / 2;
 			tailHorzSpeed = 0.25f / 2;
-			if (dolphin.getAir() <= 0) {
+			if (dolphin.getAirSupply() <= 0) {
 				tailVertSpeed = 0.5f;
 				tailHorzSpeed = 0.25f;
 			}
@@ -552,141 +557,141 @@ public class TropicraftDolphinModel extends CompositeEntityModel<TropicraftDolph
 			}
 		}
 
-		lowerJaw3.pitch = 0.3490658F;
+		lowerJaw3.xRot = 0.3490658F;
 		if (mouthOpen) {
-			lowerJaw5.setPivot(0F, 23.4F, -15.3F+0.52f);
-			lowerJaw4.pitch = 0.5F;
+			lowerJaw5.setPos(0F, 23.4F, -15.3F+0.52f);
+			lowerJaw4.xRot = 0.5F;
 		} else {
-			lowerJaw5.setPivot(0F, 22.4F, -15.3F);
-			lowerJaw4.pitch = 0F;
+			lowerJaw5.setPos(0F, 22.4F, -15.3F);
+			lowerJaw4.xRot = 0F;
 		}
 
-		lowerJaw5.pitch = -0.2275909F;
-		upperJaw2.pitch = 0.3490658F;
-		upperJaw4.pitch = -0.09110618F;
-		upperJaw5.pitch = 0.15132F;
-		head2.pitch = 0.1453859F;
-		head3.pitch = 0.4640831F;
-		head4.pitch = 0.737227F;
-		head5.pitch = 1.055924F;
-		body3.pitch = 0.04555309F;
+		lowerJaw5.xRot = -0.2275909F;
+		upperJaw2.xRot = 0.3490658F;
+		upperJaw4.xRot = -0.09110618F;
+		upperJaw5.xRot = 0.15132F;
+		head2.xRot = 0.1453859F;
+		head3.xRot = 0.4640831F;
+		head4.xRot = 0.737227F;
+		head5.xRot = 1.055924F;
+		body3.xRot = 0.04555309F;
 
-		rightPectoralFin1.pitch = 0.1612329F;
-		rightPectoralFin1.yaw = 0.2214468F;
-		rightPectoralFin1.roll = -0.6194302F+ (float) (Math.sin(ageInTicks * .025F)) * .3f;
+		rightPectoralFin1.xRot = 0.1612329F;
+		rightPectoralFin1.yRot = 0.2214468F;
+		rightPectoralFin1.zRot = -0.6194302F+ (float) (Math.sin(ageInTicks * .025F)) * .3f;
 
-		rightPectoralFin2.pitch = 0.2393862F;
-		rightPectoralFin2.yaw = 0.3358756F;
-		rightPectoralFin2.roll = -0.5966207F+ (float) (Math.sin(ageInTicks * .025F)) * .45f;
+		rightPectoralFin2.xRot = 0.2393862F;
+		rightPectoralFin2.yRot = 0.3358756F;
+		rightPectoralFin2.zRot = -0.5966207F+ (float) (Math.sin(ageInTicks * .025F)) * .45f;
 
-		rightPectoralFin3.pitch = 0.3620028F;
-		rightPectoralFin3.yaw = 0.5368112F;
-		rightPectoralFin3.roll = -0.5368112F+ (float) (Math.sin(ageInTicks * .025F)) * .5f;
+		rightPectoralFin3.xRot = 0.3620028F;
+		rightPectoralFin3.yRot = 0.5368112F;
+		rightPectoralFin3.zRot = -0.5368112F+ (float) (Math.sin(ageInTicks * .025F)) * .5f;
 
-		leftPectoralFin1.pitch = 0.1612329F;
-		leftPectoralFin1.yaw = -0.2214468F;
-		leftPectoralFin1.roll = 0.6194302F + (float) (Math.sin(ageInTicks * .025F)) * .3f;
+		leftPectoralFin1.xRot = 0.1612329F;
+		leftPectoralFin1.yRot = -0.2214468F;
+		leftPectoralFin1.zRot = 0.6194302F + (float) (Math.sin(ageInTicks * .025F)) * .3f;
 
-		leftPectoralFin2.pitch = 0.2393862F;
-		leftPectoralFin2.yaw = -0.3358756F;
-		leftPectoralFin2.roll = 0.5966207F + (float) (Math.sin(ageInTicks * .025F)) * .35f;
+		leftPectoralFin2.xRot = 0.2393862F;
+		leftPectoralFin2.yRot = -0.3358756F;
+		leftPectoralFin2.zRot = 0.5966207F + (float) (Math.sin(ageInTicks * .025F)) * .35f;
 
-		leftPectoralFin3.pitch = 0.3620028F;
-		leftPectoralFin3.yaw = -0.5368112F;
-		leftPectoralFin3.roll = 0.5368112F + (float) (Math.sin(ageInTicks * .025F)) * .4f;
+		leftPectoralFin3.xRot = 0.3620028F;
+		leftPectoralFin3.yRot = -0.5368112F;
+		leftPectoralFin3.zRot = 0.5368112F + (float) (Math.sin(ageInTicks * .025F)) * .4f;
 
-		tail1.pitch = -0.04555309F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .1f;
-		tail1.yaw = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .135F;
-		tail1.roll = 0F;
+		tail1.xRot = -0.04555309F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .1f;
+		tail1.yRot = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .135F;
+		tail1.zRot = 0F;
 
-		tail2.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 1;
+		tail2.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 1;
 
-		tail2.pivotY = 20 - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 0.8F;
+		tail2.y = 20 - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 0.8F;
 
-		tail2.pitch = -0.1366593F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .1f;
-		tail2.yaw = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .135F;
-		tail2.roll = 0F;
+		tail2.xRot = -0.1366593F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .1f;
+		tail2.yRot = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .135F;
+		tail2.zRot = 0F;
 
-		tail3.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 1.85f;
+		tail3.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 1.85f;
 
-		tail3.pivotY = 20.5f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 1.5F;
+		tail3.y = 20.5f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 1.5F;
 
-		tail3.pitch = -0.2733185F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .2f;
-		tail3.yaw = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .135F;
-		tail3.roll = 0F;
+		tail3.xRot = -0.2733185F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .2f;
+		tail3.yRot = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .135F;
+		tail3.zRot = 0F;
 
-		tail4.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.4f;
-		tail4.pivotY = 21.5f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 2.5F;
+		tail4.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.4f;
+		tail4.y = 21.5f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 2.5F;
 
-		tail4.pitch = -0.3644247F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .5f;
-		tail4.yaw = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		tail4.roll = 0F;
+		tail4.xRot = -0.3644247F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .5f;
+		tail4.yRot = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		tail4.zRot = 0F;
 
-		fluke1.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
-		fluke1.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke1.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke1.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke1.pitch = -0.09128072F;
-		fluke1.yaw = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke1.roll = 0F;
+		fluke1.xRot = -0.09128072F;
+		fluke1.yRot = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke1.zRot = 0F;
 
-		fluke2.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke2.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke2.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke2.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
 
-		fluke2.pitch = -0.09128071F;
-		fluke2.yaw = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke2.roll = 0F;
+		fluke2.xRot = -0.09128071F;
+		fluke2.yRot = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke2.zRot = 0F;
 
-		fluke3.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
-		fluke3.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke3.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke3.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke3.pitch = -0.09118575F;
-		fluke3.yaw = -0.04574326F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke3.roll = 0.00416824F;
+		fluke3.xRot = -0.09118575F;
+		fluke3.yRot = -0.04574326F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke3.zRot = 0.00416824F;
 
-		fluke4.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke4.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke4.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke4.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
 
-		fluke4.pitch = -0.08892051F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
+		fluke4.xRot = -0.08892051F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
 
-		fluke4.yaw = -0.2285096F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke4.roll = 0.02065023F;
+		fluke4.yRot = -0.2285096F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke4.zRot = 0.02065023F;
 
-		fluke5.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
-		fluke5.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke5.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke5.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke5.pitch = -0.09118575F;
-		fluke5.yaw = 0.04574326F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke5.roll = -0.00416824F;
+		fluke5.xRot = -0.09118575F;
+		fluke5.yRot = 0.04574326F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke5.zRot = -0.00416824F;
 
-		fluke6.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
-		fluke6.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke6.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke6.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke6.pitch = -0.08892051F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
-		fluke6.yaw = 0.2285096F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke6.roll = -0.02065023F;
+		fluke6.xRot = -0.08892051F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
+		fluke6.yRot = 0.2285096F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke6.zRot = -0.02065023F;
 
-		fluke7.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
-		fluke7.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke7.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke7.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke7.pitch = -0.09042732F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
-		fluke7.yaw = -0.1372235F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke7.roll = 0.01246957F;
+		fluke7.xRot = -0.09042732F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
+		fluke7.yRot = -0.1372235F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke7.zRot = 0.01246957F;
 
-		fluke8.pivotX = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
-		fluke8.pivotY = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
+		fluke8.x = (float) (Math.sin(ageInTicks * tailHorzSpeed)) * 2.8f;
+		fluke8.y = 22f - (float) (Math.sin(ageInTicks * tailVertSpeed)) * 4F;
 
-		fluke8.pitch = -0.09042732F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
+		fluke8.xRot = -0.09042732F + (float) (Math.sin(ageInTicks * tailVertSpeed)) * .8f;
 
-		fluke8.yaw = 0.1372235F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
-		fluke8.roll = -0.01246957F;
+		fluke8.yRot = 0.1372235F + (float) (Math.sin(ageInTicks * tailHorzSpeed)) * .35F;
+		fluke8.zRot = -0.01246957F;
 
-		dorsalFin1.pitch = -0.09110619F;
-		dorsalFin2.pitch = -0.1822124F;
-		dorsalFin3.pitch = -0.2733186F;
-		dorsalFin4.pitch = -0.4553564F;
-		dorsalFin5.pitch = -0.7285004F;
+		dorsalFin1.xRot = -0.09110619F;
+		dorsalFin2.xRot = -0.1822124F;
+		dorsalFin3.xRot = -0.2733186F;
+		dorsalFin4.xRot = -0.4553564F;
+		dorsalFin5.xRot = -0.7285004F;
 	}
 }
 

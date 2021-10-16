@@ -1,15 +1,15 @@
 package net.tropicraft.core.common.registry;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.tropicraft.Constants;
 //import com.dragonseeker.tropicfabricport.common.block.entity.CoconutBlockEntity;
 import net.tropicraft.core.common.block.blockentity.*;
 import net.tropicraft.core.common.block.testContainer.BoxBlockEntity;
 import net.tropicraft.core.common.block.testContainer.BoxChestBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class TropicBlockEntities<T extends BlockEntity>{
 
@@ -39,7 +39,7 @@ public class TropicBlockEntities<T extends BlockEntity>{
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntityType(String id, FabricBlockEntityTypeBuilder<T> builder) {
-        return (BlockEntityType)Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MODID, id), builder.build(null));
+        return (BlockEntityType)Registry.register(Registry.BLOCK_ENTITY_TYPE, new ResourceLocation(Constants.MODID, id), builder.build(null));
     }
 
 

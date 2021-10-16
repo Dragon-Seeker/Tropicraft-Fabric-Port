@@ -1,0 +1,9 @@
+accessWidener	v1	named
+
+extendable class net/minecraft/world/gen/chunk/NoiseChunkGenerator
+accessible field net/minecraft/client/render/SkyProperties BY_IDENTIFIER Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;
+accessible method net/minecraft/world/gen/stateprovider/BlockStateProviderType <init> (Lcom/mojang/serialization/Codec;)V
+accessible field net/minecraft/structure/pool/StructurePool$Projection PROJECTIONS_BY_ID Ljava/util/Map;
+mutable field net/minecraft/world/gen/chunk/NoiseChunkGenerator densityNoise Lnet/minecraft/util/math/noise/OctavePerlinNoiseSampler;
+extendable method net/minecraft/structure/StructureStart setBoundingBoxFromChildren ()net/minecraft/util/math/BlockBox;
+extendable method net/minecraft/entity/decoration/ItemFrameEntity dropHeldStack (Lnet/minecraft/entity/Entity;Z)V

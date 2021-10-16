@@ -1,24 +1,23 @@
 package net.tropicraft.core.common.item;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.core.common.entity.placeable.FurnitureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,11 +27,11 @@ public class FurnitureItem<T extends FurnitureEntity> extends Item implements IC
     private final DyeColor dyeColor;
     private final int color;
 
-    public FurnitureItem(final Settings properties, final EntityType<T> entityType, final DyeColor dyeColor) {
+    public FurnitureItem(final Properties properties, final EntityType<T> entityType, final DyeColor dyeColor) {
         super(properties);
         this.entityType = entityType;
         this.dyeColor = dyeColor;
-        float[] colorComponents = dyeColor.getColorComponents();
+        float[] colorComponents = dyeColor.getTextureDiffuseColors();
 
         int R = (Math.round(colorComponents[0] * 255.0F) << 16) & 0x00FF0000;
         int G = (Math.round(colorComponents[1] * 255.0F) << 8) & 0x0000FF00;
@@ -48,52 +47,52 @@ public class FurnitureItem<T extends FurnitureEntity> extends Item implements IC
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity placer, Hand hand) {
-        ItemStack heldItem = placer.getStackInHand(hand);
-        HitResult rayTraceResult = raycast(world, placer, RaycastContext.FluidHandling.ANY);
+    public InteractionResultHolder<ItemStack> use(Level world, Player placer, InteractionHand hand) {
+        ItemStack heldItem = placer.getItemInHand(hand);
+        HitResult rayTraceResult = getPlayerPOVHitResult(world, placer, ClipContext.Fluid.ANY);
         if (rayTraceResult.getType() == HitResult.Type.MISS) {
-            return new TypedActionResult<>(ActionResult.PASS, heldItem);
+            return new InteractionResultHolder<>(InteractionResult.PASS, heldItem);
         } else {
-            Vec3d lookvec = placer.getRotationVec(1.0F);
-            List<Entity> nearbyEntities = world.getOtherEntities(placer, placer.getBoundingBox().stretch(lookvec.multiply(5.0D)).expand(1.0D), EntityPredicates.EXCEPT_SPECTATOR);
+            Vec3 lookvec = placer.getViewVector(1.0F);
+            List<Entity> nearbyEntities = world.getEntities(placer, placer.getBoundingBox().expandTowards(lookvec.scale(5.0D)).inflate(1.0D), EntitySelector.NO_SPECTATORS);
             if (!nearbyEntities.isEmpty()) {
-                Vec3d eyePosition = placer.getCameraPosVec(1.0F);
+                Vec3 eyePosition = placer.getEyePosition(1.0F);
                 Iterator<Entity> nearbyEntityIterator = nearbyEntities.iterator();
 
                 while (nearbyEntityIterator.hasNext()) {
                     Entity nearbyEnt = nearbyEntityIterator.next();
-                    Box nearbyBB = nearbyEnt.getBoundingBox().expand((double)nearbyEnt.getTargetingMargin());
+                    AABB nearbyBB = nearbyEnt.getBoundingBox().inflate((double)nearbyEnt.getPickRadius());
                     if (nearbyBB.contains(eyePosition)) {
-                        return new TypedActionResult<>(ActionResult.PASS, heldItem);
+                        return new InteractionResultHolder<>(InteractionResult.PASS, heldItem);
                     }
                 }
             }
 
             if (rayTraceResult.getType() == HitResult.Type.BLOCK) {
-                Vec3d hitVec = rayTraceResult.getPos();
+                Vec3 hitVec = rayTraceResult.getLocation();
 
                 final T entity = this.entityType.create(world);
-                entity.refreshPositionAndAngles(new BlockPos(hitVec.x, hitVec.y, hitVec.z), 0, 0);
-                entity.setVelocity(Vec3d.ZERO);
-                entity.setRotation(placer.getYaw() + 180);
+                entity.moveTo(new BlockPos(hitVec.x, hitVec.y, hitVec.z), 0, 0);
+                entity.setDeltaMovement(Vec3.ZERO);
+                entity.setRotation(placer.getYRot() + 180);
                 entity.setColor(this.dyeColor);
 
-                if (!world.isSpaceEmpty(entity, entity.getBoundingBox().expand(-0.1D))) {
-                    return new TypedActionResult<>(ActionResult.FAIL, heldItem);
+                if (!world.noCollision(entity, entity.getBoundingBox().inflate(-0.1D))) {
+                    return new InteractionResultHolder<>(InteractionResult.FAIL, heldItem);
                 } else {
-                    if (!world.isClient) {
-                        world.spawnEntity(entity);
+                    if (!world.isClientSide) {
+                        world.addFreshEntity(entity);
                     }
 
-                    if (!placer.getAbilities().creativeMode) {
-                        heldItem.decrement(1);
+                    if (!placer.getAbilities().instabuild) {
+                        heldItem.shrink(1);
                     }
 
-                    placer.incrementStat(Stats.USED.getOrCreateStat(this));
-                    return new TypedActionResult<>(ActionResult.SUCCESS, heldItem);
+                    placer.awardStat(Stats.ITEM_USED.get(this));
+                    return new InteractionResultHolder<>(InteractionResult.SUCCESS, heldItem);
                 }
             } else {
-                return new TypedActionResult<>(ActionResult.PASS, heldItem);
+                return new InteractionResultHolder<>(InteractionResult.PASS, heldItem);
             }
         }
     }

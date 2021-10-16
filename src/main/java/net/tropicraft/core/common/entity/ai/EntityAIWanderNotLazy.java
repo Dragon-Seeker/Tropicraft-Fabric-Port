@@ -1,15 +1,14 @@
 package net.tropicraft.core.common.entity.ai;
 
-import net.minecraft.entity.ai.FuzzyTargeting;
-//import net.minecraft.entity.ai.TargetFinder;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.Vec3d;
 import java.util.EnumSet;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.LandRandomPos;
+import net.minecraft.world.phys.Vec3;
 
 public class EntityAIWanderNotLazy extends Goal {
 
-    private final PathAwareEntity entity;
+    private final PathfinderMob entity;
     private double xPosition;
     private double yPosition;
     private double zPosition;
@@ -17,24 +16,24 @@ public class EntityAIWanderNotLazy extends Goal {
     private int executionChance;
     private boolean mustUpdate;
 
-    public EntityAIWanderNotLazy(PathAwareEntity creatureIn, double speedIn)
+    public EntityAIWanderNotLazy(PathfinderMob creatureIn, double speedIn)
     {
         this(creatureIn, speedIn, 120);
     }
 
-    public EntityAIWanderNotLazy(PathAwareEntity creatureIn, double speedIn, int chance)
+    public EntityAIWanderNotLazy(PathfinderMob creatureIn, double speedIn, int chance)
     {
         this.entity = creatureIn;
         this.speed = speedIn;
         this.executionChance = chance;
-        this.setControls(EnumSet.of(Control.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean canStart()
+    public boolean canUse()
     {
         if (!this.mustUpdate)
         {
@@ -49,7 +48,7 @@ public class EntityAIWanderNotLazy extends Goal {
             }
         }
 
-        Vec3d vec = FuzzyTargeting.find(this.entity, 10, 7);
+        Vec3 vec = LandRandomPos.getPos(this.entity, 10, 7);
         if (vec == null)
         {
             return false;
@@ -68,9 +67,9 @@ public class EntityAIWanderNotLazy extends Goal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean shouldContinue()
+    public boolean canContinueToUse()
     {
-        return !this.entity.getNavigation().isIdle();
+        return !this.entity.getNavigation().isDone();
     }
 
     /**
@@ -79,7 +78,7 @@ public class EntityAIWanderNotLazy extends Goal {
     @Override
     public void start()
     {
-        this.entity.getNavigation().startMovingTo(this.xPosition, this.yPosition, this.zPosition, this.speed);
+        this.entity.getNavigation().moveTo(this.xPosition, this.yPosition, this.zPosition, this.speed);
     }
 
     /**

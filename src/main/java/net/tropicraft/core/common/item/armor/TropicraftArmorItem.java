@@ -2,15 +2,15 @@ package net.tropicraft.core.common.item.armor;
 
 import net.tropicraft.Constants;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 
 
 public class TropicraftArmorItem extends ArmorItem {
     public static final String ARMOR_LOCATION = Constants.MODID + ":textures/models/armor/";
 
-    public TropicraftArmorItem(ArmorMaterial armorMaterial, EquipmentSlot slotType, FabricItemSettings properties) {
+    public TropicraftArmorItem(ArmorMaterial armorMaterial, EquipmentSlot slotType, Properties properties) {
         super(armorMaterial, slotType, properties);
     }
 

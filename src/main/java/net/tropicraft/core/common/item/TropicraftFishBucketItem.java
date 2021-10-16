@@ -1,24 +1,22 @@
 package net.tropicraft.core.common.item;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.passive.FishEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.EntityBucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
-public class TropicraftFishBucketItem<T extends FishEntity> extends EntityBucketItem {
+public class TropicraftFishBucketItem<T extends AbstractFish> extends MobBucketItem {
     private final EntityType<T> fishType;
 
-    public TropicraftFishBucketItem(final EntityType<T> type, Fluid fluid, Settings props) {
-        super(type, fluid, SoundEvents.ITEM_BUCKET_EMPTY_FISH, props);
+    public TropicraftFishBucketItem(final EntityType<T> type, Fluid fluid, Properties props) {
+        super(type, fluid, SoundEvents.BUCKET_EMPTY_FISH, props);
         this.fishType = type;
     }
 
@@ -31,10 +29,10 @@ public class TropicraftFishBucketItem<T extends FishEntity> extends EntityBucket
     }
      */
 
-    private void spawnEntity(ServerWorld world, ItemStack stack, BlockPos pos) {
-        Entity fishy = fishType.spawnFromItemStack(world, stack, null, pos, SpawnReason.BUCKET, true, false);
+    private void spawn(ServerLevel world, ItemStack stack, BlockPos pos) {
+        Entity fishy = fishType.spawn(world, stack, null, pos, MobSpawnType.BUCKET, true, false);
         if (fishy != null) {
-            ((FishEntity) fishy).setFromBucket(true);
+            ((AbstractFish) fishy).setFromBucket(true);
         }
 
     }

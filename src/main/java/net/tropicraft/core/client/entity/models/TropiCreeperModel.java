@@ -1,13 +1,18 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 import net.tropicraft.core.common.entity.passive.TropiCreeperEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.util.math.MathHelper;
 
 
-public class TropiCreeperModel extends CompositeEntityModel<TropiCreeperEntity> {
+public class TropiCreeperModel extends ListModel<TropiCreeperEntity> {
     private final ModelPart head;
     private final ModelPart body;
     private final ModelPart leg3;
@@ -80,72 +85,72 @@ public class TropiCreeperModel extends CompositeEntityModel<TropiCreeperEntity> 
          */
     }
 
-    public static TexturedModelData getTexturedModelData() {
+    public static LayerDefinition getTexturedModelData() {
         int i = 4;
 
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        ModelPartData modelPartHead = modelPartData.addChild("head",
-                ModelPartBuilder.create().uv(0, 0)
-                        .cuboid(-4F, -8F, -4F, 8, 8, 8),
-                ModelTransform.of(0F, 6F, 0F, 0F, 0F, 0F));
+        PartDefinition modelPartHead = modelPartData.addOrReplaceChild("head",
+                CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-4F, -8F, -4F, 8, 8, 8),
+                PartPose.offsetAndRotation(0F, 6F, 0F, 0F, 0F, 0F));
 
-        modelPartData.addChild("body",
-                ModelPartBuilder.create().uv(16, 16)
-                        .cuboid(-4F, 0F, -2F, 8, 12, 4),
-                ModelTransform.pivot(0F, 6F, 0F));
+        modelPartData.addOrReplaceChild("body",
+                CubeListBuilder.create().texOffs(16, 16)
+                        .addBox(-4F, 0F, -2F, 8, 12, 4),
+                PartPose.offset(0F, 6F, 0F));
 
-        modelPartData.addChild("leg3",
-                ModelPartBuilder.create().uv(0, 16)
-                        .cuboid(-2F, 0.0F, -2F, 4, 6, 4),
-                ModelTransform.pivot(-2F, 12 + i, -4F));
+        modelPartData.addOrReplaceChild("leg3",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-2F, 0.0F, -2F, 4, 6, 4),
+                PartPose.offset(-2F, 12 + i, -4F));
 
-        modelPartData.addChild("leg4",
-                ModelPartBuilder.create().uv(0, 16)
-                        .cuboid(-2F, 0.0F, -2F, 4, 6, 4),
-                ModelTransform.pivot(2.0F, 12 + i, -4F));
+        modelPartData.addOrReplaceChild("leg4",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-2F, 0.0F, -2F, 4, 6, 4),
+                PartPose.offset(2.0F, 12 + i, -4F));
 
-        modelPartData.addChild("leg1",
-                ModelPartBuilder.create().uv(0, 16)
-                        .cuboid(-2F, 0.0F, -2F, 4, 6, 4),
-                ModelTransform.pivot(-2F, 12 + i, 4F));
+        modelPartData.addOrReplaceChild("leg1",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-2F, 0.0F, -2F, 4, 6, 4),
+                PartPose.offset(-2F, 12 + i, 4F));
 
-        modelPartData.addChild("leg2",
-                ModelPartBuilder.create().uv(0, 16)
-                        .cuboid(-2F, 0.0F, -2F, 4, 6, 4),
-                ModelTransform.pivot(2.0F, 12 + i, 4F));
+        modelPartData.addOrReplaceChild("leg2",
+                CubeListBuilder.create().texOffs(0, 16)
+                        .addBox(-2F, 0.0F, -2F, 4, 6, 4),
+                PartPose.offset(2.0F, 12 + i, 4F));
 
-        modelPartHead.addChild("hat1",
-                ModelPartBuilder.create().uv(24, 0).mirrored()
-                        .cuboid(-5F, -6F, -5F, 12, 1, 6),
-                ModelTransform.pivot(-1F, -3F, -1F));
+        modelPartHead.addOrReplaceChild("hat1",
+                CubeListBuilder.create().texOffs(24, 0).mirror()
+                        .addBox(-5F, -6F, -5F, 12, 1, 6),
+                PartPose.offset(-1F, -3F, -1F));
 
-        modelPartHead.addChild("hat2",
-                ModelPartBuilder.create().uv(40, 24)
-                        .cuboid(0F, -6F, 0F, 6, 2, 6),
-                ModelTransform.pivot(-3F, -5F, -3F));
+        modelPartHead.addOrReplaceChild("hat2",
+                CubeListBuilder.create().texOffs(40, 24)
+                        .addBox(0F, -6F, 0F, 6, 2, 6),
+                PartPose.offset(-3F, -5F, -3F));
 
-        modelPartHead.addChild("hat3",
-                ModelPartBuilder.create().uv(24, 0)
-                        .cuboid(-5F, -6F, 0F, 12, 1, 6),
-                ModelTransform.pivot(-1F, -3F, 0F));
+        modelPartHead.addOrReplaceChild("hat3",
+                CubeListBuilder.create().texOffs(24, 0)
+                        .addBox(-5F, -6F, 0F, 12, 1, 6),
+                PartPose.offset(-1F, -3F, 0F));
 
-        return TexturedModelData.of(modelData, 64, 32);
+        return LayerDefinition.create(modelData, 64, 32);
     }
 
     @Override
-    public void setAngles(TropiCreeperEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        head.yaw = netHeadYaw * ((float) Math.PI / 180F);
-        head.pitch = headPitch * ((float) Math.PI / 180F);
-        leg1.pitch = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-        leg2.pitch = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
-        leg3.pitch = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
-        leg4.pitch = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+    public void setupAnim(TropiCreeperEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        head.yRot = netHeadYaw * ((float) Math.PI / 180F);
+        head.xRot = headPitch * ((float) Math.PI / 180F);
+        leg1.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        leg2.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        leg3.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
+        leg4.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
     }
 
     @Override
-    public Iterable<ModelPart> getParts() {
+    public Iterable<ModelPart> parts() {
         return ImmutableList.of(
             head, body, leg1, leg2, leg3, leg4
         );

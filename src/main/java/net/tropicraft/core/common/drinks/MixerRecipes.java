@@ -1,10 +1,9 @@
 package net.tropicraft.core.common.drinks;
 
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.tropicraft.core.common.item.CocktailItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-
 import java.util.*;
 
 public final class MixerRecipes {
@@ -53,7 +52,7 @@ public final class MixerRecipes {
         if (drinkToSpecialItemMap.containsKey(drink)) {
             return new ItemStack(drinkToSpecialItemMap.get(drink));
         }
-        DefaultedList<ItemStack> stack = DefaultedList.of();
+        NonNullList<ItemStack> stack = NonNullList.create();
 
         for (Ingredient i : drinkToIngredientsMap.get(drink)) {
             stack.add(new ItemStack(i.getIngredientItem()));
@@ -62,7 +61,7 @@ public final class MixerRecipes {
         return Drinks.getResult(stack);
     }
 
-    public static boolean isValidRecipe(DefaultedList<ItemStack> ingredientStacks) {
+    public static boolean isValidRecipe(NonNullList<ItemStack> ingredientStacks) {
         Set<Ingredient> ingredients = new HashSet<>();
 
         for (ItemStack stack : ingredientStacks) {
@@ -84,7 +83,7 @@ public final class MixerRecipes {
         return false;
     }
 
-    public static Drink getDrink(DefaultedList<ItemStack> ingredientStacks) {
+    public static Drink getDrink(NonNullList<ItemStack> ingredientStacks) {
         final Set<Ingredient> ingredients = new HashSet<>();
 
         for (ItemStack stack : ingredientStacks) {

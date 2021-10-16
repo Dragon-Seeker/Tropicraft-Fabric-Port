@@ -1,55 +1,55 @@
 package net.tropicraft.core.client.entity.renderlayer;
 
 import net.tropicraft.core.common.entity.passive.CowktailEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.CowEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.CowModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Environment(EnvType.CLIENT)
-public class CowktailLayer<T extends CowktailEntity> extends FeatureRenderer<T, CowEntityModel<T>>
+public class CowktailLayer<T extends CowktailEntity> extends RenderLayer<T, CowModel<T>>
 {
-   public CowktailLayer(FeatureRendererContext<T, CowEntityModel<T>> rendererIn) {
+   public CowktailLayer(RenderLayerParent<T, CowModel<T>> rendererIn) {
       super(rendererIn);
    }
 
-   public void render(MatrixStack matrixStackIn, VertexConsumerProvider bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+   public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
       if (!entitylivingbaseIn.isBaby() && !entitylivingbaseIn.isInvisible()) {
-         BlockRenderManager blockrendererdispatcher = MinecraftClient.getInstance().getBlockRenderManager();
+         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
          BlockState blockstate = entitylivingbaseIn.getCowktailType().getRenderState();
-         int i = LivingEntityRenderer.getOverlay(entitylivingbaseIn, 0.0F);
-         matrixStackIn.push();
+         int i = LivingEntityRenderer.getOverlayCoords(entitylivingbaseIn, 0.0F);
+         matrixStackIn.pushPose();
          matrixStackIn.translate((double)0.2F, (double)-0.35F, 0.5D);
-         matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-48.0F));
+         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-48.0F));
          matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
          matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-         blockrendererdispatcher.renderBlockAsEntity(blockstate, matrixStackIn, bufferIn, packedLightIn, i);
-         matrixStackIn.pop();
-         matrixStackIn.push();
+         blockrendererdispatcher.renderSingleBlock(blockstate, matrixStackIn, bufferIn, packedLightIn, i);
+         matrixStackIn.popPose();
+         matrixStackIn.pushPose();
          matrixStackIn.translate((double)0.2F, (double)-0.35F, 0.5D);
-         matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(42.0F));
+         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(42.0F));
          matrixStackIn.translate((double)0.1F, 0.0D, (double)-0.6F);
-         matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-48.0F));
+         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-48.0F));
          matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
          matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-         blockrendererdispatcher.renderBlockAsEntity(blockstate, matrixStackIn, bufferIn, packedLightIn, i);
-         matrixStackIn.pop();
-         matrixStackIn.push();
-         this.getContextModel().getHead().rotate(matrixStackIn);
+         blockrendererdispatcher.renderSingleBlock(blockstate, matrixStackIn, bufferIn, packedLightIn, i);
+         matrixStackIn.popPose();
+         matrixStackIn.pushPose();
+         this.getParentModel().getHead().translateAndRotate(matrixStackIn);
          matrixStackIn.translate(0.0D, (double)-0.7F, (double)-0.2F);
-         matrixStackIn.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-78.0F));
+         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-78.0F));
          matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
          matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-         blockrendererdispatcher.renderBlockAsEntity(blockstate, matrixStackIn, bufferIn, packedLightIn, i);
-         matrixStackIn.pop();
+         blockrendererdispatcher.renderSingleBlock(blockstate, matrixStackIn, bufferIn, packedLightIn, i);
+         matrixStackIn.popPose();
       }
    }
 }

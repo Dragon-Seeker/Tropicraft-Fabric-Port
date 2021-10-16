@@ -1,43 +1,43 @@
 package net.tropicraft.core.common.item;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.entity.placeable.WallItemEntity;
 
 public class ShellItem extends Item {
 
-    public ShellItem(final Settings properties) {
+    public ShellItem(final Properties properties) {
         super(properties);
     }
 
     @Override
-    public ActionResult useOnBlock(final ItemUsageContext context) {
-        final Direction facing = context.getSide();
-        final ItemStack stack = context.getPlayer().getStackInHand(context.getHand());
-        final BlockPos pos = context.getBlockPos().offset(facing);
+    public InteractionResult useOn(final UseOnContext context) {
+        final Direction facing = context.getClickedFace();
+        final ItemStack stack = context.getPlayer().getItemInHand(context.getHand());
+        final BlockPos pos = context.getClickedPos().relative(facing);
 
         // Must set the world coordinates here, or onValidSurface will be false.
-        final World world = context.getWorld();
+        final Level world = context.getLevel();
         final WallItemEntity hangingEntity = new WallItemEntity(world, pos, facing);
-        hangingEntity.setHeldItemStack(stack);
+        hangingEntity.setItem(stack);
 
-        if (!context.getPlayer().canPlaceOn(pos, facing, stack)) {
-            return ActionResult.FAIL;
+        if (!context.getPlayer().mayUseItemAt(pos, facing, stack)) {
+            return InteractionResult.FAIL;
         } else {
-            if (hangingEntity.canStayAttached()) {
-                if (!world.isClient) {
-                    world.spawnEntity(hangingEntity);
+            if (hangingEntity.survives()) {
+                if (!world.isClientSide) {
+                    world.addFreshEntity(hangingEntity);
                 }
 
-                stack.decrement(1);
+                stack.shrink(1);
             }
 
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 }

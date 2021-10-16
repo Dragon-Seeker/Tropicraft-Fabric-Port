@@ -1,12 +1,17 @@
 package net.tropicraft.core.client.entity.models;
 
 import net.minecraft.client.model.*;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 import net.tropicraft.core.common.entity.passive.FailgullEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.util.math.MathHelper;
 
-public class FailgullModel extends CompositeEntityModel<FailgullEntity> {
+public class FailgullModel extends ListModel<FailgullEntity> {
 	final ModelPart baseFootLeft;
 	final ModelPart baseFootRight;
 	final ModelPart lowerLeg1;
@@ -84,89 +89,89 @@ public class FailgullModel extends CompositeEntityModel<FailgullEntity> {
 		 */
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
 
-		modelPartData.addChild("baseFootLeft",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 1, 0, 1),
-				ModelTransform.pivot(-1F, 23F, 0F));
+		modelPartData.addOrReplaceChild("baseFootLeft",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 1, 0, 1),
+				PartPose.offset(-1F, 23F, 0F));
 
-		modelPartData.addChild("baseFootRight",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 1, 0, 1),
-				ModelTransform.pivot(1F, 23F, 0F));
+		modelPartData.addOrReplaceChild("baseFootRight",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 1, 0, 1),
+				PartPose.offset(1F, 23F, 0F));
 
-		modelPartData.addChild("lowerLeg1",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, -1F, 0F, 1, 2, 0),
-				ModelTransform.pivot(1F, 22F, 1F));
+		modelPartData.addOrReplaceChild("lowerLeg1",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, -1F, 0F, 1, 2, 0),
+				PartPose.offset(1F, 22F, 1F));
 
-		modelPartData.addChild("lowestBody",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 3, 1, 4),
-				ModelTransform.pivot(-1F, 20F, 0F));
+		modelPartData.addOrReplaceChild("lowestBody",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 3, 1, 4),
+				PartPose.offset(-1F, 20F, 0F));
 
-		modelPartData.addChild("lowerLeg2",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 1, 2, 0),
-				ModelTransform.pivot(-1F, 21F, 1F));
+		modelPartData.addOrReplaceChild("lowerLeg2",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 1, 2, 0),
+				PartPose.offset(-1F, 21F, 1F));
 
-		modelPartData.addChild("lowerBody1",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 3, 1, 8),
-				ModelTransform.pivot(-1F, 19F, -1F));
+		modelPartData.addOrReplaceChild("lowerBody1",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 3, 1, 8),
+				PartPose.offset(-1F, 19F, -1F));
 
-		modelPartData.addChild("lowerBody2",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 3, 1, 7),
-				ModelTransform.pivot(-1F, 18F, -2F));
+		modelPartData.addOrReplaceChild("lowerBody2",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 3, 1, 7),
+				PartPose.offset(-1F, 18F, -2F));
 
-		modelPartData.addChild("rightWing",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 0, 2, 5),
-				ModelTransform.of(-1F, 18F, 0F, -0.06981F,-0.06981F,0));
+		modelPartData.addOrReplaceChild("rightWing",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 0, 2, 5),
+				PartPose.offsetAndRotation(-1F, 18F, 0F, -0.06981F,-0.06981F,0));
 
-		modelPartData.addChild("leftWing",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 0, 2, 5),
-				ModelTransform.of(2F, 18F, 0F, -0.06981F,0.06981F,0));
+		modelPartData.addOrReplaceChild("leftWing",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 0, 2, 5),
+				PartPose.offsetAndRotation(2F, 18F, 0F, -0.06981F,0.06981F,0));
 
-		modelPartData.addChild("neck",
-				ModelPartBuilder.create()
-						.uv(0,0)
-						.cuboid(0F, 0F, 0F, 3, 2, 2),
-				ModelTransform.pivot(-1F, 16F, -3F));
+		modelPartData.addOrReplaceChild("neck",
+				CubeListBuilder.create()
+						.texOffs(0,0)
+						.addBox(0F, 0F, 0F, 3, 2, 2),
+				PartPose.offset(-1F, 16F, -3F));
 
-		modelPartData.addChild("beak",
-				ModelPartBuilder.create()
-						.uv(14,0)
-						.cuboid(0F, 0F, 0F, 1, 1, 2),
-				ModelTransform.pivot(0F, 17F, -5F));
+		modelPartData.addOrReplaceChild("beak",
+				CubeListBuilder.create()
+						.texOffs(14,0)
+						.addBox(0F, 0F, 0F, 1, 1, 2),
+				PartPose.offset(0F, 17F, -5F));
 
-		return TexturedModelData.of(modelData, 64, 32);
+		return LayerDefinition.create(modelData, 64, 32);
 	}
 
 	@Override
-	public void setAngles(FailgullEntity failgull, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		lowerLeg1.pitch = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-		lowerLeg2.pitch = MathHelper.cos(limbSwing * 0.6662F + 3.141593F) * 1.4F * limbSwingAmount;
-		rightWing.roll = ageInTicks;
-		leftWing.roll = -ageInTicks;		//left wing
+	public void setupAnim(FailgullEntity failgull, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		lowerLeg1.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+		lowerLeg2.xRot = Mth.cos(limbSwing * 0.6662F + 3.141593F) * 1.4F * limbSwingAmount;
+		rightWing.zRot = ageInTicks;
+		leftWing.zRot = -ageInTicks;		//left wing
 	}
 
 	@Override
-	public Iterable<ModelPart> getParts() {
+	public Iterable<ModelPart> parts() {
 		return ImmutableList.of(baseFootLeft, baseFootRight, lowerLeg1, lowerLeg2, rightWing, leftWing, neck, beak, lowestBody, lowerBody1, lowerBody2);
 	}
 }

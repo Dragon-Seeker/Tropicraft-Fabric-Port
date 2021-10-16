@@ -1,34 +1,34 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.ParentedLayer;
-import net.minecraft.world.biome.layer.util.LayerSampleContext;
-import net.minecraft.world.biome.layer.util.LayerSampler;
+import net.minecraft.world.level.newbiome.area.Area;
+import net.minecraft.world.level.newbiome.context.BigContext;
+import net.minecraft.world.level.newbiome.layer.traits.AreaTransformer1;
 
-public enum TropicraftVoronoiZoomLayer implements ParentedLayer {
+public enum TropicraftVoronoiZoomLayer implements AreaTransformer1 {
     INSTANCE;
 
     private static final int ZOOM_BITS = 2;
 
     @Override
-    public int sample(LayerSampleContext<?> random, LayerSampler area, int x, int y) {
+    public int applyPixel(BigContext<?> random, Area area, int x, int y) {
         int absx = x - 2;
         int absy = y - 2;
         int shiftedAbsX = absx >> 2;
         int shiftedAbsY = absy >> 2;
         int backX = shiftedAbsX << 2;
         int backY = shiftedAbsY << 2;
-        random.initSeed((long)backX, (long)backY);
-        double offsetX = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
-        double offsetY = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
-        random.initSeed((long)(backX + 4), (long)backY);
-        double offsetYY = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
-        double offsetXY = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
-        random.initSeed((long)backX, (long)(backY + 4));
-        double offsetYX = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D;
-        double offsetXX = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
-        random.initSeed((long)(backX + 4), (long)(backY + 4));
-        double offsetYXY = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
-        double offsetXXY = ((double)random.nextInt(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
+        random.initRandom((long)backX, (long)backY);
+        double offsetX = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D;
+        double offsetY = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D;
+        random.initRandom((long)(backX + 4), (long)backY);
+        double offsetYY = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
+        double offsetXY = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D;
+        random.initRandom((long)backX, (long)(backY + 4));
+        double offsetYX = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D;
+        double offsetXX = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
+        random.initRandom((long)(backX + 4), (long)(backY + 4));
+        double offsetYXY = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
+        double offsetXXY = ((double)random.nextRandom(1024) / 1024.0D - 0.5D) * 3.6D + 4.0D;
         int xx = absx & 3;
         int yy = absy & 3;
         // TODO performance improve -> MathHelper
@@ -41,21 +41,21 @@ public enum TropicraftVoronoiZoomLayer implements ParentedLayer {
         double a3 = Math.abs(yy - offsetXXY) + Math.abs(xx - offsetYXY);
         //double a3 = ((double)yy - offsetXXY) * ((double)yy - offsetXXY) + ((double)xx - offsetYXY) * ((double)xx - offsetYXY);
         if (a0 < a1 && a0 < a2 && a0 < a3) {
-            return area.sample(this.transformX(backX), this.transformZ(backY));
+            return area.get(this.getParentX(backX), this.getParentY(backY));
         } else if (a1 < a0 && a1 < a2 && a1 < a3) {
-            return area.sample(this.transformX(backX + 4), this.transformZ(backY)) & 255;
+            return area.get(this.getParentX(backX + 4), this.getParentY(backY)) & 255;
         } else {
-            return a2 < a0 && a2 < a1 && a2 < a3 ? area.sample(this.transformX(backX), this.transformZ(backY + 4)) : area.sample(this.transformX(backX + 4), this.transformZ(backY + 4)) & 255;
+            return a2 < a0 && a2 < a1 && a2 < a3 ? area.get(this.getParentX(backX), this.getParentY(backY + 4)) : area.get(this.getParentX(backX + 4), this.getParentY(backY + 4)) & 255;
         }
     }
 
     @Override
-    public int transformX(int x) {
+    public int getParentX(int x) {
         return x >> ZOOM_BITS;
     }
 
     @Override
-    public int transformZ(int z) {
+    public int getParentY(int z) {
         return z >> ZOOM_BITS;
     }
 }

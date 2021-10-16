@@ -1,23 +1,19 @@
 package net.tropicraft.core.common.entity.placeable;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.registry.Registry;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 import net.tropicraft.core.common.registry.TropicraftItems;
 import org.jetbrains.annotations.Nullable;
@@ -26,29 +22,29 @@ import java.util.UUID;
 
 public class WallItemEntity extends BambooItemFrameEntity {
 
-	public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "wall_item");
+	public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "wall_item");
 
-    public WallItemEntity(EntityType<? extends BambooItemFrameEntity> entityType, World world) {
+    public WallItemEntity(EntityType<? extends BambooItemFrameEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-	public WallItemEntity(World worldIn, BlockPos pos, Direction on) {
+	public WallItemEntity(Level worldIn, BlockPos pos, Direction on) {
 		super(TropicraftEntities.WALL_ITEM, worldIn, pos, on);
 
 	}
 
 	@Environment(EnvType.CLIENT)
-	public WallItemEntity(EntityType<? extends BambooItemFrameEntity> entityType, World world, double x, double y, double z, Direction facing, int id, UUID uuid) {
+	public WallItemEntity(EntityType<? extends BambooItemFrameEntity> entityType, Level world, double x, double y, double z, Direction facing, int id, UUID uuid) {
 		super(entityType, world, x, y, z, facing, id, uuid);
 	}
 
 	@Override
-	public int getWidthPixels() {
+	public int getWidth() {
 		return 16;
 	}
 
 	@Override
-	public int getHeightPixels() {
+	public int getHeight() {
 		return 16;
 	}
 
@@ -59,16 +55,16 @@ public class WallItemEntity extends BambooItemFrameEntity {
 
 
 	@Override
-	protected void dropHeldStack(@Nullable Entity entity, boolean alwaysDrop) {
-		super.dropHeldStack(entity, false);
+	protected void dropItem(@Nullable Entity entity, boolean alwaysDrop) {
+		super.dropItem(entity, false);
 		this.remove(RemovalReason.KILLED);
 	}
 
 	@Override
-	public Packet<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		//return new EntitySpawnS2CPacket(this, this.getType(), this.facing.getId(), this.getDecorationBlockPos());
 
-		PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+		FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
 		// entity position
 		packet.writeDouble(getX());
@@ -77,13 +73,13 @@ public class WallItemEntity extends BambooItemFrameEntity {
 
 		// entity id & uuid
 		packet.writeInt(getId());
-		packet.writeUuid(getUuid());
+		packet.writeUUID(getUUID());
 
 		//Entity Facing direction
 
 		//packet.writeIdentifier(Registry.ITEM.getId(getAsItemStack().getItem()));
 
-		packet.writeInt(getHorizontalFacing().getId());
+		packet.writeInt(getDirection().get3DDataValue());
 		return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
 
 	}

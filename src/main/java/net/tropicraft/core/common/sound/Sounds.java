@@ -1,10 +1,9 @@
 package net.tropicraft.core.common.sound;
 
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.tropicraft.Constants;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -129,7 +128,7 @@ public class Sounds {
     }
 
     private static SoundEvent register(String soundPath) {
-        Identifier resLoc = new Identifier(Constants.MODID, soundPath);
+        ResourceLocation resLoc = new ResourceLocation(Constants.MODID, soundPath);
         SoundEvent soundEvent = new SoundEvent(resLoc);
         Registry.register(Registry.SOUND_EVENT, resLoc, soundEvent);
         //ForgeRegistries.SOUND_EVENTS.register(soundEvent.setRegistryName(resLoc));

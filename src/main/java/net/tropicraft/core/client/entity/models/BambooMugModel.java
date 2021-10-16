@@ -1,12 +1,16 @@
 package net.tropicraft.core.client.entity.models;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
 import java.util.function.Function;
 
 public class BambooMugModel extends Model {
@@ -26,7 +30,7 @@ public class BambooMugModel extends Model {
     //Function<Identifier, RenderLayer> renderTypeIn
 
     public BambooMugModel(ModelPart root) {
-        super(RenderLayer::getEntityCutout);
+        super(RenderType::entityCutout);
         this.base = root.getChild("base");
         this.wall1 = root.getChild("wall1");
         this.wall2 = root.getChild("wall2");
@@ -39,21 +43,21 @@ public class BambooMugModel extends Model {
 
     }
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
 
-        modelPartData.addChild("base", ModelPartBuilder.create().uv(10,0).mirrored().cuboid(-2F, 23F, -2F, 4, 1, 4),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("wall1", ModelPartBuilder.create().uv(0,10).mirrored().cuboid(-2F, 17F, -3F, 4, 6, 1),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("wall2", ModelPartBuilder.create().uv(0,10).mirrored().cuboid(-2F, 17F, 2F, 4, 6, 1),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("wall3", ModelPartBuilder.create().uv(0,0).mirrored().cuboid(2F, 17F, -2F, 1, 6, 4),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("wall4", ModelPartBuilder.create().uv(0,0).mirrored().cuboid(-3F, 17F, -2F, 1, 6, 4),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("liquid", ModelPartBuilder.create().uv(10,5).mirrored().cuboid(-2F, 18F, -2F, 4, 1, 4),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("handletop", ModelPartBuilder.create().uv(26,0).mirrored().cuboid(-1F, 18F, -4F, 2, 1, 1),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("handlebottom", ModelPartBuilder.create().uv(26,2).mirrored().cuboid(-1F, 21F, -4F, 2, 1, 1),ModelTransform.pivot(0F, 0F, 0F));
-        modelPartData.addChild("handle", ModelPartBuilder.create().uv(32,0).mirrored().cuboid(-1F, 19F, -5F, 2, 2, 1),ModelTransform.pivot(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("base", CubeListBuilder.create().texOffs(10,0).mirror().addBox(-2F, 23F, -2F, 4, 1, 4),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("wall1", CubeListBuilder.create().texOffs(0,10).mirror().addBox(-2F, 17F, -3F, 4, 6, 1),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("wall2", CubeListBuilder.create().texOffs(0,10).mirror().addBox(-2F, 17F, 2F, 4, 6, 1),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("wall3", CubeListBuilder.create().texOffs(0,0).mirror().addBox(2F, 17F, -2F, 1, 6, 4),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("wall4", CubeListBuilder.create().texOffs(0,0).mirror().addBox(-3F, 17F, -2F, 1, 6, 4),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("liquid", CubeListBuilder.create().texOffs(10,5).mirror().addBox(-2F, 18F, -2F, 4, 1, 4),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("handletop", CubeListBuilder.create().texOffs(26,0).mirror().addBox(-1F, 18F, -4F, 2, 1, 1),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("handlebottom", CubeListBuilder.create().texOffs(26,2).mirror().addBox(-1F, 21F, -4F, 2, 1, 1),PartPose.offset(0F, 0F, 0F));
+        modelPartData.addOrReplaceChild("handle", CubeListBuilder.create().texOffs(32,0).mirror().addBox(-1F, 19F, -5F, 2, 2, 1),PartPose.offset(0F, 0F, 0F));
 
-        return TexturedModelData.of(modelData,64,32);
+        return LayerDefinition.create(modelData,64,32);
     }
 
     public Iterable<ModelPart> getMugParts() {
@@ -63,7 +67,7 @@ public class BambooMugModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         getMugParts().forEach((part) -> {
             part.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         });

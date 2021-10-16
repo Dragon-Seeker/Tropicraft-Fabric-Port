@@ -1,16 +1,15 @@
 package net.tropicraft.core.common.dimension.feature.tree;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.VineBlock;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.tropicraft.core.common.dimension.feature.config.RainforestVinesConfig;
 
 import java.util.Random;
@@ -24,13 +23,13 @@ public class RainforestVinesFeature extends Feature<RainforestVinesConfig> {
     }
 
     @Override
-    public boolean generate(FeatureContext<RainforestVinesConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        Random rand = context.getRandom();
-        BlockPos pos = context.getOrigin();
-        RainforestVinesConfig config = context.getConfig();
+    public boolean place(FeaturePlaceContext<RainforestVinesConfig> context) {
+        WorldGenLevel world = context.level();
+        Random rand = context.random();
+        BlockPos pos = context.origin();
+        RainforestVinesConfig config = context.config();
 
-        BlockPos.Mutable mutablePos = pos.mutableCopy();
+        BlockPos.MutableBlockPos mutablePos = pos.mutable();
 
         int maxY = Math.min(pos.getY() + config.height, world.getLogicalHeight());
         for (int y = pos.getY(); y < maxY; ++y) {
@@ -38,16 +37,16 @@ public class RainforestVinesFeature extends Feature<RainforestVinesConfig> {
                 mutablePos.set(pos);
                 mutablePos.move(rand.nextInt(config.xzSpread * 2) - config.xzSpread, 0, rand.nextInt(config.xzSpread * 2) - config.xzSpread);
                 mutablePos.setY(y);
-                if (world.isAir(mutablePos)) {
+                if (world.isEmptyBlock(mutablePos)) {
                     for (Direction direction : DIRECTIONS) {
                         mutablePos.move(direction);
                         BlockState attaching = world.getBlockState(mutablePos);
-                        if ((attaching.getBlock() == Blocks.GRASS_BLOCK && rand.nextInt(4) == 0) || attaching.isIn(BlockTags.LEAVES)) {
-                            if (direction != Direction.DOWN && VineBlock.shouldConnectTo(world, mutablePos, direction)) {
+                        if ((attaching.getBlock() == Blocks.GRASS_BLOCK && rand.nextInt(4) == 0) || attaching.is(BlockTags.LEAVES)) {
+                            if (direction != Direction.DOWN && VineBlock.isAcceptableNeighbour(world, mutablePos, direction)) {
                                 mutablePos.move(direction.getOpposite());
                                 int len = rand.nextInt(3) + 2;
-                                for (int j = 0; j < len && world.isAir(mutablePos); j++) {
-                                    world.setBlockState(mutablePos, Blocks.VINE.getDefaultState().with(VineBlock.getFacingProperty(direction), true), 2);
+                                for (int j = 0; j < len && world.isEmptyBlock(mutablePos); j++) {
+                                    world.setBlock(mutablePos, Blocks.VINE.defaultBlockState().setValue(VineBlock.getPropertyForFace(direction), true), 2);
                                     mutablePos.move(Direction.DOWN);
                                 }
                                 break;

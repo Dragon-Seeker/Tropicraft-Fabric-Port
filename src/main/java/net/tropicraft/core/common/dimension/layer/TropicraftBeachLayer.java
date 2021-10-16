@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.DiagonalCrossSamplingLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.BishopTransformer;
 
-public final class TropicraftBeachLayer implements DiagonalCrossSamplingLayer {
+public final class TropicraftBeachLayer implements BishopTransformer {
     private final TropicraftBiomeIds biomeIds;
 
     public TropicraftBeachLayer(TropicraftBiomeIds biomeIds) {
@@ -11,7 +11,7 @@ public final class TropicraftBeachLayer implements DiagonalCrossSamplingLayer {
     }
 
     @Override
-    public int sample(LayerRandomnessSource iNoiseRandom, int ne, int se, int sw, int nw, int center) {
+    public int apply(Context iNoiseRandom, int ne, int se, int sw, int nw, int center) {
         if (biomeIds.isOcean(center) && (!biomeIds.isOcean(ne) || !biomeIds.isOcean(se) || !biomeIds.isOcean(sw) || !biomeIds.isOcean(nw))) {
             return biomeIds.beach;
         }

@@ -1,15 +1,13 @@
 package net.tropicraft.core.client.registry;
 
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.tropicraft.core.common.entity.placeable.*;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import net.tropicraft.core.common.entity.projectile.ExplodingCoconutEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Direction;
 import net.tropicraft.core.common.entity.projectile.LavaBallEntity;
 import net.tropicraft.core.common.entity.projectile.PoisonBlotEntity;
 import net.tropicraft.core.common.registry.TropicraftEntities;
@@ -26,11 +24,11 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
             context.getTaskQueue().execute(() -> {
-                AshenMaskEntity ashenMask = new AshenMaskEntity(MinecraftClient.getInstance().world, x, y, z, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, ashenMask);
+                AshenMaskEntity ashenMask = new AshenMaskEntity(Minecraft.getInstance().level, x, y, z, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, ashenMask);
             });
         });
 
@@ -40,11 +38,11 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
             context.getTaskQueue().execute(() -> {
-                ExplodingCoconutEntity explCoconut = new ExplodingCoconutEntity(MinecraftClient.getInstance().world, x, y, z, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, explCoconut);
+                ExplodingCoconutEntity explCoconut = new ExplodingCoconutEntity(Minecraft.getInstance().level, x, y, z, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, explCoconut);
             });
         });
 
@@ -54,12 +52,12 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
-            Direction direction = Direction.byId(packet.readInt());
+            Direction direction = Direction.from3DDataValue(packet.readInt());
             context.getTaskQueue().execute(() -> {
-                BambooItemFrameEntity bambooFrame = new BambooItemFrameEntity(TropicraftEntities.BAMBOO_ITEM_FRAME, MinecraftClient.getInstance().world, x, y, z, direction, entityID, entityUUID);;
-                MinecraftClient.getInstance().world.addEntity(entityID, bambooFrame);
+                BambooItemFrameEntity bambooFrame = new BambooItemFrameEntity(TropicraftEntities.BAMBOO_ITEM_FRAME, Minecraft.getInstance().level, x, y, z, direction, entityID, entityUUID);;
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, bambooFrame);
             });
         });
 
@@ -69,13 +67,13 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
             //Identifier itemID = packet.readIdentifier();
 
-            Direction direction = Direction.byId(packet.readInt());
+            Direction direction = Direction.from3DDataValue(packet.readInt());
             context.getTaskQueue().execute(() -> {
-                WallItemEntity wallItem = new WallItemEntity(TropicraftEntities.WALL_ITEM, MinecraftClient.getInstance().world, x, y, z, direction, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, wallItem);
+                WallItemEntity wallItem = new WallItemEntity(TropicraftEntities.WALL_ITEM, Minecraft.getInstance().level, x, y, z, direction, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, wallItem);
             });
         });
 
@@ -85,11 +83,11 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
             context.getTaskQueue().execute(() -> {
-                LavaBallEntity lavaBall = new LavaBallEntity(MinecraftClient.getInstance().world, x, y, z, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, lavaBall);
+                LavaBallEntity lavaBall = new LavaBallEntity(Minecraft.getInstance().level, x, y, z, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, lavaBall);
             });
         });
 
@@ -99,11 +97,11 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
             context.getTaskQueue().execute(() -> {
-                PoisonBlotEntity poisonBlot = new PoisonBlotEntity(MinecraftClient.getInstance().world, x, y, z, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, poisonBlot);
+                PoisonBlotEntity poisonBlot = new PoisonBlotEntity(Minecraft.getInstance().level, x, y, z, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, poisonBlot);
             });
         });
 
@@ -113,11 +111,11 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
             context.getTaskQueue().execute(() -> {
-                BeachFloatEntity beachFloat = new BeachFloatEntity(MinecraftClient.getInstance().world, x, y, z, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, beachFloat);
+                BeachFloatEntity beachFloat = new BeachFloatEntity(Minecraft.getInstance().level, x, y, z, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, beachFloat);
             });
         });
 
@@ -127,11 +125,11 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
             context.getTaskQueue().execute(() -> {
-                ChairEntity chair = new ChairEntity(MinecraftClient.getInstance().world, x, y, z, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, chair);
+                ChairEntity chair = new ChairEntity(Minecraft.getInstance().level, x, y, z, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, chair);
             });
         });
 
@@ -141,11 +139,11 @@ public class TropicClientPackets {
             double z = packet.readDouble();
 
             int entityID = packet.readInt();
-            UUID entityUUID = packet.readUuid();
+            UUID entityUUID = packet.readUUID();
 
             context.getTaskQueue().execute(() -> {
-                UmbrellaEntity chair = new UmbrellaEntity(MinecraftClient.getInstance().world, x, y, z, entityID, entityUUID);
-                MinecraftClient.getInstance().world.addEntity(entityID, chair);
+                UmbrellaEntity chair = new UmbrellaEntity(Minecraft.getInstance().level, x, y, z, entityID, entityUUID);
+                Minecraft.getInstance().level.putNonPlayerEntity(entityID, chair);
             });
         });
 

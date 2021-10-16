@@ -1,12 +1,12 @@
 package net.tropicraft.core.common.block.blockentity;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.tropicraft.core.common.registry.TropicBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class TropicBambooChestBlockEntity extends ChestBlockEntity {
 
@@ -23,24 +23,24 @@ public class TropicBambooChestBlockEntity extends ChestBlockEntity {
      */
 
     @Override
-    public Text getDisplayName() {
+    public Component getDisplayName() {
         //return getContainerName();
-        return new TranslatableText(getCachedState().getBlock().getTranslationKey());
+        return new TranslatableComponent(getBlockState().getBlock().getDescriptionId());
     }
 
     @Override
-    protected Text getContainerName() {
-        return new TranslatableText("container.bamboo_chest");
+    protected Component getDefaultName() {
+        return new TranslatableComponent("container.bamboo_chest");
         //return new TranslatableText(Tropicfabricport.MOD_ID + "container.bamboo_chest");
     }
     @Override
-    public void readNbt(NbtCompound compound) {
-        super.readNbt(compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         unbreakable = compound.getBoolean("unbreakable");
     }
     @Override
-    public NbtCompound writeNbt(NbtCompound compound) {
-        super.writeNbt(compound);
+    public CompoundTag save(CompoundTag compound) {
+        super.save(compound);
         compound.putBoolean("unbreakable", unbreakable);
 
         return compound;

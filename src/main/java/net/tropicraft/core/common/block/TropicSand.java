@@ -1,19 +1,21 @@
 package net.tropicraft.core.common.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.*;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class TropicSand extends FallingBlock{
-    public static final BooleanProperty UNDERWATER = BooleanProperty.of("underwater");
+    public static final BooleanProperty UNDERWATER = BooleanProperty.create("underwater");
 
-    public TropicSand(FabricBlockSettings settings) {
+    public TropicSand(Properties settings) {
         super(settings);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
         stateManager.add(UNDERWATER);
     }
 

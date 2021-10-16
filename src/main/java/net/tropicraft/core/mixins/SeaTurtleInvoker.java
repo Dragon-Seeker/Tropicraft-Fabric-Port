@@ -1,11 +1,11 @@
 package net.tropicraft.core.mixins;
 
-import net.minecraft.entity.passive.TurtleEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.animal.Turtle;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(TurtleEntity.class)
+@Mixin(Turtle.class)
 public interface SeaTurtleInvoker {
     @Invoker("getHomePos")
     BlockPos inokverGetHomePos();

@@ -1,6 +1,6 @@
 package net.tropicraft.core.mixins;
 
-import net.minecraft.structure.processor.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.tropicraft.core.mixinExtensions.StructureProcessorExtension;
 import org.spongepowered.asm.mixin.Mixin;
 

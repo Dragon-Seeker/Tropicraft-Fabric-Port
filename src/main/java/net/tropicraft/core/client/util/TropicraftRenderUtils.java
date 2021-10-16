@@ -1,24 +1,22 @@
 package net.tropicraft.core.client.util;
 
-import net.minecraft.client.render.entity.ItemFrameEntityRenderer;
 import net.tropicraft.Constants;
 import com.google.common.collect.Maps;
-import net.minecraft.client.MinecraftClient;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SkullItem;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3f;
-
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PlayerHeadItem;
 import java.util.Map;
 
 public class TropicraftRenderUtils {
@@ -26,103 +24,103 @@ public class TropicraftRenderUtils {
     /**
      * Cache of ResourceLocations for texture binding
      */
-    private static Map<String, Identifier> resLocMap = Maps.newHashMap();
-    private static Map<String, SpriteIdentifier> materialMap = Maps.newHashMap();
+    private static Map<String, ResourceLocation> resLocMap = Maps.newHashMap();
+    private static Map<String, Material> materialMap = Maps.newHashMap();
 
-    public static VertexConsumer getEntityCutoutBuilder(final VertexConsumerProvider buffer, final Identifier resourceLocation) {
-        return buffer.getBuffer(RenderLayer.getEntityCutout(resourceLocation));
+    public static VertexConsumer getEntityCutoutBuilder(final MultiBufferSource buffer, final ResourceLocation resourceLocation) {
+        return buffer.getBuffer(RenderType.entityCutout(resourceLocation));
     }
 
     public static BakedModel getBakedModel(final ItemRenderer itemRenderer, final ItemStack itemStack) {
-        return itemRenderer.getModels().getModel(itemStack);
+        return itemRenderer.getItemModelShaper().getItemModel(itemStack);
     }
 
-    public static void renderModel(final SpriteIdentifier material, final Model model, MatrixStack stack, VertexConsumerProvider buffer, int combinedLightIn, int combinedOverlayIn) {
-        model.render(stack, buffer.getBuffer(model.getLayer(material.getTextureId())), combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
+    public static void renderModel(final Material material, final Model model, PoseStack stack, MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
+        model.renderToBuffer(stack, buffer.getBuffer(model.renderType(material.texture())), combinedLightIn, combinedOverlayIn, 1, 1, 1, 1);
     }
 
-    public static SpriteIdentifier getBlockMaterial(final String path) {
+    public static Material getBlockMaterial(final String path) {
         return materialMap.computeIfAbsent(path, m -> createBlockMaterial(path));
     }
 
-    private static SpriteIdentifier createBlockMaterial(final String path) {
-        return new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, getTextureBlock(path));
+    private static Material createBlockMaterial(final String path) {
+        return new Material(TextureAtlas.LOCATION_BLOCKS, getTextureBlock(path));
     }
 
-    public static SpriteIdentifier getTEMaterial(final String path) {
+    public static Material getTEMaterial(final String path) {
         return materialMap.computeIfAbsent(path, m -> createTEMaterial(path));
     }
 
-    private static SpriteIdentifier createTEMaterial(final String path) {
-        return new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, getTextureTE(path));
+    private static Material createTEMaterial(final String path) {
+        return new Material(TextureAtlas.LOCATION_BLOCKS, getTextureTE(path));
     }
 
-    public static Identifier getTexture(String path) {
+    public static ResourceLocation getTexture(String path) {
         return resLocMap.computeIfAbsent(path, k -> getResLoc(path));
     }
 
-    private static Identifier getResLoc(String path) {
-        return new Identifier(Constants.MODID, path);
+    private static ResourceLocation getResLoc(String path) {
+        return new ResourceLocation(Constants.MODID, path);
     }
 
-    public static Identifier getTextureArmor(String path) {
+    public static ResourceLocation getTextureArmor(String path) {
         return getTexture(String.format("textures/models/armor/%s.png", path));
     }
 
-    public static Identifier getTextureBlock(String path) {
+    public static ResourceLocation getTextureBlock(String path) {
         return getTexture(String.format("textures/block/%s.png", path));
     }
 
-    public static Identifier getTextureEntity(String path) {
+    public static ResourceLocation getTextureEntity(String path) {
         return getTexture(String.format("textures/entity/%s.png", path));
     }
 
-    public static Identifier getTextureGui(String path) {
+    public static ResourceLocation getTextureGui(String path) {
         return getTexture(String.format("textures/gui/%s.png", path));
     }
 
-    public static Identifier getTextureTE(String path) {
+    public static ResourceLocation getTextureTE(String path) {
         return getTexture(String.format("textures/block/te/%s.png", path));
     }
 
-    public static Identifier bindTextureArmor(String path) {
+    public static ResourceLocation bindTextureArmor(String path) {
         return bindTexture(getTextureArmor(path));
     }
 
-    public static Identifier bindTextureEntity(String path) {
+    public static ResourceLocation bindTextureEntity(String path) {
         return bindTexture(getTextureEntity(path));
     }
 
-    public static Identifier bindTextureGui(String path) {
+    public static ResourceLocation bindTextureGui(String path) {
         return bindTexture(getTextureGui(path));
     }
 
-    public static Identifier bindTextureTE(String path) {
+    public static ResourceLocation bindTextureTE(String path) {
         return bindTexture(getTextureTE(path));
     }
 
-    public static Identifier bindTextureBlock(String path) {
+    public static ResourceLocation bindTextureBlock(String path) {
         return bindTexture(getTextureBlock(path));
     }
 
-    public static Identifier bindTexture(Identifier resource) {
-        MinecraftClient.getInstance().getTextureManager().bindTexture(resource);
+    public static ResourceLocation bindTexture(ResourceLocation resource) {
+        Minecraft.getInstance().getTextureManager().bindForSetup(resource);
         return resource;
     }
 
 
-    public static void renderItem(ItemStack itemStack, final float scale, boolean leftHand, MatrixStack stack, VertexConsumerProvider buffer, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn, int seed) {
+    public static void renderItem(ItemStack itemStack, final float scale, boolean leftHand, PoseStack stack, MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn, BakedModel modelIn, int seed) {
         if (!itemStack.isEmpty()) {
-            stack.push();
+            stack.pushPose();
             stack.scale(scale, scale, scale);
 
 
             // TODO what is this now?
-            if (/*!Minecraft.getInstance().getItemRenderer().shouldRenderItemIn3D(stack) || */itemStack.getItem() instanceof SkullItem) {
-                stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F));
+            if (/*!Minecraft.getInstance().getItemRenderer().shouldRenderItemIn3D(stack) || */itemStack.getItem() instanceof PlayerHeadItem) {
+                stack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
             }
-            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, combinedLightIn, combinedOverlayIn, stack, buffer, seed);
-            stack.pop();
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, stack, buffer, seed);
+            stack.popPose();
         }
     }
 

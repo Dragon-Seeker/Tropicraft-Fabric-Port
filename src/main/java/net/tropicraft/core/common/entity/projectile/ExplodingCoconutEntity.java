@@ -7,47 +7,46 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import java.util.UUID;
 
-public class ExplodingCoconutEntity extends ThrownItemEntity {
+public class ExplodingCoconutEntity extends ThrowableItemProjectile {
 
-    public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "exploding_coconut");
+    public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "exploding_coconut");
     
-    public ExplodingCoconutEntity(EntityType<? extends ExplodingCoconutEntity> type, World world) {
+    public ExplodingCoconutEntity(EntityType<? extends ExplodingCoconutEntity> type, Level world) {
         super(type, world);
     }
     
-    public ExplodingCoconutEntity(World world, LivingEntity thrower) {
+    public ExplodingCoconutEntity(Level world, LivingEntity thrower) {
         super(TropicraftEntities.EXPLODING_COCONUT, thrower, world);
     }
 
     @Environment(EnvType.CLIENT)
-    public ExplodingCoconutEntity(World world, double x, double y, double z, int id, UUID uuid) {
+    public ExplodingCoconutEntity(Level world, double x, double y, double z, int id, UUID uuid) {
         super(TropicraftEntities.EXPLODING_COCONUT, world);
-        updatePosition(x, y, z);
-        updateTrackedPosition(x, y, z);
+        absMoveTo(x, y, z);
+        setPacketCoordinates(x, y, z);
         setId(id);
-        setUuid(uuid);
+        setUUID(uuid);
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         //return new EntitySpawnS2CPacket(this);
 
         //NetworkHooks.getEntitySpawningPacket(this);
 
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
         // entity position
         packet.writeDouble(getX());
@@ -56,16 +55,16 @@ public class ExplodingCoconutEntity extends ThrownItemEntity {
 
         // entity id & uuid
         packet.writeInt(getId());
-        packet.writeUuid(getUuid());
+        packet.writeUUID(getUUID());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
     }
 
 	@Override
-	protected void onCollision(HitResult hitResult) {
+	protected void onHit(HitResult hitResult) {
 		// TODO - why isn't this being called?
-		if (!world.isClient) {
-			world.createExplosion(this, getX(), getY(), getZ(), 2.4F, Explosion.DestructionType.DESTROY);
+		if (!level.isClientSide) {
+			level.explode(this, getX(), getY(), getZ(), 2.4F, Explosion.BlockInteraction.DESTROY);
 			remove(RemovalReason.DISCARDED);
 		}
 	}

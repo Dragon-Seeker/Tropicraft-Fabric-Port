@@ -1,49 +1,60 @@
 package net.tropicraft.core.common.block;
 
-import net.minecraft.block.sapling.SaplingGenerator;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
-import net.minecraft.block.*;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.math.Direction;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import java.util.Arrays;
 
 public class Builder {
 
 
-    private static MapColor SAND = MapColor.PALE_YELLOW;
+    private static MaterialColor SAND = MaterialColor.SAND;
 
 
-    public static Block tropicBlock(Material baseMaterial, MapColor baseColor, float hardness, float resistance){
+    public static Block tropicBlock(Material baseMaterial, MaterialColor baseColor, float hardness, float resistance){
         return tropicBlock(FabricBlockSettings
                 .of(baseMaterial)
                 .materialColor(baseColor)
-                .hardness(hardness)
-                .resistance(resistance));
+                .destroyTime(hardness)
+                .explosionResistance(resistance));
     }
 
-    public static Block tropicBlock(Material baseMaterial, MapColor baseColor, float hardness, float resistance, BlockSoundGroup soundbase){
+    public static Block tropicBlock(Material baseMaterial, MaterialColor baseColor, float hardness, float resistance, SoundType soundbase){
         return tropicBlock(FabricBlockSettings
                 .of(baseMaterial)
                 .materialColor(baseColor)
-                .hardness(hardness)
-                .resistance(resistance)
-                .sounds(soundbase));
+                .destroyTime(hardness)
+                .explosionResistance(resistance)
+                .sound(soundbase));
     }
 
-    public static Block tropicBlock(FabricBlockSettings settings){
+    public static Block tropicBlock(BlockBehaviour.Properties settings){
         return new Block(FabricBlockSettings
                 .copyOf(settings));
     }
 
     public static Block Fence(Block block){
         return new FenceBlock(FabricBlockSettings
-                .copyOf(block).nonOpaque());
+                .copyOf(block).noOcclusion());
     }
 
     public static Block Stairs(Block block){
@@ -57,34 +68,35 @@ public class Builder {
 
     public static Block FenceGate(Block block){
         return new FenceGateBlock(FabricBlockSettings
-                .copyOf(block).nonOpaque());
+                .copyOf(block).noOcclusion());
     }
 
-    public static Block MetalBlock(MapColor baseColor){
+    public static Block MetalBlock(MaterialColor baseColor){
         return new Block(FabricBlockSettings
                 .of(Material.METAL)
+                .breakByTool(FabricToolTags.PICKAXES, 2)
                 .materialColor(baseColor)
-                .sounds(BlockSoundGroup.METAL)
-                .hardness(5.0F)
-                .resistance(6.0F)
-                .breakByTool(FabricToolTags.PICKAXES, 2));
+                .sound(SoundType.METAL)
+                .destroyTime(5.0F)
+                .explosionResistance(6.0F));
     }
 
-    public static TropicOreBlock OreBlock(MapColor baseColor, UniformIntProvider provider){
+    public static TropicOreBlock OreBlock(MaterialColor baseColor, UniformInt provider){
         return OreBlock(baseColor, 2, provider);
     }
 
-    public static TropicOreBlock OreBlock(MapColor baseColor, int miningLevel){
-        return OreBlock(baseColor, miningLevel, UniformIntProvider.create(0,0));
+    public static TropicOreBlock OreBlock(MaterialColor baseColor, int miningLevel){
+        return OreBlock(baseColor, miningLevel, UniformInt.of(0,0));
     }
 
-    public static TropicOreBlock OreBlock(MapColor baseColor, int miningLevel, UniformIntProvider provider){
+    public static TropicOreBlock OreBlock(MaterialColor baseColor, int miningLevel, UniformInt provider){
         return new TropicOreBlock(FabricBlockSettings
                 .of(Material.STONE, baseColor)
-                .hardness(3.0F)
-                .resistance(3.0F)
-                .requiresTool().breakByTool(FabricToolTags.PICKAXES, miningLevel)
-                .sounds(BlockSoundGroup.STONE), provider);
+                .breakByTool(FabricToolTags.PICKAXES, miningLevel)
+                .destroyTime(3.0F)
+                .explosionResistance(3.0F)
+                .requiresCorrectToolForDrops()
+                .sound(SoundType.STONE), provider);
     }
 
     public static Block Sand() {
@@ -95,53 +107,53 @@ public class Builder {
         return Sand(hardness, resistance, SAND);
     }
 
-    public static Block Sand(MapColor baseColor){
+    public static Block Sand(MaterialColor baseColor){
         return Sand(0.5f, 0.5f, baseColor);
     }
 
-    public static Block Sand(float hardness, float resistance, MapColor baseColor){
+    public static Block Sand(float hardness, float resistance, MaterialColor baseColor){
         return new TropicSand(FabricBlockSettings
-                .of(Material.AGGREGATE)
+                .of(Material.SAND)
                 .materialColor(baseColor)
-                .hardness(hardness)
-                .resistance(resistance)
-                .sounds(BlockSoundGroup.SAND));
+                .destroyTime(hardness)
+                .explosionResistance(resistance)
+                .sound(SoundType.SAND));
     }
 
 
 
     //LogBlock
-    public static Block Log(Material baseMaterial, MapColor color1, MapColor color2, BlockSoundGroup baseSound) {
-        return new PillarBlock(FabricBlockSettings
-                .of(baseMaterial, blockState -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? color1 : color2)
+    public static Block Log(Material baseMaterial, MaterialColor color1, MaterialColor color2, SoundType baseSound) {
+        return new RotatedPillarBlock(FabricBlockSettings
+                .of(baseMaterial, blockState -> blockState.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? color1 : color2)
                 .strength(2.0F)
-                .sounds(baseSound));
+                .sound(baseSound));
     }
 
     //Plank Block
-    public static Block Planks(Material baseMaterial, BlockSoundGroup baseSound, float baseHardness, float baseResistance) {
-        return new PillarBlock(FabricBlockSettings
+    public static Block Planks(Material baseMaterial, SoundType baseSound, float baseHardness, float baseResistance) {
+        return new RotatedPillarBlock(FabricBlockSettings
                 .of(baseMaterial)
-                .hardness(baseHardness)
-                .resistance(baseResistance)
-                .sounds(baseSound));
+                .destroyTime(baseHardness)
+                .explosionResistance(baseResistance)
+                .sound(baseSound));
     }
 
     //WoodBlock
-    public static Block Bark(Material baseMaterial, BlockSoundGroup baseSound) {
-        return new PillarBlock(FabricBlockSettings
+    public static Block Bark(Material baseMaterial, SoundType baseSound) {
+        return new RotatedPillarBlock(FabricBlockSettings
                 .of(baseMaterial)
-                .hardness(2.0F)
-                .sounds(baseSound));
+                .destroyTime(2.0F)
+                .sound(baseSound));
     }
 
     public static Block Wall(Block block) {
-        return new WallBlock(FabricBlockSettings.copyOf(block).nonOpaque());
+        return new WallBlock(FabricBlockSettings.copyOf(block).noOcclusion());
     }
 
     //TropicBambooPot(Blocks.AIR, );
     public static TropicBambooPot BambooPot(Block content) {
-        return new TropicBambooPot(content, FabricBlockSettings.copyOf(TropicraftBlocks.FlowerPot).nonOpaque());
+        return new TropicBambooPot(content, FabricBlockSettings.copyOf(TropicraftBlocks.FlowerPot).noOcclusion());
     }
 
 
@@ -151,7 +163,7 @@ public class Builder {
 
 
     public static TropicBambooPot tropicraftPot(final Block block) {
-        return new TropicBambooPot(block, FabricBlockSettings.of(Material.DECORATION).strength(0.2F, 5.0F).sounds(BlockSoundGroup.BAMBOO));
+        return new TropicBambooPot(block, FabricBlockSettings.of(Material.DECORATION).strength(0.2F, 5.0F).sound(SoundType.BAMBOO));
     }
 
     public static FlowerPotBlock vanillaPot(final Block block) {
@@ -159,9 +171,9 @@ public class Builder {
     }
 
     @SafeVarargs
-    public static SaplingBlock sapling(final SaplingGenerator tree, FabricBlockSettings settings, final Block... validPlantBlocks) {
+    public static SaplingBlock sapling(final AbstractTreeGrower tree, FabricBlockSettings settings, final Block... validPlantBlocks) {
         return new SaplingBlock(tree, settings) {
-            protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
+            protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
                 final Block block = floor.getBlock();
                 if (validPlantBlocks == null || validPlantBlocks.length == 0) {
                     return block == Blocks.GRASS_BLOCK || block == Blocks.DIRT || block == Blocks.COARSE_DIRT || block == Blocks.PODZOL || block == Blocks.FARMLAND;

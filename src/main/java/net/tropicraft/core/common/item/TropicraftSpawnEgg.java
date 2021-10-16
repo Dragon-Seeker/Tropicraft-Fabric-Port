@@ -1,62 +1,61 @@
 package net.tropicraft.core.common.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FluidBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.MobSpawnerBlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.MobSpawnerLogic;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-
 import java.util.Objects;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BaseSpawner;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class TropicraftSpawnEgg<T extends Entity> extends Item {
 
     private final EntityType<T> typeIn;
 
-    public TropicraftSpawnEgg(final EntityType<T> type, Settings properties) {
+    public TropicraftSpawnEgg(final EntityType<T> type, Properties properties) {
         super(properties);
         this.typeIn = type;
     }
 
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         } else {
-            ItemStack itemStack = context.getStack();
-            BlockPos pos = context.getBlockPos();
-            Direction dir = context.getSide();
+            ItemStack itemStack = context.getItemInHand();
+            BlockPos pos = context.getClickedPos();
+            Direction dir = context.getClickedFace();
             BlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
             if (block == Blocks.SPAWNER) {
                 BlockEntity te = world.getBlockEntity(pos);
-                if (te instanceof MobSpawnerBlockEntity) {
-                    MobSpawnerLogic spawner = ((MobSpawnerBlockEntity)te).getLogic();
+                if (te instanceof SpawnerBlockEntity) {
+                    BaseSpawner spawner = ((SpawnerBlockEntity)te).getSpawner();
                     EntityType<?> spawnType = typeIn;
                     spawner.setEntityId(spawnType);
-                    te.markDirty();
-                    world.updateListeners(pos, state, state, 3);
-                    itemStack.decrement(1);
-                    return ActionResult.SUCCESS;
+                    te.setChanged();
+                    world.sendBlockUpdated(pos, state, state, 3);
+                    itemStack.shrink(1);
+                    return InteractionResult.SUCCESS;
                 }
             }
 
@@ -64,45 +63,45 @@ public class TropicraftSpawnEgg<T extends Entity> extends Item {
             if (state.getCollisionShape(world, pos).isEmpty()) {
                 spawnPos = pos;
             } else {
-                spawnPos = pos.offset(dir);
+                spawnPos = pos.relative(dir);
             }
 
             EntityType<?> type3 = typeIn;
-            if (type3.spawnFromItemStack((ServerWorld) world, itemStack, context.getPlayer(), spawnPos, SpawnReason.SPAWN_EGG, true, !Objects.equals(pos, spawnPos) && dir == Direction.UP) != null) {
-                itemStack.decrement(1);
+            if (type3.spawn((ServerLevel) world, itemStack, context.getPlayer(), spawnPos, MobSpawnType.SPAWN_EGG, true, !Objects.equals(pos, spawnPos) && dir == Direction.UP) != null) {
+                itemStack.shrink(1);
             }
 
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        ItemStack heldItem = player.getStackInHand(hand);
-        if (world.isClient) {
-            return TypedActionResult.pass(heldItem);
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        ItemStack heldItem = player.getItemInHand(hand);
+        if (world.isClientSide) {
+            return InteractionResultHolder.pass(heldItem);
         } else {
-            HitResult rayTraceResult = raycast(world, player, RaycastContext.FluidHandling.SOURCE_ONLY);
+            HitResult rayTraceResult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.SOURCE_ONLY);
             if (rayTraceResult.getType() != HitResult.Type.BLOCK) {
-                return TypedActionResult.pass(heldItem);
+                return InteractionResultHolder.pass(heldItem);
             } else {
                 BlockHitResult traceResult = (BlockHitResult) rayTraceResult;
                 BlockPos tracePos = traceResult.getBlockPos();
-                if (!(world.getBlockState(tracePos).getBlock() instanceof FluidBlock)) {
-                    return TypedActionResult.pass(heldItem);
-                } else if (world.canPlayerModifyAt(player, tracePos) && player.canPlaceOn(tracePos, traceResult.getSide(), heldItem)) {
+                if (!(world.getBlockState(tracePos).getBlock() instanceof LiquidBlock)) {
+                    return InteractionResultHolder.pass(heldItem);
+                } else if (world.mayInteract(player, tracePos) && player.mayUseItemAt(tracePos, traceResult.getDirection(), heldItem)) {
                     EntityType<?> type = typeIn;
-                    if (type.spawnFromItemStack((ServerWorld) world, heldItem, player, tracePos, SpawnReason.SPAWN_EGG, false, false) == null) {
-                        return TypedActionResult.pass(heldItem);
+                    if (type.spawn((ServerLevel) world, heldItem, player, tracePos, MobSpawnType.SPAWN_EGG, false, false) == null) {
+                        return InteractionResultHolder.pass(heldItem);
                     } else {
-                        if (!player.getAbilities().creativeMode) {
-                            heldItem.decrement(1);
+                        if (!player.getAbilities().instabuild) {
+                            heldItem.shrink(1);
                         }
 
-                        player.incrementStat(Stats.USED.getOrCreateStat(this));
-                        return TypedActionResult.success(heldItem);
+                        player.awardStat(Stats.ITEM_USED.get(this));
+                        return InteractionResultHolder.success(heldItem);
                     }
                 } else {
-                    return TypedActionResult.fail(heldItem);
+                    return InteractionResultHolder.fail(heldItem);
                 }
             }
         }

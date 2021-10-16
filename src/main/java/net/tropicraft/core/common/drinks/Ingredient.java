@@ -1,15 +1,14 @@
 package net.tropicraft.core.common.drinks;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.tropicraft.core.common.item.CocktailItem;
 import net.tropicraft.core.common.registry.TropicraftBlocks;
 import net.tropicraft.core.common.registry.TropicraftItems;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -33,7 +32,7 @@ public class Ingredient implements Comparable<Ingredient> {
 	public static final Ingredient coconut = new Ingredient(11, TropicraftBlocks.COCONUT.asItem(), false, 0xefefef).addAction(new DrinkActionFood(1, 0.1f));
 	public static final Ingredient coconutChunk = new Ingredient(12, TropicraftItems.COCONUT_CHUNK, false, 0xefefef/*, 0.1f*/).addAction(new DrinkActionFood(1, 0.1f));
 	public static final Ingredient sugarcane = new Ingredient(13, Items.SUGAR_CANE, false, 0xb1ff6b, 0.1f);
-	public static final Ingredient roastedCoffeeBean = new Ingredient(14, TropicraftItems.ROASTED_COFFEE_BEAN, false, 0x68442c, 0.95f).addAction(new DrinkActionFood(4, 0.2f)).addAction(new DrinkActionPotion(StatusEffects.SPEED, 5, 1));
+	public static final Ingredient roastedCoffeeBean = new Ingredient(14, TropicraftItems.ROASTED_COFFEE_BEAN, false, 0x68442c, 0.95f).addAction(new DrinkActionFood(4, 0.2f)).addAction(new DrinkActionPotion(MobEffects.MOVEMENT_SPEED, 5, 1));
 	public static final Ingredient waterBucket = new Ingredient(15, Items.WATER_BUCKET, false, 0xffffff);
 	public static final Ingredient milkBucket = new Ingredient(16, Items.MILK_BUCKET, false, 0xffffff, 0.1f).addAction(new DrinkActionFood(2, 0.2f));
 	public static final Ingredient cocoaBean = new Ingredient(17, Items.COCOA_BEANS, false, 0x805A3E, 0.95f).addAction(new DrinkActionFood(4, 0.2f));
@@ -130,7 +129,7 @@ public class Ingredient implements Comparable<Ingredient> {
         return Integer.compare(id, other.id);
     }
     
-    public void onDrink(PlayerEntity player) {
+    public void onDrink(Player player) {
         for (final DrinkAction action: actions) {
             action.onDrink(player);
         }
@@ -162,8 +161,8 @@ public class Ingredient implements Comparable<Ingredient> {
         return is;
     }
 
-    public Text getName() {
-        return new ItemStack(getIngredientItem()).getName();
+    public Component getName() {
+        return new ItemStack(getIngredientItem()).getHoverName();
     }
 
 }

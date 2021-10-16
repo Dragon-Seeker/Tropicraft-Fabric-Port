@@ -1,15 +1,12 @@
 package net.tropicraft.core.common.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-//import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorItem;
-//import net.tropicraft.core.client.TropicraftRenderUtils;
-//import net.tropicraft.core.client.entity.model.PlayerHeadpieceRenderer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 
 public class NigelStacheItem extends ArmorItem {
 
-    public NigelStacheItem(final FabricItemSettings properties) {
+    public NigelStacheItem(final Properties properties) {
         super(ArmorMaterials.NIGEL_STACHE, EquipmentSlot.HEAD, properties);
     }
     /*

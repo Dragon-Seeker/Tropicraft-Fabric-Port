@@ -1,20 +1,26 @@
 package net.tropicraft.core.client.entity.models;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.model.EntityModelLoader;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.LivingEntity;
 import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.client.util.TropicraftSpecialRenderHelper;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3f;
 import org.w3c.dom.Entity;
 
-public class PlayerHeadpieceModel extends BipedEntityModel<LivingEntity> {
+public class PlayerHeadpieceModel extends HumanoidModel<LivingEntity> {
 	private int textureIndex;
 	private double xOffset;
 	private double yOffset;
@@ -31,14 +37,14 @@ public class PlayerHeadpieceModel extends BipedEntityModel<LivingEntity> {
 	}
 
 	public PlayerHeadpieceModel(ModelPart modelPart, float scale, final int textureIndex, final double xOffset, final double yOffset) {
-		super(modelPart, RenderLayer::getEntityCutoutNoCull);
+		super(modelPart, RenderType::entityCutoutNoCull);
 		this.textureIndex = textureIndex;
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 		this.scale = scale;
 		renderer = new TropicraftSpecialRenderHelper();
 
-		headpiece = modelPart.getChild(EntityModelPartNames.HAT);
+		headpiece = modelPart.getChild(PartNames.HAT);
 	}
 
 	/*
@@ -49,47 +55,47 @@ public class PlayerHeadpieceModel extends BipedEntityModel<LivingEntity> {
 
 	 */
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
 
-		modelPartData.addChild("head", ModelPartBuilder.create(), ModelTransform.NONE);
+		modelPartData.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.ZERO);
 		//modelPartData.addChild("hat", ModelPartBuilder.create(), ModelTransform.NONE);
-		modelPartData.addChild("body", ModelPartBuilder.create(), ModelTransform.NONE);
-		modelPartData.addChild("right_arm", ModelPartBuilder.create(), ModelTransform.NONE);
-		modelPartData.addChild("left_arm", ModelPartBuilder.create(), ModelTransform.NONE);
-		modelPartData.addChild("right_leg", ModelPartBuilder.create(), ModelTransform.NONE);
-		modelPartData.addChild("left_leg", ModelPartBuilder.create(), ModelTransform.NONE);
+		modelPartData.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.ZERO);
+		modelPartData.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.ZERO);
+		modelPartData.addOrReplaceChild("left_arm", CubeListBuilder.create(), PartPose.ZERO);
+		modelPartData.addOrReplaceChild("right_leg", CubeListBuilder.create(), PartPose.ZERO);
+		modelPartData.addOrReplaceChild("left_leg", CubeListBuilder.create(), PartPose.ZERO);
 
-		Dilation dilation_hat = new Dilation(scale + 0.5f);
-		ModelPartData hat = modelPartData.addChild(EntityModelPartNames.HAT,
-						ModelPartBuilder.create().uv(32, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, dilation_hat),
-						ModelTransform.NONE);
+		CubeDeformation dilation_hat = new CubeDeformation(scale + 0.5f);
+		PartDefinition hat = modelPartData.addOrReplaceChild(PartNames.HAT,
+						CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, dilation_hat),
+						PartPose.ZERO);
 
-		return TexturedModelData.of(modelData, 64, 32);
+		return LayerDefinition.create(modelData, 64, 32);
 	}
 
-	public static PlayerHeadpieceModel createModel(EntityModelLayer entityModelLayer, EntityModelLoader entityModelLoader, final int textureIndex, final double xOffset, final double yOffset) {
+	public static PlayerHeadpieceModel createModel(ModelLayerLocation entityModelLayer, EntityModelSet entityModelLoader, final int textureIndex, final double xOffset, final double yOffset) {
 		return new PlayerHeadpieceModel(entityModelLoader == null ?
-				getTexturedModelData().createModel() :
-				entityModelLoader.getModelPart(entityModelLayer), textureIndex, xOffset, yOffset);
+				getTexturedModelData().bakeRoot() :
+				entityModelLoader.bakeLayer(entityModelLayer), textureIndex, xOffset, yOffset);
 	}
 
 
 	@Override
-	public void render(MatrixStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-		stack.push();
+	public void renderToBuffer(PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
+		stack.pushPose();
 
-		if (sneaking) {
+		if (crouching) {
 			stack.translate(0, 0.25f, 0);
 		}
 
 		// Set head rotation to mask
-		stack.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(head.yaw));
-		stack.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(head.pitch));
+		stack.mulPose(Vector3f.YP.rotation(head.yRot));
+		stack.mulPose(Vector3f.XP.rotation(head.xRot));
 
 		// Flip mask to face away from the player
-		stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
+		stack.mulPose(Vector3f.YP.rotationDegrees(180));
 
 		// put it in the middle in front of the face
 		stack.translate(0.0F - xOffset, 0.112f + 0.0625f - yOffset, 0.2501F);
@@ -98,7 +104,7 @@ public class PlayerHeadpieceModel extends BipedEntityModel<LivingEntity> {
 		// Setting the texture is handled in the item class.
 		renderer.renderMask(stack, bufferIn, this.textureIndex, packedLightIn, packedOverlayIn);
 		
-		stack.pop();
+		stack.popPose();
 	}
 	
 	

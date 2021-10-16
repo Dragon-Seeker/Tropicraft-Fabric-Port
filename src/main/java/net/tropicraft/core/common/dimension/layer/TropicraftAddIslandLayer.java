@@ -1,9 +1,9 @@
 package net.tropicraft.core.common.dimension.layer;
 
-import net.minecraft.world.biome.layer.type.DiagonalCrossSamplingLayer;
-import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.level.newbiome.context.Context;
+import net.minecraft.world.level.newbiome.layer.traits.BishopTransformer;
 
-public final class TropicraftAddIslandLayer implements DiagonalCrossSamplingLayer {
+public final class TropicraftAddIslandLayer implements BishopTransformer {
     private final TropicraftBiomeIds biomeIds;
     private final int chance;
     private final int landId;
@@ -31,8 +31,8 @@ public final class TropicraftAddIslandLayer implements DiagonalCrossSamplingLaye
     }
 
     @Override
-    public int sample(LayerRandomnessSource random, int ne, int se, int sw, int nw, int center) {
-        if (!biomeIds.isLand(nw) && !biomeIds.isLand(sw) && !biomeIds.isLand(ne) && !biomeIds.isLand(se) && !biomeIds.isLand(center) && random.nextInt(chance) == 0) {
+    public int apply(Context random, int ne, int se, int sw, int nw, int center) {
+        if (!biomeIds.isLand(nw) && !biomeIds.isLand(sw) && !biomeIds.isLand(ne) && !biomeIds.isLand(se) && !biomeIds.isLand(center) && random.nextRandom(chance) == 0) {
             return landId;
             // TODO - maybe this is incorrect, but in old tropicode we actually didn't return the variable, it was unused return landID;
         }

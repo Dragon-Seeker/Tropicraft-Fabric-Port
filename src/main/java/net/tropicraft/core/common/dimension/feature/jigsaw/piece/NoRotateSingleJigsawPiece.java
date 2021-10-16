@@ -3,22 +3,22 @@ package net.tropicraft.core.common.dimension.feature.jigsaw.piece;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.Structure.StructureBlockInfo;
-import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.pool.SinglePoolElement;
-import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.structure.pool.StructurePoolElementType;
-import net.minecraft.structure.processor.StructureProcessorList;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.gen.StructureAccessor;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.structures.SinglePoolElement;
+import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElementType;
+import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.tropicraft.Constants;
 
 import java.util.List;
@@ -29,22 +29,22 @@ import java.util.function.Supplier;
 public class NoRotateSingleJigsawPiece extends SinglePoolElement {
 
     public static final Codec<NoRotateSingleJigsawPiece> CODEC = RecordCodecBuilder.create(instance -> {
-        return instance.group(method_28882(), method_28880(), method_28883())
+        return instance.group(templateCodec(), processorsCodec(), projectionCodec())
                 .apply(instance, NoRotateSingleJigsawPiece::new);
     });
 
     private static final StructurePoolElementType<NoRotateSingleJigsawPiece> TYPE = StructurePoolElementType.register(Constants.MODID + ":single_no_rotate", CODEC);
 
-    public NoRotateSingleJigsawPiece(Either<Identifier, Structure> template, Supplier<StructureProcessorList> processors, StructurePool.Projection placementBehaviour) {
+    public NoRotateSingleJigsawPiece(Either<ResourceLocation, StructureTemplate> template, Supplier<StructureProcessorList> processors, StructureTemplatePool.Projection placementBehaviour) {
         super(template, processors, placementBehaviour);
     }
 
-    public NoRotateSingleJigsawPiece(Structure template) {
+    public NoRotateSingleJigsawPiece(StructureTemplate template) {
         super(template);
     }
 
-    public static Function<StructurePool.Projection, NoRotateSingleJigsawPiece> createNoRotate(String id, StructureProcessorList processors) {
-        return placementBehaviour -> new NoRotateSingleJigsawPiece(Either.left(new Identifier(id)), () -> processors, placementBehaviour);
+    public static Function<StructureTemplatePool.Projection, NoRotateSingleJigsawPiece> createNoRotate(String id, StructureProcessorList processors) {
+        return placementBehaviour -> new NoRotateSingleJigsawPiece(Either.left(new ResourceLocation(id)), () -> processors, placementBehaviour);
     }
 
     @Override
@@ -53,32 +53,32 @@ public class NoRotateSingleJigsawPiece extends SinglePoolElement {
     }
 
     @Override
-    protected StructurePlacementData createPlacementData(BlockRotation rotation, BlockBox box, boolean b) {
-        return super.createPlacementData(BlockRotation.NONE, box, b);
+    protected StructurePlaceSettings getSettings(Rotation rotation, BoundingBox box, boolean b) {
+        return super.getSettings(Rotation.NONE, box, b);
     }
 
     @Override
-    public void method_16756(WorldAccess worldIn, StructureBlockInfo p_214846_2_, BlockPos pos, BlockRotation rotationIn, Random rand, BlockBox p_214846_6_) {
-        super.method_16756(worldIn, p_214846_2_, pos, BlockRotation.NONE, rand, p_214846_6_);
+    public void handleDataMarker(LevelAccessor worldIn, StructureBlockInfo p_214846_2_, BlockPos pos, Rotation rotationIn, Random rand, BoundingBox p_214846_6_) {
+        super.handleDataMarker(worldIn, p_214846_2_, pos, Rotation.NONE, rand, p_214846_6_);
     }
 
     @Override
-    public List<StructureBlockInfo> getDataStructureBlocks(StructureManager p_214857_1_, BlockPos p_214857_2_, BlockRotation p_214857_3_, boolean p_214857_4_) {
-        return super.getDataStructureBlocks(p_214857_1_, p_214857_2_, BlockRotation.NONE, p_214857_4_);
+    public List<StructureBlockInfo> getDataMarkers(StructureManager p_214857_1_, BlockPos p_214857_2_, Rotation p_214857_3_, boolean p_214857_4_) {
+        return super.getDataMarkers(p_214857_1_, p_214857_2_, Rotation.NONE, p_214857_4_);
     }
 
     @Override
-    public BlockBox getBoundingBox(StructureManager templateManagerIn, BlockPos pos, BlockRotation rotationIn) {
-        return super.getBoundingBox(templateManagerIn, pos, BlockRotation.NONE);
+    public BoundingBox getBoundingBox(StructureManager templateManagerIn, BlockPos pos, Rotation rotationIn) {
+        return super.getBoundingBox(templateManagerIn, pos, Rotation.NONE);
     }
 
     @Override
-    public List<StructureBlockInfo> getStructureBlockInfos(StructureManager templateManager, BlockPos pos, BlockRotation rotation, Random random) {
-        return super.getStructureBlockInfos(templateManager, pos, BlockRotation.NONE, random);
+    public List<StructureBlockInfo> getShuffledJigsawBlocks(StructureManager templateManager, BlockPos pos, Rotation rotation, Random random) {
+        return super.getShuffledJigsawBlocks(templateManager, pos, Rotation.NONE, random);
     }
 
     @Override
-    public boolean generate(StructureManager templates, StructureWorldAccess world, StructureAccessor structures, ChunkGenerator generator, BlockPos pos, BlockPos pos2, BlockRotation rotation, BlockBox box, Random random, boolean b) {
-        return super.generate(templates, world, structures, generator, pos, pos2, BlockRotation.NONE, box, random, b);
+    public boolean place(StructureManager templates, WorldGenLevel world, StructureFeatureManager structures, ChunkGenerator generator, BlockPos pos, BlockPos pos2, Rotation rotation, BoundingBox box, Random random, boolean b) {
+        return super.place(templates, world, structures, generator, pos, pos2, Rotation.NONE, box, random, b);
     }
 }

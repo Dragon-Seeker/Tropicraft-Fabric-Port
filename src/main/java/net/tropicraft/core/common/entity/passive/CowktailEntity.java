@@ -7,30 +7,34 @@ import net.tropicraft.core.common.registry.TropicraftEntities;
 import net.tropicraft.core.common.registry.TropicraftItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.TallPlantBlock;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.*;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.CowEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Shearable;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,53 +42,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CowktailEntity extends CowEntity implements Shearable {
-	private static final TrackedData<String> COWKTAIL_TYPE = DataTracker.registerData(CowktailEntity.class, TrackedDataHandlerRegistry.STRING);
+public class CowktailEntity extends Cow implements Shearable {
+	private static final EntityDataAccessor<String> COWKTAIL_TYPE = SynchedEntityData.defineId(CowktailEntity.class, EntityDataSerializers.STRING);
 
-	public CowktailEntity(EntityType<? extends CowktailEntity> type, World worldIn) {
+	public CowktailEntity(EntityType<? extends CowktailEntity> type, Level worldIn) {
 		super(type, worldIn);
 	}
 
 	@Override
-	public float getPathfindingFavor(BlockPos pos, WorldView worldIn) {
-		return worldIn.getBlockState(pos.down()).getBlock() == Blocks.MYCELIUM ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
+	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
+		return worldIn.getBlockState(pos.below()).getBlock() == Blocks.MYCELIUM ? 10.0F : worldIn.getBrightness(pos) - 0.5F;
 	}
 
 	@Override
-	protected void initDataTracker() {
-		super.initDataTracker();
-		this.dataTracker.startTracking(COWKTAIL_TYPE, Type.IRIS.name);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(COWKTAIL_TYPE, Type.IRIS.name);
 	}
 
 	@Override
-	public ActionResult interactMob(PlayerEntity player, Hand hand) {
-		ItemStack itemstack = player.getStackInHand(hand);
+	public InteractionResult mobInteract(Player player, InteractionHand hand) {
+		ItemStack itemstack = player.getItemInHand(hand);
 		if (itemstack.getItem() == TropicraftItems.BAMBOO_MUG && !this.isBaby()) {
-			if (player.getAbilities().creativeMode) {
-				itemstack.decrement(1);
+			if (player.getAbilities().instabuild) {
+				itemstack.shrink(1);
 			}
 
 			final List<CocktailItem> cocktails = new ArrayList(TropicraftItems.COCKTAILS.values());
 			// Remove generic cocktail from cowktail
-			cocktails.removeIf(cocktail -> player.getMainHandStack().getItem() instanceof CocktailItem && cocktail.getDrink() == Drink.COCKTAIL);
+			cocktails.removeIf(cocktail -> player.getMainHandItem().getItem() instanceof CocktailItem && cocktail.getDrink() == Drink.COCKTAIL);
 			final ItemStack cocktailItem = new ItemStack(cocktails.get(random.nextInt(cocktails.size())));
 
 			if (itemstack.isEmpty()) {
-				player.setStackInHand(hand, cocktailItem);
-			} else if (!player.getInventory().insertStack(cocktailItem)) {
-				player.dropItem(cocktailItem, false);
+				player.setItemInHand(hand, cocktailItem);
+			} else if (!player.getInventory().add(cocktailItem)) {
+				player.drop(cocktailItem, false);
 			}
 
-			this.playSound(SoundEvents.ENTITY_MOOSHROOM_SUSPICIOUS_MILK, 1.0F, 1.0F);
-			return ActionResult.SUCCESS;
+			this.playSound(SoundEvents.MOOSHROOM_MILK_SUSPICIOUSLY, 1.0F, 1.0F);
+			return InteractionResult.SUCCESS;
 		}
 
-		return super.interactMob(player, hand);
+		return super.mobInteract(player, hand);
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound compound) {
-		super.writeCustomDataToNbt(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		compound.putString("Type", this.getCowktailType().name);
 	}
 
@@ -92,22 +96,22 @@ public class CowktailEntity extends CowEntity implements Shearable {
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
 	@Override
-	public void readCustomDataFromNbt(NbtCompound compound) {
-		super.readCustomDataFromNbt(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 		this.setCowktailType(Type.getTypeByName(compound.getString("Type")));
 	}
 
 	private void setCowktailType(Type typeIn) {
-		this.dataTracker.set(COWKTAIL_TYPE, typeIn.name);
+		this.entityData.set(COWKTAIL_TYPE, typeIn.name);
 	}
 
 	public Type getCowktailType() {
-		return Type.getTypeByName(this.dataTracker.get(COWKTAIL_TYPE));
+		return Type.getTypeByName(this.entityData.get(COWKTAIL_TYPE));
 	}
 
 	@Override
-	public CowktailEntity createChild(ServerWorld world, PassiveEntity ageable) {
-		CowktailEntity child = TropicraftEntities.COWKTAIL.create(this.world);
+	public CowktailEntity getBreedOffspring(ServerLevel world, AgeableMob ageable) {
+		CowktailEntity child = TropicraftEntities.COWKTAIL.create(this.level);
 		child.setCowktailType(this.getOffspringType((CowktailEntity)ageable));
 		return child;
 	}
@@ -128,40 +132,40 @@ public class CowktailEntity extends CowEntity implements Shearable {
 
 
 	@Override
-	public boolean isShearable() {
+	public boolean readyForShearing() {
 		return !this.isBaby();
 	}
 
 	@NotNull
 	@Override
-	public void sheared(SoundCategory shearedSoundCategory) {
+	public void shear(SoundSource shearedSoundCategory) {
 		List<ItemStack> ret = new ArrayList<>();
-		this.world.addParticle(ParticleTypes.EXPLOSION, this.getX(), this.getBodyY(0.5D), this.getZ(), 0.0D, 0.0D, 0.0D);
-		if (!this.world.isClient) {
+		this.level.addParticle(ParticleTypes.EXPLOSION, this.getX(), this.getY(0.5D), this.getZ(), 0.0D, 0.0D, 0.0D);
+		if (!this.level.isClientSide) {
 			this.discard();
-			CowEntity cowentity = EntityType.COW.create(this.world);
-			cowentity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), this.getPitch());
+			Cow cowentity = EntityType.COW.create(this.level);
+			cowentity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
 			cowentity.setHealth(this.getHealth());
-			cowentity.bodyYaw = this.bodyYaw;
+			cowentity.yBodyRot = this.yBodyRot;
 			if (this.hasCustomName()) {
 				cowentity.setCustomName(this.getCustomName());
 				cowentity.setCustomNameVisible(this.isCustomNameVisible());
 			}
-			this.world.spawnEntity(cowentity);
+			this.level.addFreshEntity(cowentity);
 			for(int i = 0; i < 5; ++i) {
 				//ret.add(new ItemStack(this.getCowktailType().renderState.getBlock()));
-				this.world.spawnEntity(new ItemEntity(this.world, this.getX(), this.getBodyY(1.0D), this.getZ(), new ItemStack(this.getCowktailType().renderState.getBlock())));
+				this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(1.0D), this.getZ(), new ItemStack(this.getCowktailType().renderState.getBlock())));
 			}
 
-			this.playSound(SoundEvents.ENTITY_MOOSHROOM_SHEAR, 1.0F, 1.0F);
+			this.playSound(SoundEvents.MOOSHROOM_SHEAR, 1.0F, 1.0F);
 		}
 		//return ret;
 	}
 
 	@Nullable
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficultyInstance, SpawnReason spawnReason, @Nullable EntityData data, @Nullable NbtCompound nbt) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData data, @Nullable CompoundTag nbt) {
 		setCowktailType(Type.getRandomType(random));
-		return super.initialize(world, difficultyInstance, spawnReason, data, nbt);
+		return super.finalizeSpawn(world, difficultyInstance, spawnReason, data, nbt);
 	}
 
 
@@ -173,8 +177,8 @@ public class CowktailEntity extends CowEntity implements Shearable {
 	 */
 
 	public enum Type {
-		IRIS("iris", TropicraftBlocks.IRIS.getDefaultState().with(TallPlantBlock.HALF, DoubleBlockHalf.UPPER)),
-		ANEMONE("anemone", TropicraftBlocks.ANEMONE.getDefaultState());
+		IRIS("iris", TropicraftBlocks.IRIS.defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)),
+		ANEMONE("anemone", TropicraftBlocks.ANEMONE.defaultBlockState());
 
 		private final String name;
 		private final BlockState renderState;

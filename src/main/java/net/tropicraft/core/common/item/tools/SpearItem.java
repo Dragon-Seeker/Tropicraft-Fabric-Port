@@ -3,14 +3,14 @@ package net.tropicraft.core.common.item.tools;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.TridentItem;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.level.Level;
 
 public class SpearItem extends TridentItem {
 
@@ -18,14 +18,14 @@ public class SpearItem extends TridentItem {
     private final int attackDamage;
     private final float attackSpeed;
 
-    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
+    private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
-    public SpearItem(TropicTiers tier, int attackDamage, float attackSpeed, FabricItemSettings properties) {
-        super(properties.maxDamage(tier.getDefaultTier().getDurability()));
+    public SpearItem(TropicTiers tier, int attackDamage, float attackSpeed, Properties properties) {
+        super(properties.durability(tier.getDefaultTier().getUses()));
 
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Tool modifier", attackDamage, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Tool modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed, AttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
 
         this.tier = tier;
@@ -34,28 +34,28 @@ public class SpearItem extends TridentItem {
     }
 
     @Override
-    public void onStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
+    public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         // TODO
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {
             return this.attributeModifiers;
         }
 
         else{
-            return super.getAttributeModifiers(slot);
+            return super.getDefaultAttributeModifiers(slot);
         }
     }
 
     @Override
-    public int getEnchantability() {
-       return this.tier.getDefaultTier().getEnchantability();
+    public int getEnchantmentValue() {
+       return this.tier.getDefaultTier().getEnchantmentValue();
     }
 
     @Override
-    public boolean canRepair(ItemStack toRepair, ItemStack repair) {
-       return this.tier.getDefaultTier().getRepairIngredient().test(repair) || super.canRepair(toRepair, repair);
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+       return this.tier.getDefaultTier().getRepairIngredient().test(repair) || super.isValidRepairItem(toRepair, repair);
     }
 }

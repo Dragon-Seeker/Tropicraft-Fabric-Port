@@ -1,18 +1,17 @@
 package net.tropicraft.core.common.block.blockentity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-//import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.core.common.TropicsConfigs;
 import net.tropicraft.core.common.dimension.chunk.VolcanoGenerator;
 import net.tropicraft.core.common.entity.projectile.LavaBallEntity;
@@ -51,17 +50,17 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 	}
 
 
-	public static void tick(World world, BlockPos pos, BlockState state, VolcanoBlockEntity blockEntity) {
+	public static void tick(Level world, BlockPos pos, BlockState state, VolcanoBlockEntity blockEntity) {
 		if (!TropicsConfigs.allowVolcanoEruption)
 		{
 			return;
 		}
 
 		if (blockEntity.heightOffset == Integer.MIN_VALUE) {
-			blockEntity.heightOffset = VolcanoGenerator.getHeightOffsetForBiome(blockEntity.getPos().getY());
+			blockEntity.heightOffset = VolcanoGenerator.getHeightOffsetForBiome(blockEntity.getBlockPos().getY());
 		}
 
-		if (!world.isClient) {
+		if (!world.isClientSide) {
 			//System.out.println(radius + " Volcano Update: " + pos.getX() + " " + pos.getZ() + " State:" + state + " lvl: " + lavaLevel);
 			//System.out.println("smoking: " + ticksUntilSmoking + " rising: " + ticksUntilRising + " eruption: " + ticksUntilEruption + " retreating: " + ticksUntilRetreating + " dormant: " + ticksUntilDormant);	
 		}
@@ -85,7 +84,7 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 		case DORMANT:
 			break;
 		case ERUPTING:
-			if (!world.isClient) {
+			if (!world.isClientSide) {
 				//	if ((ticksUntilRetreating % (getWorld().rand.nextInt(40) + 10) == 0)/* && time > 800 && !falling) {
 				if (world.random.nextInt(15) == 0)
 				{
@@ -107,7 +106,7 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 			}
 			break;
 		case RISING:
-			if (world.isClient) {
+			if (world.isClientSide) {
 				blockEntity.spewSmoke();
 			}
 
@@ -116,7 +115,7 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 					blockEntity.raiseLavaLevels();
 				} else {
 					blockEntity.ticksUntilEruption = 0;
-					world.playSound(blockEntity.pos.getX(), 73, blockEntity.pos.getY(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 1.0F, world.random.nextFloat() / 4 + 0.825F, false);
+					world.playLocalSound(blockEntity.worldPosition.getX(), 73, blockEntity.worldPosition.getY(), SoundEvents.GENERIC_EXPLODE, SoundSource.NEUTRAL, 1.0F, world.random.nextFloat() / 4 + 0.825F, false);
 					int balls = world.random.nextInt(25) + 15;
 
 					for (int i = 0; i < balls; i++) {
@@ -128,7 +127,7 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 			break;
 		case SMOKING:
 			// TODO: Client only in the future if this is particles
-			if (world.isClient) {
+			if (world.isClientSide) {
 				//if (ticksUntilRising % 100 == 0) {
 				//if (getWorld().rand.nextInt(10) == 0)
 				blockEntity.spewSmoke();
@@ -141,15 +140,15 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 	}
 
 	public void cleanUpFromEruption() {
-		int xPos = this.pos.getX();
-		int zPos = this.pos.getZ();
+		int xPos = this.worldPosition.getX();
+		int zPos = this.worldPosition.getZ();
 
 		for (int x = xPos - (radius * 2); x < xPos + (radius * 2); x++) {
 			for (int z = zPos - (radius * 2); z < zPos + (radius * 2); z++) {
 				for (int y = LAVA_BASE_LEVEL + this.heightOffset; y < 140; y++) {
 					BlockPos outBlockPos = new BlockPos(x, y, z);
-					if (getWorld().getBlockState(outBlockPos).getBlock() == Blocks.LAVA) {
-						getWorld().setBlockState(outBlockPos, Blocks.AIR.getDefaultState());
+					if (getLevel().getBlockState(outBlockPos).getBlock() == Blocks.LAVA) {
+						getLevel().setBlockAndUpdate(outBlockPos, Blocks.AIR.defaultBlockState());
 					}
 				}
 			}
@@ -158,11 +157,11 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 
 	public void throwLavaFromCaldera(double force) {
 		// Create vector at center facing in the +x direction
-		Vec3d pos = new Vec3d(((getWorld().random.nextDouble() / 2) + 0.3) * radius, lavaLevel + 2, 0);
+		Vec3 pos = new Vec3(((getLevel().random.nextDouble() / 2) + 0.3) * radius, lavaLevel + 2, 0);
 		// Get a random angle from 0 to 2PI (radians)
-		float angle = getWorld().random.nextFloat() * (float) Math.PI * 2;
+		float angle = getLevel().random.nextFloat() * (float) Math.PI * 2;
 		// Rotate the center vector to this angle, and offset it to the volcano's position
-		pos = pos.rotateY(angle).add(Vec3d.ofCenter(getPos()));
+		pos = pos.yRot(angle).add(Vec3.atCenterOf(getBlockPos()));
 		// Compute x/y components of angle
 		double motX = force * Math.cos(angle);
 		double motZ = force * Math.sin(-angle);
@@ -170,42 +169,42 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 	}
 
 	public void throwLava(double i, double j, double k, double xMot, double yMot, double zMot) {
-		if (!getWorld().isClient) {
-			getWorld().spawnEntity(new LavaBallEntity(TropicraftEntities.LAVA_BALL, getWorld(), i, j, k, xMot, yMot, zMot));
+		if (!getLevel().isClientSide) {
+			getLevel().addFreshEntity(new LavaBallEntity(TropicraftEntities.LAVA_BALL, getLevel(), i, j, k, xMot, yMot, zMot));
 		}
 	}
 
 	private void raiseLavaLevels() {
 		if (lavaLevel < MAX_LAVA_LEVEL_DURING_ERUPTION + this.heightOffset) {
 			lavaLevel++;
-			setBlocksOnLavaLevel(Blocks.LAVA.getDefaultState(), 3);	
+			setBlocksOnLavaLevel(Blocks.LAVA.defaultBlockState(), 3);	
 		}
 	}
 
 	private void lowerLavaLevels() {
 		if (lavaLevel > LAVA_BASE_LEVEL + this.heightOffset) {
-			setBlocksOnLavaLevel(Blocks.AIR.getDefaultState(), 3);
+			setBlocksOnLavaLevel(Blocks.AIR.defaultBlockState(), 3);
 			lavaLevel--;
 		}
 	}
 
 	private void setBlocksOnLavaLevel(BlockState state, int updateFlag) {
-		int xPos = this.pos.getX();
-		int zPos = this.pos.getZ();
+		int xPos = this.worldPosition.getX();
+		int zPos = this.worldPosition.getZ();
 
 		for (int x = xPos - radius; x < xPos + radius; x++) {
 			for (int z = zPos - radius; z < zPos + radius; z++) {
 				if (Math.sqrt(Math.pow(x - xPos, 2) + Math.pow(z - zPos, 2)) < radius + 3) {
 					BlockPos botPos = new BlockPos(x, 10, z);
-					if (getWorld().getBlockState(botPos).getBlock() == Blocks.LAVA) {
+					if (getLevel().getBlockState(botPos).getBlock() == Blocks.LAVA) {
 						BlockPos pos2 = new BlockPos(x, lavaLevel, z);
 
 						if (lavaLevel >= MAX_LAVA_LEVEL_DURING_RISE + this.heightOffset && lavaLevel < MAX_LAVA_LEVEL_DURING_ERUPTION + this.heightOffset) {
-							if (getWorld().getBlockState(pos2).getBlock() != TropicraftBlocks.CHUNK) {
-								getWorld().setBlockState(pos2, state, updateFlag);
+							if (getLevel().getBlockState(pos2).getBlock() != TropicraftBlocks.CHUNK) {
+								getLevel().setBlock(pos2, state, updateFlag);
 							}
 						} else {
-							getWorld().setBlockState(pos2, state, updateFlag);
+							getLevel().setBlock(pos2, state, updateFlag);
 							// System.out.println("Setting block " + x + " " + lavaLevel + " " + z + " to whatever");
 						}
 						//getWorld().setBlockWithNotify(x, lavaLevel, z, falling ? 0 : lavaLevel >= 95 ? TropicraftMod.tempLavaMoving.blockID : Block.lavaStill.blockID);
@@ -221,13 +220,13 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 
 	public void spewSmoke() {
 		// System.out.println("Spewing smoke");
-		int n = getWorld().random.nextInt(100) + 4;
+		int n = getLevel().random.nextInt(100) + 4;
 		for (int i = 0; i < n; i++) {
 			// getWorld().spawnEntity(new EntitySmoke(getWorld(), xPos + rand.nextInt(10) - 5, lavaLevel + rand.nextInt(4), zPos + rand.nextInt(10) - 5));
-			double x = this.pos.getX() + getWorld().random.nextInt(radius) * (getWorld().random.nextBoolean() ? -1 : 1);
-			double y = this.lavaLevel + getWorld().random.nextInt(6);
-			double z = this.pos.getZ() + getWorld().random.nextInt(radius) * (getWorld().random.nextBoolean() ? -1 : 1);
-			getWorld().addParticle(ParticleTypes.LARGE_SMOKE, true, x, y, z, 0.0D, 0.7, 0.0D);
+			double x = this.worldPosition.getX() + getLevel().random.nextInt(radius) * (getLevel().random.nextBoolean() ? -1 : 1);
+			double y = this.lavaLevel + getLevel().random.nextInt(6);
+			double z = this.worldPosition.getZ() + getLevel().random.nextInt(radius) * (getLevel().random.nextBoolean() ? -1 : 1);
+			getLevel().addParticle(ParticleTypes.LARGE_SMOKE, true, x, y, z, 0.0D, 0.7, 0.0D);
 			//System.out.println("Spewing smoke " + x + " " + z);
 		}
 	}
@@ -282,7 +281,7 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 			if (ticksUntilDormant <= 0) {
 				// cleanUpFromEruption();
 				state = VolcanoState.DORMANT;
-				ticksUntilDormant = VolcanoState.getTimeBefore(VolcanoState.DORMANT) + getWorld().random.nextInt(RAND_DORMANT_DURATION);
+				ticksUntilDormant = VolcanoState.getTimeBefore(VolcanoState.DORMANT) + getLevel().random.nextInt(RAND_DORMANT_DURATION);
 			}
 			break;
 		default:
@@ -292,9 +291,9 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 
 	private void setLavaLevel() {
 		for(int y = LAVA_BASE_LEVEL + this.heightOffset; y < VolcanoGenerator.CHUNK_SIZE_Y; y++) {
-			BlockPos pos2 = new BlockPos(this.pos.getX(), y, this.pos.getZ());
+			BlockPos pos2 = new BlockPos(this.worldPosition.getX(), y, this.worldPosition.getZ());
 			//if(getWorld().getBlockState(pos).getBlock() != Blocks.LAVA && getWorld().getBlockId(xPos, y, zPos) != TropicraftMod.tempLavaMoving.blockID) {\
-			if (getWorld().getBlockState(pos2).getMaterial() != Material.LAVA) {
+			if (getLevel().getBlockState(pos2).getMaterial() != Material.LAVA) {
 				lavaLevel = y - 1;
 				return;
 			}
@@ -307,7 +306,7 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 	 */
 	private int findRadius() {
 		for (int x = 0; x < 60; x++) {
-			if (getWorld().getBlockState(new BlockPos(x + this.pos.getX(), 10, this.pos.getZ())).getBlock() != Blocks.LAVA) {
+			if (getLevel().getBlockState(new BlockPos(x + this.worldPosition.getX(), 10, this.worldPosition.getZ())).getBlock() != Blocks.LAVA) {
 				return x;
 			}
 		}
@@ -316,8 +315,8 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 	}
 
 	@Override
-	public void readNbt(NbtCompound nbt) {
-		super.readNbt(nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 		state = VolcanoState.valueOf(nbt.getString("state"));
 		ticksUntilDormant = nbt.getInt("ticksUntilDormant");
 		ticksUntilSmoking = nbt.getInt("ticksUntilSmoking");
@@ -329,8 +328,8 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
-		super.writeNbt(nbt);
+	public CompoundTag save(CompoundTag nbt) {
+		super.save(nbt);
 		nbt.putString("state", state.name());
 		nbt.putInt("ticksUntilDormant", ticksUntilDormant);
 		nbt.putInt("ticksUntilSmoking", ticksUntilSmoking);
@@ -352,12 +351,12 @@ public class VolcanoBlockEntity extends BlockEntity //implements Tickable
 
 	@Override
 	@Nullable
-	public BlockEntityUpdateS2CPacket toUpdatePacket() {
-		return new BlockEntityUpdateS2CPacket(this.pos, 1, this.toInitialChunkDataNbt());
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		return new ClientboundBlockEntityDataPacket(this.worldPosition, 1, this.getUpdateTag());
 	}
 
 	@Override
-	public NbtCompound toInitialChunkDataNbt() {
-		return this.writeNbt(new NbtCompound());
+	public CompoundTag getUpdateTag() {
+		return this.save(new CompoundTag());
 	}
 }

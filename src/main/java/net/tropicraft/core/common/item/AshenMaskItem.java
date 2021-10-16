@@ -2,21 +2,21 @@ package net.tropicraft.core.common.item;
 
 import net.tropicraft.core.common.entity.placeable.WallItemEntity;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
 public class AshenMaskItem extends ArmorItem {
     public final AshenMasks maskType;
 
-    public AshenMaskItem(ArmorMaterial armorMaterial, AshenMasks maskType, FabricItemSettings settings) {
+    public AshenMaskItem(ArmorMaterial armorMaterial, AshenMasks maskType, Properties settings) {
         super(armorMaterial, EquipmentSlot.HEAD, settings);
         this.maskType = maskType;
     }
@@ -29,34 +29,34 @@ public class AshenMaskItem extends ArmorItem {
      * Called when this item is used when targetting a Block
      */
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        Direction direction = context.getSide();
-        BlockPos pos = context.getBlockPos().offset(direction);
-        PlayerEntity player = context.getPlayer();
-        ItemStack itemStack = context.getStack();
+    public InteractionResult useOn(UseOnContext context) {
+        Direction direction = context.getClickedFace();
+        BlockPos pos = context.getClickedPos().relative(direction);
+        Player player = context.getPlayer();
+        ItemStack itemStack = context.getItemInHand();
 
         if (player != null && !this.canPlace(player, direction, itemStack, pos)) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         } else {
-            World world = context.getWorld();
+            Level world = context.getLevel();
             WallItemEntity wallItem = new WallItemEntity(world, pos, direction);
-            wallItem.setHeldItemStack(itemStack);
+            wallItem.setItem(itemStack);
 
-            if (wallItem.canStayAttached()) {
-                if (!world.isClient) {
-                    wallItem.onPlace();
-                    world.spawnEntity(wallItem);
+            if (wallItem.survives()) {
+                if (!world.isClientSide) {
+                    wallItem.playPlacementSound();
+                    world.addFreshEntity(wallItem);
                 }
 
-                itemStack.decrement(1);
+                itemStack.shrink(1);
             }
 
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 
-    private boolean canPlace(PlayerEntity player, Direction direction, ItemStack heldStack, BlockPos pos) {
-        return player.canPlaceOn(pos, direction, heldStack); //canPlayerEdit()
+    private boolean canPlace(Player player, Direction direction, ItemStack heldStack, BlockPos pos) {
+        return player.mayUseItemAt(pos, direction, heldStack); //canPlayerEdit()
 	}
 
 

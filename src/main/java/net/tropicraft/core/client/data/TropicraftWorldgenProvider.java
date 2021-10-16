@@ -7,23 +7,23 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.data.DataCache;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.structure.pool.StructurePool;
-import net.minecraft.structure.processor.StructureProcessorList;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.util.Lazy;
-import net.minecraft.util.dynamic.RegistryReadingOps;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.DynamicRegistryManager;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.carver.ConfiguredCarver;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
+import net.minecraft.data.HashCache;
+import net.minecraft.resources.RegistryWriteOps;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.surfacebuilders.ConfiguredSurfaceBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -40,23 +40,23 @@ public final class TropicraftWorldgenProvider implements DataProvider {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger(TropicraftWorldgenProvider.class);
 
-    private static final Lazy<DynamicRegistryManager.Impl> DYNAMIC_REGISTRIES = new Lazy<>(() -> {
-        DynamicRegistryManager.Impl dynamicRegistries = new DynamicRegistryManager.Impl();
-        for (Registry<?> registry : BuiltinRegistries.REGISTRIES) {
+    private static final LazyLoadedValue<RegistryAccess.RegistryHolder> DYNAMIC_REGISTRIES = new LazyLoadedValue<>(() -> {
+        RegistryAccess.RegistryHolder dynamicRegistries = new RegistryAccess.RegistryHolder();
+        for (Registry<?> registry : BuiltinRegistries.REGISTRY) {
             copyAllToDynamicRegistry(registry, dynamicRegistries);
         }
         return dynamicRegistries;
     });
 
-    private static <T> void copyAllToDynamicRegistry(Registry<T> from, DynamicRegistryManager dynamicRegistries) {
-        dynamicRegistries.getOptionalMutable(from.getKey()).ifPresent(dynamicRegistry -> {
+    private static <T> void copyAllToDynamicRegistry(Registry<T> from, RegistryAccess dynamicRegistries) {
+        dynamicRegistries.ownedRegistry(from.key()).ifPresent(dynamicRegistry -> {
             copyAllToRegistry(from, dynamicRegistry);
         });
     }
 
     private static <T> void copyAllToRegistry(Registry<T> from, Registry<T> to) {
-        for (Map.Entry<RegistryKey<T>, T> entry : from.getEntries()) {
-            Registry.register(to, entry.getKey().getValue(), entry.getValue());
+        for (Map.Entry<ResourceKey<T>, T> entry : from.entrySet()) {
+            Registry.register(to, entry.getKey().location(), entry.getValue());
         }
     }
 
@@ -64,14 +64,14 @@ public final class TropicraftWorldgenProvider implements DataProvider {
     private final Consumer<Generator> generatorFunction;
 
     public TropicraftWorldgenProvider(DataGenerator dataGenerator, Consumer<Generator> generatorFunction) {
-        this.root = dataGenerator.getOutput().resolve("data");
+        this.root = dataGenerator.getOutputFolder().resolve("data");
         this.generatorFunction = generatorFunction;
     }
 
     @Override
-    public void run(DataCache cache) {
-        DynamicRegistryManager.Impl dynamicRegistries = DYNAMIC_REGISTRIES.get();
-        DynamicOps<JsonElement> ops = RegistryReadingOps.of(JsonOps.INSTANCE, dynamicRegistries);
+    public void run(HashCache cache) {
+        RegistryAccess.RegistryHolder dynamicRegistries = DYNAMIC_REGISTRIES.get();
+        DynamicOps<JsonElement> ops = RegistryWriteOps.create(JsonOps.INSTANCE, dynamicRegistries);
 
         Generator generator = new Generator(root, cache, dynamicRegistries, ops);
         this.generatorFunction.accept(generator);
@@ -84,11 +84,11 @@ public final class TropicraftWorldgenProvider implements DataProvider {
 
     public static final class Generator {
         private final Path root;
-        private final DataCache cache;
-        private final DynamicRegistryManager.Impl dynamicRegistries;
+        private final HashCache cache;
+        private final RegistryAccess.RegistryHolder dynamicRegistries;
         private final DynamicOps<JsonElement> ops;
 
-        Generator(Path root, DataCache cache, DynamicRegistryManager.Impl dynamicRegistries, DynamicOps<JsonElement> ops) {
+        Generator(Path root, HashCache cache, RegistryAccess.RegistryHolder dynamicRegistries, DynamicOps<JsonElement> ops) {
             this.root = root;
             this.cache = cache;
             this.dynamicRegistries = dynamicRegistries;
@@ -97,49 +97,49 @@ public final class TropicraftWorldgenProvider implements DataProvider {
 
         public <R> R addConfiguredFeatures(EntryGenerator<ConfiguredFeature<?, ?>, R> entryGenerator) {
             return add(
-                    "worldgen/configured_feature", BuiltinRegistries.CONFIGURED_FEATURE, ConfiguredFeature.REGISTRY_CODEC,
+                    "worldgen/configured_feature", BuiltinRegistries.CONFIGURED_FEATURE, ConfiguredFeature.CODEC,
                     entryGenerator
             );
         }
 
         public <R> R addConfiguredSurfaceBuilders(EntryGenerator<ConfiguredSurfaceBuilder<?>, R> entryGenerator) {
             return add(
-                    "worldgen/configured_surface_builder", BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, ConfiguredSurfaceBuilder.REGISTRY_CODEC,
+                    "worldgen/configured_surface_builder", BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, ConfiguredSurfaceBuilder.CODEC,
                     entryGenerator
             );
         }
 
-        public <R> R addConfiguredCarvers(EntryGenerator<ConfiguredCarver<?>, R> entryGenerator) {
+        public <R> R addConfiguredCarvers(EntryGenerator<ConfiguredWorldCarver<?>, R> entryGenerator) {
             return add(
-                    "worldgen/configured_carver", BuiltinRegistries.CONFIGURED_CARVER, ConfiguredCarver.REGISTRY_CODEC,
+                    "worldgen/configured_carver", BuiltinRegistries.CONFIGURED_CARVER, ConfiguredWorldCarver.CODEC,
                     entryGenerator
             );
         }
 
         public <R> R addProcessorLists(EntryGenerator<StructureProcessorList, R> entryGenerator) {
             return add(
-                    "worldgen/processor_list", BuiltinRegistries.STRUCTURE_PROCESSOR_LIST, StructureProcessorType.REGISTRY_CODEC,
+                    "worldgen/processor_list", BuiltinRegistries.PROCESSOR_LIST, StructureProcessorType.LIST_CODEC,
                     entryGenerator
             );
         }
 
-        public <R> R addTemplatePools(EntryGenerator<StructurePool, R> entryGenerator) {
+        public <R> R addTemplatePools(EntryGenerator<StructureTemplatePool, R> entryGenerator) {
             return add(
-                    "worldgen/template_pool", BuiltinRegistries.STRUCTURE_POOL, StructurePool.REGISTRY_CODEC,
+                    "worldgen/template_pool", BuiltinRegistries.TEMPLATE_POOL, StructureTemplatePool.CODEC,
                     entryGenerator
             );
         }
 
         public <R> R addConfiguredStructures(EntryGenerator<ConfiguredStructureFeature<?, ?>, R> entryGenerator) {
             return add(
-                    "worldgen/configured_structure_feature", BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, ConfiguredStructureFeature.REGISTRY_CODEC,
+                    "worldgen/configured_structure_feature", BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, ConfiguredStructureFeature.CODEC,
                     entryGenerator
             );
         }
 
         public <R> R addBiomes(EntryGenerator<Biome, R> entryGenerator) {
             return add(
-                    "worldgen/biome", null, Biome.REGISTRY_CODEC,
+                    "worldgen/biome", null, Biome.CODEC,
                     entryGenerator
             );
         }
@@ -156,7 +156,7 @@ public final class TropicraftWorldgenProvider implements DataProvider {
                 try {
                     Optional<JsonElement> serialized = function.apply(() -> entry).result();
                     if (serialized.isPresent()) {
-                        DataProvider.writeToPath(GSON, cache, serialized.get(), entryPath);
+                        DataProvider.save(GSON, cache, serialized.get(), entryPath);
                     } else {
                         LOGGER.error("Couldn't serialize worldgen entry at {}", entryPath);
                     }
@@ -166,7 +166,7 @@ public final class TropicraftWorldgenProvider implements DataProvider {
 
                 if (registry != null) {
                     Registry.register(registry, id, entry);
-                    dynamicRegistries.getOptionalMutable(registry.getKey()).ifPresent(dynamicRegistry -> {
+                    dynamicRegistries.ownedRegistry(registry.key()).ifPresent(dynamicRegistry -> {
                         Registry.register(dynamicRegistry, id, entry);
                     });
                 }

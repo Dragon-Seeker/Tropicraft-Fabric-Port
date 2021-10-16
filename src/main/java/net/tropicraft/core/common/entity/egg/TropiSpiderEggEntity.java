@@ -1,15 +1,15 @@
 package net.tropicraft.core.common.entity.egg;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.entity.hostile.TropiSpiderEntity;
 import net.tropicraft.core.common.registry.TropicraftEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -17,30 +17,30 @@ import java.util.UUID;
 
 public class TropiSpiderEggEntity extends EggEntity {
 
-	protected static final TrackedData<Optional<UUID>> MOTHER_UNIQUE_ID = DataTracker.registerData(TropiSpiderEggEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+	protected static final EntityDataAccessor<Optional<UUID>> MOTHER_UNIQUE_ID = SynchedEntityData.defineId(TropiSpiderEggEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
-	public TropiSpiderEggEntity(final EntityType<? extends EggEntity> type, World world) {
+	public TropiSpiderEggEntity(final EntityType<? extends EggEntity> type, Level world) {
 		super(type, world);
 	}
 
 	@Override
-	protected void initDataTracker() {
-		super.initDataTracker();
-		dataTracker.startTracking(MOTHER_UNIQUE_ID, Optional.empty());
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(MOTHER_UNIQUE_ID, Optional.empty());
 	}
 
 	@Nullable
 	public UUID getMotherId() {
-		return dataTracker.get(MOTHER_UNIQUE_ID).orElse(null);
+		return entityData.get(MOTHER_UNIQUE_ID).orElse(null);
 	}
 
 	public void setMotherId(@Nullable UUID uuid) {
-		dataTracker.set(MOTHER_UNIQUE_ID, Optional.ofNullable(uuid));
+		entityData.set(MOTHER_UNIQUE_ID, Optional.ofNullable(uuid));
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound nbt) {
-		super.writeCustomDataToNbt(nbt);
+	public void addAdditionalSaveData(CompoundTag nbt) {
+		super.addAdditionalSaveData(nbt);
 		if (getMotherId() == null) {
 			nbt.putString("MotherUUID", "");
 		} else {
@@ -49,8 +49,8 @@ public class TropiSpiderEggEntity extends EggEntity {
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound nbt) {
-		super.readCustomDataFromNbt(nbt);
+	public void readAdditionalSaveData(CompoundTag nbt) {
+		super.readAdditionalSaveData(nbt);
 		String motherUUID = "";
 		if (nbt.contains("MotherUUID", 8)) {
 			motherUUID = nbt.getString("MotherUUID");
@@ -73,15 +73,15 @@ public class TropiSpiderEggEntity extends EggEntity {
 
 	@Override
 	public Entity onHatch() {
-		if (world instanceof ServerWorld && getMotherId() != null) {
-			final ServerWorld serverWorld = (ServerWorld) world;
+		if (level instanceof ServerLevel && getMotherId() != null) {
+			final ServerLevel serverWorld = (ServerLevel) level;
 			final Entity e = serverWorld.getEntity(getMotherId());
 
 			if (e instanceof TropiSpiderEntity) {
 				return TropiSpiderEntity.haveBaby((TropiSpiderEntity) e);
 			}
 		}
-		return TropicraftEntities.TROPI_SPIDER.create(world);
+		return TropicraftEntities.TROPI_SPIDER.create(level);
 	}
 
 	@Override

@@ -4,42 +4,42 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 import net.tropicraft.core.common.registry.TropicraftItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 
 public class ChairEntity extends FurnitureEntity {
-    public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "furniture_entity_chair");
+    public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "furniture_entity_chair");
 
     // TODO add drips after being wet
     // TODO make it so monkies can sit in the chair ouo
-    private static final TrackedData<Byte> COMESAILAWAY = DataTracker.registerData(ChairEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final EntityDataAccessor<Byte> COMESAILAWAY = SynchedEntityData.defineId(ChairEntity.class, EntityDataSerializers.BYTE);
     
     /** Is any entity sitting in the chair? */
     public boolean isChairEmpty = true;
@@ -47,17 +47,17 @@ public class ChairEntity extends FurnitureEntity {
     /** Acceleration */
     private double speedMultiplier = 0.1;
 
-    public ChairEntity(EntityType<ChairEntity> type, World world) {
+    public ChairEntity(EntityType<ChairEntity> type, Level world) {
         super(type, world, TropicraftItems.CHAIRS);
     }
 
     @Environment(EnvType.CLIENT)
-    public ChairEntity(World world, double x, double y, double z, int id, UUID uuid) {
+    public ChairEntity(Level world, double x, double y, double z, int id, UUID uuid) {
         super(TropicraftEntities.CHAIR, world, TropicraftItems.CHAIRS);
-        updatePosition(x, y, z);
-        updateTrackedPosition(x, y, z);
+        absMoveTo(x, y, z);
+        setPacketCoordinates(x, y, z);
         setId(id);
-        setUuid(uuid);
+        setUUID(uuid);
     }
 
     /**
@@ -73,22 +73,22 @@ public class ChairEntity extends FurnitureEntity {
             for (int i = 0; i < b0; ++i) {
                 double d1 = this.getBoundingBox().minY + (this.getBoundingBox().maxY - this.getBoundingBox().minY) * (double)(i + 0) / (double)b0 - 0.125D;
                 double d3 = this.getBoundingBox().minY + (this.getBoundingBox().maxY - this.getBoundingBox().minY) * (double)(i + 1) / (double)b0 - 0.125D;
-                Box axisalignedbb = new Box(this.getBoundingBox().minX, d1, this.getBoundingBox().minZ, this.getBoundingBox().maxX, d3, this.getBoundingBox().maxZ);
+                AABB axisalignedbb = new AABB(this.getBoundingBox().minX, d1, this.getBoundingBox().minZ, this.getBoundingBox().maxX, d3, this.getBoundingBox().maxZ);
 
-                if (this.world.containsFluid(axisalignedbb)) {
+                if (this.level.containsAnyLiquid(axisalignedbb)) {
                     d0 += 1.0D / (double)b0;
                 }
             }
         }
 
-        double d10 = Math.sqrt(this.getVelocity().x * this.getVelocity().x + this.getVelocity().z * this.getVelocity().z);
+        double d10 = Math.sqrt(this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z);
         double d2;
         double d4;
         int j;
 
         if (/*this.getComeSailAway() && */d10 > 0.26249999999999996D) {
-            d2 = Math.cos((double) this.getYaw() * Math.PI / 180.0D);
-            d4 = Math.sin((double) this.getYaw() * Math.PI / 180.0D);
+            d2 = Math.cos((double) this.getYRot() * Math.PI / 180.0D);
+            d4 = Math.sin((double) this.getYRot() * Math.PI / 180.0D);
 
             if (this.getComeSailAway())
                 for (j = 0; (double)j < 1.0D + d10 * 60.0D; ++j) {
@@ -104,38 +104,38 @@ public class ChairEntity extends FurnitureEntity {
                         particleX = getX() + d2 + d4 * d5 * 0.7D;
                         particleZ = getZ() + d4 - d2 * d5 * 0.7D;
                     }
-                    world.addParticle(ParticleTypes.SPLASH, particleX, getY() - 0.125D, particleZ, getVelocity().x, getVelocity().y, getVelocity().z);
+                    level.addParticle(ParticleTypes.SPLASH, particleX, getY() - 0.125D, particleZ, getDeltaMovement().x, getDeltaMovement().y, getDeltaMovement().z);
                 }
         }
 
         double d11;
         double d12;
 
-        if (!this.world.isClient || this.getComeSailAway()) {
+        if (!this.level.isClientSide || this.getComeSailAway()) {
             if (d0 < 1.0D) {
                 d2 = d0 * 2.0D - 1.0D;
-                setVelocity(getVelocity().add(0, 0.03999999910593033D * d2, 0));
+                setDeltaMovement(getDeltaMovement().add(0, 0.03999999910593033D * d2, 0));
             } else {
-                if (this.getVelocity().y < 0.0D) {
-                    setVelocity(getVelocity().multiply(1, 0.5, 1));
+                if (this.getDeltaMovement().y < 0.0D) {
+                    setDeltaMovement(getDeltaMovement().multiply(1, 0.5, 1));
                 }
 
-                setVelocity(getVelocity().add(0, 0.007000000216066837D, 0));
+                setDeltaMovement(getDeltaMovement().add(0, 0.007000000216066837D, 0));
             }
 
-            if (this.getComeSailAway() && this.getPrimaryPassenger() != null && this.getPrimaryPassenger() instanceof LivingEntity) {
-                LivingEntity entitylivingbase = (LivingEntity)this.getPrimaryPassenger();
-                float f = this.getPrimaryPassenger().getYaw() + -entitylivingbase.sidewaysSpeed * 90.0F;
-                double moveX = -Math.sin((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.forwardSpeed * 0.05000000074505806D;
-                double moveZ = Math.cos((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.forwardSpeed * 0.05000000074505806D;
-                setVelocity(getVelocity().add(moveX, 0, moveZ));
+            if (this.getComeSailAway() && this.getControllingPassenger() != null && this.getControllingPassenger() instanceof LivingEntity) {
+                LivingEntity entitylivingbase = (LivingEntity)this.getControllingPassenger();
+                float f = this.getControllingPassenger().getYRot() + -entitylivingbase.xxa * 90.0F;
+                double moveX = -Math.sin((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.zza * 0.05000000074505806D;
+                double moveZ = Math.cos((double)(f * (float)Math.PI / 180.0F)) * this.speedMultiplier * (double)entitylivingbase.zza * 0.05000000074505806D;
+                setDeltaMovement(getDeltaMovement().add(moveX, 0, moveZ));
             }
 
-            d2 = Math.sqrt(this.getVelocity().x * this.getVelocity().x + this.getVelocity().z * this.getVelocity().z);
+            d2 = Math.sqrt(this.getDeltaMovement().x * this.getDeltaMovement().x + this.getDeltaMovement().z * this.getDeltaMovement().z);
 
             if (d2 > 0.45D) {
                 d4 = 0.45D / d2;
-                setVelocity(getVelocity().multiply(d4, 1, d4));
+                setDeltaMovement(getDeltaMovement().multiply(d4, 1, d4));
                 d2 = 0.45D;
             }
 
@@ -157,48 +157,48 @@ public class ChairEntity extends FurnitureEntity {
 
             if (this.getComeSailAway())
                 for (l = 0; l < 4; ++l) {
-                    int i1 = MathHelper.floor(this.getX() + ((double)(l % 2) - 0.5D) * 0.8D);
-                    j = MathHelper.floor(this.getZ() + ((double)(l / 2) - 0.5D) * 0.8D);
+                    int i1 = Mth.floor(this.getX() + ((double)(l % 2) - 0.5D) * 0.8D);
+                    j = Mth.floor(this.getZ() + ((double)(l / 2) - 0.5D) * 0.8D);
 
                     for (int j1 = 0; j1 < 2; ++j1) {
-                        int k = MathHelper.floor(this.getY()) + j1;
+                        int k = Mth.floor(this.getY()) + j1;
                         BlockPos pos = new BlockPos(i1, k, j);
-                        Block block = this.world.getBlockState(pos).getBlock();
+                        Block block = this.level.getBlockState(pos).getBlock();
                         
                         if (block == Blocks.SNOW) {
-                            this.world.breakBlock(pos, true);
+                            this.level.destroyBlock(pos, true);
                             this.horizontalCollision = false;
                         } else if (block == Blocks.LILY_PAD) {
-                            this.world.breakBlock(pos, true);
+                            this.level.destroyBlock(pos, true);
                             this.horizontalCollision = false;
                         }
                     }
                 }
 
             if (this.getComeSailAway() && this.onGround) {
-                setVelocity(getVelocity().multiply(0.5, 0.5, 0.5));
+                setDeltaMovement(getDeltaMovement().multiply(0.5, 0.5, 0.5));
             } else if (this.onGround) {
-                setVelocity(Vec3d.ZERO);
+                setDeltaMovement(Vec3.ZERO);
             }
 
-            this.move(MovementType.SELF, getVelocity());
+            this.move(MoverType.SELF, getDeltaMovement());
 
             // This will never trigger since d10 will only ever get up to 0.45 >:D *evil laugh*
             // In other words, when come sail away, there is no stopping this sucker
             if (this.getComeSailAway()) {
-                setVelocity(getVelocity().multiply(0.9900000095367432D, 0.949999988079071D, 0.9900000095367432D));
+                setDeltaMovement(getDeltaMovement().multiply(0.9900000095367432D, 0.949999988079071D, 0.9900000095367432D));
             }
 
-            this.setPitch(0.0F);
-            d4 = (double)this.getYaw();
-            d11 = this.prevX - this.getX();
-            d12 = this.prevZ - this.getZ();
+            this.setXRot(0.0F);
+            d4 = (double)this.getYRot();
+            d11 = this.xo - this.getX();
+            d12 = this.zo - this.getZ();
 
             if (d11 * d11 + d12 * d12 > 0.001D) {
                 d4 = (double)((float)(Math.atan2(d12, d11) * 180.0D / Math.PI));
             }
 
-            double d7 = MathHelper.wrapDegrees(d4 - (double)this.getYaw());
+            double d7 = Mth.wrapDegrees(d4 - (double)this.getYRot());
 
             if (d7 > 20.0D) {
                 d7 = 20.0D;
@@ -208,28 +208,28 @@ public class ChairEntity extends FurnitureEntity {
                 d7 = -20.0D;
             }
 
-            this.setYaw((float)((double)this.getYaw() + d7));
-            this.setRotation(this.getYaw(), this.getPitch());
+            this.setYRot((float)((double)this.getYRot() + d7));
+            this.setRot(this.getYRot(), this.getXRot());
 
-            if (!this.world.isClient) {
-                List<?> list = this.world.getOtherEntities(this, this.getBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+            if (!this.level.isClientSide) {
+                List<?> list = this.level.getEntities(this, this.getBoundingBox().inflate(0.20000000298023224D, 0.0D, 0.20000000298023224D));
 
                 if (list != null && !list.isEmpty()) {
                     for (int k1 = 0; k1 < list.size(); ++k1) {
                         Entity entity = (Entity)list.get(k1);
 
-                        if (entity != this.getPrimaryPassenger() && entity.isPushable() && entity instanceof ChairEntity) {
-                            entity.pushAwayFrom(this);
+                        if (entity != this.getControllingPassenger() && entity.isPushable() && entity instanceof ChairEntity) {
+                            entity.push(this);
                         }
                     }
                 }
 
-                if (this.getPrimaryPassenger() != null && !this.getPrimaryPassenger().isAlive()) {
-                    this.removeAllPassengers();
+                if (this.getControllingPassenger() != null && !this.getControllingPassenger().isAlive()) {
+                    this.ejectPassengers();
                 }
             }
         } else {
-            this.move(MovementType.SELF, getVelocity());
+            this.move(MoverType.SELF, getDeltaMovement());
         }
     }
     
@@ -239,76 +239,76 @@ public class ChairEntity extends FurnitureEntity {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.getDataTracker().startTracking(COMESAILAWAY, Byte.valueOf((byte)0));
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.getEntityData().define(COMESAILAWAY, Byte.valueOf((byte)0));
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    protected void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.setComeSailAway(Boolean.valueOf(nbt.getBoolean("true")));
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    protected void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("COME_SAIL_AWAY", getComeSailAway());
     }
 
     @Override
-    public ActionResult interact(PlayerEntity player, Hand hand) {
-        if (!world.isClient && !player.isSneaking()) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        if (!level.isClientSide && !player.isShiftKeyDown()) {
             player.startRiding(this);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
-        return !player.isConnectedThroughVehicle(this) ? ActionResult.SUCCESS : ActionResult.PASS;
+        return !player.isPassengerOfSameVehicle(this) ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     /**
      * Returns true if other Entities should be prevented from moving through this Entity.
      */
     @Override
-    public boolean collides() {
+    public boolean isPickable() {
         return isAlive();
     }
     
     @Override
     @Nullable
-    public Entity getPrimaryPassenger() {
-        List<Entity> list = this.getPassengerList();
+    public Entity getControllingPassenger() {
+        List<Entity> list = this.getPassengers();
         return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
-    public double getMountedHeightOffset() {
+    public double getPassengersRidingOffset() {
         return 0.11;
     }
     
     @Override
-    public void updatePassengerPosition(Entity passenger) {
+    public void positionRider(Entity passenger) {
         if (this.hasPassenger(passenger)) {
-            Vec3d xzOffset = new Vec3d(0, 0, -0.125).rotateY((float) Math.toRadians(-getYaw()));
-            passenger.setPosition(getX() + xzOffset.x, getY() + getMountedHeightOffset() + passenger.getHeightOffset(), getZ() + xzOffset.z);
+            Vec3 xzOffset = new Vec3(0, 0, -0.125).yRot((float) Math.toRadians(-getYRot()));
+            passenger.setPos(getX() + xzOffset.x, getY() + getPassengersRidingOffset() + passenger.getMyRidingOffset(), getZ() + xzOffset.z);
         }
     }
 
     public void setComeSailAway(boolean sail) {
-        dataTracker.set(COMESAILAWAY, sail ? Byte.valueOf((byte)1) : Byte.valueOf((byte)0));
+        entityData.set(COMESAILAWAY, sail ? Byte.valueOf((byte)1) : Byte.valueOf((byte)0));
     }
 
     public boolean getComeSailAway() {
-        return dataTracker.get(COMESAILAWAY) == (byte)1;
+        return entityData.get(COMESAILAWAY) == (byte)1;
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         //return new EntitySpawnS2CPacket(this);
 
         //NetworkHooks.getEntitySpawningPacket(this);
 
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
         // entity position
         packet.writeDouble(getX());
@@ -317,7 +317,7 @@ public class ChairEntity extends FurnitureEntity {
 
         // entity id & uuid
         packet.writeInt(getId());
-        packet.writeUuid(getUuid());
+        packet.writeUUID(getUUID());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
     }

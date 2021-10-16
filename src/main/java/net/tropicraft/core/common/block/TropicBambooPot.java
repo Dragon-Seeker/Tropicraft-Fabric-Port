@@ -4,49 +4,52 @@ import net.tropicraft.core.common.registry.TropicraftBlocks;
 import com.google.common.collect.Maps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.Map;
 
 public class TropicBambooPot extends Block {
     private static final Map<Block, Block> FLOWER_TO_POTTED = Maps.newHashMap();
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
+    protected static final VoxelShape SHAPE = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D);
     private final Block flora;
 
-    public TropicBambooPot(Block content, Settings settings) {
+    public TropicBambooPot(Block content, Properties settings) {
         super(settings);
         this.flora = content;
         FLOWER_TO_POTTED.put(content, this);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack possibleFloralItem = player.getStackInHand(hand);
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack possibleFloralItem = player.getItemInHand(hand);
         Item item = possibleFloralItem.getItem();
 
         Block block;
@@ -61,56 +64,56 @@ public class TropicBambooPot extends Block {
         boolean isFlowerBlockAir = this.flora == Blocks.AIR;
         if (isAirBlock != isFlowerBlockAir) {
             if (isFlowerBlockAir) {
-                world.setBlockState(pos, block.getDefaultState(), 3);
-                player.incrementStat(Stats.POT_FLOWER);
+                world.setBlock(pos, block.defaultBlockState(), 3);
+                player.awardStat(Stats.POT_FLOWER);
 
-                if (!player.getAbilities().creativeMode) {
-                    possibleFloralItem.decrement(1);
+                if (!player.getAbilities().instabuild) {
+                    possibleFloralItem.shrink(1);
                 }
             }
             else {
                 ItemStack currentFloraInPot = new ItemStack(this.flora);
                 if (possibleFloralItem.isEmpty()) {
-                    player.setStackInHand(hand, currentFloraInPot);
+                    player.setItemInHand(hand, currentFloraInPot);
                 }
 
-                else if (!player.giveItemStack(currentFloraInPot)) {
-                    player.dropItem(currentFloraInPot, false);
+                else if (!player.addItem(currentFloraInPot)) {
+                    player.drop(currentFloraInPot, false);
                 }
 
-                world.setBlockState(pos, TropicraftBlocks.BAMBOO_FLOWER_POT.getDefaultState(), 3);
+                world.setBlock(pos, TropicraftBlocks.BAMBOO_FLOWER_POT.defaultBlockState(), 3);
             }
 
-            return ActionResult.success(world.isClient);
+            return InteractionResult.sidedSuccess(world.isClientSide);
 
         }
         else {
 
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state) {
         if(this.flora == Blocks.AIR ){
-            return super.getPickStack(world, pos, state);
+            return super.getCloneItemStack(world, pos, state);
         }
 
         return new ItemStack(this.flora);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if(direction == Direction.DOWN && !state.canPlaceAt(world, pos)){
-            return Blocks.AIR.getDefaultState();
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if(direction == Direction.DOWN && !state.canSurvive(world, pos)){
+            return Blocks.AIR.defaultBlockState();
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
 

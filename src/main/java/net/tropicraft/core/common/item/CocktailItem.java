@@ -2,18 +2,23 @@ package net.tropicraft.core.common.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.drinks.*;
 import net.tropicraft.core.common.registry.TropicraftItems;
 import org.jetbrains.annotations.NotNull;
@@ -38,23 +43,23 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	//   - byte IngredientID: Ingredient.ingredientList index
 	//   - short Count: count of this ingredient in the mixture, typically 1
 
-	public CocktailItem(final Drink drink, final Item.Settings Settings) {
+	public CocktailItem(final Drink drink, final Item.Properties Settings) {
 		super(Settings);
 		this.drink = drink;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext flag) {
+	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
 		Drink drink = getDrink(stack);
 
-		if (drink == Drink.COCKTAIL && stack.hasNbt() && stack.getNbt().contains("Ingredients")) {
-    		final NbtList ingredients = stack.getNbt().getList("Ingredients", 10);
+		if (drink == Drink.COCKTAIL && stack.hasTag() && stack.getTag().contains("Ingredients")) {
+    		final ListTag ingredients = stack.getTag().getList("Ingredients", 10);
     
     		for (int i = 0; i < ingredients.size(); ++i) {
-				NbtCompound ingredient = ingredients.getCompound(i);
+				CompoundTag ingredient = ingredients.getCompound(i);
     			int id = ingredient.getByte("IngredientID");
-				Text ingredientName = Ingredient.ingredientsList[id].getName();
+				Component ingredientName = Ingredient.ingredientsList[id].getName();
     			int ingredientColor = Ingredient.ingredientsList[id].getColor();
     			//String lvl = StatCollector.translateToLocal("enchantment.level." + count);
     			//par3List.add(ingredientName + " " + lvl);
@@ -64,7 +69,7 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	}
 
 	public static int getCocktailColor(ItemStack stack) {
-		final NbtCompound tag = stack.getNbt();
+		final CompoundTag tag = stack.getTag();
 		if (tag != null && !tag.isEmpty()) {
 			if (tag.contains("Color")) {
 				return tag.getInt("Color");
@@ -75,16 +80,16 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 
 	public static @NotNull ItemStack makeCocktail(MixerRecipe recipe) {
 		final ItemStack stack = MixerRecipes.getItemStack(recipe.getCraftingResult());
-		NbtCompound tag = new NbtCompound();
+		CompoundTag tag = new CompoundTag();
 		Drink drink = recipe.getCraftingResult();
 		tag.putByte("DrinkID", (byte) drink.drinkId);
-		NbtList tagList = new NbtList();
+		ListTag tagList = new ListTag();
 
 		Ingredient primary = null;
 		List<Ingredient> additives = new LinkedList<>();
 
 		for (Ingredient ingredient: recipe.getIngredients()) {
-			NbtCompound ingredientNbt = new NbtCompound();
+			CompoundTag ingredientNbt = new CompoundTag();
 			ingredientNbt.putByte("IngredientID", (byte)ingredient.id);
 			tagList.add(ingredientNbt);
 
@@ -105,7 +110,7 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 
 		tag.putInt("Color", color);
 
-		stack.setNbt(tag);
+		stack.setTag(tag);
 		return stack;
 	}
 
@@ -114,9 +119,9 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	public static ItemStack makeCocktail(final List<ItemStack> itemStacks) {
 		//TODO: fixme this is so ugly ugh
 		final ItemStack stack = new ItemStack(TropicraftItems.COCKTAILS.get(Drink.COCKTAIL));
-		NbtCompound tag = new NbtCompound();
+		CompoundTag tag = new CompoundTag();
 		tag.putByte("DrinkID", (byte) Drink.COCKTAIL.drinkId);
-		NbtList tagList = new NbtList();
+		ListTag tagList = new ListTag();
 
 		List<Ingredient> ingredients = new ArrayList<>();
 		for (ItemStack ingredientStack : itemStacks) {
@@ -128,7 +133,7 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 		List<Ingredient> additives = new LinkedList<>();
 
 		for (Ingredient ingredient : ingredients) {
-			NbtCompound ingredientTag = new NbtCompound();
+			CompoundTag ingredientTag = new CompoundTag();
 			ingredientTag.putByte("IngredientID", (byte)ingredient.id);
 			tagList.add(ingredientTag);
 
@@ -149,18 +154,18 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 
 		tag.putInt("Color", color);
 
-		stack.setNbt(tag);
+		stack.setTag(tag);
 		return stack;
 
 	}
 
 	public static Ingredient[] getIngredients(ItemStack stack) {
-		if (!Drink.isDrink(stack.getItem()) || !stack.hasNbt()) {
+		if (!Drink.isDrink(stack.getItem()) || !stack.hasTag()) {
 			return new Ingredient[0];
 		}
 
-		NbtCompound nbt = stack.getNbt();
-		NbtList tagList = nbt.getList("Ingredients", 10);
+		CompoundTag nbt = stack.getTag();
+		ListTag tagList = nbt.getList("Ingredients", 10);
 		Ingredient[] ingredients = new Ingredient[tagList.size()];
 
 		for (int i = 0; i < tagList.size(); ++i) {
@@ -179,17 +184,17 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	}
 
 	@Override
-	public int getMaxUseTime(ItemStack par1ItemStack) {
+	public int getUseDuration(ItemStack par1ItemStack) {
 		return 32;
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack) {
-		return UseAction.DRINK;
+	public UseAnim getUseAnimation(ItemStack stack) {
+		return UseAnim.DRINK;
 	}
 
-	public ItemStack onFoodEaten(ItemStack itemstack, World world, PlayerEntity player) {
-		world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
+	public ItemStack onFoodEaten(ItemStack itemstack, Level world, Player player) {
+		world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
 
 		for (Ingredient ingredient: getIngredients(itemstack)) {
 			ingredient.onDrink(player);
@@ -209,14 +214,14 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	 * the Item before the action is complete.
 	 */
 	@Override
-	public ItemStack finishUsing(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-		if (entityLiving instanceof PlayerEntity) {
-			final PlayerEntity player = (PlayerEntity) entityLiving;
+	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+		if (entityLiving instanceof Player) {
+			final Player player = (Player) entityLiving;
 			onFoodEaten(stack, worldIn, player);
 
 			Drink drink = getDrink(stack);
 
-			if (worldIn.hasRain(player.getBlockPos()) && drink == Drink.PINA_COLADA) {
+			if (worldIn.isRainingAt(player.blockPosition()) && drink == Drink.PINA_COLADA) {
 				// TODO advancements player.addStat(AchievementRegistry.drinkPinaColada);
 			}
 		}
@@ -225,17 +230,17 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand hand) {
-	    ItemStack stack = playerIn.getStackInHand(hand);
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand hand) {
+	    ItemStack stack = playerIn.getItemInHand(hand);
 		Drink drink = getDrink(stack);
 
 		if (drink == null) {
-			return new TypedActionResult<>(ActionResult.FAIL, stack);
+			return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
 		}
 
-		playerIn.setCurrentHand(hand);
+		playerIn.startUsingItem(hand);
 
-		return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 	}
 
 	/*
@@ -266,13 +271,13 @@ public class CocktailItem extends Item implements IColoredItem {//implements ICo
 	 */
 	
 	@Override
-	public Text getName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		Drink drink = getDrink(stack);
 		if (drink != null) {
-			return super.getName(stack).shallowCopy().formatted(drink.textFormatting).formatted(Formatting.BOLD);//applyTextStyle
+			return super.getName(stack).copy().withStyle(drink.textFormatting).withStyle(ChatFormatting.BOLD);//applyTextStyle
 			//return super.getName(stack);
 		}
-		return super.getName(stack).shallowCopy();
+		return super.getName(stack).copy();
 	}
 
 	public Drink getDrink() {

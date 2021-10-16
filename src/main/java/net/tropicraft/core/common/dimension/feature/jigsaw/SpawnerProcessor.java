@@ -3,18 +3,18 @@ package net.tropicraft.core.common.dimension.feature.jigsaw;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.StructureProcessor;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.registry.TropicraftEntities;
 import org.jetbrains.annotations.Nullable;
@@ -48,22 +48,22 @@ public class SpawnerProcessor extends StructureProcessor {
 
     @Override
     @Nullable
-    public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pos2, Structure.StructureBlockInfo originalBlockInfo, Structure.StructureBlockInfo blockInfo, StructurePlacementData settings) {
+    public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos pos2, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo blockInfo, StructurePlaceSettings settings) {
         final Block block = blockInfo.state.getBlock();
 
         if (block != Blocks.SPAWNER) {
             return blockInfo;
         } else {
-            final NbtCompound tag = new NbtCompound();
-            String typeName = Registry.ENTITY_TYPE.getId(entityTypes.get(0)).toString();
+            final CompoundTag tag = new CompoundTag();
+            String typeName = Registry.ENTITY_TYPE.getKey(entityTypes.get(0)).toString();
 
-            tag.putString("id", Registry.ENTITY_TYPE.getId(entityTypes.get(0)).toString());
+            tag.putString("id", Registry.ENTITY_TYPE.getKey(entityTypes.get(0)).toString());
 
             blockInfo.nbt.getCompound("SpawnData").putString("id", typeName);
             // TODO not working
-            final NbtList list = blockInfo.nbt.getList("SpawnPotentials", 9);
+            final ListTag list = blockInfo.nbt.getList("SpawnPotentials", 9);
             for (int i = 0; i < list.size(); i++) {
-                final NbtCompound nbt = list.getCompound(i);
+                final CompoundTag nbt = list.getCompound(i);
                 nbt.getCompound("Entity").putString("id", typeName);
             }
 

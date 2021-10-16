@@ -3,18 +3,23 @@ package net.tropicraft.core.common.registry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.entity.*;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.FishEntity;
-import net.minecraft.tag.FluidTags;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.Material;
 import net.tropicraft.Constants;
 import net.tropicraft.core.common.entity.BambooItemFrameEntity;
 import net.tropicraft.core.common.entity.SeaTurtleEntity;
@@ -83,7 +88,7 @@ public class TropicraftEntities {
     public static final EntityType<ManOWarEntity> MAN_O_WAR = registerEntity("man_o_war", manOWar());
 
     public static <T extends Entity> EntityType<T> registerEntity(String id, FabricEntityTypeBuilder<T> builder) { //FabricEntityTypeBuilder<T> builder,
-        return (EntityType) Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MODID, id), builder.build());
+        return (EntityType) Registry.register(Registry.ENTITY_TYPE, new ResourceLocation(Constants.MODID, id), builder.build());
 
         //return Registry.register(Registry.ENTITY_TYPE, new Identifier(Tropicfabricport.MOD_ID, id), type);
 
@@ -92,7 +97,7 @@ public class TropicraftEntities {
     // TODO review -- tracking range is in chunks...these values seem way too high
 
     private static FabricEntityTypeBuilder<CowktailEntity> cowktail() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, CowktailEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, CowktailEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.9F, 1.4F))
                 .trackRangeBlocks(10)
@@ -101,7 +106,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<ManOWarEntity> manOWar() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, ManOWarEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, ManOWarEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.6F, 0.8F)
                 )
@@ -111,7 +116,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TropiBeeEntity> tropiBee() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, TropiBeeEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, TropiBeeEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.4F, 0.6F)
                 )
@@ -121,7 +126,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<SeaTurtleEggEntity> turtleEgg() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, SeaTurtleEggEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, SeaTurtleEggEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(EGG_WIDTH, EGG_HEIGHT)
                 )
@@ -131,7 +136,7 @@ public class TropicraftEntities {
     }
     
     private static FabricEntityTypeBuilder<SharkEntity> hammerhead() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, SharkEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, SharkEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(2.4F, 1.4F)
                 )
@@ -142,7 +147,7 @@ public class TropicraftEntities {
 
     private static FabricEntityTypeBuilder<ExplodingCoconutEntity> explodingCoconut() {
         return FabricEntityTypeBuilder
-                .create(SpawnGroup.MISC, (EntityType.EntityFactory<ExplodingCoconutEntity>) ExplodingCoconutEntity::new)
+                .create(MobCategory.MISC, (EntityType.EntityFactory<ExplodingCoconutEntity>) ExplodingCoconutEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.25F, 0.25F))
                 .trackRangeBlocks(4)
@@ -151,7 +156,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<AshenMaskEntity> ashenMask() {
-        return FabricEntityTypeBuilder.<AshenMaskEntity>create( SpawnGroup.MISC, AshenMaskEntity::new)
+        return FabricEntityTypeBuilder.<AshenMaskEntity>create( MobCategory.MISC, AshenMaskEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.8F, 0.2F)
                 )
@@ -161,7 +166,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<AshenEntity> ashen() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, AshenEntity::new )
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, AshenEntity::new )
                 .dimensions(EntityDimensions
                         .fixed(0.5F, 1.3F)
                 )
@@ -171,7 +176,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TropiSpiderEntity> tropiSpider() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, TropiSpiderEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, TropiSpiderEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.4F, 0.9F)
                 )
@@ -181,7 +186,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TropiSpiderEggEntity> tropiSpiderEgg() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, TropiSpiderEggEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, TropiSpiderEggEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(EGG_WIDTH, EGG_HEIGHT)
                 )
@@ -191,7 +196,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<EagleRayEntity> eagleRay() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, EagleRayEntity::new )
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, EagleRayEntity::new )
                 .dimensions(EntityDimensions
                         .fixed(2F, 0.4F)
                 )
@@ -201,7 +206,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TropicraftTropicalFishEntity> tropicalFish() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, TropicraftTropicalFishEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, TropicraftTropicalFishEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.3F, 0.4F)
                 )
@@ -211,7 +216,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<SardineEntity> riverSardine() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, SardineEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, SardineEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.3F, 0.4F)
                 )
@@ -221,7 +226,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<PiranhaEntity> piranha() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, PiranhaEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, PiranhaEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.3F, 0.4F)
                 )
@@ -231,7 +236,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<VMonkeyEntity> vervetMonkey() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, VMonkeyEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, VMonkeyEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.8F, 0.8F)
                 )
@@ -241,7 +246,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<StarfishEggEntity> starfishEgg() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, StarfishEggEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, StarfishEggEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.4F, 0.5F)
                 )
@@ -251,7 +256,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<StarfishEntity> starfish() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, StarfishEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, StarfishEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.5F, 0.5F)
                 )
@@ -261,7 +266,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<SeaUrchinEggEntity> seaUrchinEgg() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, SeaUrchinEggEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, SeaUrchinEggEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.4F, 0.5F)
                 )
@@ -271,7 +276,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<SeaUrchinEntity> seaUrchin() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, SeaUrchinEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, SeaUrchinEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.5F, 0.5F)
                 )
@@ -281,7 +286,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TreeFrogEntity> treeFrog() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, TreeFrogEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, TreeFrogEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.6F, 0.4F)
                 )
@@ -291,7 +296,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<PoisonBlotEntity> poisonBlot() {
-        return FabricEntityTypeBuilder.<PoisonBlotEntity>create(SpawnGroup.MISC, PoisonBlotEntity::new)
+        return FabricEntityTypeBuilder.<PoisonBlotEntity>create(MobCategory.MISC, PoisonBlotEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.25F, 0.25F)
                 )
@@ -301,7 +306,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<SeahorseEntity> seahorse() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, SeahorseEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, SeahorseEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.5F, 0.6F)
                 )
@@ -311,7 +316,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TropicraftDolphinEntity> dolphin() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, TropicraftDolphinEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, TropicraftDolphinEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.4F, 0.5F)
                 )
@@ -321,7 +326,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<FailgullEntity> failgull() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.AMBIENT, FailgullEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.AMBIENT, FailgullEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.4F, 0.6F)
                 )
@@ -331,7 +336,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<MarlinEntity> marlin() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.WATER_CREATURE, MarlinEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.WATER_CREATURE, MarlinEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.4F, 0.95F)
                 )
@@ -341,7 +346,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<SeaTurtleEntity> turtle() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, SeaTurtleEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, SeaTurtleEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.8F, 0.35F)
                 )
@@ -352,7 +357,7 @@ public class TropicraftEntities {
 
     private static FabricEntityTypeBuilder<BambooItemFrameEntity> bambooItemFrame() {
         return FabricEntityTypeBuilder
-                .create(SpawnGroup.MISC, (EntityType.EntityFactory<BambooItemFrameEntity>) BambooItemFrameEntity::new)
+                .create(MobCategory.MISC, (EntityType.EntityFactory<BambooItemFrameEntity>) BambooItemFrameEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.5F, 0.5F))
                 .trackRangeBlocks(8)
@@ -361,7 +366,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<LavaBallEntity> lavaBall() {
-        return FabricEntityTypeBuilder.<LavaBallEntity>create(SpawnGroup.MISC, LavaBallEntity::new)
+        return FabricEntityTypeBuilder.<LavaBallEntity>create(MobCategory.MISC, LavaBallEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.0F, 1.0F)
                 )
@@ -371,7 +376,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<WallItemEntity> wallItem() {
-        return FabricEntityTypeBuilder.<WallItemEntity>create(SpawnGroup.MISC, WallItemEntity::new)
+        return FabricEntityTypeBuilder.<WallItemEntity>create(MobCategory.MISC, WallItemEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.5F, 0.5F)
                 )
@@ -381,7 +386,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<EIHEntity> eih() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EIHEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, EIHEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.2F, 3.25F)
                 )
@@ -391,7 +396,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TropiSkellyEntity> tropiskelly() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, TropiSkellyEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, TropiSkellyEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.7F, 1.95F)
                 )
@@ -401,7 +406,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<UmbrellaEntity> umbrella() {
-        return FabricEntityTypeBuilder.<UmbrellaEntity>create(SpawnGroup.MISC, UmbrellaEntity::new)
+        return FabricEntityTypeBuilder.<UmbrellaEntity>create(MobCategory.MISC, UmbrellaEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.0F, 4.0F)
                 )
@@ -411,7 +416,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<ChairEntity> chair() {
-        return FabricEntityTypeBuilder.<ChairEntity>create(SpawnGroup.MISC, ChairEntity::new)
+        return FabricEntityTypeBuilder.<ChairEntity>create(MobCategory.MISC, ChairEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.5F, 0.5F)
                 )
@@ -421,7 +426,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<BeachFloatEntity> beachFloat() {
-        return FabricEntityTypeBuilder.<BeachFloatEntity>create(SpawnGroup.MISC, BeachFloatEntity::new)
+        return FabricEntityTypeBuilder.<BeachFloatEntity>create(MobCategory.MISC, BeachFloatEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(2F, 0.175F)
                 )
@@ -431,7 +436,7 @@ public class TropicraftEntities {
     }
     
     private static FabricEntityTypeBuilder<IguanaEntity> iguana() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, IguanaEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, IguanaEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(1.0F, 0.4F)
                 )
@@ -442,7 +447,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<EntityKoaHunter> koaHunter() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MISC, EntityKoaHunter::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MISC, EntityKoaHunter::new)
                 .dimensions(EntityDimensions
                         .fixed(0.6F, 1.95F)
                 )
@@ -453,7 +458,7 @@ public class TropicraftEntities {
     }
 
     private static FabricEntityTypeBuilder<TropiCreeperEntity> tropicreeper() {
-        return FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, TropiCreeperEntity::new)
+        return FabricEntityTypeBuilder.create(MobCategory.MONSTER, TropiCreeperEntity::new)
                 .dimensions(EntityDimensions
                         .fixed(0.6F, 1.7F)
                 )
@@ -464,24 +469,24 @@ public class TropicraftEntities {
 
 
 
-    public static boolean canAnimalSpawn(EntityType<? extends MobEntity> animal, WorldAccess worldIn, SpawnReason reason, BlockPos pos, Random random) {
-        return worldIn.getBlockState(pos.down()).getBlock() == Blocks.GRASS_BLOCK || worldIn.getBlockState(pos.down()).getMaterial() == Material.AGGREGATE;
+    public static boolean canAnimalSpawn(EntityType<? extends Mob> animal, LevelAccessor worldIn, MobSpawnType reason, BlockPos pos, Random random) {
+        return worldIn.getBlockState(pos.below()).getBlock() == Blocks.GRASS_BLOCK || worldIn.getBlockState(pos.below()).getMaterial() == Material.SAND;
     }
 
-    private static <T extends MobEntity> void registerLandSpawn(final EntityType<T> type, SpawnRestriction.SpawnPredicate<T> predicate) {
-        SpawnRestrictionAccessor.callRegister(type, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, predicate);
+    private static <T extends Mob> void registerLandSpawn(final EntityType<T> type, SpawnPlacements.SpawnPredicate<T> predicate) {
+        SpawnRestrictionAccessor.callRegister(type, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, predicate);
     }
 
-    private static <T extends MobEntity> void registerWaterSpawn(final EntityType<T> type, SpawnRestriction.SpawnPredicate<T> predicate) {
-        SpawnRestrictionAccessor.callRegister(type, SpawnRestriction.Location.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, predicate);
+    private static <T extends Mob> void registerWaterSpawn(final EntityType<T> type, SpawnPlacements.SpawnPredicate<T> predicate) {
+        SpawnRestrictionAccessor.callRegister(type, SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, predicate);
     }
 
-    public static <T extends MobEntity> boolean canSpawnOceanWaterMob(EntityType<T> waterMob, WorldAccess world, SpawnReason reason, BlockPos pos, Random rand) {
-        return pos.getY() > 90 && pos.getY() < world.getSeaLevel() && world.getFluidState(pos).isIn(FluidTags.WATER);
+    public static <T extends Mob> boolean canSpawnOceanWaterMob(EntityType<T> waterMob, LevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
+        return pos.getY() > 90 && pos.getY() < world.getSeaLevel() && world.getFluidState(pos).is(FluidTags.WATER);
     }
 
-    public static <T extends MobEntity> boolean canSpawnSurfaceOceanWaterMob(EntityType<T> waterMob, WorldAccess world, SpawnReason reason, BlockPos pos, Random rand) {
-        return pos.getY() > world.getSeaLevel() - 3 && pos.getY() < world.getSeaLevel() && world.getFluidState(pos).isIn(FluidTags.WATER);
+    public static <T extends Mob> boolean canSpawnSurfaceOceanWaterMob(EntityType<T> waterMob, LevelAccessor world, MobSpawnType reason, BlockPos pos, Random rand) {
+        return pos.getY() > world.getSeaLevel() - 3 && pos.getY() < world.getSeaLevel() && world.getFluidState(pos).is(FluidTags.WATER);
     }
 
     public static void init(){
@@ -489,9 +494,9 @@ public class TropicraftEntities {
     }
 
     public static void registerSpawns() {
-        registerWaterSpawn(TROPICAL_FISH, FishEntity::canSpawn);
-        registerWaterSpawn(RIVER_SARDINE, FishEntity::canSpawn);
-        registerWaterSpawn(PIRANHA, FishEntity::canSpawn);
+        registerWaterSpawn(TROPICAL_FISH, AbstractFish::checkFishSpawnRules);
+        registerWaterSpawn(RIVER_SARDINE, AbstractFish::checkFishSpawnRules);
+        registerWaterSpawn(PIRANHA, AbstractFish::checkFishSpawnRules);
         registerWaterSpawn(DOLPHIN, TropicraftEntities::canSpawnOceanWaterMob);
         registerWaterSpawn(EAGLE_RAY, TropicraftEntities::canSpawnOceanWaterMob);
         registerWaterSpawn(MARLIN, TropicraftEntities::canSpawnOceanWaterMob);
@@ -504,17 +509,17 @@ public class TropicraftEntities {
         registerLandSpawn(KOA_HUNTER, TropicraftEntities::canAnimalSpawn);
         registerLandSpawn(TROPI_CREEPER, TropicraftEntities::canAnimalSpawn);
         registerLandSpawn(IGUANA, TropicraftEntities::canAnimalSpawn);
-        registerLandSpawn(TROPI_SKELLY, HostileEntity::canSpawnInDark);
-        registerLandSpawn(TROPI_SPIDER, HostileEntity::canSpawnInDark);
+        registerLandSpawn(TROPI_SKELLY, Monster::checkMonsterSpawnRules);
+        registerLandSpawn(TROPI_SPIDER, Monster::checkMonsterSpawnRules);
         registerLandSpawn(EIH, TropicraftEntities::canAnimalSpawn);
         registerLandSpawn(SEA_TURTLE, SeaTurtleEntity::canSpawnOnLand);
         registerLandSpawn(TREE_FROG, TropicraftEntities::canAnimalSpawn);
         registerLandSpawn(V_MONKEY, TropicraftEntities::canAnimalSpawn);
         registerLandSpawn(COWKTAIL, TropicraftEntities::canAnimalSpawn);
 
-        registerLandSpawn(ASHEN, MobEntity::canMobSpawn);
-        registerLandSpawn(FAILGULL, MobEntity::canMobSpawn);
-        registerLandSpawn(TROPI_BEE, MobEntity::canMobSpawn);
+        registerLandSpawn(ASHEN, Mob::checkMobSpawnRules);
+        registerLandSpawn(FAILGULL, Mob::checkMobSpawnRules);
+        registerLandSpawn(TROPI_BEE, Mob::checkMobSpawnRules);
         // TODO tropibee, or from nests?
         //TODO: Add tropical hives and replace this when finished
     }
@@ -525,10 +530,10 @@ public class TropicraftEntities {
         FabricDefaultAttributeRegistry.register(TropicraftEntities.IGUANA, IguanaEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.TROPI_SKELLY, TropiSkellyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.EIH, EIHEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(TropicraftEntities.SEA_TURTLE, SeaTurtleEntity.createTurtleAttributes());
+        FabricDefaultAttributeRegistry.register(TropicraftEntities.SEA_TURTLE, SeaTurtleEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.MARLIN, MarlinEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.FAILGULL, FailgullEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(TropicraftEntities.DOLPHIN, TropicraftDolphinEntity.createDolphinAttributes());
+        FabricDefaultAttributeRegistry.register(TropicraftEntities.DOLPHIN, TropicraftDolphinEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.SEAHORSE, SeahorseEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.TREE_FROG, TreeFrogEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.SEA_URCHIN, SeaUrchinEntity.createAttributes());
@@ -540,13 +545,13 @@ public class TropicraftEntities {
         FabricDefaultAttributeRegistry.register(TropicraftEntities.PIRANHA, PiranhaEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.TROPICAL_FISH, TropicraftTropicalFishEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.EAGLE_RAY, EagleRayEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(TropicraftEntities.TROPI_SPIDER, TropiSpiderEntity.createSpiderAttributes());
+        FabricDefaultAttributeRegistry.register(TropicraftEntities.TROPI_SPIDER, TropiSpiderEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.TROPI_SPIDER_EGG, EggEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.ASHEN, AshenEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.HAMMERHEAD, SharkEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.SEA_TURTLE_EGG, EggEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(TropicraftEntities.TROPI_BEE, TropiBeeEntity.createBeeAttributes());
-        FabricDefaultAttributeRegistry.register(TropicraftEntities.COWKTAIL, CowktailEntity.createCowAttributes());
+        FabricDefaultAttributeRegistry.register(TropicraftEntities.TROPI_BEE, TropiBeeEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(TropicraftEntities.COWKTAIL, CowktailEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TropicraftEntities.MAN_O_WAR, ManOWarEntity.createAttributes());
     }
 

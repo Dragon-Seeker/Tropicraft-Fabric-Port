@@ -1,38 +1,38 @@
 package net.tropicraft.core.common.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
 
 public class WaterWandItem extends Item {
-    public WaterWandItem(FabricItemSettings settings) {
+    public WaterWandItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         double inc = Math.PI / 12;
 
-        ItemStack itemstack = player.getStackInHand(hand);
+        ItemStack itemstack = player.getItemInHand(hand);
 
-        player.swingHand(Hand.MAIN_HAND);
-        if (!world.isClient) {
+        player.swing(InteractionHand.MAIN_HAND);
+        if (!world.isClientSide) {
             for (double lat = 0; lat < 2 * Math.PI; lat += inc) {
                 for (double lng = 0; lng < 2 * Math.PI; lng += inc) {
                     for (double len = 1; len < 3; len += 0.5D) {
                         int x1 = (int)(Math.cos(lat) * len);
                         int z1 = (int)(Math.sin(lat) * len);
                         int y1 = (int)(Math.sin(lng) * len);
-                        if (!removeWater(world, itemstack, player, new BlockPos(player.getBlockPos().add(x1, y1, z1)))) {
+                        if (!removeWater(world, itemstack, player, new BlockPos(player.blockPosition().offset(x1, y1, z1)))) {
                             break;
                         }
                     }
@@ -40,20 +40,20 @@ public class WaterWandItem extends Item {
             }
         }
 
-        return new TypedActionResult<>(ActionResult.PASS, itemstack);
+        return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
     }
 
-    private boolean removeWater(World world, ItemStack itemstack, PlayerEntity player, BlockPos pos) {
-        if (!world.isClient) {
+    private boolean removeWater(Level world, ItemStack itemstack, Player player, BlockPos pos) {
+        if (!world.isClientSide) {
             if (world.getBlockState(pos).getMaterial() == Material.WATER) {
-                itemstack.damage(1, player, (e) -> {
-                    e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND);
+                itemstack.hurtAndBreak(1, player, (e) -> {
+                    e.broadcastBreakEvent(EquipmentSlot.MAINHAND);
                 });
-                world.setBlockState(pos, Blocks.AIR.getDefaultState());
+                world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 return true;
             }
 
-            return world.isAir(pos);
+            return world.isEmptyBlock(pos);
         }
 
         return false;

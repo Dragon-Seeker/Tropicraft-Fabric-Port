@@ -1,6 +1,6 @@
 package net.tropicraft.core.common.drinks;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class DrinkActionFood extends DrinkAction {
     private final int healAmount;
@@ -12,8 +12,8 @@ public class DrinkActionFood extends DrinkAction {
     }
 
     @Override
-    public void onDrink(PlayerEntity player) {
+    public void onDrink(Player player) {
         player.heal(healAmount);
-        player.getHungerManager().add(0, saturationModifier);
+        player.getFoodData().eat(0, saturationModifier);
     }
 }

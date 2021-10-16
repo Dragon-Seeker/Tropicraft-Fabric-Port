@@ -1,20 +1,20 @@
 package net.tropicraft.core.common.entity;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.level.Level;
 import net.tropicraft.core.common.registry.TropicraftEntities;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
 
-public class TropiBeeEntity extends BeeEntity {
-    public TropiBeeEntity(EntityType<? extends BeeEntity> type, World world) {
+public class TropiBeeEntity extends Bee {
+    public TropiBeeEntity(EntityType<? extends Bee> type, Level world) {
         super(type, world);
     }
 
     @Override
-    public BeeEntity createChild(ServerWorld world, PassiveEntity partner) {
-        return TropicraftEntities.TROPI_BEE.create(this.world);
+    public Bee getBreedOffspring(ServerLevel world, AgeableMob partner) {
+        return TropicraftEntities.TROPI_BEE.create(this.level);
     }
 
     /*

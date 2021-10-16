@@ -3,9 +3,12 @@ package net.tropicraft.core.mixins;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.util.dynamic.RegistryOps;
-import net.minecraft.util.registry.*;
-import net.minecraft.world.dimension.DimensionOptions;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.RegistryReadOps;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.tropicraft.core.common.dimension.TropicraftDimension;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,42 +19,42 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.OptionalInt;
 
-@Mixin(RegistryOps.class)
+@Mixin(RegistryReadOps.class)
 public class WorldSettingsImportMixin {
     @Shadow
     @Final
     //private DynamicRegistryManager.Impl registryManager;
-    private DynamicRegistryManager registryManager;
+    private RegistryAccess registryAccess;
 
     /**
      * Add the tropicraft dimension to both new worlds and existing worlds when they get loaded.
      */
     //@Inject(method = "loadToRegistry(Lnet/minecraft/util/registry/SimpleRegistry;Lnet/minecraft/util/RegistryKey;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/DataResult;", at = @At("HEAD"))
-    @Inject(at = @At("HEAD"), method = "loadToRegistry")
+    @Inject(at = @At("HEAD"), method = "decodeElements")
     @SuppressWarnings("unchecked")
-    protected <E> void loadToRegistry(SimpleRegistry<E> registry, RegistryKey<E> registryKey, Codec<E> codec, CallbackInfoReturnable<DataResult<SimpleRegistry<E>>> ci) {
-        if (registryKey == Registry.DIMENSION_KEY && registry.get(TropicraftDimension.ID) == null) {
-            this.addDimensions((SimpleRegistry<DimensionOptions>) registry);
+    protected <E> void loadToRegistry(MappedRegistry<E> registry, ResourceKey<E> registryKey, Codec<E> codec, CallbackInfoReturnable<DataResult<MappedRegistry<E>>> ci) {
+        if (registryKey == Registry.LEVEL_STEM_REGISTRY && registry.get(TropicraftDimension.ID) == null) {
+            this.addDimensions((MappedRegistry<LevelStem>) registry);
         }
     }
 
-    private void addDimensions(SimpleRegistry<DimensionOptions> registry) {
-        DimensionOptions overworld = registry.get(DimensionOptions.OVERWORLD);
+    private void addDimensions(MappedRegistry<LevelStem> registry) {
+        LevelStem overworld = registry.get(LevelStem.OVERWORLD);
         if (overworld == null) {
             return;
         }
 
         // steal the seed from the overworld chunk generator.
         // not necessarily the world seed if a datapack changes it, but it's probably a safe bet.
-        long seed = ((SeedAccessor)overworld.getChunkGenerator()).getWorldSeed();
+        long seed = ((SeedAccessor)overworld.generator()).getStrongholdSeed();
 
-        DimensionOptions dimension = TropicraftDimension.createDimension(
-                this.registryManager.get(Registry.DIMENSION_TYPE_KEY),
-                this.registryManager.get(Registry.BIOME_KEY),
-                this.registryManager.get(Registry.CHUNK_GENERATOR_SETTINGS_KEY),
+        LevelStem dimension = TropicraftDimension.createDimension(
+                this.registryAccess.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY),
+                this.registryAccess.registryOrThrow(Registry.BIOME_REGISTRY),
+                this.registryAccess.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY),
                 seed
         );
-        registry.replace(OptionalInt.empty(), TropicraftDimension.DIMENSION, dimension, Lifecycle.stable());
+        registry.registerOrOverride(OptionalInt.empty(), TropicraftDimension.DIMENSION, dimension, Lifecycle.stable());
     }
 
 

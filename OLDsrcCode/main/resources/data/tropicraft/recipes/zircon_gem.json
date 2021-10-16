@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "tropicraft:zircon_ore"
+  },
+  "result": "tropicraft:zircon_gem",
+  "experience": 0.5,
+  "cookingtime": 100
+}

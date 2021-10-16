@@ -2,26 +2,29 @@ package net.tropicraft.core.common.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.tropicraft.core.common.block.blockentity.DrinkMixerTileEntity;
 import net.tropicraft.core.common.block.blockentity.SifterTileEntity;
 import net.tropicraft.core.common.drinks.Drink;
@@ -32,16 +35,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DrinkMixerBlock extends Block implements BlockEntityProvider {
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+public class DrinkMixerBlock extends Block implements EntityBlock {
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    public DrinkMixerBlock(final Settings properties) {
+    public DrinkMixerBlock(final Properties properties) {
         super(properties);
-        setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    protected void appendProperties(final StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
@@ -50,14 +53,14 @@ public class DrinkMixerBlock extends Block implements BlockEntityProvider {
      */
     @Environment(EnvType.CLIENT)
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext flag) {
-        super.appendTooltip(stack, world, tooltip, flag);
-        tooltip.add(new TranslatableText("!! Work In Progress !!").formatted(Formatting.RED, Formatting.BOLD));
-        tooltip.add(new TranslatableText(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
+        tooltip.add(new TranslatableComponent("!! Work In Progress !!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+        tooltip.add(new TranslatableComponent(getDescriptionId() + ".desc").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         return null;
         //return checkType(type, TropicBlockEntities.SIFTER, (world1, pos, state1, be) -> SifterTileEntity.tick(world1, pos, state1, be));
     }
@@ -68,26 +71,26 @@ public class DrinkMixerBlock extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
 
-        ItemStack stack = player.getMainHandStack();
+        ItemStack stack = player.getMainHandItem();
 
         DrinkMixerTileEntity mixer = (DrinkMixerTileEntity) world.getBlockEntity(pos);
         if (mixer == null) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
         if (mixer.isDoneMixing()) {
             mixer.retrieveResult(player);
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
 
         if (stack.isEmpty()) {
             mixer.emptyMixer(player);
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
 
         ItemStack ingredientStack = stack.copy();
@@ -95,14 +98,14 @@ public class DrinkMixerBlock extends Block implements BlockEntityProvider {
 
         if (mixer.addToMixer(ingredientStack)) {
             if (!player.isCreative()) {
-                player.getInventory().removeStack(player.getInventory().selectedSlot, 1);
+                player.getInventory().removeItem(player.getInventory().selected, 1);
             }
         }
 
         if (ingredientStack.getItem() == TropicraftItems.BAMBOO_MUG && mixer.canMix()) {
             mixer.startMixing();
             if (!player.isCreative()) {
-                player.getInventory().removeStack(player.getInventory().selectedSlot, 1);
+                player.getInventory().removeItem(player.getInventory().selected, 1);
             }
 
             Drink craftedDrink = MixerRecipes.getDrink(mixer.ingredients);
@@ -113,18 +116,18 @@ public class DrinkMixerBlock extends Block implements BlockEntityProvider {
             }
         }
 
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
     
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        BlockState ret = super.getPlacementState(context);
-        return ret.with(FACING, context.getPlayer().getHorizontalFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState ret = super.getStateForPlacement(context);
+        return ret.setValue(FACING, context.getPlayer().getDirection());
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new DrinkMixerTileEntity(pos, state);
     }
 }

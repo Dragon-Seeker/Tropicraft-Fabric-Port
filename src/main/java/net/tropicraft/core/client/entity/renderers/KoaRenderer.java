@@ -1,26 +1,25 @@
 package net.tropicraft.core.client.entity.renderers;
 
-import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.tropicraft.Constants;
 import net.tropicraft.core.client.entity.models.KoaModel;
 import net.tropicraft.core.client.registry.TropicraftEntityRendering;
 import net.tropicraft.core.common.entity.passive.EntityKoaBase;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.entity.BipedEntityRenderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-public class KoaRenderer extends BipedEntityRenderer<EntityKoaBase, KoaModel> {
+public class KoaRenderer extends HumanoidMobRenderer<EntityKoaBase, KoaModel> {
 
-    private static final Identifier MALE_FISHER = new Identifier(Constants.MODID, "textures/entity/koa/koa_man_fisher.png");
-    private static final Identifier FEMALE_FISHER = new Identifier(Constants.MODID, "textures/entity/koa/koa_woman_fisher.png");
-    private static final Identifier MALE_HUNTER = new Identifier(Constants.MODID, "textures/entity/koa/koa_man_hunter.png");
-    private static final Identifier FEMALE_HUNTER = new Identifier(Constants.MODID, "textures/entity/koa/koa_woman_hunter.png");
+    private static final ResourceLocation MALE_FISHER = new ResourceLocation(Constants.MODID, "textures/entity/koa/koa_man_fisher.png");
+    private static final ResourceLocation FEMALE_FISHER = new ResourceLocation(Constants.MODID, "textures/entity/koa/koa_woman_fisher.png");
+    private static final ResourceLocation MALE_HUNTER = new ResourceLocation(Constants.MODID, "textures/entity/koa/koa_man_hunter.png");
+    private static final ResourceLocation FEMALE_HUNTER = new ResourceLocation(Constants.MODID, "textures/entity/koa/koa_woman_hunter.png");
 
-    public KoaRenderer(EntityRendererFactory.Context context) {
-        super(context, new KoaModel(context.getPart(TropicraftEntityRendering.KOA_HUNTER_LAYER)), 0.5F);
-        this.shadowOpacity = 0.5f;
+    public KoaRenderer(EntityRendererProvider.Context context) {
+        super(context, new KoaModel(context.bakeLayer(TropicraftEntityRendering.KOA_HUNTER_LAYER)), 0.5F);
+        this.shadowStrength = 0.5f;
     }
 
     /**
@@ -28,7 +27,7 @@ public class KoaRenderer extends BipedEntityRenderer<EntityKoaBase, KoaModel> {
      */
 
     @Override
-    public Identifier getTexture(EntityKoaBase entity) {
+    public ResourceLocation getTextureLocation(EntityKoaBase entity) {
         if (entity.getGender() == EntityKoaBase.Genders.MALE) {
             if (entity.getRole() == EntityKoaBase.Roles.HUNTER) {
                 return MALE_HUNTER;
@@ -44,8 +43,8 @@ public class KoaRenderer extends BipedEntityRenderer<EntityKoaBase, KoaModel> {
 
     @Nullable
     @Override
-    protected RenderLayer getRenderLayer(EntityKoaBase entity, boolean showBody, boolean translucent, boolean showOutline) {
-        return RenderLayer.getEntityCutout(getTexture(entity));
+    protected RenderType getRenderType(EntityKoaBase entity, boolean showBody, boolean translucent, boolean showOutline) {
+        return RenderType.entityCutout(getTextureLocation(entity));
     }
 
 }

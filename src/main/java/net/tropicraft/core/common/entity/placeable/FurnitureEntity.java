@@ -2,24 +2,24 @@ package net.tropicraft.core.common.entity.placeable;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.tropicraft.Constants;
 
 import java.util.List;
@@ -28,12 +28,12 @@ import java.util.function.Function;
 
 public abstract class FurnitureEntity extends Entity {
 
-    private static final TrackedData<Integer> COLOR = DataTracker.registerData(FurnitureEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Float> DAMAGE = DataTracker.registerData(FurnitureEntity.class, TrackedDataHandlerRegistry.FLOAT);
-    private static final TrackedData<Integer> FORWARD_DIRECTION = DataTracker.registerData(FurnitureEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Integer> TIME_SINCE_HIT = DataTracker.registerData(FurnitureEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(FurnitureEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> DAMAGE = SynchedEntityData.defineId(FurnitureEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> FORWARD_DIRECTION = SynchedEntityData.defineId(FurnitureEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> TIME_SINCE_HIT = SynchedEntityData.defineId(FurnitureEntity.class, EntityDataSerializers.INT);
 
-    public static Identifier SPAWN_PACKET = new Identifier(Constants.MODID, "furniture_entity_default");
+    public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "furniture_entity_default");
     
     private static final int DAMAGE_THRESHOLD = 40;
     
@@ -46,15 +46,15 @@ public abstract class FurnitureEntity extends Entity {
     protected double lerpYaw = Double.NaN; // Force first-time sync even if packet is incomplete
     protected double lerpPitch;
     
-    protected FurnitureEntity(EntityType<?> entityTypeIn, World worldIn, Map<DyeColor, ? extends Item> items) {
+    protected FurnitureEntity(EntityType<?> entityTypeIn, Level worldIn, Map<DyeColor, ? extends Item> items) {
         this(entityTypeIn, worldIn, c -> items.get(c));
     }
 
-    protected FurnitureEntity(EntityType<?> entityTypeIn, World worldIn, Function<DyeColor, Item> itemLookup) {
+    protected FurnitureEntity(EntityType<?> entityTypeIn, Level worldIn, Function<DyeColor, Item> itemLookup) {
         super(entityTypeIn, worldIn);
         this.itemLookup = itemLookup;
-        this.ignoreCameraFrustum = true;
-        this.inanimate = true;
+        this.noCulling = true;
+        this.blocksBuilding = true;
         //TODO: Welp, figure out how to readd this later
         //this.pushSpeedReduction = .95F;
     }
@@ -70,20 +70,20 @@ public abstract class FurnitureEntity extends Entity {
      */
     
     public void setRotation(float yaw) {
-        float tempYaw = MathHelper.wrapDegrees(yaw);
-        this.setYaw(tempYaw);
+        float tempYaw = Mth.wrapDegrees(yaw);
+        this.setYRot(tempYaw);
         this.lerpYaw = tempYaw;
     }
 
 
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         //return new EntitySpawnS2CPacket(this);
 
         //NetworkHooks.getEntitySpawningPacket(this);
 
-        PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
 
         // entity position
         packet.writeDouble(getX());
@@ -92,17 +92,17 @@ public abstract class FurnitureEntity extends Entity {
 
         // entity id & uuid
         packet.writeInt(getId());
-        packet.writeUuid(getUuid());
+        packet.writeUUID(getUUID());
 
         return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
     }
 
     @Override
-    protected void initDataTracker() {
-        this.getDataTracker().startTracking(COLOR, 0);
-        this.getDataTracker().startTracking(DAMAGE, (float) 0);
-        this.getDataTracker().startTracking(FORWARD_DIRECTION, 1);
-        this.getDataTracker().startTracking(TIME_SINCE_HIT, 0);
+    protected void defineSynchedData() {
+        this.getEntityData().define(COLOR, 0);
+        this.getEntityData().define(DAMAGE, (float) 0);
+        this.getEntityData().define(FORWARD_DIRECTION, 1);
+        this.getEntityData().define(TIME_SINCE_HIT, 0);
     }
 
     @Override
@@ -117,27 +117,27 @@ public abstract class FurnitureEntity extends Entity {
             setDamage(damage - 1);
         }
 
-        final Vec3d currentPos = getPos();
-        prevX = currentPos.x;
-        prevY = currentPos.y;
-        prevZ = currentPos.z;
+        final Vec3 currentPos = position();
+        xo = currentPos.x;
+        yo = currentPos.y;
+        zo = currentPos.z;
     
         super.tick();
     
         tickLerp();
     
         if (preventMotion()) {
-            setVelocity(Vec3d.ZERO);
+            setDeltaMovement(Vec3.ZERO);
         }
     
         //updateRocking();
     
-        this.checkBlockCollision();
-        List<Entity> list = this.world.getOtherEntities(this, this.getBoundingBox().expand((double)0.2F, (double)-0.01F, (double)0.2F), EntityPredicates.canBePushedBy(this));
+        this.checkInsideBlocks();
+        List<Entity> list = this.level.getEntities(this, this.getBoundingBox().inflate((double)0.2F, (double)-0.01F, (double)0.2F), EntitySelector.pushableBy(this));
         if (!list.isEmpty()) {
             for (Entity entity : list) {
                 if (!entity.hasPassenger(this)) {
-                    this.pushAwayFrom(entity);
+                    this.push(entity);
                 }
             }
         }
@@ -149,19 +149,19 @@ public abstract class FurnitureEntity extends Entity {
     
     /* Following two methods mostly copied from EntityBoat interpolation code */
     @Override
-    public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
         if (teleport) {
-            super.updateTrackedPositionAndAngles(x, y, z, yaw, pitch, posRotationIncrements, teleport);
+            super.lerpTo(x, y, z, yaw, pitch, posRotationIncrements, teleport);
         } else {
             this.lerpX = x;
             this.lerpY = y;
             this.lerpZ = z;
             // Avoid "jumping" back to the client's rotation due to vanilla's dumb incomplete packets
             if (yaw != yaw || Double.isNaN(lerpYaw)) {
-                this.lerpYaw = MathHelper.wrapDegrees((double) yaw);
+                this.lerpYaw = Mth.wrapDegrees((double) yaw);
             }
             this.lerpSteps = 10;
-            this.setPitch(pitch);
+            this.setXRot(pitch);
         }
     }
 
@@ -170,35 +170,35 @@ public abstract class FurnitureEntity extends Entity {
             double d0 = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
             double d1 = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
             double d2 = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
-            double d3 = MathHelper.wrapDegrees(this.lerpYaw - (double)this.getYaw());
-            this.setYaw((float)((double)this.getYaw() + d3 / (double)this.lerpSteps));
-            this.setPitch((float)((double)this.getPitch() + (this.lerpPitch - (double)this.getPitch()) / (double)this.lerpSteps));
+            double d3 = Mth.wrapDegrees(this.lerpYaw - (double)this.getYRot());
+            this.setYRot((float)((double)this.getYRot() + d3 / (double)this.lerpSteps));
+            this.setXRot((float)((double)this.getXRot() + (this.lerpPitch - (double)this.getXRot()) / (double)this.lerpSteps));
             --this.lerpSteps;
-            this.setPosition(d0, d1, d2);
-            this.setRotation(this.getYaw(), this.getPitch());
+            this.setPos(d0, d1, d2);
+            this.setRot(this.getYRot(), this.getXRot());
         }
     }
 
     @Override
-    public boolean damage(DamageSource damageSource, float amount) {
+    public boolean hurt(DamageSource damageSource, float amount) {
         if (this.isInvulnerableTo(damageSource)) {
             return false;
         }
-        else if (!this.world.isClient && isAlive()) {
+        else if (!this.level.isClientSide && isAlive()) {
             this.setForwardDirection(-this.getForwardDirection());
             this.setTimeSinceHit(10);
             this.setDamage(this.getDamage() + amount * 10.0F);
-            this.scheduleVelocityUpdate();
-            boolean flag = damageSource.getAttacker() instanceof PlayerEntity && ((PlayerEntity)damageSource.getAttacker()).getAbilities().creativeMode;
+            this.markHurt();
+            boolean flag = damageSource.getEntity() instanceof Player && ((Player)damageSource.getEntity()).getAbilities().instabuild;
     
             if (flag || this.getDamage() > DAMAGE_THRESHOLD) {
-                Entity rider = this.getPrimaryPassenger();
+                Entity rider = this.getControllingPassenger();
                 if (rider != null) {
                     rider.startRiding(this);
                 }
     
                 if (!flag) {
-                    this.dropStack(getItemStack(), 0.0F);
+                    this.spawnAtLocation(getItemStack(), 0.0F);
                 }
     
                 this.remove(RemovalReason.KILLED);
@@ -213,12 +213,12 @@ public abstract class FurnitureEntity extends Entity {
     }
 
     @Override
-    public double getMountedHeightOffset() {
+    public double getPassengersRidingOffset() {
         return 0.0D;
     }
 
     @Override
-    public void animateDamage() {
+    public void animateHurt() {
         this.setForwardDirection(-1 * this.getForwardDirection());
         this.setTimeSinceHit(10);
         this.setDamage(this.getDamage() * 10.0F);
@@ -231,7 +231,7 @@ public abstract class FurnitureEntity extends Entity {
      */
 
     @Override
-    public boolean collides() {
+    public boolean isPickable() {
         return true;
     }
 
@@ -241,62 +241,62 @@ public abstract class FurnitureEntity extends Entity {
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    protected void readAdditionalSaveData(CompoundTag nbt) {
         setColor(DyeColor.byId(nbt.getInt("Color")));
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    protected void addAdditionalSaveData(CompoundTag nbt) {
         nbt.putInt("Color", getColor().ordinal());
     }
 
     public void setColor(DyeColor color) {
-        dataTracker.set(COLOR, color.ordinal());
+        entityData.set(COLOR, color.ordinal());
     }
 
     public DyeColor getColor() {
-        return DyeColor.byId(dataTracker.get(COLOR));
+        return DyeColor.byId(entityData.get(COLOR));
     }
 
     /**
      * Sets the forward direction of the entity.
      */
     public void setForwardDirection(int dir) {
-        dataTracker.set(FORWARD_DIRECTION, dir);
+        entityData.set(FORWARD_DIRECTION, dir);
     }
 
     /**
      * Gets the forward direction of the entity.
      */
     public int getForwardDirection() {
-        return dataTracker.get(FORWARD_DIRECTION);
+        return entityData.get(FORWARD_DIRECTION);
     }
 
     /**
      * Sets the damage taken from the last hit.
      */
     public void setDamage(float damageTaken) {
-        dataTracker.set(DAMAGE, damageTaken);
+        entityData.set(DAMAGE, damageTaken);
     }
 
     /**
      * Gets the damage taken from the last hit.
      */
     public float getDamage() {
-        return dataTracker.get(DAMAGE);
+        return entityData.get(DAMAGE);
     }
 
     /**
      * Sets the time to count down from since the last time entity was hit.
      */
     public void setTimeSinceHit(int timeSinceHit) {
-        dataTracker.set(TIME_SINCE_HIT, timeSinceHit);
+        entityData.set(TIME_SINCE_HIT, timeSinceHit);
     }
 
     /**
      * Gets the time since the last hit.
      */
     public int getTimeSinceHit() {
-        return dataTracker.get(TIME_SINCE_HIT);
+        return entityData.get(TIME_SINCE_HIT);
     }
 }

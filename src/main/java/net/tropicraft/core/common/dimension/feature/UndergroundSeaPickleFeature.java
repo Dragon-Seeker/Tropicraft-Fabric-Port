@@ -1,42 +1,40 @@
 package net.tropicraft.core.common.dimension.feature;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SeaPickleBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
-
 import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SeaPickleBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class UndergroundSeaPickleFeature extends Feature<DefaultFeatureConfig> {
-    public UndergroundSeaPickleFeature(Codec<DefaultFeatureConfig> codec) {
+public class UndergroundSeaPickleFeature extends Feature<NoneFeatureConfiguration> {
+    public UndergroundSeaPickleFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    public boolean generate(FeatureContext<DefaultFeatureConfig> context) {
-        StructureWorldAccess world = context.getWorld();
-        Random rand = context.getRandom();
-        BlockPos pos = context.getOrigin();
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
+        WorldGenLevel world = context.level();
+        Random rand = context.random();
+        BlockPos pos = context.origin();
 
-        BlockState surface = world.getBlockState(pos.down());
-        if (!surface.isOf(Blocks.STONE) && !surface.isOf(Blocks.DIRT)) {
+        BlockState surface = world.getBlockState(pos.below());
+        if (!surface.is(Blocks.STONE) && !surface.is(Blocks.DIRT)) {
             return false;
         }
 
-        if (world.getBlockState(pos).isOf(Blocks.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER)) {
+        if (world.getBlockState(pos).is(Blocks.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER)) {
             int count = rand.nextInt(rand.nextInt(4) + 1) + 1;
-            if (surface.isOf(Blocks.DIRT)) {
+            if (surface.is(Blocks.DIRT)) {
                 count = Math.min(count + rand.nextInt(2), 4);
             }
 
-            BlockState pickle = Blocks.SEA_PICKLE.getDefaultState().with(SeaPickleBlock.PICKLES, count);
-            world.setBlockState(pos, pickle, 2);
+            BlockState pickle = Blocks.SEA_PICKLE.defaultBlockState().setValue(SeaPickleBlock.PICKLES, count);
+            world.setBlock(pos, pickle, 2);
             return true;
         }
 
