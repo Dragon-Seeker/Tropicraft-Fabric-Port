@@ -1,0 +1,210 @@
+package net.tropicraft.core.common.entity.hostile;
+
+
+import net.tropicraft.core.common.entity.passive.EntityKoaBase;
+import net.tropicraft.core.common.entity.placeable.AshenMaskEntity;
+import net.tropicraft.core.common.entity.ai.ashen.AIAshenChaseAndPickupLostMask;
+import net.tropicraft.core.common.entity.ai.ashen.AIAshenShootDart;
+import net.tropicraft.core.common.entity.ai.ashen.EntityAIMeleeAndRangedAttack;
+import net.tropicraft.core.common.item.AshenMaskItem;
+import net.tropicraft.core.common.item.AshenMasks;
+import net.tropicraft.core.common.item.BlowGunItem;
+import net.tropicraft.core.common.registry.TropicraftEntities;
+import net.tropicraft.core.common.registry.TropicraftItems;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import org.jetbrains.annotations.Nullable;
+
+
+public class AshenEntity extends TropicraftCreatureEntity implements RangedAttackMob {
+    public enum AshenState {
+        PEACEFUL,
+        LOST_MASK,
+        HOSTILE;
+
+        public static final AshenState[] VALUES = values();
+    }
+
+    private static final EntityDataAccessor<Byte> MASK_TYPE = SynchedEntityData.defineId(AshenEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> ACTION_STATE = SynchedEntityData.defineId(AshenEntity.class, EntityDataSerializers.BYTE);
+
+    public AshenMaskEntity maskToTrack;
+
+    public AshenEntity(EntityType<? extends PathfinderMob> type, Level world) {
+        super(type, world);
+        setActionState(AshenState.HOSTILE);
+    }
+
+    @Override
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
+    }
+
+    @Override
+    @Nullable
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
+        setItemInHand(InteractionHand.OFF_HAND, new ItemStack(TropicraftItems.BLOW_GUN));
+        setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(TropicraftItems.DAGGER));
+        setMaskType((byte) AshenMasks.VALUES[world.getRandom().nextInt(AshenMasks.VALUES.length)].ordinal());
+        setActionState(AshenState.HOSTILE);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(MASK_TYPE, (byte) 0);
+        getEntityData().define(ACTION_STATE, (byte) AshenState.HOSTILE.ordinal());
+    }
+
+    @Override
+    protected void registerGoals() {
+        goalSelector.addGoal(1, new FloatGoal(this));
+        goalSelector.addGoal(2, new AIAshenChaseAndPickupLostMask(this, 1.0D));
+        goalSelector.addGoal(3, new AIAshenShootDart(this));
+        goalSelector.addGoal(4, new RandomStrollGoal(this, 1.0D));
+        goalSelector.addGoal(5, new EntityAIMeleeAndRangedAttack(this, 1.0D, 20*2, 20*10, 5F));
+        goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        // TODO: Change predicate in last parameter below?
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+
+        //TODO: re-enable THE CHASING OF KOA's
+        targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, EntityKoaBase.class, true));
+    }
+
+    public static AttributeSupplier.Builder createAttributes(){
+        return Mob.createMobAttributes()
+                .add(Attributes.ATTACK_DAMAGE, 3)
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.35D);
+    }
+
+    public boolean hasMask() {
+        return getActionState() != AshenState.LOST_MASK;
+    }
+
+    public void setMaskType(byte type) {
+        getEntityData().set(MASK_TYPE, type);
+    }
+
+    public byte getMaskType() {
+        return getEntityData().get(MASK_TYPE);
+    }
+
+    public void setActionState(final AshenState state) {
+        getEntityData().set(ACTION_STATE, (byte) state.ordinal());
+    }
+
+    public AshenState getActionState() {
+        return AshenState.VALUES[getActionStateValue()];
+    }
+
+    private byte getActionStateValue() {
+        return getEntityData().get(ACTION_STATE);
+    }
+
+
+    @Override
+    public void performRangedAttack(LivingEntity target, float velocity) {
+        ItemStack headGear = target.getItemBySlot(EquipmentSlot.HEAD);
+        // Don't shoot things wearing ashen masks
+        if (headGear.getItem() instanceof AshenMaskItem) {
+            return;
+        }
+
+        Arrow tippedArrow = BlowGunItem.createArrow(level, this, BlowGunItem.getProjectile());
+        double d0 = target.getX() - getX();
+        double d1 = target.getBoundingBox().minY + (double)(target.getBbHeight() / 3.0F) - tippedArrow.getY();
+        double d2 = target.getZ() - getZ();
+        double d3 = Mth.sqrt(d0 * d0 + d2 * d2);
+        tippedArrow.shoot(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, velocity);
+
+        tippedArrow.setBaseDamage(1);
+        tippedArrow.setKnockback(0);
+
+        playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.0F / (getRandom().nextFloat() * 0.4F + 0.8F));
+        level.addFreshEntity(tippedArrow);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amt) {
+        boolean wasHit = super.hurt(source, amt);
+
+        if (!level.isClientSide) {
+            if (hasMask() && wasHit && !source.equals(DamageSource.OUT_OF_WORLD)) {
+                dropMask();
+            }
+        }
+
+        return wasHit;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag nbt) { //writeAdditional
+        super.addAdditionalSaveData(nbt);
+        nbt.putByte("MaskType", getMaskType());
+        nbt.putByte("ActionState", getActionStateValue());
+    }
+    @Override
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        setMaskType(nbt.getByte("MaskType"));
+        setActionState(AshenState.VALUES[nbt.getByte("ActionState")]);
+    }
+
+    public void dropMask() {
+        setActionState(AshenState.LOST_MASK);
+        maskToTrack = new AshenMaskEntity(TropicraftEntities.ASHEN_MASK, level);
+        maskToTrack.setMaskType(getMaskType());
+        maskToTrack.absMoveTo(getX(), getY(), getZ(), yRot, 0);
+        level.addFreshEntity(maskToTrack);
+    }
+
+    public void pickupMask(AshenMaskEntity mask) {
+        setActionState(AshenState.HOSTILE);
+        maskToTrack = null;
+        setMaskType(mask.getMaskType());
+        mask.remove();
+    }
+
+    /*
+    @Override
+    public ItemStack getPickedResult(RayTraceResult target) {
+        return new ItemStack(TropicraftItems.ASHEN_SPAWN_EGG.get());
+    }
+     */
+
+}

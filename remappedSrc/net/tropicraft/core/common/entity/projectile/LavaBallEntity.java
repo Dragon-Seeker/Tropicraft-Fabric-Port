@@ -1,0 +1,228 @@
+package net.tropicraft.core.common.entity.projectile;
+
+import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
+import net.tropicraft.Constants;
+import net.tropicraft.core.common.registry.TropicraftEntities;
+
+import java.util.UUID;
+
+public class LavaBallEntity extends Entity {
+
+    public static ResourceLocation SPAWN_PACKET = new ResourceLocation(Constants.MODID, "lava_ball");
+
+    public boolean setFire;
+    public float size;
+    public boolean held;
+    public int lifeTimer;
+
+    public double accelerationX;
+    public double accelerationY;
+    public double accelerationZ;
+
+    public LavaBallEntity(EntityType<? extends LavaBallEntity> type, Level world) {
+        super(type, world);
+        setFire = false;
+        held = false;
+        size = 1;
+        lifeTimer = 0;
+    }
+
+    public LavaBallEntity(EntityType<? extends LavaBallEntity> type,Level world, double i, double j, double k, double motX, double motY, double motZ) {
+        super(type, world);
+        setFire = false;
+        moveTo(i, j, k, 0, 0);
+        accelerationX = motX;
+        accelerationY = motY;
+        accelerationZ = motZ;
+        size = 1;
+        held = false;
+        lifeTimer = 0;
+    }
+
+    public LavaBallEntity(EntityType<? extends LavaBallEntity> type, Level world, float startSize) {
+        super(type, world);
+        size = startSize;
+        setFire = false;
+        held = true;
+        lifeTimer = 0;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public LavaBallEntity(Level world, double x, double y, double z, int id, UUID uuid) {
+        super(TropicraftEntities.LAVA_BALL, world);
+        absMoveTo(x, y, z);
+        setPacketCoordinates(x, y, z);
+        setId(id);
+        setUUID(uuid);
+    }
+
+
+
+
+    @Override
+    public boolean isPickable() {
+        return true;
+    }
+
+    @Override
+    public boolean isPushable() {
+        return true;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void supahDrip() {
+        float x = (float) getX();
+        float y = (float) getY();
+        float z = (float) getZ();
+
+        if (level.isClientSide) {
+            level.addParticle(ParticleTypes.LAVA, x, y, z, this.getDeltaMovement().x, -1.5F, this.getDeltaMovement().z);
+        }
+    }
+
+    @Override
+    protected void defineSynchedData()
+    {
+
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        // System.out.println("laba ball: " + posX + " " + posY + " " + posZ);
+
+        if (lifeTimer < 500)
+        {
+            lifeTimer++;
+        }
+        else
+        {
+            this.remove();
+        }
+
+        double motionX = this.getDeltaMovement().x;
+        double motionY = this.getDeltaMovement().y;
+        double motionZ = this.getDeltaMovement().z;
+
+        if (size < 1) {
+            size += .025;
+        }
+
+        if (onGround) {
+            motionZ *= .95;
+            motionX *= .95;
+        }
+
+        motionY *= .99;
+
+        if (!onGround) {
+            motionY -=.05F;
+            if (level.isClientSide) {
+                for (int i = 0; i < 5 + random.nextInt(3); i++){
+                    supahDrip();
+                }
+            }
+        }
+
+        if (horizontalCollision) {
+            motionZ = 0;
+            motionX = 0;
+        }
+
+        //TODO: Note below, these used to be tempLavaMoving - maybe they still need to be?
+        int thisX = (int)Math.floor(getX());
+        int thisY = (int)Math.floor(getY());
+        int thisZ = (int)Math.floor(getZ());
+
+        BlockPos posCurrent = new BlockPos(thisX, thisY, thisZ);
+        BlockPos posBelow = posCurrent.below();
+        BlockState stateBelow = level.getBlockState(posBelow);
+
+        if (!level.isEmptyBlock(posBelow) && stateBelow.getMaterial() != Material.LAVA && !held) {
+            if (setFire) {
+                level.setBlock(posCurrent, Blocks.LAVA.defaultBlockState(), 3);
+                this.remove();
+            }
+
+            if (!setFire) {
+                if (level.isEmptyBlock(posCurrent.west())) {
+                    level.setBlock(posCurrent.west(), Blocks.LAVA.defaultBlockState(), 2);
+                }
+
+                if (level.isEmptyBlock(posCurrent.east())) {
+                    level.setBlock(posCurrent.east(), Blocks.LAVA.defaultBlockState(), 2);
+                }
+
+                if (level.isEmptyBlock(posCurrent.south())) {
+                    level.setBlock(posCurrent.south(), Blocks.LAVA.defaultBlockState(), 2);
+                }
+
+                if (level.isEmptyBlock(posCurrent.north())) {
+                    level.setBlock(posCurrent.north(), Blocks.LAVA.defaultBlockState(), 2);
+                }
+
+                level.setBlock(posCurrent, Blocks.LAVA.defaultBlockState(), 3);
+                setFire = true;
+            }
+        }
+
+        Vec3 motion = new Vec3(motionX + this.accelerationX, motionY + this.accelerationY, motionZ + this.accelerationZ);
+        this.setDeltaMovement(motion);
+
+        this.move(MoverType.SELF, motion);
+    }
+
+    // TODO: Need this again? 1.14
+    /*@Override
+    protected void entityInit() {
+
+    }*/
+
+    @Override
+    protected void readAdditionalSaveData(CompoundTag nbt) {
+        this.lifeTimer = nbt.getInt("lifeTimer");
+    }
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag nbt) {
+        nbt.putInt("lifeTimer", this.lifeTimer);
+    }
+
+    @Override
+    public Packet<?> getAddEntityPacket() {
+        //return new EntitySpawnS2CPacket(this);
+
+        //NetworkHooks.getEntitySpawningPacket(this);
+
+        FriendlyByteBuf packet = new FriendlyByteBuf(Unpooled.buffer());
+
+        // entity position
+        packet.writeDouble(getX());
+        packet.writeDouble(getY());
+        packet.writeDouble(getZ());
+
+        // entity id & uuid
+        packet.writeInt(getId());
+        packet.writeUUID(getUUID());
+
+        return ServerSidePacketRegistry.INSTANCE.toPacket(SPAWN_PACKET, packet);
+    }
+
+}
